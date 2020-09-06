@@ -113,6 +113,29 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2015/11/28/%E4%B8%AA%E4%BA%BACSDN%E5%8D%9A%E5%AE%A2%E5%92%8C%E5%8D%9A%E5%AE%A2%E5%9B%AD%E9%87%8D%E7%82%B9%E6%96%87%E7%AB%A0%E6%91%98%E5%8F%96/">个人CSDN博客和博客园重点文章摘取</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2015-11-28 </span>
+      <div class="post-category">
+          <a href="/categories/%E6%80%BB%E7%BB%93%E6%84%9F%E6%82%9F/"> 总结感悟 </a>
+          </div>
+        <span class="more-meta"> 约 194 字 </span>
+        <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      VMware11.1.2安装CentOS6.7详细步骤 CentOS6.7配置静态IP CentOS配置本地yum源 《从缺陷中学习CC++》总结
+    </div>
+    <div class="read-more">
+      <a href="/2015/11/28/%E4%B8%AA%E4%BA%BACSDN%E5%8D%9A%E5%AE%A2%E5%92%8C%E5%8D%9A%E5%AE%A2%E5%9B%AD%E9%87%8D%E7%82%B9%E6%96%87%E7%AB%A0%E6%91%98%E5%8F%96/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2015/11/27/%E6%88%91%E7%9A%84%E5%9B%9B%E5%B9%B4%E6%88%91%E7%9A%84%E6%A0%A1%E6%8B%9B/">我的四年，我的校招</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2015-11-27 </span>
@@ -131,68 +154,6 @@
     </div>
     <div class="read-more">
       <a href="/2015/11/27/%E6%88%91%E7%9A%84%E5%9B%9B%E5%B9%B4%E6%88%91%E7%9A%84%E6%A0%A1%E6%8B%9B/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/1/01/01/Building-Hadoop3-Cluster/">搭建Hadoop3集群</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 0001-01-01 </span>
-      <div class="post-category">
-          <a href="/categories/Hadoop/"> Hadoop </a>
-          </div>
-        <span class="more-meta"> 约 5575 字 </span>
-        <span class="more-meta"> 预计阅读 12 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>强烈建议再搭建hadoop集群之前体验一下单机模式和伪分布式模式的搭建过程，可以参考以下链接：</p>
-<ul>
-<li><a href="https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/">https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</a></li>
-</ul>
-<h1 id="开始之前">开始之前</h1>
-<p>本次集群搭建所依赖的软件环境如下：</p>
-<ol>
-<li>Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例</li>
-<li>jdk-8u162-linux-x64.tar.gz</li>
-<li>hadoop 3.1.0</li>
-</ol>
-<p>先了解一个概念：</p>
-<blockquote>
-<p><strong>Hadoop YARN</strong>： YARN是一个在所有节点上执行数据处理任务的作业调度框架。</p>
-</blockquote>
-<p>然后执行以下初始步骤：</p>
-<ol>
-<li>创建三台阿里云ECS，也可以在本地创建3台配置较好的Vmware虚拟机。分别作为hadoop集群的node-master，node1和node2（名称可以自取）。 <del>建议将每个主机名设置为节点名</del> ，一定要修改hostname。</li>
-<li>为每台机器创建hadoop用户，后续如没有特殊说明，所有命令均在hadoop用户下执行。</li>
-<li>在三台机器上都安装jdk，统一使用hadoop用户安装在<code>/usr/local/src</code>目录下（其他目录也可，放在用户目录下会更好，省掉权限问题），更改<code>/usr/local/src</code>目录的属主和属组为hadoop，可以使用<code>chown hadoop:hadoop /usr/local/src</code>命令更改。</li>
-<li>需要在各个节点的/bin目录下增加java可执行文件的软连接，以node2为例</li>
-</ol>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">hadoop@node2:~$ <span class="nb">cd</span> /bin
-hadoop@node2:/bin$ sudo ln -s /usr/local/src/jdk1.8.0_162/bin/java java
-</code></pre></td></tr></table>
-</div>
-</div><p>如果没有添加，在执行MR程序时会报错：<code>/bin/bash: /bin/java: No such file or directory</code></p>
-<p>创建hadoop用户和安装jdk的步骤参见文章开头的单机和伪分布式搭建过程。</p>
-<p>下面是本次集群安装的三台ECS机器的ip情况：</p>
-<ul>
-<li><strong>node-master</strong>: 120.77.239.67</li>
-<li><strong>node1</strong>: 119.23.145.73</li>
-<li><strong>node2</strong>: 119.23.141.223</li>
-</ul>
-    </div>
-    <div class="read-more">
-      <a href="/1/01/01/Building-Hadoop3-Cluster/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

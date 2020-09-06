@@ -113,6 +113,35 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2018/04/16/Hadoop-MapReduce-HDFS-Introduction/">Hadoop、MapReduce、HDFS介绍</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-04-16 </span>
+      <div class="post-category">
+          <a href="/categories/Hadoop/"> Hadoop </a>
+          </div>
+        <span class="more-meta"> 约 3489 字 </span>
+        <span class="more-meta"> 预计阅读 7 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>对于入门hadoop的初学者，首先需要了解一下三个部分：</p>
+<ul>
+<li>hadoop的生态环境</li>
+<li>MapReduce模型</li>
+<li>HDFS分布式文件系统</li>
+</ul>
+<p>依次介绍这三个部分。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2018/04/16/Hadoop-MapReduce-HDFS-Introduction/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2018/04/11/FilmReview-Ready-Player-One/">影评：Ready Player One</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2018-04-11 </span>
@@ -391,74 +420,6 @@
     </div>
     <div class="read-more">
       <a href="/2018/02/06/Python-Google-Protocol-Buffer/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/">使用ab和wrk对腾讯CLS进行benchmark测试</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2018-02-01 </span>
-      <div class="post-category">
-          <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"> 工具使用 </a>
-          </div>
-        <span class="more-meta"> 约 1964 字 </span>
-        <span class="more-meta"> 预计阅读 4 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <h1 id="使用ab和wrk对cls进行benchmark测试">使用ab和wrk对CLS进行benchmark测试</h1>
-<p>使用ab和wrk对腾讯云日志服务CLS进行压力测试，以此为例对ab和wrk进行说明</p>
-<h1 id="ab">ab</h1>
-<p>ab，全称是apache benchmark，是apache官方推出的工具。该工具是用来测试Apache服务器的性能的。查看安装的apache的服务器能提供的服务能力，每秒可以处理多少次请求。ab 执行时常用的选项如下表：</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>-c</td>
-<td>并发数， 一次发送的总请求数，默认是一次发一个请求。</td>
-</tr>
-<tr>
-<td>-k</td>
-<td>打开keep-alive，在一个HTTP Session中请求多次。默认是关闭的。</td>
-</tr>
-<tr>
-<td>-n</td>
-<td>请求数， 整个benchmark测试过程中需要发送的请求次数。默认是一次，默认情况下得到的性能参数没有代表性。</td>
-</tr>
-<tr>
-<td>-t</td>
-<td>最大时间，benchmark测试最长时间，默认没有限制。</td>
-</tr>
-<tr>
-<td>-u</td>
-<td>上传文件，PUT操作时使用，需要设置-T选项</td>
-</tr>
-<tr>
-<td>-T</td>
-<td>设置上传文件的Content-Type</td>
-</tr>
-<tr>
-<td>-p</td>
-<td>postfile，指定包含post数据的文件</td>
-</tr>
-<tr>
-<td>-r</td>
-<td>当接收到socket错误的时候ab不退出</td>
-</tr>
-</tbody>
-</table>
-    </div>
-    <div class="read-more">
-      <a href="/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

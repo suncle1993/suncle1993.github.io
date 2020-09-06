@@ -113,6 +113,64 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/">自动存储管理ASM</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2016-03-21 </span>
+      <div class="post-category">
+          <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+          </div>
+        <span class="more-meta"> 约 1567 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>参考资料：</p>
+<p><a href="https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036">https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036</a></p>
+<h2 id="什么是asm">什么是ASM？</h2>
+<p>ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。</p>
+<p>In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.</p>
+<h2 id="为什么使用asm">为什么使用ASM？</h2>
+<ul>
+<li>提供高效率的存储管理</li>
+<li>提供完整的集群文件系统和卷管理能力</li>
+</ul>
+<p><strong>ASM的优点：</strong></p>
+<p><strong>Mirroring and Striping</strong>（镜像化和条带化）</p>
+<p>条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。</p>
+<p>ASM镜像化选项:</p>
+<table>
+<thead>
+<tr>
+<th>Mirroring Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2-way mirroring</td>
+<td>Each extent has 1 mirrored copy.</td>
+</tr>
+<tr>
+<td>3-way mirroring</td>
+<td>Each extent has 2 mirrored copies.</td>
+</tr>
+<tr>
+<td>Unprotected</td>
+<td>ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.</td>
+</tr>
+</tbody>
+</table>
+    </div>
+    <div class="read-more">
+      <a href="/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/">Rman备份恢复和管理</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2016-03-18 </span>
@@ -1038,85 +1096,6 @@ SQL&gt; select * from t1;
     </div>
     <div class="read-more">
       <a href="/2016/03/16/DBA%E5%B8%B8%E7%94%A8%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2016/03/16/%E5%81%9A%E4%B8%80%E5%90%8D%E5%90%88%E6%A0%BC%E7%9A%84DBA/">做一名合格的DBA</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-03-16 </span>
-      <div class="post-category">
-          <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
-          </div>
-        <span class="more-meta"> 约 775 字 </span>
-        <span class="more-meta"> 预计阅读 2 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <hr>
-<p><em><strong>Oracle DBA的角色定义</strong></em></p>
-<p><strong>开发型DBA</strong></p>
-<ul>
-<li>数据库安装</li>
-<li>数据库架构设计（架构和建模）</li>
-<li>代码开发（存储过程，SQL）</li>
-</ul>
-<p><strong>运维型DBA</strong></p>
-<ul>
-<li>数据库日常监控</li>
-<li>故障处理</li>
-<li>性能优化</li>
-<li>数据备份，容灾</li>
-<li>数据库安全规划</li>
-</ul>
-<p><em><strong>DBA的操守</strong></em></p>
-<p><strong>在自己的责任范围内</strong></p>
-<ul>
-<li>让数据库设计更合理，预防设计导致的性能或安全隐患</li>
-<li>数据更安全</li>
-<li>数据库性能更优</li>
-<li>数据库日常管理更合理</li>
-<li>故障发现，处理及时</li>
-</ul>
-<p><em><strong>数据库的架构设计</strong></em></p>
-<p>数据库架构</p>
-<ul>
-<li>分布or单库</li>
-</ul>
-<p>实例的冗余</p>
-<ul>
-<li>RAC or single</li>
-</ul>
-<p>数据库的安全和容灾</p>
-<ul>
-<li>DG or streams or Rman</li>
-</ul>
-<p>空间的考虑存储的规划</p>
-<ul>
-<li>ASM （自动存储管理）+ SAN（Storage Area Network，SAN网络存储）</li>
-</ul>
-<p>软件的生命周期和业务（数据）增长的预测</p>
-<p><em><strong>数据库的建模</strong></em></p>
-<p>实体，关系的设计E-R</p>
-<ul>
-<li>表</li>
-<li>索引</li>
-<li>主、外键的引用</li>
-</ul>
-<p><em><strong>数据库的开发&ndash;SQL和存储过程</strong></em></p>
-<ul>
-<li>SQL是否绑定变量</li>
-<li>SQL语句的性能问题</li>
-<li>表的分析的方式-分析选项，分析频率等&hellip;</li>
-<li>影响SQL执行效率的性能参数</li>
-</ul>
-    </div>
-    <div class="read-more">
-      <a href="/2016/03/16/%E5%81%9A%E4%B8%80%E5%90%8D%E5%90%88%E6%A0%BC%E7%9A%84DBA/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

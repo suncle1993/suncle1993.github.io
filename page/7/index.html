@@ -113,6 +113,34 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/11/10/ubuntu16-04%E5%AE%89%E5%85%A8%E5%B0%8F%E7%BB%93-01/">ubuntu16.04安全小结-01</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-11-10 </span>
+      <div class="post-category">
+          <a href="/categories/%E5%AE%89%E5%85%A8/"> 安全 </a>
+          </div>
+        <span class="more-meta"> 约 1201 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>本篇主要介绍以下三个部分：</p>
+<ol>
+<li>反病毒引擎clamav的安装和使用</li>
+<li>ubuntu ufw限制访问地址</li>
+<li>ubuntu用户连接失败锁定指定时间</li>
+</ol>
+    </div>
+    <div class="read-more">
+      <a href="/2017/11/10/ubuntu16-04%E5%AE%89%E5%85%A8%E5%B0%8F%E7%BB%93-01/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2017/11/08/%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86http302%E9%87%8D%E5%AE%9A%E5%90%91%E6%9C%BA%E5%88%B6/">重新认识HTTP3xx重定向机制</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2017-11-08 </span>
@@ -483,36 +511,6 @@ cat <span class="nv">$TMP_FILE</span> <span class="p">|</span> grep <span class=
     </div>
     <div class="read-more">
       <a href="/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2017/05/23/CMDB/">结合公司现状浅谈CMDB</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-05-23 </span>
-      <div class="post-category">
-          <a href="/categories/Python/"> Python </a>
-          </div>
-        <span class="more-meta"> 约 2329 字 </span>
-        <span class="more-meta"> 预计阅读 5 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。</p>
-<h1 id="cmdb概述">CMDB概述</h1>
-<p>CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个<strong>集中式</strong>的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。</p>
-<h1 id="公司运维现状">公司运维现状</h1>
-<p><strong>资产现状</strong></p>
-<p>全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。</p>
-<p><strong>运维情况现状</strong></p>
-<p>由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。</p>
-    </div>
-    <div class="read-more">
-      <a href="/2017/05/23/CMDB/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

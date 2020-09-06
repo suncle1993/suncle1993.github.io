@@ -113,6 +113,101 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/">CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-03-30 </span>
+      <div class="post-category">
+          <a href="/categories/Http/"> Http </a>
+          </div>
+        <span class="more-meta"> 约 1514 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="lets-encrypt">Let&rsquo;s-Encrypt</h1>
+<p>为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：</p>
+<ul>
+<li><a href="https://letsencrypt.org/">Let&rsquo;s-Encrypt</a>，本文即将介绍，Let&rsquo;s-Encrypt大法好。</li>
+<li><a href="https://caddyserver.com/">caddy</a>，原生支持 HTTP/2，自动创建 <a href="http://www.appinn.com/use-letsencrypt-with-nginx/">Let’s Encrypt</a> 证书，非常简单易用。</li>
+</ul>
+<h2 id="安装">安装</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">yum install epel-release -y
+yum install certbot -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置">配置</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>--webroot</code>表示以webroot模式运行，此处我们不选择standalone模式</li>
+<li><code>-w /www/html</code>表示站点根目录在/www/html</li>
+<li><code>-d suncle.me -d www.suncle.me</code>表示为@主机和www主机生成共同的证书</li>
+</ul>
+<p>按照提示操作成功后，提示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will
+   expire on 2017-06-28. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run &#34;certbot
+   renew&#34;
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let&#39;s Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+    <div class="read-more">
+      <a href="/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/">CentOS7-Nginx编译安装</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2017-03-30 </span>
@@ -742,76 +837,6 @@ make install
     </div>
     <div class="read-more">
       <a href="/2017/02/15/Python%E8%A3%85%E9%A5%B0%E5%99%A8/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2017/02/13/Python-IO/">Python IO</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-02-13 </span>
-      <div class="post-category">
-          <a href="/categories/Python/"> Python </a>
-          </div>
-        <span class="more-meta"> 约 4962 字 </span>
-        <span class="more-meta"> 预计阅读 10 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <h1 id="python-io">Python IO</h1>
-<h2 id="文件打开和关闭">文件打开和关闭</h2>
-<p>文件打开和关闭就是两个函数，一个open函数一个close函数</p>
-<p><strong>open函数的原型</strong></p>
-<p><code>open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)</code></p>
-<p>前面说open函数返回的是一个file-like对象，但是这个file-like对象并不是固定的，这个对象的类型会随着打开mode的变化而变化。</p>
-<ol>
-<li>以文本模式打开文件（&lsquo;w&rsquo;, &lsquo;r&rsquo;，&lsquo;wt&rsquo;，&lsquo;rt&rsquo;等），返回一个TextIOWrapper。</li>
-<li>当用二进制模式打开文件时，返回的对象也会变化。</li>
-<li>在二进制读取模式，返回一个BufferedReader。</li>
-<li>在二进制写模式和二进制追加模式，返回一个BufferedWriter。</li>
-<li>在二进制读/写模式下，返回一个BufferedRandom。</li>
-</ol>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./hello.py&#39;</span><span class="p">)</span>	<span class="c1"># 直接open函数打开，文件不存在会FileNotFoundError</span>
-<span class="o">---------------------------------------------------------------------------</span>
-<span class="n">FileNotFoundError</span>                         <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">b6df97277b77</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
-<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./hello.py&#39;</span><span class="p">)</span>
-
-<span class="n">FileNotFoundError</span><span class="p">:</span> <span class="p">[</span><span class="n">Errno</span> <span class="mi">2</span><span class="p">]</span> <span class="n">No</span> <span class="n">such</span> <span class="nb">file</span> <span class="ow">or</span> <span class="n">directory</span><span class="p">:</span> <span class="s1">&#39;./hello.py&#39;</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./hello.py&#39;</span><span class="p">)</span>	<span class="c1"># 创建文件之后就可以打开，返回一个file-like对象</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>	<span class="c1"># 读出文件全部内容</span>
-<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="s2">&#34;#!/usr/bin/env python</span><span class="se">\n</span><span class="s2"># coding=utf-8</span><span class="se">\n</span><span class="s2">print(&#39;hello world&#39;)</span><span class="se">\n</span><span class="s2">&#34;</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>	<span class="c1"># 关闭文件</span>
-</code></pre></td></tr></table>
-</div>
-</div>
-    </div>
-    <div class="read-more">
-      <a href="/2017/02/13/Python-IO/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

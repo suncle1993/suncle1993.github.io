@@ -113,6 +113,36 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/05/23/CMDB/">结合公司现状浅谈CMDB</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-05-23 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 2329 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。</p>
+<h1 id="cmdb概述">CMDB概述</h1>
+<p>CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个<strong>集中式</strong>的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。</p>
+<h1 id="公司运维现状">公司运维现状</h1>
+<p><strong>资产现状</strong></p>
+<p>全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。</p>
+<p><strong>运维情况现状</strong></p>
+<p>由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/05/23/CMDB/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/">Python实现通用web框架</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2017-05-22 </span>
@@ -628,101 +658,6 @@ mysql -uroot -p  <span class="c1"># 登录</span>
     </div>
     <div class="read-more">
       <a href="/2017/04/04/%E7%81%B5%E9%AD%82%E7%8B%AC%E6%97%85%E4%B9%8B%E6%B5%B7%E5%A4%A9%E4%BD%9B%E5%9B%BD%E6%99%AE%E9%99%80%E5%B1%B1/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/">CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-03-30 </span>
-      <div class="post-category">
-          <a href="/categories/Http/"> Http </a>
-          </div>
-        <span class="more-meta"> 约 1514 字 </span>
-        <span class="more-meta"> 预计阅读 4 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <h1 id="lets-encrypt">Let&rsquo;s-Encrypt</h1>
-<p>为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：</p>
-<ul>
-<li><a href="https://letsencrypt.org/">Let&rsquo;s-Encrypt</a>，本文即将介绍，Let&rsquo;s-Encrypt大法好。</li>
-<li><a href="https://caddyserver.com/">caddy</a>，原生支持 HTTP/2，自动创建 <a href="http://www.appinn.com/use-letsencrypt-with-nginx/">Let’s Encrypt</a> 证书，非常简单易用。</li>
-</ul>
-<h2 id="安装">安装</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">yum install epel-release -y
-yum install certbot -y
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="配置">配置</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li><code>--webroot</code>表示以webroot模式运行，此处我们不选择standalone模式</li>
-<li><code>-w /www/html</code>表示站点根目录在/www/html</li>
-<li><code>-d suncle.me -d www.suncle.me</code>表示为@主机和www主机生成共同的证书</li>
-</ul>
-<p>按照提示操作成功后，提示：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">IMPORTANT NOTES:
- - Congratulations! Your certificate and chain have been saved at
-   /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will
-   expire on 2017-06-28. To obtain a new or tweaked version of this
-   certificate in the future, simply run certbot again. To
-   non-interactively renew *all* of your certificates, run &#34;certbot
-   renew&#34;
- - Your account credentials have been saved in your Certbot
-   configuration directory at /etc/letsencrypt. You should make a
-   secure backup of this folder now. This configuration directory will
-   also contain certificates and private keys obtained by Certbot so
-   making regular backups of this folder is ideal.
- - If you like Certbot, please consider supporting our work by:
-
-   Donating to ISRG / Let&#39;s Encrypt:   https://letsencrypt.org/donate
-   Donating to EFF:                    https://eff.org/donate-le
-
-</code></pre></td></tr></table>
-</div>
-</div>
-    </div>
-    <div class="read-more">
-      <a href="/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

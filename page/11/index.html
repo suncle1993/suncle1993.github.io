@@ -113,6 +113,45 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/">Oracle字符集检查和修改</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2016-12-01 </span>
+      <div class="post-category">
+          <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+          </div>
+        <span class="more-meta"> 约 1681 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="oracle字符集检查和修改">Oracle字符集检查和修改</h1>
+<p>在部署重构版测试环境时，需要创建Oracle数据库，使用dbca创建数据库之后没有注意数据库本身的字符集，导致后续所有的数据库脚本执行后中文乱码。最后的解决办法是清掉全库数据，再修改字符集，重启数据库。</p>
+<h2 id="1oracle字符集概述">1、Oracle字符集概述</h2>
+<p>系统或者程序运行的环境就是一个我们常见的locale。而设置数据库locale最简单的方法就是设置NLS_LANG这个环境参数。在linux中NLS_LANG是一个环境变量，在windows中NLS_LANG是写在注册表中的。NLS_LANG这个参数由三个组成部分，分别是语言（language）, 区域（territory）和字符集（character set），格式如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nv">NLS_LANG</span> <span class="o">=</span> language_territory.charset
+</code></pre></td></tr></table>
+</div>
+</div><p>我们平时最常见的就是：<code>AMERICAN_AMERICA.ZHS16GBK</code>和<code>SIMPLIFIED CHINESE_CHINA.ZHS16GBK</code></p>
+<p>NLS_LANG的作用官网是这样说的：</p>
+<ul>
+<li>It sets the language and territory used by the client application and the database server. It also sets the client&rsquo;s character set, which is the character set for data entered or displayed by a client program</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2016/09/05/Python%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89%E5%8F%8A%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/">Python函数定义及参数详解</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2016-09-05 </span>
@@ -843,64 +882,6 @@
     </div>
     <div class="read-more">
       <a href="/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/">自动存储管理ASM</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-03-21 </span>
-      <div class="post-category">
-          <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
-          </div>
-        <span class="more-meta"> 约 1567 字 </span>
-        <span class="more-meta"> 预计阅读 4 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>参考资料：</p>
-<p><a href="https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036">https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036</a></p>
-<h2 id="什么是asm">什么是ASM？</h2>
-<p>ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。</p>
-<p>In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.</p>
-<h2 id="为什么使用asm">为什么使用ASM？</h2>
-<ul>
-<li>提供高效率的存储管理</li>
-<li>提供完整的集群文件系统和卷管理能力</li>
-</ul>
-<p><strong>ASM的优点：</strong></p>
-<p><strong>Mirroring and Striping</strong>（镜像化和条带化）</p>
-<p>条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。</p>
-<p>ASM镜像化选项:</p>
-<table>
-<thead>
-<tr>
-<th>Mirroring Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2-way mirroring</td>
-<td>Each extent has 1 mirrored copy.</td>
-</tr>
-<tr>
-<td>3-way mirroring</td>
-<td>Each extent has 2 mirrored copies.</td>
-</tr>
-<tr>
-<td>Unprotected</td>
-<td>ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.</td>
-</tr>
-</tbody>
-</table>
-    </div>
-    <div class="read-more">
-      <a href="/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

@@ -856,6 +856,27 @@
   </url>
   
   <url>
+    <loc>https://suncle.me/tags/YARN/</loc>
+    <lastmod>2018-05-03T16:54:05+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://suncle.me/2018/05/03/Building-Hadoop3-Cluster/</loc>
+    <lastmod>2018-05-03T16:54:05+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://suncle.me/tags/%E9%9B%86%E7%BE%A4/</loc>
+    <lastmod>2018-05-03T16:54:05+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://suncle.me/tags/MapReduce/</loc>
     <lastmod>2018-04-17T15:54:21+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -2803,24 +2824,6 @@
   
   <url>
     <loc>https://suncle.me/tags/pl/sql/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://suncle.me/tags/YARN/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://suncle.me/1/01/01/Building-Hadoop3-Cluster/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://suncle.me/tags/%E9%9B%86%E7%BE%A4/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
