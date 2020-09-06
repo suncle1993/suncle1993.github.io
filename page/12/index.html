@@ -45,7 +45,7 @@
 <meta property="og:description" content="关注Python、Goalng的web后端、DevOps等领域" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://suncle.me/" />
-<meta property="og:updated_time" content="2019-12-31T23:59:59+00:00" />
+<meta property="og:updated_time" content="2020-09-07T02:22:53+08:00" />
 <meta itemprop="name" content="Suncle&#39;s Blog">
 <meta itemprop="description" content="关注Python、Goalng的web后端、DevOps等领域">
 <meta name="twitter:card" content="summary"/>
@@ -115,6 +115,49 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/">闪回flashback</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2016-03-21 </span>
+      <div class="post-category">
+          <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+          </div>
+        <span class="more-meta"> 约 2803 字 </span>
+        <span class="more-meta"> 预计阅读 6 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-flashback_pic.png" alt=""></p>
+<p><strong>参考资料：</strong><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm">Using Oracle Flashback Technology</a></p>
+<p>Oracle 11g的新特性闪回操作</p>
+<ul>
+<li>闪回查询
+<ul>
+<li>闪回查询</li>
+<li>闪回版本查询</li>
+<li>闪回事务查询</li>
+</ul>
+</li>
+<li>闪回数据
+<ul>
+<li>闪回表</li>
+<li>闪回删除</li>
+<li>闪回数据</li>
+<li>闪回归档</li>
+</ul>
+</li>
+</ul>
+<p>下面会分别介绍这些操作。在介绍这些操作之前先看下闪回特性是否开启。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/">自动存储管理ASM</a></h1>
@@ -1009,97 +1052,6 @@ SQL&gt; select * from t1;
     </div>
     <div class="read-more">
       <a href="/2016/03/16/DBA%E6%97%A5%E5%B8%B8%E5%B7%A5%E4%BD%9C%E5%92%8C%E8%81%8C%E8%B4%A3/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2016/03/16/DBA%E5%B8%B8%E7%94%A8%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/">DBA常用的SQL语句</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-03-16 </span>
-      <div class="post-category">
-          <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
-          </div>
-        <span class="more-meta"> 约 269 字 </span>
-        <span class="more-meta"> 预计阅读 1 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <hr>
-<p>DBA常用的SQL语句</p>
-<p><strong>数据库的大小</strong></p>
-<p>数据库的大小主要是数据文件（dba_data_files）和临时文件(dba_temp_files;)的大小之和。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--查询数据文件大小
-</span><span class="c1"></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">select</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="k">from</span> <span class="n">dba_data_files</span><span class="p">;</span>
-
-<span class="k">SUM</span><span class="p">(</span><span class="n">BYTES</span><span class="p">)</span>
-<span class="c1">----------
-</span><span class="c1"></span><span class="mi">1515192320</span>
-
-<span class="c1">--查询临时文件大小
-</span><span class="c1"></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">select</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="k">from</span> <span class="n">dba_temp_files</span><span class="p">;</span>
-
-<span class="k">SUM</span><span class="p">(</span><span class="n">BYTES</span><span class="p">)</span>
-<span class="c1">----------
-</span><span class="c1"></span>  <span class="mi">30408704</span>
-
-<span class="c1">--查询数据库的大小：两项相加
-</span><span class="c1"></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">select</span> <span class="p">(</span><span class="k">select</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="k">from</span> <span class="n">dba_data_files</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="k">select</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="k">from</span> <span class="n">dba_</span>
-<span class="n">temp_files</span><span class="p">)</span> <span class="k">from</span> <span class="n">dual</span><span class="p">;</span>
-
-<span class="p">(</span><span class="n">SELECTSUM</span><span class="p">(</span><span class="n">BYTES</span><span class="p">)</span><span class="n">FROMDBA_DATA_FILES</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">SELECTSUM</span><span class="p">(</span><span class="n">BYTES</span><span class="p">)</span><span class="n">FROMDBA_TEMP_FILES</span><span class="p">)</span>
-<span class="c1">-------------------------------------------------------------------------
-</span><span class="c1"></span>                                                               <span class="mi">1545601024</span>
-
-<span class="c1">--取一个别名total_size
-</span><span class="c1"></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">select</span> <span class="p">(</span><span class="k">select</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="k">from</span> <span class="n">dba_data_files</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="k">select</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="k">from</span> <span class="n">dba_</span>
-<span class="n">temp_files</span><span class="p">)</span> <span class="k">as</span> <span class="n">total_size</span> <span class="k">from</span> <span class="n">dual</span><span class="p">;</span>
-
-<span class="n">TOTAL_SIZE</span>
-<span class="c1">----------
-</span><span class="c1"></span><span class="mi">1545601024</span>
-</code></pre></td></tr></table>
-</div>
-</div>
-    </div>
-    <div class="read-more">
-      <a href="/2016/03/16/DBA%E5%B8%B8%E7%94%A8%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

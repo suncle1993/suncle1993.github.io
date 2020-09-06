@@ -45,7 +45,7 @@
 <meta property="og:description" content="关注Python、Goalng的web后端、DevOps等领域" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://suncle.me/" />
-<meta property="og:updated_time" content="2019-12-31T23:59:59+00:00" />
+<meta property="og:updated_time" content="2020-09-07T02:22:53+08:00" />
 <meta itemprop="name" content="Suncle&#39;s Blog">
 <meta itemprop="description" content="关注Python、Goalng的web后端、DevOps等领域">
 <meta name="twitter:card" content="summary"/>
@@ -115,6 +115,90 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/02/15/Python%E8%A3%85%E9%A5%B0%E5%99%A8/">Python装饰器</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-02-15 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 2497 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="python装饰器">Python装饰器</h1>
+<h2 id="引入装饰器">引入装饰器</h2>
+<p>如果想在一个函数执行前后执行一些别的代码，比如打印一点日志用来输出这个函数的调用情况那应该怎么做呢？</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># coding=utf-8</span>
+
+<span class="k">def</span> <span class="nf">logger</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>									<span class="c1"># 函数作为参数即fn可以为任何参数</span>
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>					<span class="c1"># 可变参数args和kwargs</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;call {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>	
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>				<span class="c1"># 函数调用时的参数解构</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{} called&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ret</span>								<span class="c1"># 返回函数的返回值</span>
+    <span class="k">return</span> <span class="n">wrap</span>
+
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="n">logger_add</span> <span class="o">=</span> <span class="n">logger</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">logger_add</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">logger_add</span><span class="p">)</span>
+<span class="n">ret</span> <span class="o">=</span> <span class="n">logger_add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+
+<span class="c1">#输出结果：</span>
+<span class="n">wrap</span>
+<span class="o">&lt;</span><span class="n">function</span> <span class="n">logger</span><span class="o">.&lt;</span><span class="nb">locals</span><span class="o">&gt;.</span><span class="n">wrap</span> <span class="n">at</span> <span class="mh">0x7fba35f4fe18</span><span class="o">&gt;</span>
+<span class="n">call</span> <span class="n">add</span>
+<span class="n">add</span> <span class="n">called</span>
+<span class="mi">8</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+    <div class="read-more">
+      <a href="/2017/02/15/Python%E8%A3%85%E9%A5%B0%E5%99%A8/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2017/02/13/Python-IO/">Python IO</a></h1>
@@ -574,43 +658,6 @@ yum makecache
     </div>
     <div class="read-more">
       <a href="/2016/12/04/filling-hols-series-general-catalogue-of-basic-knowledge/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/">oracle的userenv和nls_lang详解</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-12-01 </span>
-      <div class="post-category">
-          <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
-          </div>
-        <span class="more-meta"> 约 1100 字 </span>
-        <span class="more-meta"> 预计阅读 3 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <h1 id="oracle的userenv和nls_lang详解">oracle的userenv和nls_lang详解</h1>
-<h2 id="1userenv最常见的使用">1、userenv最常见的使用</h2>
-<p>userenv函数返回当前会话（session）的相关信息。以下sql语句可以查询当前会话连接的数据库字符集</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">select</span> <span class="n">userenv</span><span class="p">(</span><span class="s1">&#39;language&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">dual</span><span class="p">;</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>有关<code>userenv('parameter')</code>返回值的官网介绍如下</p>
-<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/oracle/2016-11-29_194757.jpg" alt=""></p>
-<p>意思就是：返回的是当前会话使用的language和territory。characterset是数据库的字符集。</p>
-<p>下面我们就去验证这种情况</p>
-    </div>
-    <div class="read-more">
-      <a href="/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

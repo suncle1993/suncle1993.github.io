@@ -45,7 +45,7 @@
 <meta property="og:description" content="关注Python、Goalng的web后端、DevOps等领域" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://suncle.me/" />
-<meta property="og:updated_time" content="2019-12-31T23:59:59+00:00" />
+<meta property="og:updated_time" content="2020-09-07T02:22:53+08:00" />
 <meta itemprop="name" content="Suncle&#39;s Blog">
 <meta itemprop="description" content="关注Python、Goalng的web后端、DevOps等领域">
 <meta name="twitter:card" content="summary"/>
@@ -115,6 +115,41 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/">Clickhouse创建分布式表以及表引擎介绍</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-07-27 </span>
+      <div class="post-category">
+          <a href="/categories/Clickhouse/"> Clickhouse </a>
+          </div>
+        <span class="more-meta"> 约 2520 字 </span>
+        <span class="more-meta"> 预计阅读 6 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="表引擎">表引擎</h1>
+<p>表引擎（即表的类型）决定了：</p>
+<ul>
+<li>数据的存储方式和位置，写到哪里以及从哪里读取数据</li>
+<li>支持哪些查询以及如何支持。</li>
+<li>并发数据访问。</li>
+<li>索引的使用（如果存在）。</li>
+<li>是否可以执行多线程请求。</li>
+<li>数据复制参数。</li>
+</ul>
+<p>在读取时，引擎只需要输出所请求的列，但在某些情况下，引擎可以在响应请求时部分处理数据。</p>
+<p>对于大多数正式的任务，应该使用MergeTree族中的引擎。</p>
+<p><code>MergeTree</code> 引擎系列的基本理念如下。当你有巨量数据要插入到表中，你要高效地一批批写入数据片段，并希望这些数据片段在后台按照一定规则合并。相比在插入时不断修改（重写）数据进存储，这种策略会高效很多。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2019/07/27/clickhouse-build-distributed-cluster/">Clickhouse分布式集群搭建</a></h1>
@@ -398,30 +433,6 @@
     </div>
     <div class="read-more">
       <a href="/2019/03/30/useful-linux-commands/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2019/03/10/haidilao-management-philosophy/">海底捞的经营哲学</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2019-03-10 </span>
-      <div class="post-category">
-          <a href="/categories/%E6%80%BB%E7%BB%93%E6%84%9F%E6%82%9F/"> 总结感悟 </a>
-          </div>
-        <span class="more-meta"> 约 1538 字 </span>
-        <span class="more-meta"> 预计阅读 4 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>在京东选书为了满减凑单入了这本《海底捞的经营哲学》，和《飘》不同，这本书比较薄，全书只有200页，很快就看完了，但是内容涉及到了海底捞的方方面面，，当然这也就导致这本书不可能对每个方面都说得很细致。下面是这本书的大致提纲：</p>
-<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/normal/Haidilao-management-philosophy-outline.png" alt="海底捞的经营哲学提纲"></p>
-    </div>
-    <div class="read-more">
-      <a href="/2019/03/10/haidilao-management-philosophy/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

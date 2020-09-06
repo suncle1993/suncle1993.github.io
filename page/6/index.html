@@ -45,7 +45,7 @@
 <meta property="og:description" content="关注Python、Goalng的web后端、DevOps等领域" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://suncle.me/" />
-<meta property="og:updated_time" content="2019-12-31T23:59:59+00:00" />
+<meta property="og:updated_time" content="2020-09-07T02:22:53+08:00" />
 <meta itemprop="name" content="Suncle&#39;s Blog">
 <meta itemprop="description" content="关注Python、Goalng的web后端、DevOps等领域">
 <meta name="twitter:card" content="summary"/>
@@ -115,6 +115,40 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2018/02/06/Python-Google-Protocol-Buffer/">Python Google Protocol Buffer</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-02-06 </span>
+      
+        <span class="more-meta"> 约 2619 字 </span>
+        <span class="more-meta"> 预计阅读 6 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>本篇主要介绍如何在Python语言中使用Google Protocol Buffer（后续都简写为PB）， 包括以下几个部分：</p>
+<ul>
+<li>为什么要使用PB？</li>
+<li>安装Google PB</li>
+<li>自定义.proto 文件</li>
+<li>编译.proto文件</li>
+<li>解析目标py文件</li>
+<li>序列化和反序列化</li>
+<li>更复杂的Message</li>
+<li>动态编译</li>
+</ul>
+<h1 id="为什么要使用pb">为什么要使用PB？</h1>
+<p>PB（Protocol Buffer）是 Google 开发的用于结构化数据交换格式，作为腾讯云日志服务标准写入格式。因此用于写入日志数据前，需要将日志原始数据序列化为 PB 数据流后通过 API 写入服务端。而各个端类程序中不便操作PB格式，因此需要在端类和日志服务之间加入一层PB转化层。</p>
+<p>当然PB格式也有自己的优点，主要是简单和快，具体测试结果参见<a href="https://github.com/eishay/jvm-serializers/wiki">Google序列化基准分析</a></p>
+    </div>
+    <div class="read-more">
+      <a href="/2018/02/06/Python-Google-Protocol-Buffer/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/">使用ab和wrk对腾讯CLS进行benchmark测试</a></h1>
@@ -559,33 +593,6 @@ b1c1d8736f20db3fb6c1c66bb1455ed43909f0d8
     </div>
     <div class="read-more">
       <a href="/2017/11/14/Python%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2017/11/13/AloneTripOfSoul-MagnificentHuangshan/">灵魂独旅之壮美黄山</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-11-13 </span>
-      <div class="post-category">
-          <a href="/categories/%E7%81%B5%E9%AD%82%E7%8B%AC%E6%97%85/"> 灵魂独旅 </a>
-          </div>
-        <span class="more-meta"> 约 1104 字 </span>
-        <span class="more-meta"> 预计阅读 3 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>越来越喜欢一个人到处走走，没有目的，没有理由，说走就走，到未曾到过的远方，散散步，也散散心，给充实而又枯燥的生活添加一点内心深处独有的染色剂。</p>
-<p>出行的前一天下午才临时决定买的票，本以为会有一个晚上的时间去准备出行的相关事宜，忙碌了一天后，临下班又来了紧急的任务，等到回去的时候不知不觉已经很晚很晚，晚到都没有时间去填充双十一的购物车。现在回想起来，都不知道为什么3点才开始睡觉，虽然只休息了两个小时，但也不觉得有困意，带着期待的心情，早早出门，开始美好周末的旅行。</p>
-<p>一直以来，恐高症都非常的严重，坐在缆车上会觉得随时都会掉下去，也完全不敢回头看黄山的深谷，但是这些都阻挡不了我登山的脚步，我会用足迹证明nothing is impossible。</p>
-<p><strong>关于奇松</strong>，虚胖浮肿的身体，爬数百米的台阶早已气喘吁吁，终于，在玉屏锋的左侧见到了黄山五绝之一的迎客松，他就像一位英姿飒爽的老人屹立在嶙峋怪石之中，万丈悬崖之上。</p>
-<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tour/huangshan/IMG_20171111_135436.jpg" alt="IMG_20171111_135436.jpg"></p>
-    </div>
-    <div class="read-more">
-      <a href="/2017/11/13/AloneTripOfSoul-MagnificentHuangshan/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
