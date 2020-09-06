@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://suncle.me/about/</loc>
+    <lastmod>2020-09-07T01:15:40+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://suncle.me/tags/2019/</loc>
     <lastmod>2019-12-31T23:59:59+00:00</lastmod>
     <changefreq>weekly</changefreq>

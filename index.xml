@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>About</title>
+      <link>https://suncle.me/about/</link>
+      <pubDate>Mon, 07 Sep 2020 01:15:40 +0800</pubDate>
+      
+      <guid>https://suncle.me/about/</guid>
+      <description>它在我的机器上可以很好运行！——大部分程序员 它在所有机器上可以很好运行！——suncle 嗨，我是 suncle，16年7月毕业于长安大学计算机</description>
+    </item>
+    
+    <item>
       <title>2019年OKR</title>
       <link>https://suncle.me/2019/12/31/2019-OKR/</link>
       <pubDate>Tue, 31 Dec 2019 23:59:59 +0000</pubDate>
