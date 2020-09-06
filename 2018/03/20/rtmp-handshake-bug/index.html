@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>排查rtmp协议推流时握手bug - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="概况 转推流程序的过程：从一个观看地址拉流，然后推流到另一个推流地址。主要用于cdn之间转推，目前市面上大多数cdn厂商都愿意不支持动态转推，因此只能通过转推流程序进行转推。
+bug现象：使用obs studio推流到微赞可以成功，但是使用Erlang版本的转推流程序推流到微赞却失败。
+日志如下：
+1 2 3 4 5  14:12:35.926 [debug] payload [{amf,[&amp;#34;onBWDone&amp;#34;,0,null]}], msgtype[command_msg_4_amf0] 14:12:35.949 [debug] play succ ======&amp;gt; url [&amp;#34;/live-sz/w1520993434573948&amp;#34;] 14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&amp;#34;|RtmpSampleAccess&amp;#34;,true,true]}} 14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&amp;#34;onStatus&amp;#34;,{object,[{&amp;#34;code&amp;#34;,&amp;#34;NetStream.Data.Start&amp;#34;}]}]}} 14:12:36.038 [error] gen_server &amp;lt;0.122.0&amp;gt; terminated with reason: no match of right hand value &amp;lt;&amp;lt;0,0,0,0,0,0,0,0,113,142,194,240,185,25,41,180,242,33,5,112,128,97,178,8,79,179,28,53,152,242,82,43,234,104,113,246,170,189,182,146,122,36,155,3,152,180,226,122,36,97,52,67,53,158,107,170,178,119,209,132,40,233,102,182,142,233,218,71,55,8,121,67,117,58,130,91,107,224,202,5,1,132,37,245,143,231,20,198,121,204,57,80,102,165,104,245,79,71,254,169,15,3,166,12,148,45,24,62,253,66,93,139,84,139,54,236,47,5,98,95,51,231,222,144,8,153,232,166,227,151,57,98,214,63,238,167,212,49,51,160,83,248,246,199,...&amp;gt;&amp;gt; in rtmp_handshake:create_c2/2 line 61   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2018/03/20/rtmp-handshake-bug/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="排查rtmp协议推流时握手bug" />
+<meta property="og:description" content="概况
+转推流程序的过程：从一个观看地址拉流，然后推流到另一个推流地址。主要用于cdn之间转推，目前市面上大多数cdn厂商都愿意不支持动态转推，因此只能通过转推流程序进行转推。
+bug现象：使用obs studio推流到微赞可以成功，但是使用Erlang版本的转推流程序推流到微赞却失败。
+日志如下：
+
+
+1
+2
+3
+4
+5
+
+
+14:12:35.926 [debug] payload [{amf,[&#34;onBWDone&#34;,0,null]}], msgtype[command_msg_4_amf0] 
+14:12:35.949 [debug] play succ ======&gt; url [&#34;/live-sz/w1520993434573948&#34;] 
+14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&#34;|RtmpSampleAccess&#34;,true,true]}}
+14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&#34;onStatus&#34;,{object,[{&#34;code&#34;,&#34;NetStream.Data.Start&#34;}]}]}}
+14:12:36.038 [error] gen_server &lt;0.122.0&gt; terminated with reason: no match of right hand value &lt;&lt;0,0,0,0,0,0,0,0,113,142,194,240,185,25,41,180,242,33,5,112,128,97,178,8,79,179,28,53,152,242,82,43,234,104,113,246,170,189,182,146,122,36,155,3,152,180,226,122,36,97,52,67,53,158,107,170,178,119,209,132,40,233,102,182,142,233,218,71,55,8,121,67,117,58,130,91,107,224,202,5,1,132,37,245,143,231,20,198,121,204,57,80,102,165,104,245,79,71,254,169,15,3,166,12,148,45,24,62,253,66,93,139,84,139,54,236,47,5,98,95,51,231,222,144,8,153,232,166,227,151,57,98,214,63,238,167,212,49,51,160,83,248,246,199,...&gt;&gt; in rtmp_handshake:create_c2/2 line 61
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2018/03/20/rtmp-handshake-bug/" />
+<meta property="article:published_time" content="2018-03-20T12:45:29+00:00" />
+<meta property="article:modified_time" content="2018-03-20T12:45:29+00:00" />
+<meta itemprop="name" content="排查rtmp协议推流时握手bug">
+<meta itemprop="description" content="概况
+转推流程序的过程：从一个观看地址拉流，然后推流到另一个推流地址。主要用于cdn之间转推，目前市面上大多数cdn厂商都愿意不支持动态转推，因此只能通过转推流程序进行转推。
+bug现象：使用obs studio推流到微赞可以成功，但是使用Erlang版本的转推流程序推流到微赞却失败。
+日志如下：
+
+
+1
+2
+3
+4
+5
+
+
+14:12:35.926 [debug] payload [{amf,[&#34;onBWDone&#34;,0,null]}], msgtype[command_msg_4_amf0] 
+14:12:35.949 [debug] play succ ======&gt; url [&#34;/live-sz/w1520993434573948&#34;] 
+14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&#34;|RtmpSampleAccess&#34;,true,true]}}
+14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&#34;onStatus&#34;,{object,[{&#34;code&#34;,&#34;NetStream.Data.Start&#34;}]}]}}
+14:12:36.038 [error] gen_server &lt;0.122.0&gt; terminated with reason: no match of right hand value &lt;&lt;0,0,0,0,0,0,0,0,113,142,194,240,185,25,41,180,242,33,5,112,128,97,178,8,79,179,28,53,152,242,82,43,234,104,113,246,170,189,182,146,122,36,155,3,152,180,226,122,36,97,52,67,53,158,107,170,178,119,209,132,40,233,102,182,142,233,218,71,55,8,121,67,117,58,130,91,107,224,202,5,1,132,37,245,143,231,20,198,121,204,57,80,102,165,104,245,79,71,254,169,15,3,166,12,148,45,24,62,253,66,93,139,84,139,54,236,47,5,98,95,51,231,222,144,8,153,232,166,227,151,57,98,214,63,238,167,212,49,51,160,83,248,246,199,...&gt;&gt; in rtmp_handshake:create_c2/2 line 61
+
+
+">
+<meta itemprop="datePublished" content="2018-03-20T12:45:29+00:00" />
+<meta itemprop="dateModified" content="2018-03-20T12:45:29+00:00" />
+<meta itemprop="wordCount" content="2160">
+
+
+
+<meta itemprop="keywords" content="rtmp,握手," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="排查rtmp协议推流时握手bug"/>
+<meta name="twitter:description" content="概况
+转推流程序的过程：从一个观看地址拉流，然后推流到另一个推流地址。主要用于cdn之间转推，目前市面上大多数cdn厂商都愿意不支持动态转推，因此只能通过转推流程序进行转推。
+bug现象：使用obs studio推流到微赞可以成功，但是使用Erlang版本的转推流程序推流到微赞却失败。
+日志如下：
+
+
+1
+2
+3
+4
+5
+
+
+14:12:35.926 [debug] payload [{amf,[&#34;onBWDone&#34;,0,null]}], msgtype[command_msg_4_amf0] 
+14:12:35.949 [debug] play succ ======&gt; url [&#34;/live-sz/w1520993434573948&#34;] 
+14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&#34;|RtmpSampleAccess&#34;,true,true]}}
+14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&#34;onStatus&#34;,{object,[{&#34;code&#34;,&#34;NetStream.Data.Start&#34;}]}]}}
+14:12:36.038 [error] gen_server &lt;0.122.0&gt; terminated with reason: no match of right hand value &lt;&lt;0,0,0,0,0,0,0,0,113,142,194,240,185,25,41,180,242,33,5,112,128,97,178,8,79,179,28,53,152,242,82,43,234,104,113,246,170,189,182,146,122,36,155,3,152,180,226,122,36,97,52,67,53,158,107,170,178,119,209,132,40,233,102,182,142,233,218,71,55,8,121,67,117,58,130,91,107,224,202,5,1,132,37,245,143,231,20,198,121,204,57,80,102,165,104,245,79,71,254,169,15,3,166,12,148,45,24,62,253,66,93,139,84,139,54,236,47,5,98,95,51,231,222,144,8,153,232,166,227,151,57,98,214,63,238,167,212,49,51,160,83,248,246,199,...&gt;&gt; in rtmp_handshake:create_c2/2 line 61
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">排查rtmp协议推流时握手bug</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-03-20 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BD%91%E7%BB%9C/"> 网络 </a>
+            </div>
+          <span class="more-meta"> 约 2160 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#概况">概况</a></li>
+    <li><a href="#rtmp握手过程">Rtmp握手过程</a></li>
+    <li><a href="#抓包分析">抓包分析</a></li>
+    <li><a href="#结论">结论</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="概况">概况</h1>
+<p>转推流程序的过程：从一个观看地址拉流，然后推流到另一个推流地址。主要用于cdn之间转推，目前市面上大多数cdn厂商都愿意不支持动态转推，因此只能通过转推流程序进行转推。</p>
+<p>bug现象：使用obs studio推流到微赞可以成功，但是使用Erlang版本的转推流程序推流到微赞却失败。</p>
+<p>日志如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">14:12:35.926 [debug] payload [{amf,[&#34;onBWDone&#34;,0,null]}], msgtype[command_msg_4_amf0] 
+14:12:35.949 [debug] play succ ======&gt; url [&#34;/live-sz/w1520993434573948&#34;] 
+14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&#34;|RtmpSampleAccess&#34;,true,true]}}
+14:12:35.949 [debug] {rtmp_msg,4,0,data_msg_4_amf0,1,{amf,[&#34;onStatus&#34;,{object,[{&#34;code&#34;,&#34;NetStream.Data.Start&#34;}]}]}}
+14:12:36.038 [error] gen_server &lt;0.122.0&gt; terminated with reason: no match of right hand value &lt;&lt;0,0,0,0,0,0,0,0,113,142,194,240,185,25,41,180,242,33,5,112,128,97,178,8,79,179,28,53,152,242,82,43,234,104,113,246,170,189,182,146,122,36,155,3,152,180,226,122,36,97,52,67,53,158,107,170,178,119,209,132,40,233,102,182,142,233,218,71,55,8,121,67,117,58,130,91,107,224,202,5,1,132,37,245,143,231,20,198,121,204,57,80,102,165,104,245,79,71,254,169,15,3,166,12,148,45,24,62,253,66,93,139,84,139,54,236,47,5,98,95,51,231,222,144,8,153,232,166,227,151,57,98,214,63,238,167,212,49,51,160,83,248,246,199,...&gt;&gt; in rtmp_handshake:create_c2/2 line 61
+</code></pre></td></tr></table>
+</div>
+</div><p>很显然是<code>rtmp_handshake:create_c2/2</code>函数出现匹配错误，对应代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-erlang" data-lang="erlang"><span class="p">-</span><span class="ni">spec</span> <span class="n">create_c2</span><span class="p">(</span><span class="nv">C0C1</span><span class="p">,</span> <span class="nv">S0S1S2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Result</span> <span class="k">when</span>
+          <span class="nv">C0C1</span> <span class="p">::</span> <span class="n">iodata</span><span class="p">(),</span>
+          <span class="nv">S0S1S2</span> <span class="p">::</span> <span class="n">binary</span><span class="p">(),</span>
+          <span class="nv">Result</span> <span class="p">::</span> <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">C2</span><span class="p">},</span>
+          <span class="nv">C2</span> <span class="p">::</span> <span class="n">iolist</span><span class="p">().</span>
+<span class="nf">create_c2</span><span class="p">(</span><span class="nv">C0C1</span><span class="p">,</span> <span class="nv">S0S1S2</span><span class="p">)</span> <span class="k">when</span> <span class="nb">is_list</span><span class="p">(</span><span class="nv">C0C1</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="n">create_c2</span><span class="p">(</span><span class="nb">iolist_to_binary</span><span class="p">(</span><span class="nv">C0C1</span><span class="p">),</span> <span class="nv">S0S1S2</span><span class="p">);</span>
+<span class="nf">create_c2</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="p">_</span><span class="nv">C0</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">binary</span><span class="p">,</span> <span class="nv">C1</span><span class="p">:</span><span class="mi">16#600</span><span class="o">/</span><span class="n">binary</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="nv">S0</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">binary</span><span class="p">,</span> <span class="nv">S1</span><span class="p">:</span><span class="mi">16#600</span><span class="o">/</span><span class="n">binary</span><span class="p">,</span> <span class="nv">S2</span><span class="p">:</span><span class="mi">16#600</span><span class="o">/</span><span class="n">binary</span><span class="o">&gt;&gt;</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="o">&lt;&lt;</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="o">=</span> <span class="nv">S0</span><span class="p">,</span>
+    <span class="k">case</span> <span class="nv">C1</span> <span class="k">of</span>
+        <span class="o">&lt;&lt;</span><span class="p">_:</span><span class="mi">32</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span> <span class="p">_</span><span class="o">/</span><span class="n">binary</span><span class="o">&gt;&gt;</span> <span class="o">-&gt;</span>
+            <span class="nv">S2</span> <span class="o">=</span> <span class="nv">C1</span><span class="p">,</span>
+            <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">S1</span><span class="p">};</span>
+        <span class="p">_</span> <span class="o">-&gt;</span>
+            <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">S1DigestData</span><span class="p">}</span> <span class="o">=</span> <span class="n">verify_s1</span><span class="p">(</span><span class="nv">S1</span><span class="p">),</span>    
+            <span class="nv">DigestKey</span> <span class="o">=</span> <span class="nn">crypto</span><span class="p">:</span><span class="nf">hmac</span><span class="p">(</span><span class="n">sha256</span><span class="p">,</span> <span class="o">?</span><span class="nv">C2_PUBLIC_KEY</span><span class="p">,</span> <span class="nv">S1DigestData</span><span class="p">),</span>
+            <span class="nv">C2Len</span> <span class="o">=</span> <span class="mi">16#600</span><span class="p">,</span>
+            <span class="nv">C2DigestDataLen</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+            <span class="nv">RandomBin</span> <span class="o">=</span> <span class="n">random_binary</span><span class="p">(</span><span class="nv">C2Len</span> <span class="o">-</span> <span class="mi">8</span> <span class="o">-</span> <span class="nv">C2DigestDataLen</span><span class="p">),</span>
+            <span class="p">{</span><span class="nv">T1</span><span class="p">,</span> <span class="nv">T2</span><span class="p">,</span> <span class="p">_}</span> <span class="o">=</span> <span class="n">now</span><span class="p">(),</span>
+            <span class="nv">Epoch</span> <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="p">(</span><span class="mi">1000000</span> <span class="o">*</span> <span class="nv">T1</span> <span class="o">+</span> <span class="nv">T2</span><span class="p">):</span><span class="mi">32</span><span class="o">/</span><span class="n">little</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+            <span class="nv">Data</span> <span class="o">=</span> <span class="p">[</span><span class="nv">Epoch</span><span class="p">,</span> <span class="nn">binary</span><span class="p">:</span><span class="nf">part</span><span class="p">(</span><span class="nv">S1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nv">RandomBin</span><span class="p">],</span>
+            <span class="nv">S2DigestData</span> <span class="o">=</span> <span class="nn">crypto</span><span class="p">:</span><span class="nf">hmac</span><span class="p">(</span><span class="n">sha256</span><span class="p">,</span> <span class="nv">DigestKey</span><span class="p">,</span> <span class="nv">Data</span><span class="p">),</span>
+            <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="p">[</span><span class="nv">Data</span><span class="p">,</span> <span class="nv">S2DigestData</span><span class="p">]}</span>
+    <span class="k">end</span><span class="p">.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>rtmp握手过程中C1数据包匹配<code>&lt;&lt;_:32, 0:32, _/binary&gt;&gt;</code>格式后和S2数据包匹配不成功，程序直接crash dump。因此需要弄清楚rtmp握手过程中是否有对S2和C1进行匹配验证。</p>
+<h1 id="rtmp握手过程">Rtmp握手过程</h1>
+<p>此处重点关注rtmp握手过程中的C1和S2数据包。</p>
+<p>先看官方文档中的握手过程，中文翻译版本可以参见：<a href="https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/">rtmp规范1.0</a>。 官方文档中对于是否要保证C1和S2完全一致，并没有明确说法。因此可以先参见obs studio依赖的<strong><code>librtmp</code></strong>库，看握手过程是如何处理的。obs studio依赖的<strong><code>librtmp</code></strong>的代码如下连接：</p>
+<ol>
+<li><a href="https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/rtmp.c">https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/rtmp.c</a></li>
+<li><a href="https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/handshake.h">https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/handshake.h</a></li>
+</ol>
+<p>第一个链接rtmp.c中的代码是推流地址中没有加密串的情况下的握手过程代码，第二个链接handshake.h中的代码是推流地址中有加密串的情况下的握手过程代码。代码中使用条件编译<code>CRYPTO</code>宏来选择编译不同的代码。其中<code>HandShake</code>函数属于客户端的握手函数，<code>SHandShake</code>属于服务端的握手函数。非加密版本具体C语言代码如下（已添加对应的中文注释进行说明）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#ifndef CRYPTO
+</span><span class="cp"></span><span class="k">static</span> <span class="kt">int</span>
+<span class="nf">HandShake</span><span class="p">(</span><span class="n">RTMP</span> <span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="kt">int</span> <span class="n">FP9HandShake</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">//C0,C1 -- S0, S1, S2 -- C2 消息握手协议
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">uint32_t</span> <span class="n">uptime</span><span class="p">,</span> <span class="n">suptime</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">bMatch</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">type</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">clientbuf</span><span class="p">[</span><span class="n">RTMP_SIG_SIZE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">clientsig</span> <span class="o">=</span> <span class="n">clientbuf</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">serversig</span><span class="p">[</span><span class="n">RTMP_SIG_SIZE</span><span class="p">];</span>
+
+    <span class="n">clientbuf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x03</span><span class="p">;</span>  <span class="c1">//C0, 一个字节。03代表协议版本号为3 		/* not encrypted */
+</span><span class="c1"></span>
+    <span class="n">uptime</span> <span class="o">=</span> <span class="n">htonl</span><span class="p">(</span><span class="n">RTMP_GetTime</span><span class="p">());</span>  <span class="c1">//这是一个时间戳，放在C1消息头部  
+</span><span class="c1"></span>    <span class="n">memcpy</span><span class="p">(</span><span class="n">clientsig</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">uptime</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">clientsig</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>  <span class="c1">//后面放4个字节的空数据然后就是随机数据  
+</span><span class="c1"></span>
+    <span class="c1">//后面是随机数据，总共1536字节的C1消息 
+</span><span class="c1"></span><span class="cp">#ifdef _DEBUG
+</span><span class="cp"></span>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">RTMP_SIG_SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">clientsig</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xff</span><span class="p">;</span>
+<span class="cp">#else
+</span><span class="cp"></span>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">RTMP_SIG_SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">clientsig</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="p">)(</span><span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="mi">256</span><span class="p">);</span>
+<span class="cp">#endif
+</span><span class="cp"></span>
+    <span class="c1">//发送C0， C1消息  
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WriteN</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">clientbuf</span><span class="p">,</span> <span class="n">RTMP_SIG_SIZE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+
+    <span class="c1">//下面读一个字节也就是S0消息，看协议是否一样  
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">ReadN</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">type</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span>	<span class="cm">/* 0x03 or 0x06 */</span>
+        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+
+    <span class="n">RTMP_Log</span><span class="p">(</span><span class="n">RTMP_LOGDEBUG</span><span class="p">,</span> <span class="s">&#34;%s: Type Answer   : %02X&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">,</span> <span class="n">type</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="o">!=</span> <span class="n">clientbuf</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1">//C/S版本不一致 
+</span><span class="c1"></span>        <span class="n">RTMP_Log</span><span class="p">(</span><span class="n">RTMP_LOGWARNING</span><span class="p">,</span> <span class="s">&#34;%s: Type mismatch: client sent %d, server answered %d&#34;</span><span class="p">,</span>
+                 <span class="n">__FUNCTION__</span><span class="p">,</span> <span class="n">clientbuf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">type</span><span class="p">);</span>
+
+    <span class="c1">//读取S1消息，里面有服务器运行时间  
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">ReadN</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">serversig</span><span class="p">,</span> <span class="n">RTMP_SIG_SIZE</span><span class="p">)</span> <span class="o">!=</span> <span class="n">RTMP_SIG_SIZE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+
+    <span class="cm">/* decode server response */</span>
+
+    <span class="n">memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">suptime</span><span class="p">,</span> <span class="n">serversig</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">suptime</span> <span class="o">=</span> <span class="n">ntohl</span><span class="p">(</span><span class="n">suptime</span><span class="p">);</span>
+
+    <span class="n">RTMP_Log</span><span class="p">(</span><span class="n">RTMP_LOGDEBUG</span><span class="p">,</span> <span class="s">&#34;%s: Server Uptime : %d&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">,</span> <span class="n">suptime</span><span class="p">);</span>
+    <span class="n">RTMP_Log</span><span class="p">(</span><span class="n">RTMP_LOGDEBUG</span><span class="p">,</span> <span class="s">&#34;%s: FMS Version   : %d.%d.%d.%d&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">,</span>
+             <span class="n">serversig</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">serversig</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">serversig</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">serversig</span><span class="p">[</span><span class="mi">7</span><span class="p">]);</span>
+
+    <span class="cm">/* 2nd part of handshake */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WriteN</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">serversig</span><span class="p">,</span> <span class="n">RTMP_SIG_SIZE</span><span class="p">))</span>  <span class="c1">//发送C2消息，内容就等于S1消息的内容。  
+</span><span class="c1"></span>        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+
+    <span class="c1">//读取S2消息  
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">ReadN</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">serversig</span><span class="p">,</span> <span class="n">RTMP_SIG_SIZE</span><span class="p">)</span> <span class="o">!=</span> <span class="n">RTMP_SIG_SIZE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+
+    <span class="c1">//服务端返回的S2消息和C1消息进行了比对，但是即使没有match，也是返回TRUE，只是打印了log 
+</span><span class="c1"></span>    <span class="n">bMatch</span> <span class="o">=</span> <span class="p">(</span><span class="n">memcmp</span><span class="p">(</span><span class="n">serversig</span><span class="p">,</span> <span class="n">clientsig</span><span class="p">,</span> <span class="n">RTMP_SIG_SIZE</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bMatch</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">RTMP_Log</span><span class="p">(</span><span class="n">RTMP_LOGWARNING</span><span class="p">,</span> <span class="s">&#34;%s, client signature does not match!&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* er, totally unused? */</span>
+    <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">FP9HandShake</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span>
+<span class="nf">SHandShake</span><span class="p">(</span><span class="n">RTMP</span> <span class="o">*</span><span class="n">r</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#endif
+</span><span class="cp"></span>
+</code></pre></td></tr></table>
+</div>
+</div><p>rtmp握手过程中确实存在对S2和C1进行匹配验证的操作，但是这个操作并不影响握手是否是成功的，只是添加了一条warnning日志而已。因此obs studio还是能推流成功。相对应的在我们的转推流程序中，需要针对这个情况不进行强认证，删除掉匹配的操作即可。</p>
+<h1 id="抓包分析">抓包分析</h1>
+<p>以微赞和网宿为例</p>
+<ul>
+<li><a href="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/rtmp_deliver/file/obs-netcenter-handshake-success.pcapng">obs推流网宿握手成功的包点此下载</a></li>
+<li><a href="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/rtmp_deliver/file/obs-vzan-handshake-success.pcapng">obs推流微赞握手成功的包点此下载</a></li>
+</ul>
+<p>网宿推流没有走加密流程，S2和C1匹配，具体数据包截图如下：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/rtmp_deliver/image/obs-netcenter-handshake-success.jpg" alt="obs-netcenter-handshake-success.jpg"></p>
+<p>微赞推流走加密流程，S2和C1不匹配，具体数据包截图如下：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/rtmp_deliver/image/obs-vzan-handshake-success.jpg" alt="obs-vzan-handshake-success.jpg"></p>
+<p>到此，整个rtmp推流握手过程就比较清楚了。</p>
+<p>因此只需要将Erlang代码的流程更改下即可（删除S2和C1的匹配过程），见下面的Erlang代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-erlang" data-lang="erlang"><span class="p">-</span><span class="ni">spec</span> <span class="n">create_c2</span><span class="p">(</span><span class="nv">C0C1</span><span class="p">,</span> <span class="nv">S0S1S2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Result</span> <span class="k">when</span>
+          <span class="nv">C0C1</span> <span class="p">::</span> <span class="n">iodata</span><span class="p">(),</span>
+          <span class="nv">S0S1S2</span> <span class="p">::</span> <span class="n">binary</span><span class="p">(),</span>
+          <span class="nv">Result</span> <span class="p">::</span> <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">C2</span><span class="p">},</span>
+          <span class="nv">C2</span> <span class="p">::</span> <span class="n">iolist</span><span class="p">().</span>
+<span class="nf">create_c2</span><span class="p">(</span><span class="nv">C0C1</span><span class="p">,</span> <span class="nv">S0S1S2</span><span class="p">)</span> <span class="k">when</span> <span class="nb">is_list</span><span class="p">(</span><span class="nv">C0C1</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="n">create_c2</span><span class="p">(</span><span class="nb">iolist_to_binary</span><span class="p">(</span><span class="nv">C0C1</span><span class="p">),</span> <span class="nv">S0S1S2</span><span class="p">);</span>
+<span class="nf">create_c2</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="p">_</span><span class="nv">C0</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">binary</span><span class="p">,</span> <span class="nv">C1</span><span class="p">:</span><span class="mi">16#600</span><span class="o">/</span><span class="n">binary</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="nv">S0</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">binary</span><span class="p">,</span> <span class="nv">S1</span><span class="p">:</span><span class="mi">16#600</span><span class="o">/</span><span class="n">binary</span><span class="p">,</span> <span class="p">_</span><span class="nv">S2</span><span class="p">:</span><span class="mi">16#600</span><span class="o">/</span><span class="n">binary</span><span class="o">&gt;&gt;</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="o">&lt;&lt;</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="o">=</span> <span class="nv">S0</span><span class="p">,</span>
+    <span class="k">case</span> <span class="nv">C1</span> <span class="k">of</span>
+        <span class="o">&lt;&lt;</span><span class="p">_:</span><span class="mi">32</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span> <span class="p">_</span><span class="o">/</span><span class="n">binary</span><span class="o">&gt;&gt;</span> <span class="o">-&gt;</span>
+          <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">S1</span><span class="p">};</span>
+        <span class="p">_</span> <span class="o">-&gt;</span>
+            <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">S1DigestData</span><span class="p">}</span> <span class="o">=</span> <span class="n">verify_s1</span><span class="p">(</span><span class="nv">S1</span><span class="p">),</span>    
+            <span class="nv">DigestKey</span> <span class="o">=</span> <span class="nn">crypto</span><span class="p">:</span><span class="nf">hmac</span><span class="p">(</span><span class="n">sha256</span><span class="p">,</span> <span class="o">?</span><span class="nv">C2_PUBLIC_KEY</span><span class="p">,</span> <span class="nv">S1DigestData</span><span class="p">),</span>
+            <span class="nv">C2Len</span> <span class="o">=</span> <span class="mi">16#600</span><span class="p">,</span>
+            <span class="nv">C2DigestDataLen</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+            <span class="nv">RandomBin</span> <span class="o">=</span> <span class="n">random_binary</span><span class="p">(</span><span class="nv">C2Len</span> <span class="o">-</span> <span class="mi">8</span> <span class="o">-</span> <span class="nv">C2DigestDataLen</span><span class="p">),</span>
+            <span class="p">{</span><span class="nv">T1</span><span class="p">,</span> <span class="nv">T2</span><span class="p">,</span> <span class="p">_}</span> <span class="o">=</span> <span class="n">now</span><span class="p">(),</span>
+            <span class="nv">Epoch</span> <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="p">(</span><span class="mi">1000000</span> <span class="o">*</span> <span class="nv">T1</span> <span class="o">+</span> <span class="nv">T2</span><span class="p">):</span><span class="mi">32</span><span class="o">/</span><span class="n">little</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+            <span class="nv">Data</span> <span class="o">=</span> <span class="p">[</span><span class="nv">Epoch</span><span class="p">,</span> <span class="nn">binary</span><span class="p">:</span><span class="nf">part</span><span class="p">(</span><span class="nv">S1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nv">RandomBin</span><span class="p">],</span>
+            <span class="nv">S2DigestData</span> <span class="o">=</span> <span class="nn">crypto</span><span class="p">:</span><span class="nf">hmac</span><span class="p">(</span><span class="n">sha256</span><span class="p">,</span> <span class="nv">DigestKey</span><span class="p">,</span> <span class="nv">Data</span><span class="p">),</span>
+            <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="p">[</span><span class="nv">Data</span><span class="p">,</span> <span class="nv">S2DigestData</span><span class="p">]}</span>
+    <span class="k">end</span><span class="p">.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>至此，转推流成功，示例图如下：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/rtmp_deliver/image/rtmp_deliver_success.jpg" alt="rtmp_deliver_success.jpg"></p>
+<h1 id="结论">结论</h1>
+<p>虽然Adobe公司自己出的rtmp协议不是iso标准的，但是你们这些公司好歹也尽量按照规定来啊，贼鸡儿坑。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li>obs-studio: <a href="https://github.com/obsproject/obs-studio">https://github.com/obsproject/obs-studio</a></li>
+<li>obs studio握手：https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/handshake.h</li>
+<li>RTMPdump（libRTMP）握手源代码：https://blog.csdn.net/leixiaohua1020/article/details/12954329</li>
+<li>rtmp协议过程分析：https://www.cnblogs.com/lidabo/p/7355262.html</li>
+<li>librtmp使用示例： <a href="https://github.com/leixiaohua1020/simplest_librtmp_example">https://github.com/leixiaohua1020/simplest_librtmp_example</a></li>
+<li>rtmplib rtmp协议过程分析：https://www.cnblogs.com/lidabo/p/7355262.html</li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-03-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/rtmp/">rtmp</a>
+          <a href="/tags/%E6%8F%A1%E6%89%8B/">握手</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2018/03/22/use-google-translation-api/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用Google翻译Api</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2018/03/12/Python%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97%E9%9B%86%E9%94%A6/">
+            <span class="next-text nav-default">Python常用模块集锦</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

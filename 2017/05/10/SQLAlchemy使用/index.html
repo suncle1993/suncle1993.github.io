@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>SQLAlchemy使用 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="简介 SQLAlchemy是Python语言的一款流行的ORM（Object Relational Mapper）框架，该框架建立在数据库API之上，使用关系对象映射进行数据库操作，即将对象转换成SQL，然后使用数据API执行SQL并获取执行结果。
+安装SQLAlchemy也很简单，直接使用pip安装即可。
+1  pip install sqlalchemy   下面重点介绍SQLAlchemy的使用。
+版本检查 1 2  import sqlalchemy sqlalchemy.__version__	# 1.1.9   当前sqlalchemy版本为1.1.9
+连接数据库 1 2  from sqlalchemy import create_engine engine = create_engine(&amp;#39;mysql&#43;pymysql://root:123456@192.168.110.13:3306/student&amp;#39;, echo=True)    engine 是 Engine类的一个对象 echo=True表明开启logging模块的日志 数据库连接：engine://user:password@host:port/database，其中engine为mysql&#43;pymysql，或者是mysql&#43;mysqldb，或者是oracle&#43;cx_oracle等等 " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/05/10/SQLAlchemy%E4%BD%BF%E7%94%A8/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="SQLAlchemy使用" />
+<meta property="og:description" content="简介
+SQLAlchemy是Python语言的一款流行的ORM（Object Relational Mapper）框架，该框架建立在数据库API之上，使用关系对象映射进行数据库操作，即将对象转换成SQL，然后使用数据API执行SQL并获取执行结果。
+安装SQLAlchemy也很简单，直接使用pip安装即可。
+
+
+1
+
+
+pip install sqlalchemy
+
+
+下面重点介绍SQLAlchemy的使用。
+版本检查
+
+
+1
+2
+
+
+import sqlalchemy
+sqlalchemy.__version__	# 1.1.9
+
+
+当前sqlalchemy版本为1.1.9
+连接数据库
+
+
+1
+2
+
+
+from sqlalchemy import create_engine
+engine = create_engine(&#39;mysql&#43;pymysql://root:123456@192.168.110.13:3306/student&#39;, echo=True)
+
+
+
+engine 是 Engine类的一个对象
+echo=True表明开启logging模块的日志
+数据库连接：engine://user:password@host:port/database，其中engine为mysql&#43;pymysql，或者是mysql&#43;mysqldb，或者是oracle&#43;cx_oracle等等
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/05/10/SQLAlchemy%E4%BD%BF%E7%94%A8/" />
+<meta property="article:published_time" content="2017-05-10T00:37:13+00:00" />
+<meta property="article:modified_time" content="2017-05-10T00:37:13+00:00" />
+<meta itemprop="name" content="SQLAlchemy使用">
+<meta itemprop="description" content="简介
+SQLAlchemy是Python语言的一款流行的ORM（Object Relational Mapper）框架，该框架建立在数据库API之上，使用关系对象映射进行数据库操作，即将对象转换成SQL，然后使用数据API执行SQL并获取执行结果。
+安装SQLAlchemy也很简单，直接使用pip安装即可。
+
+
+1
+
+
+pip install sqlalchemy
+
+
+下面重点介绍SQLAlchemy的使用。
+版本检查
+
+
+1
+2
+
+
+import sqlalchemy
+sqlalchemy.__version__	# 1.1.9
+
+
+当前sqlalchemy版本为1.1.9
+连接数据库
+
+
+1
+2
+
+
+from sqlalchemy import create_engine
+engine = create_engine(&#39;mysql&#43;pymysql://root:123456@192.168.110.13:3306/student&#39;, echo=True)
+
+
+
+engine 是 Engine类的一个对象
+echo=True表明开启logging模块的日志
+数据库连接：engine://user:password@host:port/database，其中engine为mysql&#43;pymysql，或者是mysql&#43;mysqldb，或者是oracle&#43;cx_oracle等等
+">
+<meta itemprop="datePublished" content="2017-05-10T00:37:13+00:00" />
+<meta itemprop="dateModified" content="2017-05-10T00:37:13+00:00" />
+<meta itemprop="wordCount" content="2047">
+
+
+
+<meta itemprop="keywords" content="SQLAlchemy,ORM,Python," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SQLAlchemy使用"/>
+<meta name="twitter:description" content="简介
+SQLAlchemy是Python语言的一款流行的ORM（Object Relational Mapper）框架，该框架建立在数据库API之上，使用关系对象映射进行数据库操作，即将对象转换成SQL，然后使用数据API执行SQL并获取执行结果。
+安装SQLAlchemy也很简单，直接使用pip安装即可。
+
+
+1
+
+
+pip install sqlalchemy
+
+
+下面重点介绍SQLAlchemy的使用。
+版本检查
+
+
+1
+2
+
+
+import sqlalchemy
+sqlalchemy.__version__	# 1.1.9
+
+
+当前sqlalchemy版本为1.1.9
+连接数据库
+
+
+1
+2
+
+
+from sqlalchemy import create_engine
+engine = create_engine(&#39;mysql&#43;pymysql://root:123456@192.168.110.13:3306/student&#39;, echo=True)
+
+
+
+engine 是 Engine类的一个对象
+echo=True表明开启logging模块的日志
+数据库连接：engine://user:password@host:port/database，其中engine为mysql&#43;pymysql，或者是mysql&#43;mysqldb，或者是oracle&#43;cx_oracle等等
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">SQLAlchemy使用</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-05-10 </span>
+        <div class="post-category">
+            <a href="/categories/Python/"> Python </a>
+            </div>
+          <span class="more-meta"> 约 2047 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#版本检查">版本检查</a></li>
+    <li><a href="#连接数据库">连接数据库</a></li>
+    <li><a href="#创建表">创建表</a></li>
+    <li><a href="#session">Session</a></li>
+    <li><a href="#dml">DML</a>
+      <ul>
+        <li><a href="#insert">insert</a></li>
+        <li><a href="#update">update</a></li>
+        <li><a href="#delete">delete</a></li>
+      </ul>
+    </li>
+    <li><a href="#query">QUERY</a></li>
+    <li><a href="#relationship">Relationship</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="简介">简介</h1>
+<p>SQLAlchemy是Python语言的一款流行的ORM（Object Relational Mapper）框架，该框架建立在数据库API之上，使用关系对象映射进行数据库操作，即将对象转换成SQL，然后使用数据API执行SQL并获取执行结果。</p>
+<p>安装SQLAlchemy也很简单，直接使用pip安装即可。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">pip install sqlalchemy
+</code></pre></td></tr></table>
+</div>
+</div><p>下面重点介绍SQLAlchemy的使用。</p>
+<h1 id="版本检查">版本检查</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">sqlalchemy</span>
+<span class="n">sqlalchemy</span><span class="o">.</span><span class="n">__version__</span>	<span class="c1"># 1.1.9</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当前sqlalchemy版本为1.1.9</p>
+<h1 id="连接数据库">连接数据库</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;mysql+pymysql://root:123456@192.168.110.13:3306/student&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>engine 是 Engine类的一个对象</li>
+<li>echo=True表明开启logging模块的日志</li>
+<li>数据库连接：<code>engine://user:password@host:port/database</code>，其中engine为mysql+pymysql，或者是mysql+mysqldb，或者是oracle+cx_oracle等等</li>
+</ul>
+<h1 id="创建表">创建表</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+
+
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;mysql+pymysql://root:123456@192.168.110.13:3306/student&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>  <span class="c1"># 生成Model类的基类</span>
+
+<span class="k">class</span> <span class="nc">User1</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user1&#39;</span>
+    
+    <span class="n">extend_existing</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="c1"># 定义三个列</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">age</span>  <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    
+        
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;User(id={}, name={}, age={})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+        
+<span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>  <span class="c1"># 创建所有表</span>
+<span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">drop_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>  <span class="c1"># 删除所有表</span>
+
+<span class="c1"># 定义类的实例方法1</span>
+<span class="n">u1</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>	<span class="c1"># User类只接收一个位置参数self，和关键字参数**kwargs</span>
+<span class="n">u1</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;aa&#39;</span>  <span class="c1"># 给User类的各个列赋值</span>
+<span class="n">u1</span><span class="o">.</span><span class="n">age</span><span class="o">=</span><span class="mi">19</span>
+<span class="k">print</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span>  <span class="c1"># User(id=None, name=aa, age=19)</span>
+
+<span class="c1"># 定义类的实例方法2</span>
+<span class="n">u2</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;bb&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="s1">&#39;123&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">u2</span><span class="p">)</span>  <span class="c1"># User(id=None, name=bb, age=123)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>派生类User会继承基类Base的初始化函数<code>__init__</code>，会自动的接受我们所定义的列对应的关键字参数</li>
+<li>未赋值的列会用None初始化，如上面的id</li>
+</ul>
+<h1 id="session">Session</h1>
+<p>SQLAlchemy真正处理数据库的部分是Session。</p>
+<p>如果已经创建好了一个Engine对象engine，那么可以用以下语句创建一个Session</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果engine为创建好，则可以用以下语句创建</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当engine创建好之后，在配置Session即可</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">Session</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当需要和数据库交互的时候，就需要实例化Session</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>创建完成之后这个session并没有马上获取数据库连接。只有当这个session第一次操作数据库的时候才会从Engine维护的连接池中获取一个连接，并持有这个连接一直到我们提交了所有的改变或者关闭了这个session。</p>
+<h1 id="dml">DML</h1>
+<h2 id="insert">insert</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;haha&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="s1">&#39;123&#39;</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果这个commit的过程中发生异常，则后续所有的commit都无法执行，因此DML都需要放在try&hellip;except中处理，如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;flowsnow&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+    <span class="k">raise</span> <span class="n">e</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="update">update</h2>
+<p>和insert类似，都是使用session.add方法，但是update操作的时候需要数据库中存在带操作的记录。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">user</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+    <span class="k">raise</span> <span class="n">e</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="delete">delete</h2>
+<p>删除之前必须确保数据库中存在要删除的记录。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>	<span class="c1"># user必须已经存在</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+    <span class="k">raise</span> <span class="n">e</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="query">QUERY</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">age</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">desc</span><span class="p">())[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此条语句经ORM转换之后的SQL如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span>
+	<span class="k">USER</span><span class="p">.</span><span class="n">id</span> <span class="k">AS</span> <span class="n">user_id</span><span class="p">,</span>
+	<span class="k">USER</span><span class="p">.</span><span class="n">NAME</span> <span class="k">AS</span> <span class="n">user_name</span><span class="p">,</span>
+	<span class="k">USER</span><span class="p">.</span><span class="n">age</span> <span class="k">AS</span> <span class="n">user_age</span>
+<span class="k">FROM</span> <span class="k">USER</span>
+<span class="k">WHERE</span> <span class="k">USER</span><span class="p">.</span><span class="n">age</span> <span class="o">&lt;</span> <span class="o">%</span> <span class="p">(</span><span class="n">age_1</span><span class="p">)</span> <span class="n">s</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">USER</span><span class="p">.</span><span class="n">age</span> <span class="k">DESC</span>
+<span class="k">LIMIT</span> <span class="o">%</span> <span class="p">(</span><span class="n">param_1</span><span class="p">)</span> <span class="n">s</span><span class="p">,</span> <span class="o">%</span> <span class="p">(</span><span class="n">param_2</span><span class="p">)</span> <span class="n">s</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>query函数的返回结果为一个Query对象，Query对象是可迭代的，支持切片操作。</p>
+<p>下面列举常见的filter操作</p>
+<ul>
+<li>
+<p>相等</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;suncle&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>不相等</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;suncle&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>模糊匹配like：大小写敏感</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">un%&#39;</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>模糊匹配ilike：大小写不敏感</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">ilike</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">un%&#39;</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>IN</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">in_</span><span class="p">([</span><span class="s1">&#39;suncle&#39;</span><span class="p">,</span> <span class="s1">&#39;abc&#39;</span><span class="p">,</span> <span class="s1">&#39;suncle&#39;</span><span class="p">]))</span>
+
+<span class="c1"># 也支持Query对象</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">un%&#39;</span><span class="p">))</span>
+<span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>NOT IN</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">~</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">in_</span><span class="p">([</span><span class="s1">&#39;ed&#39;</span><span class="p">,</span> <span class="s1">&#39;wendy&#39;</span><span class="p">,</span> <span class="s1">&#39;jack&#39;</span><span class="p">]))</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>IS NULL</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span>
+
+<span class="c1"># 上面的写法不符合pep8规范，IDE会给出提示，可以用下面的方法替代，pep8的写法是is None</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="bp">None</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>IS NOT NULL</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">)</span>
+
+<span class="c1"># 上面的写法不符合pep8规范，IDE会给出提示，可以用下面的方法替代，pep8的写法是is not None</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">isnot</span><span class="p">(</span><span class="bp">None</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>AND</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 方法1：使用and_()方法</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">and_</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">and_</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;flowsnow&#39;</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">age</span> <span class="o">==</span> <span class="mi">18</span><span class="p">))</span>
+
+<span class="c1"># 方法2：filter()支持多个关键字参数</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;flowsnow&#39;</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">age</span> <span class="o">==</span> <span class="mi">18</span><span class="p">)</span>
+
+<span class="c1"># 方法3：多次调用filter函数</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;flowsnow&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">age</span> <span class="o">==</span> <span class="mi">18</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>OR</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">or_</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">or_</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;suncle&#39;</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;flowsnow&#39;</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<p>下面列举SQL支持的常见的function</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">func</span>
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="c1"># count</span>
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">age</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="c1"># max</span>
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">avg</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">age</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="c1"># avg</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="relationship">Relationship</h1>
+<p>表和表之间会有外键关系，数据库的外键关系在ORM中的使用方法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">ForeignKey</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">relationship</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>  <span class="c1"># 生成Model类的基类</span>
+
+<span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>  <span class="c1"># 作者类</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;author&#39;</span>
+    
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    
+    <span class="n">posts</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;Post&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Author&lt;id={}， name={}&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+    
+    
+<span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>  <span class="c1"># 文章类</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;post&#39;</span>
+    
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">8096</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">author_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;author.id&#39;</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    
+    <span class="n">author</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;Author&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Post&lt;id={}, title={}&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+    
+
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;mysql+pymysql://root:123456@192.168.110.13:3306/student&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+
+<span class="c1"># 新增一个作者</span>
+<span class="n">author</span> <span class="o">=</span> <span class="n">Author</span><span class="p">()</span>
+<span class="n">author</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;flowsnow&#39;</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">author</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">author</span><span class="p">)</span>  <span class="c1"># Author&lt;id=1， name=flowsnow&gt;</span>
+
+<span class="c1"># 新增一篇文章</span>
+<span class="n">post</span> <span class="o">=</span> <span class="n">Post</span><span class="p">()</span>
+<span class="n">post</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;first post&#39;</span>
+<span class="n">post</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s1">&#39;oihdoshfohro&#39;</span>
+<span class="n">post</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">author</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">author</span><span class="o">.</span><span class="n">posts</span><span class="p">)</span>  <span class="c1"># [Post&lt;id=1, title=first post&gt;]</span>
+
+<span class="c1"># 再新增一篇文章</span>
+<span class="n">post</span> <span class="o">=</span> <span class="n">Post</span><span class="p">()</span>
+<span class="n">post</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;second post&#39;</span>
+<span class="n">post</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s1">&#39;liabhgekegpaerg&#39;</span>
+<span class="n">post</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">author</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">author</span><span class="o">.</span><span class="n">posts</span><span class="p">)</span>  <span class="c1"># [Post&lt;id=1, title=first post&gt;, Post&lt;id=2, title=second post&gt;]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>数据库维护数据之间的外键关系会消耗数据库资源，影响性能，在大型的应用中一般不使用外键等数据库高级特性，而是由应用框架来维护数据之间的约束。</p>
+<hr>
+<p><strong>参考</strong></p>
+<ol>
+<li><a href="http://docs.sqlalchemy.org/en/rel_1_1/orm/tutorial.html">官方文档-Object Relational Tutorial</a></li>
+<li><a href="http://www.rmunn.com/sqlalchemy-tutorial/tutorial.html">A step-by-step SQLAlchemy tutorial</a></li>
+<li><a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014320114981139589ac5f02944601ae22834e9c521415000">廖雪峰-使用SQLAlchemy</a></li>
+</ol>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-05-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/SQLAlchemy/">SQLAlchemy</a>
+          <a href="/tags/ORM/">ORM</a>
+          <a href="/tags/Python/">Python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">常用Oracle SQL集锦</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/04/27/react%E5%9F%BA%E7%A1%80/">
+            <span class="next-text nav-default">react基础</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

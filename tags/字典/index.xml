@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>字典 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%AD%97%E5%85%B8/</link>
+    <description>Recent content in 字典 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 12 Jan 2017 17:14:43 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%AD%97%E5%85%B8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python拉链法和开地址法实现字典</title>
+      <link>https://suncle.me/2017/01/12/Python%E6%8B%89%E9%93%BE%E6%B3%95%E5%92%8C%E5%BC%80%E5%9C%B0%E5%9D%80%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%AD%97%E5%85%B8/</link>
+      <pubDate>Thu, 12 Jan 2017 17:14:43 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/01/12/Python%E6%8B%89%E9%93%BE%E6%B3%95%E5%92%8C%E5%BC%80%E5%9C%B0%E5%9D%80%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%AD%97%E5%85%B8/</guid>
+      <description>&lt;h1 id=&#34;python拉链法和开地址法实现字典&#34;&gt;Python拉链法和开地址法实现字典&lt;/h1&gt;
+&lt;p&gt;Python字典(dictionary)是除列表之外python中最灵活的内置数据结构类型。列表是有序的对象结合，&lt;strong&gt;字典是无序的对象集合&lt;/strong&gt;。两者之间的区别在于：字典当中的元素是通过键来存取的，而不是通过偏移存取。&lt;/p&gt;
+&lt;p&gt;在列表中使用下标索引可以快速的得到对应的值，那么我们需要做的有两件事情：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;怎样把键计算出一个唯一值&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;怎样把这个唯一值均匀并且唯一的分布在长度固定的列表中&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;怎样把键计算出一个唯一值&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因为字典的键是不可变的，可hash的，因此我们可以用hash函数计算key对应的唯一hash值。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;怎样把这个唯一值均匀并且唯一的分布在长度固定的列表中&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;hash散列是可以把大数据集映射到定长数据集的算法，因此我们可以对上述计算出来的hash值进行散列。很明显散列之后会出现散列冲突。因此我们需要处理这种冲突一遍唯一值能够均匀唯一的分布。这个时候就有两种处理散列冲突的方法：拉链法和开地址法&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>Python基本数据类型-list-tuple-dict-set</title>
+      <link>https://suncle.me/2016/09/02/Python%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-list-tuple-dict-set/</link>
+      <pubDate>Fri, 02 Sep 2016 21:20:51 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/09/02/Python%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-list-tuple-dict-set/</guid>
+      <description>&lt;h1 id=&#34;python基本数据类型-list-tuple-dict-set&#34;&gt;Python基本数据类型-list-tuple-dict-set&lt;/h1&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;数据类型&lt;/th&gt;
+&lt;th&gt;表示方法&lt;/th&gt;
+&lt;th&gt;特性&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;list&lt;/td&gt;
+&lt;td&gt;列表用方括号表示：[]&lt;/td&gt;
+&lt;td&gt;list是一种有序的集合，可以随时添加和删除其中的元素。和C++数组的区别就是类型可不同。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tuple&lt;/td&gt;
+&lt;td&gt;元组用圆括号表示：()&lt;/td&gt;
+&lt;td&gt;和list相比唯一的差异在于元组是只读的，不能修改。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;dict&lt;/td&gt;
+&lt;td&gt;字典用花括号表示：{}&lt;/td&gt;
+&lt;td&gt;列表是有序的对象结合，字典是无序的对象集合。两者之间的区别在于：字典当中的元素是通过键来存取的，而不是通过偏移存取。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;set&lt;/td&gt;
+&lt;td&gt;set()&lt;/td&gt;
+&lt;td&gt;集合是一个无序不重复元素集，基本功能包括关系测试和消除重复元素&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

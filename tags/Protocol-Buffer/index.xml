@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Protocol Buffer on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/Protocol-Buffer/</link>
+    <description>Recent content in Protocol Buffer on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 06 Feb 2018 17:36:47 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/Protocol-Buffer/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python Google Protocol Buffer</title>
+      <link>https://suncle.me/2018/02/06/Python-Google-Protocol-Buffer/</link>
+      <pubDate>Tue, 06 Feb 2018 17:36:47 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/02/06/Python-Google-Protocol-Buffer/</guid>
+      <description>&lt;p&gt;本篇主要介绍如何在Python语言中使用Google Protocol Buffer（后续都简写为PB）， 包括以下几个部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;为什么要使用PB？&lt;/li&gt;
+&lt;li&gt;安装Google PB&lt;/li&gt;
+&lt;li&gt;自定义.proto 文件&lt;/li&gt;
+&lt;li&gt;编译.proto文件&lt;/li&gt;
+&lt;li&gt;解析目标py文件&lt;/li&gt;
+&lt;li&gt;序列化和反序列化&lt;/li&gt;
+&lt;li&gt;更复杂的Message&lt;/li&gt;
+&lt;li&gt;动态编译&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;为什么要使用pb&#34;&gt;为什么要使用PB？&lt;/h1&gt;
+&lt;p&gt;PB（Protocol Buffer）是 Google 开发的用于结构化数据交换格式，作为腾讯云日志服务标准写入格式。因此用于写入日志数据前，需要将日志原始数据序列化为 PB 数据流后通过 API 写入服务端。而各个端类程序中不便操作PB格式，因此需要在端类和日志服务之间加入一层PB转化层。&lt;/p&gt;
+&lt;p&gt;当然PB格式也有自己的优点，主要是简单和快，具体测试结果参见&lt;a href=&#34;https://github.com/eishay/jvm-serializers/wiki&#34;&gt;Google序列化基准分析&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

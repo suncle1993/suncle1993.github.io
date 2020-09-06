@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>大数据OLAP系统比较 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="大数据OLAP系统比较
+结论 选择presto和clickhouse配合使用
+  对实时性要求不严格的数据用presto查询
+  对于实时性有要求的数据查询clickhouse
+  理由：
+ 核心原因：clickhouse相对于Apache Kylin等预计算方案非常省机器，成本最关键(比较穷，没办法) clickhouse的单表查询非常非常快 目前再惠的数据仍然处于并将长期处于小规模阶段(集群内存少于1T，Cpu少于200vCore)，clickhouse在小规模集群上表现优于Druid和Pinot presto的综合性能好，在join操作时表现较好，保持目前数仓的这一套不变 " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2019/08/02/Comparison-of-the-Open-Source-OLAP-Systems-for-BigData/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="大数据OLAP系统比较" />
+<meta property="og:description" content="大数据OLAP系统比较
+结论
+选择presto和clickhouse配合使用
+
+
+对实时性要求不严格的数据用presto查询
+
+
+对于实时性有要求的数据查询clickhouse
+
+
+理由：
+
+核心原因：clickhouse相对于Apache Kylin等预计算方案非常省机器，成本最关键(比较穷，没办法)
+clickhouse的单表查询非常非常快
+目前再惠的数据仍然处于并将长期处于小规模阶段(集群内存少于1T，Cpu少于200vCore)，clickhouse在小规模集群上表现优于Druid和Pinot
+presto的综合性能好，在join操作时表现较好，保持目前数仓的这一套不变
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2019/08/02/Comparison-of-the-Open-Source-OLAP-Systems-for-BigData/" />
+<meta property="article:published_time" content="2019-08-02T17:05:54+00:00" />
+<meta property="article:modified_time" content="2019-08-02T17:05:54+00:00" />
+<meta itemprop="name" content="大数据OLAP系统比较">
+<meta itemprop="description" content="大数据OLAP系统比较
+结论
+选择presto和clickhouse配合使用
+
+
+对实时性要求不严格的数据用presto查询
+
+
+对于实时性有要求的数据查询clickhouse
+
+
+理由：
+
+核心原因：clickhouse相对于Apache Kylin等预计算方案非常省机器，成本最关键(比较穷，没办法)
+clickhouse的单表查询非常非常快
+目前再惠的数据仍然处于并将长期处于小规模阶段(集群内存少于1T，Cpu少于200vCore)，clickhouse在小规模集群上表现优于Druid和Pinot
+presto的综合性能好，在join操作时表现较好，保持目前数仓的这一套不变
+">
+<meta itemprop="datePublished" content="2019-08-02T17:05:54+00:00" />
+<meta itemprop="dateModified" content="2019-08-02T17:05:54+00:00" />
+<meta itemprop="wordCount" content="2781">
+
+
+
+<meta itemprop="keywords" content="Aliyun,BigData," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="大数据OLAP系统比较"/>
+<meta name="twitter:description" content="大数据OLAP系统比较
+结论
+选择presto和clickhouse配合使用
+
+
+对实时性要求不严格的数据用presto查询
+
+
+对于实时性有要求的数据查询clickhouse
+
+
+理由：
+
+核心原因：clickhouse相对于Apache Kylin等预计算方案非常省机器，成本最关键(比较穷，没办法)
+clickhouse的单表查询非常非常快
+目前再惠的数据仍然处于并将长期处于小规模阶段(集群内存少于1T，Cpu少于200vCore)，clickhouse在小规模集群上表现优于Druid和Pinot
+presto的综合性能好，在join操作时表现较好，保持目前数仓的这一套不变
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">大数据OLAP系统比较</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-08-02 </span>
+        <div class="post-category">
+            <a href="/categories/BigData/"> BigData </a>
+            </div>
+          <span class="more-meta"> 约 2781 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#结论">结论</a></li>
+    <li><a href="#olap整体情况">OLAP整体情况</a></li>
+    <li><a href="#olap系统比较">OLAP系统比较</a></li>
+    <li><a href="#cloudflare的选择">CloudFlare的选择</a></li>
+    <li><a href="#各个引擎的概况">各个引擎的概况</a>
+      <ul>
+        <li><a href="#clickhouse">Clickhouse</a></li>
+        <li><a href="#druid">Druid</a></li>
+        <li><a href="#apache-pinot">Apache Pinot</a></li>
+        <li><a href="#apache-doris">Apache Doris</a></li>
+        <li><a href="#apache-kylin">Apache Kylin</a></li>
+        <li><a href="#mondrian">Mondrian</a></li>
+      </ul>
+    </li>
+    <li><a href="#olap-in-zaihui">OLAP in zaihui</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>大数据OLAP系统比较</p>
+<h1 id="结论">结论</h1>
+<p>选择presto和clickhouse配合使用</p>
+<ul>
+<li>
+<p>对实时性要求不严格的数据用presto查询</p>
+</li>
+<li>
+<p>对于实时性有要求的数据查询clickhouse</p>
+</li>
+</ul>
+<p>理由：</p>
+<ol>
+<li>核心原因：clickhouse相对于Apache Kylin等预计算方案非常省机器，成本最关键(比较穷，没办法)</li>
+<li>clickhouse的单表查询非常非常快</li>
+<li>目前再惠的数据仍然处于并将长期处于小规模阶段(集群内存少于1T，Cpu少于200vCore)，clickhouse在小规模集群上表现优于Druid和Pinot</li>
+<li>presto的综合性能好，在join操作时表现较好，保持目前数仓的这一套不变</li>
+</ol>
+<h1 id="olap整体情况">OLAP整体情况</h1>
+<ol>
+<li>目前的大数据OLAP系统都是部分优化的，偏向于定制化系统，典型的是Clickhouse的不同表级engine</li>
+<li>建立一个能够cover绝大多数情况的通用的大数据OLAP系统预计还需要100年</li>
+<li>目前所有的OLAP系统都是基于两种思路设计
+<ol>
+<li>列式数据库加索引，典型是Clickhouse</li>
+<li>预计算空间换时间：典型是Apache Kylin，所有结果预先计算好放在cube</li>
+</ol>
+</li>
+</ol>
+<h1 id="olap系统比较">OLAP系统比较</h1>
+<p>先大致按照OLAP的设计思路把常用的系统分下类：</p>
+<p><strong>列式数据库加索引</strong></p>
+<ul>
+<li>Clickhouse</li>
+<li>Apache Pinot</li>
+<li>Druid</li>
+</ul>
+<p><strong>预计算空间换时间</strong></p>
+<ul>
+<li>Apache Kylin</li>
+<li>Apache Doris</li>
+<li>Mondrian</li>
+</ul>
+<p>从所有的系统中选出相对符合的再进行深入一点的比较如下：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Clickhouse</th>
+<th>Druid</th>
+<th>Apache Kylin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>语言</td>
+<td>C++</td>
+<td>Java</td>
+<td>Java</td>
+</tr>
+<tr>
+<td>Star</td>
+<td>7743</td>
+<td>8405</td>
+<td>2275</td>
+</tr>
+<tr>
+<td>活跃度</td>
+<td>活跃</td>
+<td>活跃</td>
+<td>活跃</td>
+</tr>
+<tr>
+<td>亚秒级响应</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>列式数据库</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+</tr>
+<tr>
+<td>预计算</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>云存储</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>机器</td>
+<td>省</td>
+<td>省</td>
+<td>费</td>
+</tr>
+<tr>
+<td>join</td>
+<td>√</td>
+<td>×</td>
+<td>√</td>
+</tr>
+<tr>
+<td>商业公司</td>
+<td>Altinity</td>
+<td>Imply和Hortonworks</td>
+<td>Kyligence</td>
+</tr>
+</tbody>
+</table>
+<p>至于clickhouse/druid/pinot三者的比较可以参见这篇文章：<a href="https://medium.com/@leventov/comparison-of-the-open-source-olap-systems-for-big-data-clickhouse-druid-and-pinot-8e042a5ed1c7">Comparison of the Open Source OLAP Systems for Big Data: ClickHouse, Druid, and Pinot</a>，整体写的非常好而且有深度，对比表格翻译如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">ClickHouse</th>
+<th align="left">Druid/Pinot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">具备C++经验的组织</td>
+<td align="left">具备Java经验的组织</td>
+</tr>
+<tr>
+<td align="left">小型集群</td>
+<td align="left">大型集群</td>
+</tr>
+<tr>
+<td align="left">少量表</td>
+<td align="left">大量表</td>
+</tr>
+<tr>
+<td align="left">单一数据集</td>
+<td align="left">多个不相关的数据集（多租户）</td>
+</tr>
+<tr>
+<td align="left">表和数据集永久驻留在集群中</td>
+<td align="left">表和数据集定期出现并从群集中退出</td>
+</tr>
+<tr>
+<td align="left">表格大小（以及它们的查询强度）在时间上是稳定的</td>
+<td align="left">表格随时间热度降低</td>
+</tr>
+<tr>
+<td align="left">查询的同质性（其类型，大小，按时间分布等）</td>
+<td align="left">异质性</td>
+</tr>
+<tr>
+<td align="left">存在可以用于分区的维度，且经过该维度分区后，几乎不会触发跨分区的数据查询</td>
+<td align="left">没有这样的维度，查询经常触及整个集群中的数据</td>
+</tr>
+<tr>
+<td align="left">不使用云，集群部署在特定的物理服务器上</td>
+<td align="left">群集部署在云中</td>
+</tr>
+<tr>
+<td align="left">无需依赖现有的Hadoop或Spark集群</td>
+<td align="left">Hadoop或Spark的集群已经存在并且可以使用</td>
+</tr>
+</tbody>
+</table>
+<p>ClickHouse，Druid和Pinot三个系统都还不成熟。在这三个系统中，ClickHouse与Druid和Pinot略有不同，而后两者几乎完全相同，它们几乎是两个独立开发的完全相同系统的实现。</p>
+<p>与ClickHouse相比，Druid和Pinot更适合优化大型集群的基础架构成本，并且更适合云环境。</p>
+<p>Druid和Pinot之间唯一可持续的区别是，Pinot依赖于Helix框架并将继续依赖ZooKeeper，而德鲁伊可能会远离对ZooKeeper的依赖。另一方面，德鲁伊安装将继续依赖于某些SQL数据库的存在。</p>
+<h1 id="cloudflare的选择">CloudFlare的选择</h1>
+<p>在CK和Druid中选择了CK，10个节点的规模CK更好</p>
+<ul>
+<li><a href="https://blog.cloudflare.com/how-cloudflare-analyzes-1m-dns-queries-per-second/">https://blog.cloudflare.com/how-cloudflare-analyzes-1m-dns-queries-per-second/</a></li>
+</ul>
+<p>目前公司最大的单表数据为10B，也就是100亿：门店3公里内的所有门店以及经纬度数据，占用S3空间110G</p>
+<h1 id="各个引擎的概况">各个引擎的概况</h1>
+<h2 id="clickhouse">Clickhouse</h2>
+<p>项目地址：https://github.com/yandex/ClickHouse</p>
+<p>架构概述：https://clickhouse.yandex/docs/zh/development/architecture/</p>
+<p>支持primary key sorting，不支持inverted indexes</p>
+<p><a href="https://github.com/yandex/ClickHouse/issues/5125">https://github.com/yandex/ClickHouse/issues/5125</a></p>
+<h2 id="druid">Druid</h2>
+<p>不支持primary key sorting，支持inverted indexes</p>
+<p>通过编写 Json 文件，以 HTTP 的方式请求 Druid</p>
+<p>支持sql</p>
+<p>国内使用Druid比较多，有赞，美团等</p>
+<p><a href="https://tech.youzan.com/realtime-olap-on-druid/">https://tech.youzan.com/realtime-olap-on-druid/</a></p>
+<p><a href="https://github.com/apache/incubator-druid">https://github.com/apache/incubator-druid</a></p>
+<p>Java star 8405</p>
+<h2 id="apache-pinot">Apache Pinot</h2>
+<p>项目地址：https://github.com/apache/incubator-pinot/</p>
+<p>架构概述：https://pinot.readthedocs.io/en/latest/architecture.html</p>
+<p>2323 star 活跃</p>
+<p>国内使用Pinot的比较少</p>
+<h2 id="apache-doris">Apache Doris</h2>
+<p>Doris前身是Palo，Palo是百度自研的基于MPP的交互式SQL数据仓库</p>
+<p>架构概述：https://doris.incubator.apache.org/Docs/cn/internal/metadata-design.html#id3</p>
+<p>项目地址：https://github.com/apache/incubator-doris</p>
+<p>1294 star 活跃</p>
+<p>C++</p>
+<p>来源百度</p>
+<p>国内使用Pinot的比较少</p>
+<h2 id="apache-kylin">Apache Kylin</h2>
+<p><a href="https://github.com/apache/kylin">https://github.com/apache/kylin</a></p>
+<p>来源：eBay</p>
+<p>语言：Java</p>
+<p>2275 star 活跃</p>
+<p>在国内广泛使用</p>
+<p>链家使用Kylin：https://www.infoq.cn/article/lianjia-data-analysis-apache-kylin</p>
+<p>典型的空间换时间：维度优化，预计算的结果需要存储到 Hbase</p>
+<p>优势：</p>
+<ul>
+<li>都已经预先计算好了，性能啥的都不会有啥问题</li>
+<li>主要针对hive的离线数据做分析，属于hadoop生态圈，可以和目前的hive这一套完美结合起来</li>
+<li>Apache Kylin v1.6.0之后支持了近实时的流计算，后续构建成为离线和实时的一站式解决方案</li>
+<li>Apache Kylin v2.0.0 引入了一个全新的基于 Apache Spark 的构建引擎，替换MR，Cube构件时间缩短一半</li>
+</ul>
+<p>代价：</p>
+<ol>
+<li>需要维护一套hbase集群，空间换时间的操作会极度废机器，但是hbase数据可以存在cloud上</li>
+<li>需要在kylin web维护针对查询提前定义维度构建cube</li>
+<li>运维Kylin对Admin有较高的要求，首先必须了解HBase，Hive，MapReduce，Spark，HDFS，Yarn的原理；其次对MapReduce Job和Spark Job的问题排查和调优经验要丰富；然后必须掌握对Cube复杂调优的方法；最后出现问题时排查的链路较长，复杂度较高。</li>
+</ol>
+<p>Apache kylin中cube的构建过程及原理分析：https://www.cnblogs.com/shibit/p/7039794.html</p>
+<h2 id="mondrian">Mondrian</h2>
+<p><a href="https://github.com/pentaho/mondrian">https://github.com/pentaho/mondrian</a></p>
+<p><a href="https://blog.csdn.net/ZYC88888/article/details/80311014">https://blog.csdn.net/ZYC88888/article/details/80311014</a></p>
+<p>792 star，不活跃，性能一般(曹总说)</p>
+<p>Java</p>
+<p>Mondrian不是一个真正的OLAP数据库，是一个基于关系数据库的分析服务器</p>
+<p>查询瓶颈仍然在底层的存储层的查询效率，只是对于动态多维度分析做了优化</p>
+<p>通过xml而不是sql查询</p>
+<h1 id="olap-in-zaihui">OLAP in zaihui</h1>
+<p>现状：</p>
+<ul>
+<li>
+<p>Clickhouse的单表查询速度确实非常非常快，在会员数据这部分的表现非常好</p>
+</li>
+<li>
+<p>通过删表重建的方式处理数据重复不太优雅，对于百亿数据不太现实</p>
+</li>
+<li>
+<p>数据从hive同步到Clickhouse的时间较长，目前是单线程后续可以改成spark等形式</p>
+</li>
+</ul>
+<p>后续可以做的工作：</p>
+<ol>
+<li>开发一套clickhouse集群的管理包括扩容等等的自动化系统</li>
+<li>开发一套从hive/spark等同步数据到clickhouse的高效服务</li>
+</ol>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a href="https://medium.com/@leventov/comparison-of-the-open-source-olap-systems-for-big-data-clickhouse-druid-and-pinot-8e042a5ed1c7">Comparison of the Open Source OLAP Systems for Big Data: ClickHouse, Druid, and Pinot</a></li>
+<li><a href="https://www.sspaeti.com/blog/olap-whats-coming-next/">https://www.sspaeti.com/blog/olap-whats-coming-next/</a></li>
+<li><a href="https://cloud.google.com/blog/products/gcp/bigquery-under-the-hood">BigQuery under the hood</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/38767561">主流OLAP系统对比总结</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/51555789">https://zhuanlan.zhihu.com/p/51555789</a></li>
+<li><a href="https://github.com/yandex/ClickHouse/issues/1178">https://github.com/yandex/ClickHouse/issues/1178</a></li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-08-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Aliyun/">Aliyun</a>
+          <a href="/tags/BigData/">BigData</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2019/11/13/how-to-consider-working-from-travel/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">如何看待work from travel</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2019/07/30/Aliyun-big-data-infrastructure-components-research/">
+            <span class="next-text nav-default">阿里云大数据基础组件调研</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

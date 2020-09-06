@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="关注Python、Goalng的web后端、DevOps等领域" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/" />
+  <link href="https://suncle.me/index.xml" rel="alternate" type="application/rss+xml" title="Suncle&#39;s Blog" />
+  <link href="https://suncle.me/index.xml" rel="feed" type="application/rss+xml" title="Suncle&#39;s Blog" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Suncle&#39;s Blog" />
+<meta property="og:description" content="关注Python、Goalng的web后端、DevOps等领域" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://suncle.me/" />
+<meta property="og:updated_time" content="2019-12-31T23:59:59+00:00" />
+<meta itemprop="name" content="Suncle&#39;s Blog">
+<meta itemprop="description" content="关注Python、Goalng的web后端、DevOps等领域">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Suncle&#39;s Blog"/>
+<meta name="twitter:description" content="关注Python、Goalng的web后端、DevOps等领域"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2018/02/01/HmacSHA1-vs-SHA1/">HmacSHA1和原生SHA1的比较</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-02-01 </span>
+      <div class="post-category">
+          <a href="/categories/%E5%AE%89%E5%85%A8/"> 安全 </a>
+          </div>
+        <span class="more-meta"> 约 1581 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>首先来看一段HmacSHA1加密和SHA1加密的代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 1/31/18 10:03 AM
+</span><span class="s2">@author: Chen Liang
+</span><span class="s2">@function: HmacSHA1 vs SHA1
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nb">reload</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">setdefaultencoding</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+
+
+<span class="k">def</span> <span class="nf">sha1</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">    sha1加密
+</span><span class="s2">    :param msg:
+</span><span class="s2">    :return: 长度40位的摘要信息
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">sha</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">()</span>
+    <span class="n">sha</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sha</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">hmac_sha1</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">    hmac sha1加密
+</span><span class="s2">    :param key: 密钥
+</span><span class="s2">    :param msg: 待加密消息
+</span><span class="s2">    :return: 长度40位的摘要信息
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+
+<span class="k">print</span> <span class="n">hmac_sha1</span><span class="p">(</span><span class="s1">&#39;FKEwTiz9Te0FWlqkS4g8hEdqAsPZfdR4&#39;</span><span class="p">,</span> <span class="s1">&#39;me&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">sha1</span><span class="p">(</span><span class="s1">&#39;me&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">1db0e9132a8dff51e3a4d47497e29a500087da9a
+b1c1d8736f20db3fb6c1c66bb1455ed43909f0d8
+</code></pre></td></tr></table>
+</div>
+</div><p>从结果中可以发现，HmacSHA1算法和SHA1算法都可以为任意长的消息生成一个20字节(160bit)的固定大小的输出，那么他们的区别在哪儿呢？</p>
+<p>其实答案是很简单的。</p>
+<p>在<a href="http://dev.ionous.net/2009/03/hmac-vs-raw-sha-1.html">HMAC vs. raw SHA-1</a>这篇文章中有一个有趣的解释，翻译过来大意如下</p>
+    </div>
+    <div class="read-more">
+      <a href="/2018/02/01/HmacSHA1-vs-SHA1/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2018/01/29/Erlang-test-knowledge-collection/">Erlang测试全集(挖坑)</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-01-29 </span>
+      <div class="post-category">
+          <a href="/categories/Erlang/"> Erlang </a>
+          </div>
+        <span class="more-meta"> 约 873 字 </span>
+        <span class="more-meta"> 预计阅读 2 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="erlang测试全集挖坑">Erlang测试全集(挖坑)</h1>
+<p>本次只是简要列举Erlang测试相关的框架和概念，Erlang测试的详细使用在实际使用时再进行补充（<strong>挖坑</strong>），目前所有的Erlang程序中除部分公共基础app需要写单元测试和覆盖率报告之外其他都不需要写。</p>
+<p>后续会按照以下四个部分介绍Erlang测试相关知识</p>
+<ul>
+<li>EUnit</li>
+<li>Common Test</li>
+<li>Cover</li>
+<li>Quality Control</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2018/01/29/Erlang-test-knowledge-collection/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/">关于冷热数据备份和恢复的思考</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-01-22 </span>
+      <div class="post-category">
+          <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/"> 设计思想 </a>
+          </div>
+        <span class="more-meta"> 约 3041 字 </span>
+        <span class="more-meta"> 预计阅读 7 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="关于冷热数据备份和恢复的思考">关于冷热数据备份和恢复的思考</h1>
+<p>数据库：Mysql InnoDB</p>
+<p>目标：备份指定数据表指定时间段的全字段数据到数据文件，并删除掉数据库中已备份数据</p>
+<p>说明：这里说的数据备份不是灾备，而且通过备份基本不会使用的数据来缓解数据库压力，要求备份的数据是可以恢复的</p>
+<p>持久化存储：文本格式的数据文件，存储于oss中</p>
+<p>思考：不同表中可能含有多个时间字段，可能的组合如下</p>
+<ul>
+<li><code>update_time</code></li>
+<li><code>create_time</code> &amp; <code>update_time</code></li>
+<li><code>create_time</code> &amp; <code>update_time</code> &amp; 业务时间（由程序插入，可能是datetime可能是date可能是timestamp）</li>
+</ul>
+<p>一般数据表设计时都会带上创建时间和修改时间。</p>
+<ul>
+<li>数据一般都是快速增长，较少或者几乎不更新，属于记录型的数据</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/12/18/%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/">基于消息传递的并发模型</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-12-18 </span>
+      <div class="post-category">
+          <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/"> 设计思想 </a>
+          </div>
+        <span class="more-meta"> 约 1796 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <blockquote>An object oriented language is a language with good support for objects.<br>A concurrency oriented language has good support for concurrency.<br><br>--Joe Armstrong</blockquote>
+<p>两类通用并发模型：参考七周七并发模型</p>
+<ul>
+<li>
+<p>共享内存型Shared Memory</p>
+<ul>
+<li>线程Threads</li>
+<li>锁Locks</li>
+<li>互斥l量Mutexes</li>
+</ul>
+</li>
+<li>
+<p>消息传送型（CSP和Actor模型）</p>
+<ul>
+<li>进程Processes</li>
+<li>消息Messages</li>
+<li>不共享数据(状态)No shared data</li>
+</ul>
+</li>
+</ul>
+<p>重点介绍消息传送型的两种模型Actor和CSP（Communicating Sequential Process）的各项对比</p>
+<p>主要目的：除了常用的Python、Java等用的并发模型之外，还存在这么个东西</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/12/18/%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/12/14/Erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/">Erlang入门路线</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-12-14 </span>
+      <div class="post-category">
+          <a href="/categories/Erlang/"> Erlang </a>
+          </div>
+        <span class="more-meta"> 约 1930 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。</p>
+<p>主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/12/14/Erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/12/11/unix-domain-socket/">unix domain socket</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-12-11 </span>
+      <div class="post-category">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/"> 网络 </a>
+          </div>
+        <span class="more-meta"> 约 1309 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="unix-domain-socket">unix domain socket</h1>
+<p>unix domain socket 是在socket架构上发展起来的用于同一台主机的进程间通讯（IPC: Inter-Process Communication），它不需要经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等，只是将应用层数据从一个进程拷贝到另一个进程。UNIX Domain Socket有SOCK_DGRAM或SOCK_STREAM两种工作模式，类似于UDP和TCP，但是面向消息的UNIX Domain Socket也是可靠的，消息既不会丢失也不会顺序错乱。</p>
+<p>UNIX Domain Socket可用于两个没有亲缘关系的进程，是全双工的，是目前使用最广泛的IPC机制，比如X Window服务器和GUI程序之间就是通过UNIX Domain Socket通讯的。</p>
+<p>UNIX Domain socket与网络socket类似，可以与网络socket对比应用。</p>
+<p>上述二者编程的不同如下：</p>
+<ul>
+<li>address family为AF_UNIX</li>
+<li>因为应用于IPC，所以UNIXDomain socket不需要IP和端口，取而代之的是文件路径来表示“网络地址”。这点体现在下面两个方面。</li>
+<li>地址格式不同，UNIXDomain socket用结构体sockaddr_un表示，是一个socket类型的文件在文件系统中的路径，这个socket文件由bind()调用创建，如果调用bind()时该文件已存在，则bind()错误返回。</li>
+<li>UNIX Domain Socket客户端一般要显式调用bind函数，而不象网络socket一样依赖系统自动分配的地址。客户端bind的socket文件名可以包含客户端的pid，这样服务器就可以区分不同的客户端。</li>
+</ul>
+<p>下面用python代码演示uds的使用</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/12/11/unix-domain-socket/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/11/20/Erlang%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99Behaviour/">Erlang设计原则Behaviour</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-11-20 </span>
+      <div class="post-category">
+          <a href="/categories/Erlang/"> Erlang </a>
+          </div>
+        <span class="more-meta"> 约 1472 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>标准 Erlang/OTP 行为有</p>
+<table>
+<thead>
+<tr>
+<th>Behaviour</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gen_server</td>
+<td>用于实现 C/S 结构中的服务端</td>
+</tr>
+<tr>
+<td>gen_fsm</td>
+<td>用于实现有限状态机</td>
+</tr>
+<tr>
+<td>gen_event</td>
+<td>用于实现事件处理功能</td>
+</tr>
+<tr>
+<td>supervisor</td>
+<td>用于实现监督树中的督程</td>
+</tr>
+<tr>
+<td>gen_statem</td>
+<td>新版本中的有限状态机实现</td>
+</tr>
+</tbody>
+</table>
+<p>平时使用最多的是<code>gen_server</code>和<code>supervisor</code></p>
+<h1 id="gen_server">gen_server</h1>
+<p>erlang gen_server的使用：以银行账户服务为例</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/11/20/Erlang%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99Behaviour/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/11/14/Python%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">Python单元测试</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-11-14 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 1377 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="单元测试">单元测试</h1>
+<p>什么是单元测试, 维基百科上是这么定义的： unit testing is a method by which individual units of source code, sets of one or more computer program modules together with associated control data, usage procedures, and operating procedures, are tested to determine if they are fit for use.[1] Intuitively, one can view a unit as the smallest testable part of an application. 简而言之，就是验证系统中最小可测试单元的功能是否正确的自动化测试。因此，单元测试的目地就是“对被测试对象的职责进行验证”, 在写单元测试之前，先识别出被测试对象的职责，就知道该怎么写这个单元测试了。</p>
+<p>根据被测试对象，单元测试可以分为两大类：</p>
+<ul>
+<li>对不依赖于外部资源的组件的单元测试：使用unittest基本功能即可</li>
+<li>对依赖于外部资源的组件的单元测试：需要使用mock</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2017/11/14/Python%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/11/13/AloneTripOfSoul-MagnificentHuangshan/">灵魂独旅之壮美黄山</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-11-13 </span>
+      <div class="post-category">
+          <a href="/categories/%E7%81%B5%E9%AD%82%E7%8B%AC%E6%97%85/"> 灵魂独旅 </a>
+          </div>
+        <span class="more-meta"> 约 1104 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>越来越喜欢一个人到处走走，没有目的，没有理由，说走就走，到未曾到过的远方，散散步，也散散心，给充实而又枯燥的生活添加一点内心深处独有的染色剂。</p>
+<p>出行的前一天下午才临时决定买的票，本以为会有一个晚上的时间去准备出行的相关事宜，忙碌了一天后，临下班又来了紧急的任务，等到回去的时候不知不觉已经很晚很晚，晚到都没有时间去填充双十一的购物车。现在回想起来，都不知道为什么3点才开始睡觉，虽然只休息了两个小时，但也不觉得有困意，带着期待的心情，早早出门，开始美好周末的旅行。</p>
+<p>一直以来，恐高症都非常的严重，坐在缆车上会觉得随时都会掉下去，也完全不敢回头看黄山的深谷，但是这些都阻挡不了我登山的脚步，我会用足迹证明nothing is impossible。</p>
+<p><strong>关于奇松</strong>，虚胖浮肿的身体，爬数百米的台阶早已气喘吁吁，终于，在玉屏锋的左侧见到了黄山五绝之一的迎客松，他就像一位英姿飒爽的老人屹立在嶙峋怪石之中，万丈悬崖之上。</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tour/huangshan/IMG_20171111_135436.jpg" alt="IMG_20171111_135436.jpg"></p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/11/13/AloneTripOfSoul-MagnificentHuangshan/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/11/10/ubuntu16-04%E5%AE%89%E5%85%A8%E5%B0%8F%E7%BB%93-01/">ubuntu16.04安全小结-01</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-11-10 </span>
+      <div class="post-category">
+          <a href="/categories/%E5%AE%89%E5%85%A8/"> 安全 </a>
+          </div>
+        <span class="more-meta"> 约 1201 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>本篇主要介绍以下三个部分：</p>
+<ol>
+<li>反病毒引擎clamav的安装和使用</li>
+<li>ubuntu ufw限制访问地址</li>
+<li>ubuntu用户连接失败锁定指定时间</li>
+</ol>
+    </div>
+    <div class="read-more">
+      <a href="/2017/11/10/ubuntu16-04%E5%AE%89%E5%85%A8%E5%B0%8F%E7%BB%93-01/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    </section>
+  
+  <nav class="pagination">
+    <a class="prev" href="/page/5/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    <a class="next" href="/page/7/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

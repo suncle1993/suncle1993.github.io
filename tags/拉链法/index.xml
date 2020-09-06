@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>拉链法 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E6%8B%89%E9%93%BE%E6%B3%95/</link>
+    <description>Recent content in 拉链法 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 12 Jan 2017 17:14:43 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E6%8B%89%E9%93%BE%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python拉链法和开地址法实现字典</title>
+      <link>https://suncle.me/2017/01/12/Python%E6%8B%89%E9%93%BE%E6%B3%95%E5%92%8C%E5%BC%80%E5%9C%B0%E5%9D%80%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%AD%97%E5%85%B8/</link>
+      <pubDate>Thu, 12 Jan 2017 17:14:43 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/01/12/Python%E6%8B%89%E9%93%BE%E6%B3%95%E5%92%8C%E5%BC%80%E5%9C%B0%E5%9D%80%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%AD%97%E5%85%B8/</guid>
+      <description>&lt;h1 id=&#34;python拉链法和开地址法实现字典&#34;&gt;Python拉链法和开地址法实现字典&lt;/h1&gt;
+&lt;p&gt;Python字典(dictionary)是除列表之外python中最灵活的内置数据结构类型。列表是有序的对象结合，&lt;strong&gt;字典是无序的对象集合&lt;/strong&gt;。两者之间的区别在于：字典当中的元素是通过键来存取的，而不是通过偏移存取。&lt;/p&gt;
+&lt;p&gt;在列表中使用下标索引可以快速的得到对应的值，那么我们需要做的有两件事情：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;怎样把键计算出一个唯一值&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;怎样把这个唯一值均匀并且唯一的分布在长度固定的列表中&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;怎样把键计算出一个唯一值&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因为字典的键是不可变的，可hash的，因此我们可以用hash函数计算key对应的唯一hash值。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;怎样把这个唯一值均匀并且唯一的分布在长度固定的列表中&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;hash散列是可以把大数据集映射到定长数据集的算法，因此我们可以对上述计算出来的hash值进行散列。很明显散列之后会出现散列冲突。因此我们需要处理这种冲突一遍唯一值能够均匀唯一的分布。这个时候就有两种处理散列冲突的方法：拉链法和开地址法&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

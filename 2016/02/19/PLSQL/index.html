@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>plsql - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="PL/SQL
+PL/SQL也是一种程序语言，叫做过程化SQL语言（Procedural Language/SQL）。PL/SQL是Oracle数据库对SQL语句的扩展。在普通SQL语句的使用上增加了编程语言的特点，所以PL/SQL就是把数据操作和查询语句组织在PL/SQL代码的过程性单元中，通过逻辑判断、循环等操作实现复杂的功能或者计算的程序语言。
+  SQL是一种集合性语言
+  PL/SQL语句效率比SQL低，尽量用SQL。
+  PL/SQL循环
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23  SQL&amp;gt; create table t(id int); 表已创建。 SQL&amp;gt; begin 2 for i in 1..100 loop 3 insert into t values(i); 4 end loop; 5 end; 6 / PL/SQL 过程已成功完成。 SQL&amp;gt; select count(*) from t; COUNT(*) ---------- 100 SQL&amp;gt; commit; 提交完成。   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2016/02/19/PLSQL/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="plsql" />
+<meta property="og:description" content="PL/SQL
+PL/SQL也是一种程序语言，叫做过程化SQL语言（Procedural Language/SQL）。PL/SQL是Oracle数据库对SQL语句的扩展。在普通SQL语句的使用上增加了编程语言的特点，所以PL/SQL就是把数据操作和查询语句组织在PL/SQL代码的过程性单元中，通过逻辑判断、循环等操作实现复杂的功能或者计算的程序语言。
+
+
+SQL是一种集合性语言
+
+
+PL/SQL语句效率比SQL低，尽量用SQL。
+
+
+PL/SQL循环
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+
+SQL&gt; create table t(id int);
+
+表已创建。
+
+SQL&gt; begin
+  2  for i in 1..100 loop
+  3  insert into t values(i);
+  4  end loop;
+  5  end;
+  6  /
+
+PL/SQL 过程已成功完成。
+
+SQL&gt; select count(*) from t;
+
+  COUNT(*)
+----------
+       100
+
+SQL&gt; commit;
+
+提交完成。
+
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2016/02/19/PLSQL/" />
+<meta property="article:published_time" content="2016-02-19T22:45:12+00:00" />
+<meta property="article:modified_time" content="2016-02-19T22:45:12+00:00" />
+<meta itemprop="name" content="plsql">
+<meta itemprop="description" content="PL/SQL
+PL/SQL也是一种程序语言，叫做过程化SQL语言（Procedural Language/SQL）。PL/SQL是Oracle数据库对SQL语句的扩展。在普通SQL语句的使用上增加了编程语言的特点，所以PL/SQL就是把数据操作和查询语句组织在PL/SQL代码的过程性单元中，通过逻辑判断、循环等操作实现复杂的功能或者计算的程序语言。
+
+
+SQL是一种集合性语言
+
+
+PL/SQL语句效率比SQL低，尽量用SQL。
+
+
+PL/SQL循环
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+
+SQL&gt; create table t(id int);
+
+表已创建。
+
+SQL&gt; begin
+  2  for i in 1..100 loop
+  3  insert into t values(i);
+  4  end loop;
+  5  end;
+  6  /
+
+PL/SQL 过程已成功完成。
+
+SQL&gt; select count(*) from t;
+
+  COUNT(*)
+----------
+       100
+
+SQL&gt; commit;
+
+提交完成。
+
+
+
+">
+<meta itemprop="datePublished" content="2016-02-19T22:45:12+00:00" />
+<meta itemprop="dateModified" content="2016-02-19T22:45:12+00:00" />
+<meta itemprop="wordCount" content="884">
+
+
+
+<meta itemprop="keywords" content="plsql,Oracle," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="plsql"/>
+<meta name="twitter:description" content="PL/SQL
+PL/SQL也是一种程序语言，叫做过程化SQL语言（Procedural Language/SQL）。PL/SQL是Oracle数据库对SQL语句的扩展。在普通SQL语句的使用上增加了编程语言的特点，所以PL/SQL就是把数据操作和查询语句组织在PL/SQL代码的过程性单元中，通过逻辑判断、循环等操作实现复杂的功能或者计算的程序语言。
+
+
+SQL是一种集合性语言
+
+
+PL/SQL语句效率比SQL低，尽量用SQL。
+
+
+PL/SQL循环
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+
+SQL&gt; create table t(id int);
+
+表已创建。
+
+SQL&gt; begin
+  2  for i in 1..100 loop
+  3  insert into t values(i);
+  4  end loop;
+  5  end;
+  6  /
+
+PL/SQL 过程已成功完成。
+
+SQL&gt; select count(*) from t;
+
+  COUNT(*)
+----------
+       100
+
+SQL&gt; commit;
+
+提交完成。
+
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">plsql</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-02-19 </span>
+        <div class="post-category">
+            <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+            </div>
+          <span class="more-meta"> 约 884 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><strong>PL/SQL</strong></p>
+<p>PL/SQL也是一种程序语言，叫做<strong>过程化SQL语言</strong>（Procedural Language/SQL）。PL/SQL是Oracle数据库对SQL语句的扩展。在普通SQL语句的使用上增加了编程语言的特点，所以PL/SQL就是把数据操作和查询语句组织在PL/SQL代码的过程性单元中，通过逻辑判断、循环等操作实现复杂的功能或者计算的程序语言。</p>
+<ul>
+<li>
+<p>SQL是一种集合性语言</p>
+</li>
+<li>
+<p>PL/SQL语句效率比SQL低，尽量用SQL。</p>
+</li>
+</ul>
+<p><strong>PL/SQL循环</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; create table t(id int);
+
+表已创建。
+
+SQL&gt; begin
+  2  for i in 1..100 loop
+  3  insert into t values(i);
+  4  end loop;
+  5  end;
+  6  /
+
+PL/SQL 过程已成功完成。
+
+SQL&gt; select count(*) from t;
+
+  COUNT(*)
+----------
+       100
+
+SQL&gt; commit;
+
+提交完成。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>PL/SQL变量</strong></p>
+<p>首先看看sql内置的数据类型</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>数据类型</strong></th>
+<th><strong>长度</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">CHAR(n BYTE/CHAR)</td>
+<td>默认1字节，n值最大为2000</td>
+<td>末尾填充空格以达到指定长度，超过最大长度报错。默认指定长度为字节数，字符长度可以从1字节到四字节。</td>
+</tr>
+<tr>
+<td align="center">NCHAR(n)</td>
+<td>默认1字符，最大存储内容2000字节</td>
+<td>末尾填充空格以达到指定长度，n为Unicode字符数。默认为1字节。</td>
+</tr>
+<tr>
+<td align="center">NVARCHAR2(n)</td>
+<td>最大长度必须指定，最大存储内容4000字节</td>
+<td>变长类型。n为Unicode字符数</td>
+</tr>
+<tr>
+<td align="center">VARCHAR2(n BYTE/CHAR)</td>
+<td>最大长度必须指定，至少为1字节或者1字符，n值最大为4000</td>
+<td>变长类型。超过最大长度报错。默认存储的是长度为0的字符串。</td>
+</tr>
+<tr>
+<td align="center">VARCHAR</td>
+<td>同VARCHAR2</td>
+<td>不建议使用</td>
+</tr>
+<tr>
+<td align="center">NUMBER(p[,s])</td>
+<td>1-22字节。P取值范围1到38。S取值范围-84到127</td>
+<td>存储定点数，值的绝对值范围为1.0 x 10 -130至1.0 x 10 126。值大于等于1.0 x 10 126时报错。p为有意义的10进制位数，正值s为小数位数，负值s表示四舍五</td>
+</tr>
+<tr>
+<td align="center">BINARY_FLOAT</td>
+<td>5字节，其中有一长度字节。</td>
+<td>32位单精度浮点数类型。符号位1位，指数位8位，尾数位23</td>
+</tr>
+<tr>
+<td align="center">BINARY_DOUBLE</td>
+<td>9字节，其中有一长度字节。</td>
+<td>64位双精度浮点数类型。</td>
+</tr>
+</tbody>
+</table>
+<p>具体变量声明参见一下链接：<a href="https://blog.csdn.net/wang_zhou_jian/article/details/5693219">https://blog.csdn.net/wang_zhou_jian/article/details/5693219</a></p>
+<p>例、</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; declare
+  2  a number(10):=10;
+  3  begin
+  4  for i in 1..a loop
+  5  insert into t values(i);
+  6
+  7  end loop;
+  8  end;
+  9  /
+
+PL/SQL 过程已成功完成。
+
+SQL&gt; select * from t;
+
+        ID
+----------
+         1
+         2
+         3
+         4
+         5
+         6
+         7
+         8
+         9
+        10
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-02-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/plsql/">plsql</a>
+          <a href="/tags/Oracle/">Oracle</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2016/02/19/%E5%A4%8D%E6%9D%82%E4%B8%80%E7%82%B9%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">复杂一点的SQL语句</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/02/19/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AF%B9%E8%B1%A1/">
+            <span class="next-text nav-default">Oracle数据库的对象</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

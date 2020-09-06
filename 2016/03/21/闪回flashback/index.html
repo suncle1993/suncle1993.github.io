@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>闪回flashback - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="参考资料：Using Oracle Flashback Technology
+Oracle 11g的新特性闪回操作
+ 闪回查询  闪回查询 闪回版本查询 闪回事务查询   闪回数据  闪回表 闪回删除 闪回数据 闪回归档    下面会分别介绍这些操作。在介绍这些操作之前先看下闪回特性是否开启。
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="闪回flashback" />
+<meta property="og:description" content="
+参考资料：Using Oracle Flashback Technology
+Oracle 11g的新特性闪回操作
+
+闪回查询
+
+闪回查询
+闪回版本查询
+闪回事务查询
+
+
+闪回数据
+
+闪回表
+闪回删除
+闪回数据
+闪回归档
+
+
+
+下面会分别介绍这些操作。在介绍这些操作之前先看下闪回特性是否开启。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/" />
+<meta property="article:published_time" content="2016-03-21T17:32:01+00:00" />
+<meta property="article:modified_time" content="2016-03-21T17:32:01+00:00" />
+<meta itemprop="name" content="闪回flashback">
+<meta itemprop="description" content="
+参考资料：Using Oracle Flashback Technology
+Oracle 11g的新特性闪回操作
+
+闪回查询
+
+闪回查询
+闪回版本查询
+闪回事务查询
+
+
+闪回数据
+
+闪回表
+闪回删除
+闪回数据
+闪回归档
+
+
+
+下面会分别介绍这些操作。在介绍这些操作之前先看下闪回特性是否开启。">
+<meta itemprop="datePublished" content="2016-03-21T17:32:01+00:00" />
+<meta itemprop="dateModified" content="2016-03-21T17:32:01+00:00" />
+<meta itemprop="wordCount" content="2803">
+
+
+
+<meta itemprop="keywords" content="flashback,闪回,Oracle," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="闪回flashback"/>
+<meta name="twitter:description" content="
+参考资料：Using Oracle Flashback Technology
+Oracle 11g的新特性闪回操作
+
+闪回查询
+
+闪回查询
+闪回版本查询
+闪回事务查询
+
+
+闪回数据
+
+闪回表
+闪回删除
+闪回数据
+闪回归档
+
+
+
+下面会分别介绍这些操作。在介绍这些操作之前先看下闪回特性是否开启。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">闪回flashback</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-03-21 </span>
+        <div class="post-category">
+            <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+            </div>
+          <span class="more-meta"> 约 2803 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#检查闪回特性是否启用">检查闪回特性是否启用</a></li>
+        <li><a href="#闪回查询">闪回查询</a></li>
+        <li><a href="#闪回版本查询">闪回版本查询</a></li>
+        <li><a href="#闪回事务查询">闪回事务查询</a></li>
+        <li><a href="#闪回表">闪回表</a></li>
+        <li><a href="#闪回删除">闪回删除</a>
+          <ul>
+            <li><a href="#查看回收站的状态">查看回收站的状态</a></li>
+            <li><a href="#闪回删除实验效果">闪回删除实验效果</a></li>
+            <li><a href="#清空回收站操作">清空回收站操作</a></li>
+            <li><a href="#回收站的空间管理">回收站的空间管理</a></li>
+          </ul>
+        </li>
+        <li><a href="#闪回归档">闪回归档</a></li>
+        <li><a href="#闪回数据库">闪回数据库</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-flashback_pic.png" alt=""></p>
+<p><strong>参考资料：</strong><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm">Using Oracle Flashback Technology</a></p>
+<p>Oracle 11g的新特性闪回操作</p>
+<ul>
+<li>闪回查询
+<ul>
+<li>闪回查询</li>
+<li>闪回版本查询</li>
+<li>闪回事务查询</li>
+</ul>
+</li>
+<li>闪回数据
+<ul>
+<li>闪回表</li>
+<li>闪回删除</li>
+<li>闪回数据</li>
+<li>闪回归档</li>
+</ul>
+</li>
+</ul>
+<p>下面会分别介绍这些操作。在介绍这些操作之前先看下闪回特性是否开启。</p>
+<h2 id="检查闪回特性是否启用">检查闪回特性是否启用</h2>
+<p><strong>参考资料：</strong></p>
+<p><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm#ADFNS01002">Configuring Your Database for Oracle Flashback Technology</a></p>
+<p><a href="http://blog.itpub.net/26194851/viewspace-763582/">打开或关闭oracle数据库的闪回功能步骤 </a></p>
+<p>确认数据库闪回特性已经启用:v$database</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; select flashback_on from v$database;
+
+FLASHBACK_ON
+------------------
+NO
+</code></pre></td></tr></table>
+</div>
+</div><p>如果闪回特性没有启用，则需要先启用闪回。</p>
+<p>打开闪回的步骤：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; shutdown immediate;
+SQL&gt; startup mount;
+SQL&gt; alter database flashback on;
+SQL&gt; alter database open;
+</code></pre></td></tr></table>
+</div>
+</div><p>打开之后可再次检查闪回特性是否打开。只要打开了闪回特性，就可以进行闪回操作。</p>
+<h2 id="闪回查询">闪回查询</h2>
+<p><strong>参考资料：</strong><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm#i1008579">Using Oracle Flashback Query (SELECT AS OF)</a></p>
+<p>查询某一个历史时间点的数据。</p>
+<p><strong>查询某个时间点表中的数据——某个时间点表中快照的数据。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; create table t(x int , y int);
+
+表已创建。
+
+SQL&gt; insert into t values(1,2);
+
+已创建 1 行。
+
+SQL&gt; insert into t values(2,3);
+
+已创建 1 行。
+
+SQL&gt;
+SQL&gt; commit;
+
+提交完成。
+
+SQL&gt; select * from t;
+
+         X          Y
+---------- ----------
+         1          2
+         2          3
+
+SQL&gt; set time on
+21:11:45 SQL&gt; delete from t where x=1;
+
+已删除 1 行。
+21:12:11 SQL&gt; commit;
+
+提交完成。
+
+21:12:18 SQL&gt; select * from t;
+
+         X          Y
+---------- ----------
+         2          3
+
+21:12:21 SQL&gt; select * from t as of timestamp to_timestamp(&#39;2016-03-21 21:11:45&#39;
+,&#39;yyyy-mm-dd hh24-mi-ss&#39;);
+
+         X          Y
+---------- ----------
+         1          2
+         2          3
+</code></pre></td></tr></table>
+</div>
+</div><p>可见删除的数据已经提交，但是还是可以闪回查询到之前时间的数据。其中hh24表示可以用24小时制，否则只能小时不能超过12。至于为什么分钟用mi而不用mm，那是因为规定的格式就是mi，换成mm会显示和之前的月份mm冲突，换成其他的会显示日期格式无法识别。</p>
+<p><strong>基于SCN的闪回查询</strong></p>
+<p>如果有修改时候的SCN，那么就可以基于SCN进行闪回查询</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">21:18:34 SQL&gt; select * from t;
+
+         X          Y
+---------- ----------
+         2          3
+
+21:20:36 SQL&gt; select current_scn from v$database;
+
+CURRENT_SCN
+-----------
+    2891887
+
+21:20:53 SQL&gt; insert into t values(3,4);
+
+已创建 1 行。
+
+21:21:13 SQL&gt; commit;
+
+提交完成。
+
+21:21:16 SQL&gt; select * from t;
+
+         X          Y
+---------- ----------
+         2          3
+         3          4
+
+21:21:26 SQL&gt; select * from t as of scn 2891887;
+
+         X          Y
+---------- ----------
+         2          3
+</code></pre></td></tr></table>
+</div>
+</div><p>可见基于SCN闪回查询得到插入数据之前表中的数据</p>
+<h2 id="闪回版本查询">闪回版本查询</h2>
+<p><strong>闪回版本查询</strong>也就是flashback versions query。</p>
+<ul>
+<li>See all versions of a row between two times</li>
+<li>See transactions that changed the row</li>
+</ul>
+<p>一个时间段内的某一行的所有版本，以及改变该行的所有事务。</p>
+<p><strong>参考资料：</strong></p>
+<p><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm#i1019938">Using Oracle Flashback Version Query</a></p>
+<p><a href="https://blog.csdn.net/laoshangxyc/article/details/12405459">闪回版本查询与闪回事务查询</a></p>
+<h2 id="闪回事务查询">闪回事务查询</h2>
+<p><strong>闪回事务查询</strong>也即是flashback trasaction query</p>
+<ul>
+<li>See all changes made by a transaction</li>
+</ul>
+<p>闪回一个事务对数据的所有改变。</p>
+<p><strong>参考资料：</strong></p>
+<p><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm#i1007455">Using Oracle Flashback Transaction Query</a></p>
+<p><a href="https://blog.csdn.net/laoshangxyc/article/details/12405459">闪回版本查询与闪回事务查询</a></p>
+<h2 id="闪回表">闪回表</h2>
+<p>将表闪回到历史的某个时刻。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; create table t(id int);
+
+表已创建。
+
+SQL&gt; insert into t values(100);
+
+已创建 1 行。
+
+SQL&gt; insert into t values(200);
+
+已创建 1 行。
+
+SQL&gt; commit;
+
+提交完成。
+
+SQL&gt; select rowid,id from t;
+
+ROWID                      ID
+------------------ ----------
+AAASaxAABAAAV3xAAA        100
+AAASaxAABAAAV3xAAB        200
+
+SQL&gt; select current_scn from v$database;
+
+CURRENT_SCN
+-----------
+    2960668
+
+SQL&gt; delete from t;
+
+已删除2行。
+
+SQL&gt; commit;
+
+提交完成。
+
+SQL&gt; select * from t;
+
+未选定行
+
+SQL&gt; alter table t enable row movement;
+
+表已更改。
+
+SQL&gt; select * from t;
+
+未选定行
+
+SQL&gt; flashback table t to scn 2960668
+  2  ;
+flashback table t to scn 2960668
+                *
+第 1 行出现错误:
+ORA-08185: 用户 SYS 不支持闪回
+
+
+SQL&gt; show recyclebin
+SQL&gt;
+
+</code></pre></td></tr></table>
+</div>
+</div><p>解释1：由于当前是sys用户，会显示：</p>
+<p>ORA-08185: 用户 SYS 不支持闪回</p>
+<p>闪回技术只适用于普通用户而不适用于sys用户。system用户也不适用。</p>
+<p>解释2：必须要启用表的行移动功能，否则不能闪回表。</p>
+<ul>
+<li>alter table t enable row movement;</li>
+</ul>
+<h2 id="闪回删除">闪回删除</h2>
+<p>参考资料：<a href="https://blog.csdn.net/heng_ji/article/details/17968279">Oracle闪回功能详解</a></p>
+<p>由于闪回技术不支持sys用户，所以使用普通用户测试。</p>
+<p>Oracle10g以后，当我们删除表时，默认Oracle只是在数据库字典里面对被删的表的进行了重命名，并没有真正的把表删除。
+<strong>回收站(recyclebin)</strong>：用来维护表被删除前的名字与删除后系统生成的名字之间的对应关系的数据字典，表上的相关对象（索引、触发器等）也会一并进入回收站。</p>
+<h3 id="查看回收站的状态">查看回收站的状态</h3>
+<p>只有dba（sys,system）才有权限执行查询recyclebin的状态。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; show parameter recyclebin;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+recyclebin                           string      on
+</code></pre></td></tr></table>
+</div>
+</div><p>可以发现recyclebin是开启状态，如果发现是关闭状态，可以通过下面命令开启</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">alter system set recyclebin=on;
+</code></pre></td></tr></table>
+</div>
+</div><p>如果要关闭回收站功能，使用下面的命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">alter system set recyclebin=off;
+</code></pre></td></tr></table>
+</div>
+</div><p>禁用后删除的对象将直接删除，不会写到Recyclebin中。</p>
+<h3 id="闪回删除实验效果">闪回删除实验效果</h3>
+<p>由于sys用户和system用户不支持闪回技术，所以我们需要切换到普通用户进行实验，实验效果如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; create table t(id int);
+
+表已创建。
+
+SQL&gt; insert into t values(1);
+
+已创建 1 行。
+
+SQL&gt; show recyclebin;
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME
+---------------- ------------------------------ ------------ -------------------
+
+T                BIN$zqOXt7xBRA2SKyG5nGxb5w==$0 TABLE        2016-03-22:17:18:33
+
+
+SQL&gt; drop table t;
+
+表已删除。
+
+SQL&gt; commit;
+
+提交完成。
+
+SQL&gt; show recyclebin;
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME
+---------------- ------------------------------ ------------ -------------------
+
+T                BIN$lpoDEIX2SSGAQt9TL3gUTA==$0 TABLE        2016-03-22:17:22:24
+
+T                BIN$zqOXt7xBRA2SKyG5nGxb5w==$0 TABLE        2016-03-22:17:18:33
+
+SQL&gt; select * from &#34;BIN$lpoDEIX2SSGAQt9TL3gUTA==$0&#34;;
+
+        ID
+----------
+         1
+
+SQL&gt; flashback table t to before drop;
+
+闪回完成。
+
+SQL&gt; select * from t;
+
+        ID
+----------
+         1
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="清空回收站操作">清空回收站操作</h3>
+<p>可以全部清空回收站，也可只清空回收站的部分文件。</p>
+<p><strong>全部清空回收站</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; purge recyclebin;
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>部分清空回收站</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">##假定回收站中有一个文件的ORIGINAL NAME是t1，永久删除他t1表
+SQL&gt; purge table t1;
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="回收站的空间管理">回收站的空间管理</h3>
+<p>虽然Oracle并没真正删除被回收的表，但是在Oracle看来这一块空间已经是自由的（free）。使用下面的演示可以查看效果：（在普通用户下验证即可）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; create table t as select * from user_objects;
+
+表已创建。
+
+SQL&gt; select sum(blocks) from user_free_space where tablespace_name=&#39;USERS&#39;;
+
+SUM(BLOCKS)
+-----------
+         96
+
+SQL&gt; drop table t;
+
+表已删除。
+
+SQL&gt; select sum(blocks) from user_free_space where tablespace_name=&#39;USERS&#39;;
+
+SUM(BLOCKS)
+-----------
+        104
+
+SQL&gt; show recyclebin;
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME
+---------------- ------------------------------ ------------ -------------------
+
+T                BIN$kMskKvD5SJqmwaC5WDQiAg==$0 TABLE        2016-03-22:18:31:43
+
+SQL&gt; select blocks from user_segments where segment_name=&#39;BIN$kMskKvD5SJqmwaC5WDQiAg==$0&#39;;
+
+    BLOCKS
+----------
+         8
+</code></pre></td></tr></table>
+</div>
+</div><p>实验效果表明删除表之后用户自由空间增大了，并且大小刚好就是回收站中的对应的表的大小。可见这一块空间在Oracle看来已经是free_space了。</p>
+<h2 id="闪回归档">闪回归档</h2>
+<p><strong>参考资料：</strong></p>
+<p><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm#BJFFDCEH">Using Flashback Data Archive (Oracle Total Recall)</a></p>
+<p><a href="https://blog.csdn.net/summerycool/article/details/5925266">Oracle 11g 闪回数据归档</a></p>
+<p>闪回归档：Flashback Data Archive。<strong>Oracle Total Recall</strong>，<strong>也即Oracle全面回忆功能。</strong></p>
+<p>闪回数据归档可以和我们一直熟悉的日志归档类比，日志归档记录的是Redo的历史状态，用于保证恢复的连续性；而闪回归档记录的是UNDO的历史状态，可以用于对数据进行闪回追溯查询；后台进程LGWR用于将Redo信息写出到日志文件，ARCH进程负责进行日志归档；在Oracle 11g中，新增的后台进程FBDA（Flashback Data Archiver Process）则用于对闪回数据进行归档写出。</p>
+<p>具体操作见参考资料。</p>
+<h2 id="闪回数据库">闪回数据库</h2>
+<p>参考资料：<a href="https://www.linuxidc.com/Linux/2014-09/107257.htm">Oracle DB闪回（Flashback database）开启笔记</a></p>
+<p>数据库的闪回</p>
+<ul>
+<li>是Oracle不同于查询闪回和归档闪回的另外一种闪回机制</li>
+<li>Oracle 10g引入</li>
+<li>需要配置闪回区域</li>
+<li>记录数据块的修改，称为flashback logs（闪回日志）</li>
+<li>通过后台恢复写入进程RVWR（Recovery Writer）来工作</li>
+<li>就像一个向后转的按钮，让数据库向后回退。</li>
+<li>可以用于人为失误操作或者业务的需要。</li>
+</ul>
+<p><strong>闪回数据库架构Flashback database architecture</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Flashback%20database%20architecture.png" alt="Flashback database architecture"></p>
+<p>开启闪回数据库功能之后，会在SGA中开辟内存Flashback buffer，会记录buffer cache中的部分改变然后后台恢复写入进程RVWR将记录写入闪回日志Flashback logs中。FBDA进程（Flashback Data Archive ）则会将Flashback logs进行归档。</p>
+<p>这个过程和重做日志非常非常的类似。</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-03-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/flashback/">flashback</a>
+          <a href="/tags/%E9%97%AA%E5%9B%9E/">闪回</a>
+          <a href="/tags/Oracle/">Oracle</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2016/03/22/PL-SQL-Developer%E8%BF%9E%E6%8E%A5%E6%9C%AC%E5%9C%B0Oracle-11g-64%E4%BD%8D%E6%95%B0%E6%8D%AE%E5%BA%93/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">PL/SQL Developer连接本地Oracle 11g 64位数据库</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/">
+            <span class="next-text nav-default">自动存储管理ASM</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

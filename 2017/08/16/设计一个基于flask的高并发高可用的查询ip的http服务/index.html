@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>设计一个基于flask的高并发高可用的查询ip的http服务 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="结构设计 基础架构为flask&#43;gunicorn&#43;负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。
+使用nginx软件负载结构图
+使用阿里云硬件负载均衡服务结构图
+因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="设计一个基于flask的高并发高可用的查询ip的http服务" />
+<meta property="og:description" content="结构设计
+基础架构为flask&#43;gunicorn&#43;负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。
+使用nginx软件负载结构图
+
+使用阿里云硬件负载均衡服务结构图
+
+因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/" />
+<meta property="article:published_time" content="2017-08-16T20:17:13+00:00" />
+<meta property="article:modified_time" content="2017-08-16T20:17:13+00:00" />
+<meta itemprop="name" content="设计一个基于flask的高并发高可用的查询ip的http服务">
+<meta itemprop="description" content="结构设计
+基础架构为flask&#43;gunicorn&#43;负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。
+使用nginx软件负载结构图
+
+使用阿里云硬件负载均衡服务结构图
+
+因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务">
+<meta itemprop="datePublished" content="2017-08-16T20:17:13+00:00" />
+<meta itemprop="dateModified" content="2017-08-16T20:17:13+00:00" />
+<meta itemprop="wordCount" content="5129">
+
+
+
+<meta itemprop="keywords" content="flask,http,高并发," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="设计一个基于flask的高并发高可用的查询ip的http服务"/>
+<meta name="twitter:description" content="结构设计
+基础架构为flask&#43;gunicorn&#43;负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。
+使用nginx软件负载结构图
+
+使用阿里云硬件负载均衡服务结构图
+
+因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">设计一个基于flask的高并发高可用的查询ip的http服务</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-08-16 </span>
+        <div class="post-category">
+            <a href="/categories/Python/"> Python </a>
+            </div>
+          <span class="more-meta"> 约 5129 字 </span>
+          <span class="more-meta"> 预计阅读 11 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#结构设计">结构设计</a></li>
+    <li><a href="#ip数据库">ip数据库</a></li>
+    <li><a href="#http请求">http请求</a></li>
+    <li><a href="#服务部署">服务部署</a></li>
+    <li><a href="#压力测试">压力测试</a>
+      <ul>
+        <li><a href="#压力测试工具选择">压力测试工具选择</a>
+          <ul>
+            <li><a href="#ab">ab</a></li>
+            <li><a href="#wrk">wrk</a></li>
+            <li><a href="#jmeter">jmeter</a></li>
+          </ul>
+        </li>
+        <li><a href="#压力测试结果分析">压力测试结果分析</a></li>
+        <li><a href="#压力测试注意事项">压力测试注意事项</a></li>
+      </ul>
+    </li>
+    <li><a href="#gunicorn简介及调优">gunicorn简介及调优</a></li>
+    <li><a href="#改进点">改进点</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="结构设计">结构设计</h1>
+<p>基础架构为flask+gunicorn+负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。</p>
+<p><strong>使用nginx软件负载结构图</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/python/%E4%BD%BF%E7%94%A8nginx%E8%BD%AF%E4%BB%B6%E8%B4%9F%E8%BD%BD%E7%BB%93%E6%9E%84%E5%9B%BE.jpg" alt=""></p>
+<p><strong>使用阿里云硬件负载均衡服务结构图</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/python/%E4%BD%BF%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E7%A1%AC%E4%BB%B6%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9C%8D%E5%8A%A1%E7%BB%93%E6%9E%84%E5%9B%BE.jpg" alt=""></p>
+<p>因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务</p>
+<h1 id="ip数据库">ip数据库</h1>
+<p>IP库(也叫IP地址数据库)，是由专业技术人员经过长时间通过多种技术手段收集而来的，并且长期有专业人员进行更新、维护、补充。</p>
+<p><strong>ip数据库解析查询代码</strong></p>
+<p>基于二叉查找树实现</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="n">inet_aton</span><span class="p">,</span> <span class="n">inet_ntoa</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+
+<span class="n">_unpack_V</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&#34;&lt;L&#34;</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">_unpack_N</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&#34;&gt;L&#34;</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">_unpack_C</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">IpTree</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country_codes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">china_province_codes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">china_city_codes</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">load_country_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;rb&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">country_codes</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="c1"># print self.country_codes</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&#34;cannot open file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">ex</span><span class="o">.</span><span class="n">message</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load_china_province_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;rb&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">provinces</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">china_province_codes</span><span class="p">[</span><span class="n">provinces</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c1"># print self.china_province_codes</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&#34;cannot open file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">ex</span><span class="o">.</span><span class="n">message</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load_china_city_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;rb&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">cities</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">china_city_codes</span><span class="p">[</span><span class="n">cities</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&#34;cannot open file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">ex</span><span class="o">.</span><span class="n">message</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">loadfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ipdot0</span> <span class="o">=</span> <span class="mi">254</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;rb&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">local_binary0</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="n">local_offset</span><span class="p">,</span> <span class="o">=</span> <span class="n">_unpack_N</span><span class="p">(</span><span class="n">local_binary0</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+                <span class="n">local_binary</span> <span class="o">=</span> <span class="n">local_binary0</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="n">local_offset</span><span class="p">]</span>
+                <span class="c1"># 256 nodes</span>
+                <span class="k">while</span> <span class="n">ipdot0</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">middle_ip</span> <span class="o">=</span> <span class="bp">None</span>
+                    <span class="n">middle_content</span> <span class="o">=</span> <span class="bp">None</span>
+                    <span class="n">lis</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="c1"># offset</span>
+                    <span class="n">begin_offset</span> <span class="o">=</span> <span class="n">ipdot0</span> <span class="o">*</span> <span class="mi">4</span>
+                    <span class="n">end_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">ipdot0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
+                    <span class="c1"># index</span>
+                    <span class="n">start_index</span><span class="p">,</span> <span class="o">=</span> <span class="n">_unpack_V</span><span class="p">(</span><span class="n">local_binary</span><span class="p">[</span><span class="n">begin_offset</span><span class="p">:</span><span class="n">begin_offset</span> <span class="o">+</span> <span class="mi">4</span><span class="p">])</span>
+                    <span class="n">start_index</span> <span class="o">=</span> <span class="n">start_index</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="mi">1024</span>
+                    <span class="n">end_index</span><span class="p">,</span> <span class="o">=</span> <span class="n">_unpack_V</span><span class="p">(</span><span class="n">local_binary</span><span class="p">[</span><span class="n">end_offset</span><span class="p">:</span><span class="n">end_offset</span> <span class="o">+</span> <span class="mi">4</span><span class="p">])</span>
+                    <span class="n">end_index</span> <span class="o">=</span> <span class="n">end_index</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="mi">1024</span>
+                    <span class="k">while</span> <span class="n">start_index</span> <span class="o">&lt;</span> <span class="n">end_index</span><span class="p">:</span>
+                        <span class="n">content_offset</span><span class="p">,</span> <span class="o">=</span> <span class="n">_unpack_V</span><span class="p">(</span><span class="n">local_binary</span><span class="p">[</span><span class="n">start_index</span> <span class="o">+</span> <span class="mi">4</span><span class="p">:</span> <span class="n">start_index</span> <span class="o">+</span> <span class="mi">7</span><span class="p">]</span> <span class="o">+</span>
+                                                    <span class="nb">chr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+                        <span class="n">content_length</span><span class="p">,</span> <span class="o">=</span> <span class="n">_unpack_C</span><span class="p">(</span><span class="n">local_binary</span><span class="p">[</span><span class="n">start_index</span> <span class="o">+</span> <span class="mi">7</span><span class="p">])</span>
+                        <span class="n">content_offset</span> <span class="o">=</span> <span class="n">local_offset</span> <span class="o">+</span> <span class="n">content_offset</span> <span class="o">-</span> <span class="mi">1024</span>
+                        <span class="n">content</span> <span class="o">=</span> <span class="n">local_binary0</span><span class="p">[</span><span class="n">content_offset</span><span class="p">:</span><span class="n">content_offset</span> <span class="o">+</span> <span class="n">content_length</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">middle_content</span> <span class="o">!=</span> <span class="n">content</span> <span class="ow">and</span> <span class="n">middle_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                            <span class="n">contents</span> <span class="o">=</span> <span class="n">middle_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                            <span class="n">lis</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">middle_ip</span><span class="p">,</span> <span class="p">(</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_country_code</span><span class="p">(</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                                                    <span class="n">contents</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_china_province_code</span><span class="p">(</span><span class="n">contents</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                                                    <span class="n">contents</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_china_city_code</span><span class="p">(</span><span class="n">contents</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                                                    <span class="n">contents</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">contents</span><span class="p">[</span><span class="mi">4</span><span class="p">])))</span>
+                        <span class="n">middle_content</span><span class="p">,</span> <span class="o">=</span> <span class="n">content</span><span class="p">,</span>
+                        <span class="n">middle_ip</span> <span class="o">=</span> <span class="n">inet_ntoa</span><span class="p">(</span><span class="n">local_binary</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">start_index</span> <span class="o">+</span> <span class="mi">4</span><span class="p">])</span>
+                        <span class="n">start_index</span> <span class="o">+=</span> <span class="mi">8</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ip_dict</span><span class="p">[</span><span class="n">ipdot0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_tree</span><span class="p">(</span><span class="n">lis</span><span class="p">)</span>
+                    <span class="n">ipdot0</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&#34;cannot open file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">ex</span><span class="o">.</span><span class="n">message</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">lookup_country</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_code</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item_country</span><span class="p">,</span> <span class="n">item_country_code</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_codes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">country_code</span> <span class="o">==</span> <span class="n">item_country_code</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">item_country</span><span class="p">,</span> <span class="n">item_country_code</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span>
+
+    <span class="k">def</span> <span class="nf">lookup_country_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_codes</span><span class="p">[</span><span class="n">country</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span>
+
+    <span class="k">def</span> <span class="nf">lookup_china_province</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">province_code</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item_province</span><span class="p">,</span> <span class="n">item_province_code</span><span class="p">,</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">china_province_codes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">province_code</span> <span class="o">==</span> <span class="n">item_province_code</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">item_province</span><span class="p">,</span> <span class="n">item_province_code</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span>
+
+    <span class="k">def</span> <span class="nf">lookup_china_province_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">province</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">china_province_codes</span><span class="p">[</span><span class="n">province</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span>
+
+    <span class="k">def</span> <span class="nf">lookup_china_city</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">city_code</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item_city</span><span class="p">,</span> <span class="n">item_city_code</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">china_city_codes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">city_code</span> <span class="o">==</span> <span class="n">item_city_code</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">item_city</span><span class="p">,</span> <span class="n">item_city_code</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span>
+
+    <span class="k">def</span> <span class="nf">lookup_china_city_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">city</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">china_city_codes</span><span class="p">[</span><span class="n">city</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;None&#39;</span>
+
+    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+        <span class="n">ipdot</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">ipdot0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ipdot</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">ipdot0</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">ipdot0</span> <span class="o">&gt;</span> <span class="mi">255</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">ipdot</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip_dict</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ipdot</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup1</span><span class="p">(</span><span class="n">inet_aton</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span> <span class="n">d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">lookup1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net_ip</span><span class="p">,</span> <span class="p">(</span><span class="n">net_ip1</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">lefts</span><span class="p">,</span> <span class="n">rights</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">net_ip</span> <span class="o">&lt;</span> <span class="n">net_ip1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">lefts</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">content</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup1</span><span class="p">(</span><span class="n">net_ip</span><span class="p">,</span> <span class="n">lefts</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">net_ip</span> <span class="o">&gt;</span> <span class="n">net_ip1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rights</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">content</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup1</span><span class="p">(</span><span class="n">net_ip</span><span class="p">,</span> <span class="n">rights</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">content</span>
+
+    <span class="k">def</span> <span class="nf">generate_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_list</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ip_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">lefts</span> <span class="o">=</span> <span class="n">ip_list</span><span class="p">[:</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">rights</span> <span class="o">=</span> <span class="n">ip_list</span><span class="p">[</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:]</span>
+            <span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span> <span class="o">=</span> <span class="n">lefts</span><span class="p">[</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">inet_aton</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span> <span class="n">content</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_tree</span><span class="p">(</span><span class="n">lefts</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_tree</span><span class="p">(</span><span class="n">rights</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span> <span class="o">=</span> <span class="n">ip_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">inet_aton</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span> <span class="n">content</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+
+    <span class="nb">reload</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">setdefaultencoding</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">ip_tree</span> <span class="o">=</span> <span class="n">IpTree</span><span class="p">()</span>
+    <span class="n">ip_tree</span><span class="o">.</span><span class="n">load_country_codes</span><span class="p">(</span><span class="s2">&#34;doc/country_list.txt&#34;</span><span class="p">)</span>
+    <span class="n">ip_tree</span><span class="o">.</span><span class="n">load_china_province_codes</span><span class="p">(</span><span class="s2">&#34;doc/china_province_code.txt&#34;</span><span class="p">)</span>
+    <span class="n">ip_tree</span><span class="o">.</span><span class="n">load_china_city_codes</span><span class="p">(</span><span class="s2">&#34;doc/china_city_code.txt&#34;</span><span class="p">)</span>
+    <span class="n">ip_tree</span><span class="o">.</span><span class="n">loadfile</span><span class="p">(</span><span class="s2">&#34;doc/mydata4vipday2.dat&#34;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">ip_tree</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;123.12.23.45&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="http请求">http请求</h1>
+<p>提供ip查询服务的GET请求和POST请求</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@ip_app.route</span><span class="p">(</span><span class="s1">&#39;/api/ip_query&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">ip_query</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidUsage</span><span class="p">(</span><span class="s1">&#39;bad request: no key ip in your request json body. {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">InvalidUsage</span><span class="p">(</span><span class="s1">&#39;{} is not a ip&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">ip_tree</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidUsage</span><span class="p">(</span><span class="s1">&#39;internal error: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidUsage</span><span class="p">(</span><span class="s1">&#39;no ip info in ip db for ip: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">501</span><span class="p">)</span>
+
+
+<span class="nd">@ip_app.route</span><span class="p">(</span><span class="s1">&#39;/api/ip_query&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">ip_query_get</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidUsage</span><span class="p">(</span><span class="s1">&#39;bad request: no param ip in your request. {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">InvalidUsage</span><span class="p">(</span><span class="s1">&#39;{} is not a ip&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">ip_tree</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidUsage</span><span class="p">(</span><span class="s1">&#39;internal error: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidUsage</span><span class="p">(</span><span class="s1">&#39;no ip info in ip db for ip: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">501</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>POST请求需要在请求体中包含类似下面的json字段</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+	<span class="nt">&#34;ip&#34;</span><span class="p">:</span> <span class="s2">&#34;165.118.213.9&#34;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>GET请求的形式如：http://127.0.0.1:5000/api/ip_query?ip=165.118.213.9</p>
+<h1 id="服务部署">服务部署</h1>
+<p><strong>安装依赖库</strong></p>
+<p>依赖的库requirements.txt如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="na">certifi</span><span class="o">=</span><span class="s">=2017.7.27.1</span>
+<span class="na">chardet</span><span class="o">=</span><span class="s">=3.0.4</span>
+<span class="na">click</span><span class="o">=</span><span class="s">=6.7</span>
+<span class="na">Flask</span><span class="o">=</span><span class="s">=0.12.2</span>
+<span class="na">gevent</span><span class="o">=</span><span class="s">=1.1.1</span>
+<span class="na">greenlet</span><span class="o">=</span><span class="s">=0.4.12</span>
+<span class="na">gunicorn</span><span class="o">=</span><span class="s">=19.7.1</span>
+<span class="na">idna</span><span class="o">=</span><span class="s">=2.5</span>
+<span class="na">itsdangerous</span><span class="o">=</span><span class="s">=0.24</span>
+<span class="na">Jinja2</span><span class="o">=</span><span class="s">=2.9.6</span>
+<span class="na">locustio</span><span class="o">=</span><span class="s">=0.7.5</span>
+<span class="na">MarkupSafe</span><span class="o">=</span><span class="s">=1.0</span>
+<span class="na">meld3</span><span class="o">=</span><span class="s">=1.0.2</span>
+<span class="na">msgpack-python</span><span class="o">=</span><span class="s">=0.4.8</span>
+<span class="na">requests</span><span class="o">=</span><span class="s">=2.18.3</span>
+<span class="na">supervisor</span><span class="o">=</span><span class="s">=3.3.3</span>
+<span class="na">urllib3</span><span class="o">=</span><span class="s">=1.22</span>
+<span class="na">Werkzeug</span><span class="o">=</span><span class="s">=0.12.2</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>安装方法：<code>pip install -r requirements.txt</code></p>
+<p><strong>配置supervisor</strong></p>
+<p><code>vim /etc/supervisor/conf.d/ip_query_http_service.conf</code>，内容如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[program:ip_query_http_service]</span>
+<span class="na">directory</span> <span class="o">=</span> <span class="s">/root/qk_python/ip_query</span>
+<span class="na">command</span> <span class="o">=</span> <span class="s">gunicorn -w10 -b0.0.0.0:8080 ip_query_app:ip_app --worker-class gevent</span>
+<span class="na">autostart</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">startsecs</span> <span class="o">=</span> <span class="s">5</span>
+<span class="na">autorestart</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">startretries</span> <span class="o">=</span> <span class="s">3</span>
+<span class="na">user</span> <span class="o">=</span> <span class="s">root</span>
+<span class="na">stdout_logfile</span><span class="o">=</span><span class="s">/root/qk_python/ip_query/log/gunicorn.log</span>
+<span class="na">stderr_logfile</span><span class="o">=</span><span class="s">/root/qk_python/ip_query/log/gunicorn.err</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>内容添加完成之后，需要创建stdout_logfile和stderr_logfile这两个目录，否则supervisor启动会报错。然后更新supervisor启动ip_query_http_service进程。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 启动supervisor</span>
+supervisord -c /etc/supervisor/supervisord.conf	
+
+<span class="c1"># 更新supervisor服务</span>
+supervisorctl update
+</code></pre></td></tr></table>
+</div>
+</div><p>关于supervisor的常用操作参见最后面的参考资料。</p>
+<p><strong>安装nginx</strong></p>
+<p>如果是软负载的形式需要安装nginx，编译安装nginx的方法参见最后面的参考资料。</p>
+<p><strong>配置nginx</strong></p>
+<p><code>vim /usr/local/nginx/nginx.conf</code>，修改配置文件内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="c1">#user  nobody;
+</span><span class="c1">#nginx进程数，建议设置为等于CPU总核心数。
+</span><span class="c1"></span><span class="k">worker_processes</span>  <span class="mi">4</span><span class="p">;</span>
+<span class="c1">#error_log  logs/error.log;
+</span><span class="c1">#error_log  logs/error.log  notice;
+</span><span class="c1">#全局错误日志定义类型，[ debug | info | notice | warn | error | crit ]
+</span><span class="c1"></span><span class="k">error_log</span>  <span class="s">logs/error.log</span>  <span class="s">info</span><span class="p">;</span>
+<span class="c1">#进程文件
+</span><span class="c1"></span><span class="k">pid</span>        <span class="s">logs/nginx.pid</span><span class="p">;</span>
+<span class="c1">#一个nginx进程打开的最多文件描述符数目，理论值应该是最多打开文件数（系统的值ulimit -n）与nginx进程数相除，但是nginx分配请求并不均匀，所以建议与ulimit -n的值保持一致。
+</span><span class="c1"></span><span class="k">worker_rlimit_nofile</span> <span class="mi">65535</span><span class="p">;</span>
+<span class="k">events</span> <span class="p">{</span>
+    <span class="c1">#参考事件模型 linux 下使用epoll
+</span><span class="c1"></span>    <span class="kn">use</span> <span class="s">epoll</span><span class="p">;</span>
+    <span class="c1">#单个进程最大连接数（最大连接数=连接数*进程数）
+</span><span class="c1"></span>    <span class="kn">worker_connections</span>  <span class="mi">65535</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">http</span> <span class="p">{</span>
+    <span class="kn">include</span>       <span class="s">mime.types</span><span class="p">;</span>
+    <span class="kn">default_type</span>  <span class="s">application/octet-stream</span><span class="p">;</span>
+    <span class="kn">log_format</span>  <span class="s">main</span>  <span class="s">&#39;</span><span class="nv">$remote_addr</span> <span class="s">-</span> <span class="nv">$remote_user</span> <span class="s">[</span><span class="nv">$time_local]</span> <span class="s">&#34;</span><span class="nv">$request&#34;</span> <span class="s">&#39;</span>
+    <span class="s">&#39;</span><span class="nv">$status</span> <span class="nv">$body_bytes_sent</span> <span class="s">&#34;</span><span class="nv">$http_referer&#34;</span> <span class="s">&#39;</span>
+    <span class="s">&#39;&#34;</span><span class="nv">$http_user_agent&#34;</span> <span class="s">&#34;</span><span class="nv">$http_x_forwarded_for&#34;&#39;</span><span class="p">;</span>
+    <span class="kn">access_log</span>  <span class="s">logs/access.log</span>  <span class="s">main</span><span class="p">;</span>
+    <span class="kn">sendfile</span>        <span class="no">on</span><span class="p">;</span>
+    <span class="c1">#keepalive_timeout  0;
+</span><span class="c1"></span>    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
+    <span class="kn">tcp_nopush</span> <span class="no">on</span><span class="p">;</span> <span class="c1">#防止网络阻塞
+</span><span class="c1"></span>    <span class="kn">tcp_nodelay</span> <span class="no">on</span><span class="p">;</span> <span class="c1">#防止网络阻塞
+</span><span class="c1"></span>    <span class="c1">#gzip  on;
+</span><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+		<span class="c1">#这里配置衔接服务提供的代理端口.
+</span><span class="c1"></span>        <span class="kn">listen</span>       <span class="mi">9000</span><span class="p">;</span>
+        <span class="kn">server_name</span>  <span class="s">localhost</span><span class="p">;</span>
+        <span class="c1">#charset koi8-r;
+</span><span class="c1"></span>        <span class="c1">#access_log  logs/host.access.log  main;
+</span><span class="c1"></span>        <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+            <span class="c1">#            root   html;
+</span><span class="c1"></span>            <span class="c1">#            index  index.html index.htm;
+</span><span class="c1"></span>            <span class="kn">proxy_pass</span> <span class="s">http://127.0.0.1:8000</span><span class="p">;</span>
+            <span class="kn">proxy_redirect</span> <span class="no">off</span><span class="p">;</span>
+            <span class="kn">proxy_set_header</span> <span class="s">X-Real-IP</span> <span class="nv">$remote_addr</span><span class="p">;</span>
+            <span class="c1">#后端的Web服务器可以通过X-Forwarded-For获取用户真实IP
+</span><span class="c1"></span>            <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+            <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$host</span><span class="p">;</span>
+            <span class="kn">client_max_body_size</span> <span class="mi">10m</span><span class="p">;</span> <span class="c1">#允许客户端请求的最大单文件字节数
+</span><span class="c1"></span>            <span class="kn">client_body_buffer_size</span> <span class="mi">128k</span><span class="p">;</span> <span class="c1">#缓冲区代理缓冲用户端请求的最大字节数，
+</span><span class="c1"></span>            <span class="kn">proxy_buffer_size</span> <span class="mi">4k</span><span class="p">;</span> <span class="c1">#设置代理服务器（nginx）保存用户头信息的缓冲区大小
+</span><span class="c1"></span>            <span class="kn">proxy_temp_file_write_size</span> <span class="mi">64k</span><span class="p">;</span>       <span class="c1">#设定缓存文件夹大小，大于这个值，将从upstream服务器传
+</span><span class="c1"></span>        <span class="p">}</span>
+
+        <span class="c1">#error_page  404              /404.html;
+</span><span class="c1"></span>        <span class="c1"># redirect server error pages to the static page /50x.html
+</span><span class="c1"></span>        <span class="c1">#
+</span><span class="c1"></span>        <span class="kn">error_page</span>   <span class="mi">500</span> <span class="mi">502</span> <span class="mi">503</span> <span class="mi">504</span>  <span class="s">/50x.html</span><span class="p">;</span>
+        <span class="kn">location</span> <span class="p">=</span> <span class="s">/50x.html</span> <span class="p">{</span>
+            <span class="kn">root</span>   <span class="s">html</span><span class="p">;</span>
+        <span class="p">}</span>       
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="压力测试">压力测试</h1>
+<p>做压力测试，选择正确的工具是前提。以下工具中，jmeter运行在windows机器较多，其他工具建议都运行在<code>*nix</code>机器上。</p>
+<h2 id="压力测试工具选择">压力测试工具选择</h2>
+<table>
+<thead>
+<tr>
+<th>工具名称</th>
+<th>优缺点</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ApacheBench(ab)</td>
+<td>命令使用简单，效率高，统计信息完善，施压机器内存压力小</td>
+<td>推荐</td>
+</tr>
+<tr>
+<td>locust</td>
+<td>python编写，效率低，受限于GIL，需要编写python测试脚本</td>
+<td>不推荐</td>
+</tr>
+<tr>
+<td>wrk</td>
+<td>命令使用简单，效率高，统计信息精炼，坑少，少报错</td>
+<td>最推荐</td>
+</tr>
+<tr>
+<td>jmeter</td>
+<td>基于java，Apache开源，图形化界面，操作简便</td>
+<td>推荐</td>
+</tr>
+<tr>
+<td>webbench</td>
+<td>使用简单，但是不支持POST请求</td>
+<td>一般</td>
+</tr>
+<tr>
+<td>tsung</td>
+<td>erlang编写，配置模板较多，较复杂</td>
+<td>不推荐</td>
+</tr>
+</tbody>
+</table>
+<p>上述六种工具全部亲身使用过，下面选择ab、wrk、jmeter三种工具简单说明安装使用方法，其他工具的使用方法如有需要，自行google</p>
+<h3 id="ab">ab</h3>
+<p><strong>安装</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">apt-get install apache2-utils 
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>常见options</strong></p>
+<table>
+<thead>
+<tr>
+<th>option</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-r</td>
+<td>当接收到socket错误的时候ab不退出</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>发送请求的最长时间</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>并发数，一次构造的请求数量</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>发送的请求数量</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>postfile，指定包含post数据的文件</td>
+</tr>
+<tr>
+<td>-T</td>
+<td>content-type,指定post和put发送请求时请求体的类型</td>
+</tr>
+</tbody>
+</table>
+<p><strong>使用</strong></p>
+<p>测试GET请求</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">ab -r -t <span class="m">120</span> -c <span class="m">5000</span> http://127.0.0.1:8080/api/ip_query?ip<span class="o">=</span>165.118.213.9
+</code></pre></td></tr></table>
+</div>
+</div><p>测试POST请求</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">ab -r -t <span class="m">120</span> -c <span class="m">5000</span> -p /tmp/post_data.txt -T <span class="s1">&#39;application/json&#39;</span> http://127.0.0.1:8080/api/ip_query
+</code></pre></td></tr></table>
+</div>
+</div><p>其中<code>/tmp/post_data.txt</code>文件的内容为待发送的-T指定格式的数据，在此处为json格式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span><span class="nt">&#34;ip&#34;</span><span class="p">:</span> <span class="s2">&#34;125.118.213.9&#34;</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="wrk">wrk</h3>
+<p><a href="http://www.restran.net/2016/09/27/wrk-http-benchmark/">http://www.restran.net/2016/09/27/wrk-http-benchmark/</a></p>
+<p><strong>安装</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">apt-get install libssl-dev
+git clone https://github.com/wg/wrk.git
+<span class="nb">cd</span> wrk
+make
+cp wrk /usr/sbin
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>常见options</strong></p>
+<table>
+<thead>
+<tr>
+<th>option</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-c</td>
+<td>打开的连接数，即并发数</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>压力测试时间：发送请求的最长时间</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>施压机器使用的线程数量</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>指定要加载的lua脚本</td>
+</tr>
+<tr>
+<td>&ndash;latency</td>
+<td>打印延迟统计信息</td>
+</tr>
+</tbody>
+</table>
+<p><strong>使用</strong></p>
+<p>测试GET请求</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">wrk -t10 -c5000 -d120s --latency http://127.0.0.1:8080/api/ip_query?ip<span class="o">=</span>165.118.213.9
+</code></pre></td></tr></table>
+</div>
+</div><p>测试POST请求</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">wrk -t50 -c5000 -d120s --latency -s /tmp/wrk_post.lua http://127.0.0.1:8080
+</code></pre></td></tr></table>
+</div>
+</div><p>其中<code>/tmp/wrk_post.lua</code>文件的内容为待加载的lua脚本，指定post的path，header，body</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-lua" data-lang="lua"><span class="n">request</span> <span class="o">=</span> <span class="kr">function</span><span class="p">()</span>
+  <span class="n">path</span> <span class="o">=</span> <span class="s2">&#34;/api/ip_query&#34;</span>
+  <span class="n">wrk.headers</span><span class="p">[</span><span class="s2">&#34;Content-Type&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;application/json&#34;</span>
+  <span class="n">wrk.body</span> <span class="o">=</span> <span class="s2">&#34;{</span><span class="se">\&#34;</span><span class="s2">ip</span><span class="se">\&#34;</span><span class="s2">:</span><span class="se">\&#34;</span><span class="s2">125.118.213.9</span><span class="se">\&#34;</span><span class="s2">}&#34;</span>
+  <span class="kr">return</span> <span class="n">wrk.format</span><span class="p">(</span><span class="s2">&#34;POST&#34;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="kr">end</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="jmeter">jmeter</h3>
+<p><strong>安装</strong></p>
+<p>安装jmeter前需要先安装jdk1.8。然后在Apache官网可以下载jmeter，<a href="http://archive.apache.org/dist/jmeter/binaries/">点此下载</a></p>
+<p><strong>使用</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/jmeterjmeter%E4%BD%BF%E7%94%A8%E6%95%B4%E7%90%86xmind.jpg" alt="xmind-jmeter"></p>
+<p>以上图片来自一个测试大牛，非常详细，完整的xmind文件下载见：<a href="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/file/xmind/jmeter/jmeter.xmind">jmeter-张蓓.xmind</a></p>
+<p>jmeter的入门级使用也可以参考最后面的参考资料部分：<strong>使用Apache Jmeter进行并发压力测试</strong></p>
+<h2 id="压力测试结果分析">压力测试结果分析</h2>
+<p><strong>wrk GET请求压测结果</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">root@ubuntu:/tmp# wrk -t10 -c5000 -d60s --latency http://127.0.0.1:8080/api/ip_query?ip=165.118.213.9
+Running 1m test @ http://127.0.0.1:8080/api/ip_query?ip=165.118.213.9
+  10 threads and 5000 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   897.19ms  322.83ms   1.99s    70.52%
+    Req/Sec   318.80    206.03     2.14k    68.84%
+  Latency Distribution
+     50%  915.29ms
+     75%    1.11s 
+     90%    1.29s 
+     99%    1.57s 
+  187029 requests in 1.00m, 51.01MB read
+  Socket errors: connect 0, read 0, write 0, timeout 38
+Requests/sec:   3113.27
+Transfer/sec:    869.53KB
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>ab GET请求压测结果</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">root@ubuntu:/tmp# ab -r -t 60 -c 5000 http://127.0.0.1:8080/api/ip_query?ip=165.118.213.9
+This is ApacheBench, Version 2.3 &lt;$Revision: 1796539 $&gt;
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, https://www.apache.org/
+
+Benchmarking 127.0.0.1 (be patient)
+Completed 5000 requests
+Completed 10000 requests
+Completed 15000 requests
+Completed 20000 requests
+Completed 25000 requests
+Completed 30000 requests
+Completed 35000 requests
+Completed 40000 requests
+Completed 45000 requests
+Completed 50000 requests
+Finished 50000 requests
+
+
+Server Software:        gunicorn/19.7.1
+Server Hostname:        127.0.0.1
+Server Port:            8080
+
+Document Path:          /api/ip_query?ip=165.118.213.9
+Document Length:        128 bytes
+
+Concurrency Level:      5000
+Time taken for tests:   19.617 seconds
+Complete requests:      50000
+Failed requests:        2
+   (Connect: 0, Receive: 0, Length: 1, Exceptions: 1)
+Total transferred:      14050000 bytes
+HTML transferred:       6400000 bytes
+Requests per second:    2548.85 [#/sec] (mean)
+Time per request:       1961.668 [ms] (mean)
+Time per request:       0.392 [ms] (mean, across all concurrent requests)
+Transfer rate:          699.44 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0  597 1671.8      4   15500
+Processing:     4  224 201.4    173    3013
+Waiting:        4  223 200.1    172    2873
+Total:          7  821 1694.4    236   15914
+
+Percentage of the requests served within a certain time (ms)
+  50%    236
+  66%    383
+  75%   1049
+  80%   1155
+  90%   1476
+  95%   3295
+  98%   7347
+  99%   7551
+ 100%  15914 (longest request)
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>jmeter GET请求压测结果</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/jmeter/ip_query_jmeter.jpg" alt=""></p>
+<p><strong>结果分析</strong></p>
+<p>以上三个工具的压测结果大体相同，RPS(Requests per second)大致在3000左右，此时机器配置为4核4G内存，并且gunicorn开了10个worker，内存占用3.2G。单台机器只有3000并发，对于此配置的机器来说，需要进一步分析原因。后续再弄一台机器，负载均衡后能达到5000以上才能满足使用要求。</p>
+<h2 id="压力测试注意事项">压力测试注意事项</h2>
+<p><strong>文件打开数</strong></p>
+<p>压力测试时对施压机器的文件打开数一般有要求，远不止1024个open files，需要增加linux系统的文件打开数，增加方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 文件打开数</span>
+<span class="nb">ulimit</span> -a
+<span class="c1"># 修改文件打开数</span>
+<span class="nb">ulimit</span> -n <span class="m">500000</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>SYN洪水攻击保护</strong></p>
+<p>linux系统中有一个参数：<code>/etc/sysctl.conf</code>配置文件中的<code>net.ipv4.tcp_syncookies</code>字段。这个字段值默认为1，表示系统会检测SYN洪水攻击，并开启保护。因此压测时，如果发送大量重复性数据的请求，受压机器SYN队列溢出之后启用SYN cookie，导致会有大量请求超时失败。阿里云的负载均衡是有SYN洪水攻击检测和DDos攻击检测功能的，因此在做压力测试时需要注意两点：</p>
+<ul>
+<li>测试时适当关闭负载均衡机器的 net.ipv4.tcp_syncookies 字段</li>
+<li>造数据时应该尽量避免大量重复性数据，以免被识别为攻击。</li>
+</ul>
+<h1 id="gunicorn简介及调优">gunicorn简介及调优</h1>
+<p>关于gunicorn的选择可以参考测试报告：<a href="http://www.vincentsfootprint.com/post/python-wsgi-performance-benchmark-test">Python WSGI Server 性能分析</a></p>
+<p>在选定gunicorn作为WSGI server之后，需要根据机器选择相应的worker数量以及每个worker的worker-class。</p>
+<p><strong>worker数量选择</strong></p>
+<p>每一个worker都是作为一个单独的子进程来运行，都持有一份独立的内存数据，每增加或减少一个worker，系统内存明显的成倍数的改变。最初单台机器gunicorn开启3个worker，系统只支持1000RPS的并发。当把worker扩展为9个之后，系统支持3000RPS的并发。因此在内存足够的时候，可以适当增加worker数量。</p>
+<p><strong>worker-class选择</strong></p>
+<p>可以参考尾部的参考资料中的<strong>gunicorn常用settings</strong>和<strong>Gunicorn 几种 Worker class 性能测试比较</strong>这两篇文章。</p>
+<p>将gunicorn启动时的worker-class从默认的sync改成gevent之后，系统RPS直接翻倍。</p>
+<table>
+<thead>
+<tr>
+<th>worker-class</th>
+<th>worker数量</th>
+<th>ab测试的RPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sync</td>
+<td>3</td>
+<td>573.90</td>
+</tr>
+<tr>
+<td>gevent</td>
+<td>3</td>
+<td>1011.84</td>
+</tr>
+</tbody>
+</table>
+<p>gevent依赖：gevent &gt;= 0.13。因此需要先使用pip安装。对应的gunicorn启动flask应用的命令需要修改为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">gunicorn -w10 -b0.0.0.0:8080 ip_query_app:ip_app --worker-class gevent
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="改进点">改进点</h1>
+<p><strong>改进ip数据库准确性</strong></p>
+<p>损失效率换取准确性：使用单一ip数据库会存在一些ip无法查询出结果的情况，并且国外ip一般只能精确到国家。可以平衡几家ip数据库的准确度和覆盖率，当无法查询出准确的地址信息时去查询另外几个ip数据库。</p>
+<p><strong>提高单台机器并发量</strong></p>
+<p>从发起请求，到WSGI服务器处理，到应用接口，到ip查询每个过程都需要单独分析每秒可执行量，进而分析系统瓶颈，从根本上提高单机并发量。</p>
+<hr>
+<p><strong>参考资料</strong></p>
+<ul>
+<li><a href="https://www.ipip.net/download.html">全球 IPv4 地址归属地数据库(IPIP.NET 版)</a></li>
+<li><a href="http://python.jobbole.com/85008/">使用flask开发RESTful架构的api服务器端(5)–部署flask应用到nginx</a></li>
+<li><a href="http://www.jianshu.com/p/be9dd421fb8d">python web 部署：nginx + gunicorn + supervisor + flask 部署笔记</a></li>
+<li><a href="https://suncle.me/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/">flowsnow-nginx编译安装</a></li>
+<li><a href="http://liyangliang.me/posts/2015/06/using-supervisor/">supervisor推荐教程-使用 supervisor 管理进程</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%85%83%E6%90%9C%E5%B0%8B%E6%A8%B9">维基-二叉查找树</a></li>
+<li><a href="http://www.jianshu.com/p/cf0853226dc6">简书-wrk压力测试post接口</a></li>
+<li><a href="http://blog.jassassin.com/2014/04/17/tools/jmeter/">使用Apache Jmeter进行并发压力测试</a></li>
+<li><a href="http://docs.gunicorn.org/en/stable/settings.html">gunicorn常用settings</a></li>
+<li><a href="http://blog.wiseturtles.com/posts/gunicorn-worker-class-compare.html">Gunicorn 几种 Worker class 性能测试比较</a></li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-08-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/flask/">flask</a>
+          <a href="/tags/http/">http</a>
+          <a href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/">高并发</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">ubuntu16.04配置samba解决linux的svn使用舒适问题</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">
+            <span class="next-text nav-default">Erlang学习笔记(1)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

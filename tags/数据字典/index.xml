@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数据字典 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8/</link>
+    <description>Recent content in 数据字典 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 Mar 2016 10:23:40 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Oracle数据字典</title>
+      <link>https://suncle.me/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8/</link>
+      <pubDate>Wed, 16 Mar 2016 10:23:40 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;数据字典的组成——两类视图&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;静态数据字典：描述数据库的信息&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;这些数据经常是静止的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;动态数据字典：描述实例的信息&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;反映数据局运行的状态，反映数据库实例运行的信息，这些信息经常是变化的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;users&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ALL_USERS&amp;ndash;lists all users of the database visible to the current user. This view does not describe the users&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;描述不是用户自己，而是当前用户可见（也就是有权访问）的数据库的所有的用户。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;DBA_USERS&amp;ndash;describes all users of the database&lt;/p&gt;
+&lt;p&gt;USER_USERS&amp;ndash;describes the current user&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;数据字典视图&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查询所有的数据字典视图&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;select * from dict;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;数据字典的基表&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;是保存数据的真正的表&lt;/li&gt;
+&lt;li&gt;数据字典视图的数据来自于基表&lt;/li&gt;
+&lt;li&gt;Oracle不对基表做支持和解释&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;DBA常用的一些数据字典视图——静态视图&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;user_tables&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;内容和ALL_TABLES类似。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_2105.htm#REFRN20286&#34;&gt;https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_2105.htm#REFRN20286&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;user_tab_partitions&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;内容和ALL_TAB_PARTITIONS类似&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_2098.htm#i1591118&#34;&gt;https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_2098.htm#i1591118&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

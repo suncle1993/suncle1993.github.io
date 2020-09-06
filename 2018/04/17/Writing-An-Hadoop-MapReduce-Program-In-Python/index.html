@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用Python语言写Hadoop MapReduce程序 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。
+本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：单词计数
+ 尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如Python，Ruby，C&#43;&#43;等
+ 编写完成的MapReduce程序可以直接在你已经搭建好的伪分布式程序中调试运行。
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2018/04/17/Writing-An-Hadoop-MapReduce-Program-In-Python/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用Python语言写Hadoop MapReduce程序" />
+<meta property="og:description" content="在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。
+本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：单词计数
+
+尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如Python，Ruby，C&#43;&#43;等
+
+编写完成的MapReduce程序可以直接在你已经搭建好的伪分布式程序中调试运行。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2018/04/17/Writing-An-Hadoop-MapReduce-Program-In-Python/" />
+<meta property="article:published_time" content="2018-04-17T15:54:21+00:00" />
+<meta property="article:modified_time" content="2018-04-17T15:54:21+00:00" />
+<meta itemprop="name" content="使用Python语言写Hadoop MapReduce程序">
+<meta itemprop="description" content="在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。
+本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：单词计数
+
+尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如Python，Ruby，C&#43;&#43;等
+
+编写完成的MapReduce程序可以直接在你已经搭建好的伪分布式程序中调试运行。">
+<meta itemprop="datePublished" content="2018-04-17T15:54:21+00:00" />
+<meta itemprop="dateModified" content="2018-04-17T15:54:21+00:00" />
+<meta itemprop="wordCount" content="3318">
+
+
+
+<meta itemprop="keywords" content="Hadoop,Python,MapReduce," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用Python语言写Hadoop MapReduce程序"/>
+<meta name="twitter:description" content="在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。
+本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：单词计数
+
+尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如Python，Ruby，C&#43;&#43;等
+
+编写完成的MapReduce程序可以直接在你已经搭建好的伪分布式程序中调试运行。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用Python语言写Hadoop MapReduce程序</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-04-17 </span>
+        <div class="post-category">
+            <a href="/categories/Hadoop/"> Hadoop </a>
+            </div>
+          <span class="more-meta"> 约 3318 字 </span>
+          <span class="more-meta"> 预计阅读 7 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#mapreduce的python代码">MapReduce的Python代码</a>
+      <ul>
+        <li><a href="#mapperpy">mapper.py</a></li>
+        <li><a href="#reducerpy">reducer.py</a></li>
+        <li><a href="#代码测试">代码测试</a></li>
+      </ul>
+    </li>
+    <li><a href="#在hadoop上运行python代码">在Hadoop上运行Python代码</a>
+      <ul>
+        <li><a href="#下载示例输入数据">下载示例输入数据</a></li>
+        <li><a href="#将本地示例数据拷贝到hdfs">将本地示例数据拷贝到HDFS</a></li>
+        <li><a href="#运行mapreduce作业">运行MapReduce作业</a></li>
+      </ul>
+    </li>
+    <li><a href="#改进mapper和reducer代码">改进Mapper和Reducer代码</a>
+      <ul>
+        <li><a href="#advanced_mapperpy">advanced_mapper.py</a></li>
+        <li><a href="#advanced_reducerpy">advanced_reducer.py</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。</p>
+<p>本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：<strong>单词计数</strong></p>
+<blockquote>
+<p>尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如Python，Ruby，C++等</p>
+</blockquote>
+<p>编写完成的MapReduce程序可以直接在你已经搭建好的伪分布式程序中调试运行。</p>
+<h1 id="mapreduce的python代码">MapReduce的Python代码</h1>
+<p>我们将使用<a href="https://hadoop.apache.org/docs/r1.2.1/streaming.html#Hadoop+Streaming">Hadoop流API</a>通过STDIN和STDOUT在Map和Reduce代码间传递数据。我们只需要使用Python的sys.stdin读取输入数据和打印输出到sys.stdout。这就是我们需要做的，因为Hadoop流会处理好其他的一切。</p>
+<h2 id="mapperpy">mapper.py</h2>
+<p>将下面的代码保存在文件 <code>/home/hadoop/workspace/mapper.py</code> 中。它将从STDIN读取数据，拆分为单词并输出一组映射单词和它们数量（中间值）的行到STDOUT。尽管这个Map脚本不会计算出单词出现次数的总和（中间值）。相反，它会立即输出<code>&lt;word&gt; 1</code>元组的形式——即使某个特定的单词可能会在输入中出现多次。在我们的例子中，我们让后续的Reduce做最终的总和计数。当然，你可以按照你的想法在你自己的脚本中修改这段代码。</p>
+<p>需要给mapper.py文件赋予可执行权限：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">chmod +x /home/hadoop/workspace/mapper.py
+</code></pre></td></tr></table>
+</div>
+</div><p><code>/home/hadoop/workspace/mapper.py</code>代码如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 4/17/18 11:16 AM
+</span><span class="s2">@author: Chen Liang
+</span><span class="s2">@function:  word count mapper
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># 从标准输入STDIN输入</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
+    <span class="c1"># 移除line收尾的空白字符</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="c1"># 将line分割为单词</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="c1"># 遍历</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="c1"># 将结果写到标准输出STDOUT</span>
+        <span class="c1"># 此处的输出会作为Reduce代码的输入</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{}</span><span class="se">\t</span><span class="s1">{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="reducerpy">reducer.py</h2>
+<p>将下面的代码保存在文件 <code>/home/hadoop/workspace/reducer.py</code> 中。它将从STDIN读取mapper.py的结果（因此mapper.py的输出格式和reducer.py预期的输入格式必须匹配），然后统计每个单词出现的次数，最后将结果输出到STDOUT中。</p>
+<p>需要给reducer.py文件赋予可执行权限：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">chmod +x /home/hadoop/workspace/reducer.py
+</code></pre></td></tr></table>
+</div>
+</div><p><code>/home/hadoop/workspace/reducer.py</code>代码如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 4/17/18 11:16 AM
+</span><span class="s2">@author: Chen Liang
+</span><span class="s2">@function: word count reducer
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">current_word</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">current_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">word</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
+    <span class="c1"># 移除line收尾的空白字符</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="c1"># 解析我们从mapper.py得到的输入</span>
+    <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># 将字符串count转换为int</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="c1"># 不是数字，不做处理，跳过</span>
+        <span class="k">continue</span>
+
+    <span class="c1"># hadoop在将kv对传递给reduce之前会进行按照key进行排序，在这里也就是word</span>
+    <span class="k">if</span> <span class="n">current_word</span> <span class="o">==</span> <span class="n">word</span><span class="p">:</span>
+        <span class="n">current_count</span> <span class="o">+=</span> <span class="n">count</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">current_word</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># 将结果写入STDOUT</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{}</span><span class="se">\t</span><span class="s1">{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">current_word</span><span class="p">,</span> <span class="n">current_count</span><span class="p">))</span>
+        <span class="n">current_count</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="n">current_word</span> <span class="o">=</span> <span class="n">word</span>
+
+<span class="c1"># 最后一个单词不要忘记输出</span>
+<span class="k">if</span> <span class="n">current_word</span> <span class="o">==</span> <span class="n">word</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{}</span><span class="se">\t</span><span class="s1">{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">current_word</span><span class="p">,</span> <span class="n">current_count</span><span class="p">))</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="代码测试">代码测试</h2>
+<p>在MapReduce作业中正式使用mapper.py和reducer.py之前，最好先在本地测试mapper.py和reducer.py脚本。否则，作业可能成功完成了但没有得到作业结果数据或者得到了不是你想要的结果。</p>
+<p>这里有一些想法，关于如何测试这个Map和Reduce脚本的功能。</p>
+<p>使用<code>cat data | map | sort | reduce</code>这样的顺序。具体测试如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 首先在本地测试 mapper.py 和 reducer.py</span>
+
+<span class="c1"># 非常基本的测试</span>
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ <span class="nb">echo</span> <span class="s2">&#34;foo foo quux labs foo bar quux&#34;</span> <span class="p">|</span> /home/hadoop/workspace/mapper.py
+foo	<span class="m">1</span>
+foo	<span class="m">1</span>
+quux	<span class="m">1</span>
+labs	<span class="m">1</span>
+foo	<span class="m">1</span>
+bar	<span class="m">1</span>
+quux	<span class="m">1</span>
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ vim reducer.py 
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ <span class="nb">echo</span> <span class="s2">&#34;foo foo quux labs foo bar quux&#34;</span> <span class="p">|</span> /home/hadoop/workspace/mapper.py <span class="p">|</span> sort -k1,1 <span class="p">|</span> /home/hadoop/workspace/reducer.py
+bar	<span class="m">1</span>
+foo	<span class="m">3</span>
+labs	<span class="m">1</span>
+quux	<span class="m">2</span>
+<span class="c1"># 使用示例文件</span>
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ cat /home/hadoop/workspace/file/input1.txt <span class="p">|</span> /home/hadoop/workspace/mapper.py 
+Now	<span class="m">1</span>
+that	<span class="m">1</span>
+everything	<span class="m">1</span>
+is	<span class="m">1</span>
+prepared,	<span class="m">1</span>
+we	<span class="m">1</span>
+can	<span class="m">1</span>
+finally	<span class="m">1</span>
+run	<span class="m">1</span>
+our	<span class="m">1</span>
+Python	<span class="m">1</span>
+MapReduce	<span class="m">1</span>
+...
+</code></pre></td></tr></table>
+</div>
+</div><p>其中<code>/home/hadoop/workspace/file/input1.txt</code>示例输入文件的内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Now that everything is prepared, we can finally run our Python MapReduce job on the Hadoop cluster.
+As I said above, we leverage the Hadoop Streaming API for helping us passing data between our Map and Reduce code via STDIN and STDOUT.
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="在hadoop上运行python代码">在Hadoop上运行Python代码</h1>
+<h2 id="下载示例输入数据">下载示例输入数据</h2>
+<p>对于这个示例，我们将使用的三个文本来自Gutenberg项目：</p>
+<ol>
+<li><a href="https://www.gutenberg.org/etext/20417">The Outline of Science, Vol. 1 (of 4) by J. Arthur Thomson</a></li>
+<li><a href="https://www.gutenberg.org/etext/5000">The Notebooks of Leonardo Da Vinci</a></li>
+<li><a href="https://www.gutenberg.org/etext/4300">Ulysses by James Joyce</a></li>
+</ol>
+<p>下载对应链接下的<code>Plain Text UTF-8</code>，三个文本对应的地址分别为：</p>
+<ol>
+<li><a href="https://www.gutenberg.org/cache/epub/20417/pg20417.txt">https://www.gutenberg.org/cache/epub/20417/pg20417.txt</a></li>
+<li><a href="https://www.gutenberg.org/files/5000/5000-8.txt">https://www.gutenberg.org/files/5000/5000-8.txt</a></li>
+<li><a href="https://www.gutenberg.org/files/4300/4300-0.txt">https://www.gutenberg.org/files/4300/4300-0.txt</a></li>
+</ol>
+<p>下载每个文件为纯文本文件，以UTF-8编译并且将这些文件存储在一个临时目录中，如/tmp/gutenberg。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace/file$ ll
+total 3612
+drwxrwxr-x 2 hadoop hadoop    4096 Apr 17 14:46 ./
+drwxrwxr-x 3 hadoop hadoop    4096 Apr 17 14:32 ../
+-rw-rw-r-- 1 hadoop hadoop     237 Apr 17 14:32 input1.txt
+-rw-rw-r-- 1 hadoop hadoop  674570 Apr 17 14:45 pg20417.txt
+-rw-rw-r-- 1 hadoop hadoop 1580890 Aug 17  2017 pg4300.txt
+-rw-rw-r-- 1 hadoop hadoop 1428841 Apr  7  2015 pg5000.txt
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="将本地示例数据拷贝到hdfs">将本地示例数据拷贝到HDFS</h2>
+<p>首先在HDFS中创建一个子目录，然后拷贝文件过来（如果input已存在先删除再创建，以免影响测试结果）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -mkdir input
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -ls
+Found <span class="m">1</span> items
+drwxr-xr-x   - hadoop supergroup          <span class="m">0</span> 2018-04-17 14:51 input
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -put /home/hadoop/workspace/file/pg*.txt input
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -ls input
+Found <span class="m">3</span> items
+-rw-r--r--   <span class="m">1</span> hadoop supergroup     <span class="m">674570</span> 2018-04-17 14:53 input/pg20417.txt
+-rw-r--r--   <span class="m">1</span> hadoop supergroup    <span class="m">1580890</span> 2018-04-17 14:53 input/pg4300.txt
+-rw-r--r--   <span class="m">1</span> hadoop supergroup    <span class="m">1428841</span> 2018-04-17 14:53 input/pg5000.txt
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="运行mapreduce作业">运行MapReduce作业</h2>
+<p>运行MapReduce作业，敲入如下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hadoop jar /usr/local/src/hadoop-3.1.0/share/hadoop/tools/lib/hadoop-streaming-3.1.0.jar -file mapper.py -mapper mapper.py -file reducer.py -reducer reducer.py -input input/* -output output-first
+</code></pre></td></tr></table>
+</div>
+</div><p>查看<code>output-first</code>目录确保程序执行正常：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -ls output-first
+Found <span class="m">2</span> items
+-rw-r--r--   <span class="m">1</span> hadoop supergroup          <span class="m">0</span> 2018-04-17 15:03 output-first/_SUCCESS
+-rw-r--r--   <span class="m">1</span> hadoop supergroup     <span class="m">878847</span> 2018-04-17 15:03 output-first/part-00000
+</code></pre></td></tr></table>
+</div>
+</div><p>将文件从HDFS中拷入到你本地文件系统中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ mkdir /home/hadoop/workspace/file/output-first
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -get output-first/* /home/hadoop/workspace/file/output-first/
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ <span class="nb">cd</span> /home/hadoop/workspace/file/output-first/
+hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace/file/output-first$ ls
+part-00000  _SUCCESS
+</code></pre></td></tr></table>
+</div>
+</div><p>一般情况下，Hadoop对每个reducer产生一个输出文件；在我们的示例中，然而它将只创建单个文件，因为输入的文件都很小。</p>
+<p>如果你想要在运行的时候修改Hadoop参数，如增加Reduce任务的数量，你可以使用-D选项：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">-D mapred.reduce.tasks<span class="o">=</span><span class="m">16</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>只能指定reduce的task数量不能指定map的task数量。</p>
+<h1 id="改进mapper和reducer代码">改进Mapper和Reducer代码</h1>
+<p>上面的Mapper和Reducer例子应该给你提供了一种思路，关于如何创建第一个MapReduce程序。重点是代码简洁和易于理解，特别是对于Python语言的初学者。在现实程序中，你可能想要通过<a href="http://www.ibm.com/developerworks/library/l-pycon.html">Python的迭代器和生成器</a>来优化你的代码。</p>
+<p>一般来说，迭代器和生成器有一个优点：序列中的元素在你需要它的时候才会生成。计算资源昂贵或内存紧缺的时候很有用。</p>
+<p>注意：下面的Map和Reduce脚本只有运行在Hadoop环境中才会正常工作，即在 MapReduce任务中作为Mapper和Reducer。这表示在本地运行的测试命令&quot;cat DATA | ./mapper.py | sort -k1,1 | ./reducer.py&quot;不会正常工作，因为一些功能是由Hadoop来完成的。</p>
+<p>准确地说，我们计算了一个单词出现的次数，例如(&ldquo;foo&rdquo;, 4)，只有恰巧相同的单词（foo）相继出现多次。然而，在大多数情况下，我们让Hadoop在Map和Reduce过程时自动分组(key, value)对这样的形式，因为Hadoop在这方面比我们简单的Python脚本效率更高。</p>
+<h2 id="advanced_mapperpy">advanced_mapper.py</h2>
+<p>advanced_mapper.py是改进之后的mapper代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 4/17/18 3:23 PM
+</span><span class="s2">@author: Chen Liang
+</span><span class="s2">@function: 更高级的Mapper，使用Python迭代器和生成器
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">read_input</span><span class="p">(</span><span class="n">std_input</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">std_input</span><span class="p">:</span>
+        <span class="c1"># 将line分割成单词</span>
+        <span class="k">yield</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">separator</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">):</span>
+    <span class="c1"># 从标准输入STDIN输入</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">read_input</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">words</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="c1"># 将结果写到标准输出，此处的输出会作为reduce的输入</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{}{}{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">separator</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="advanced_reducerpy">advanced_reducer.py</h2>
+<p>advanced_reducer.py是改进之后的reducer代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 4/17/18 3:23 PM
+</span><span class="s2">@author: Chen Liang
+</span><span class="s2">@function: 更高级的Reducer，使用Python迭代器和生成器
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">read_mapper_output</span><span class="p">(</span><span class="n">std_input</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">std_input</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">separator</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">):</span>
+    <span class="c1"># 从STDIN输入</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">read_mapper_output</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="n">separator</span><span class="p">)</span>
+    <span class="c1"># groupby通过word对多个word-count对进行分组，并创建一个返回连续键和它们的组的迭代器：</span>
+    <span class="c1">#  - current_word - 包含单词的字符串（键）</span>
+    <span class="c1">#  - group - 是一个迭代器，能产生所有的[&#34;current_word&#34;, &#34;count&#34;]项</span>
+    <span class="c1"># itemgetter: 用于获取对象的哪些维的数据，itemgetter(0)表示获取第0维</span>
+    <span class="k">for</span> <span class="n">current_word</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">itemgetter</span><span class="p">(</span><span class="mi">0</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">total_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="k">for</span> <span class="n">current_word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">group</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{}{}{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">current_word</span><span class="p">,</span> <span class="n">separator</span><span class="p">,</span> <span class="n">total_count</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>代码改进结束。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a href="https://emunix.emich.edu/~sverdlik/COSC472/WritingAnHadoopMapReduceProgramInPython-MichaelG.Noll.html">https://emunix.emich.edu/~sverdlik/COSC472/WritingAnHadoopMapReduceProgramInPython-MichaelG.Noll.html</a></li>
+<li><a href="https://python.freelycode.com/contribution/detail/307">https://python.freelycode.com/contribution/detail/307</a></li>
+<li><a href="https://hadoop.apache.org/docs/r1.2.1/streaming.html#Hadoop+Streaming">https://hadoop.apache.org/docs/r1.2.1/streaming.html#Hadoop+Streaming</a></li>
+<li><a href="https://wiki.apache.org/hadoop/HadoopStreaming">https://wiki.apache.org/hadoop/HadoopStreaming</a></li>
+<li><a href="https://blog.csdn.net/dongtingzhizi/article/details/12068205">https://blog.csdn.net/dongtingzhizi/article/details/12068205</a></li>
+<li><a href="https://www.cnblogs.com/dreamer-fish/p/5522687.html">https://www.cnblogs.com/dreamer-fish/p/5522687.html</a></li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-04-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Hadoop/">Hadoop</a>
+          <a href="/tags/Python/">Python</a>
+          <a href="/tags/MapReduce/">MapReduce</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2018/05/09/Sqoop-Import-Export/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Sqoop导入导出</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2018/04/16/Hadoop3-basic-installation-and-configuration/">
+            <span class="next-text nav-default">Hadoop3单机和伪分布式模式安装配置</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

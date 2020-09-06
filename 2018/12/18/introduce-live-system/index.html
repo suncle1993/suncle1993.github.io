@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>直播系统介绍 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="演示 本地演示：ffmpeg/obs &#43; livego &#43; mpv
+ 推流选择ffmpeg或者obs 流媒体服务直接使用livego 播放使用mpv  推流截图：
+拉流截图：
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2018/12/18/introduce-live-system/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="直播系统介绍" />
+<meta property="og:description" content="演示
+本地演示：ffmpeg/obs &#43; livego &#43; mpv
+
+推流选择ffmpeg或者obs
+流媒体服务直接使用livego
+播放使用mpv
+
+推流截图：
+
+拉流截图：
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2018/12/18/introduce-live-system/" />
+<meta property="article:published_time" content="2018-12-18T20:48:22+00:00" />
+<meta property="article:modified_time" content="2018-12-18T20:48:22+00:00" />
+<meta itemprop="name" content="直播系统介绍">
+<meta itemprop="description" content="演示
+本地演示：ffmpeg/obs &#43; livego &#43; mpv
+
+推流选择ffmpeg或者obs
+流媒体服务直接使用livego
+播放使用mpv
+
+推流截图：
+
+拉流截图：
+">
+<meta itemprop="datePublished" content="2018-12-18T20:48:22+00:00" />
+<meta itemprop="dateModified" content="2018-12-18T20:48:22+00:00" />
+<meta itemprop="wordCount" content="1083">
+
+
+
+<meta itemprop="keywords" content="直播,cdn,livego," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="直播系统介绍"/>
+<meta name="twitter:description" content="演示
+本地演示：ffmpeg/obs &#43; livego &#43; mpv
+
+推流选择ffmpeg或者obs
+流媒体服务直接使用livego
+播放使用mpv
+
+推流截图：
+
+拉流截图：
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">直播系统介绍</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-12-18 </span>
+        <div class="post-category">
+            <a href="/categories/Go/"> Go </a>
+            </div>
+          <span class="more-meta"> 约 1083 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#演示">演示</a>
+      <ul>
+        <li><a href="#livego">livego</a></li>
+        <li><a href="#流地址">流地址</a></li>
+      </ul>
+    </li>
+    <li><a href="#视频流">视频流</a></li>
+    <li><a href="#直播系统组成">直播系统组成</a></li>
+    <li><a href="#直播流协议">直播流协议</a>
+      <ul>
+        <li><a href="#rtmp">RTMP</a></li>
+        <li><a href="#hdl">HDL</a></li>
+        <li><a href="#hls">HLS</a></li>
+        <li><a href="#使用情况">使用情况</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="演示">演示</h1>
+<p>本地演示：ffmpeg/obs + livego + mpv</p>
+<ol>
+<li>推流选择ffmpeg或者obs</li>
+<li>流媒体服务直接使用livego</li>
+<li>播放使用mpv</li>
+</ol>
+<p>推流截图：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/live-20181218/obs-push.jpg" alt=""></p>
+<p>拉流截图：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/live-20181218/hls-pull.jpg" alt=""></p>
+<h2 id="livego">livego</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">git clone https://github.com/gwuhaolin/livego.git
+go build livego.go  <span class="c1"># 编译</span>
+<span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span> <span class="nv">GOOS</span><span class="o">=</span>linux <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build livego.go  <span class="c1"># 编译成linux环境下的可执行文件</span>
+./livego
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="流地址">流地址</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">rtmp推流：rtmp://127.0.0.1:1935/live/taylor
+rtmp拉流：rtmp://127.0.0.1:1935/live/taylor
+hdl拉流：http://127.0.0.1:7001/live/taylor.flv
+hls拉流：http://127.0.0.1:7002/live/taylor.m3u8
+</code></pre></td></tr></table>
+</div>
+</div><p>如果使用ffmpeg推流</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">ffmpeg -re -i ~/Documents/Taylor\ Swift\ -\ You\ Belong\ With\ Me.mp4 -c copy -f flv rtmp://localhost:1935/live/taylor
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="视频流">视频流</h1>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/live-20181218/%E7%9B%B4%E6%92%AD%E7%B3%BB%E7%BB%9F%E6%B5%81%E7%A8%8B.png" alt=""></p>
+<h1 id="直播系统组成">直播系统组成</h1>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/live-20181218/%E7%9B%B4%E6%92%AD%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90.png" alt=""></p>
+<h1 id="直播流协议">直播流协议</h1>
+<h2 id="rtmp">RTMP</h2>
+<p>Rtmp规范1.0：https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/</p>
+<p>Rtmp规范1.0 en：http://wwwimages.adobe.com/www.adobe.com/content/dam/acom/en/devnet/rtmp/pdf/rtmp_specification_1.0.pdf</p>
+<ol>
+<li>RTMP协议是应用层协议，基于下层的传输层协议TCP</li>
+<li>要建立一个有效的RTMP Connection链接，首先要握手。但是实际使用过程中对握手数据校验不严格</li>
+<li>Adobe公司</li>
+<li>低延迟，内容延迟可以低于3秒</li>
+<li>需要编解码</li>
+<li>几乎所有的稳定推流协议都是RTMP</li>
+</ol>
+<h2 id="hdl">HDL</h2>
+<p>HDL协议中封装格式使用的是FLV，HDL又叫做HTTP-FLV</p>
+<ol>
+<li>基于HTTP</li>
+<li>低延迟，内容延迟可以低于3秒</li>
+<li>需要编解码</li>
+</ol>
+<h2 id="hls">HLS</h2>
+<p>Http Live Streaming。</p>
+<ol>
+<li>苹果公司</li>
+<li>基于HTTP</li>
+<li>HTML5可以直接播放，不需要编解码，需要在服务端切片，有Stream Segmenter的概念</li>
+<li>格式：
+<ol>
+<li>m3u8：索引文件，以m3u8为后缀。用文本方式对媒体文件进行描述，由一系列标签组成</li>
+<li>ts：传输流文件，视频编码主要格式h264/mpeg4，音频为acc/MP3。</li>
+</ol>
+</li>
+<li>延迟较高，一般在10秒左右</li>
+</ol>
+<h2 id="使用情况">使用情况</h2>
+<p>对于正常的直播场景，多数都是推流使用Rtmp协议，拉流使用HLS协议</p>
+<hr>
+<p>参考：</p>
+<ol>
+<li>SRS的C++版本：https://github.com/ossrs/srs</li>
+<li>SRS的Golang版本：https://github.com/gwuhaolin/livego</li>
+<li>云直播系统架构与实施：https://blog.csdn.net/qiansg123/article/details/80124296</li>
+<li>UCloud：http://blog.ucloud.cn/archives/699</li>
+</ol>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-12-18
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E7%9B%B4%E6%92%AD/">直播</a>
+          <a href="/tags/cdn/">cdn</a>
+          <a href="/tags/livego/">livego</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2018/12/27/wechat-order-evolution/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">微信点餐的需求和技术演变</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2018/12/15/Travel-Croatia-By-Google-Map/">
+            <span class="next-text nav-default">Google 地图旅拍克罗地亚</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

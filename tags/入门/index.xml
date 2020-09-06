@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>入门 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%85%A5%E9%97%A8/</link>
+    <description>Recent content in 入门 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 14 Dec 2017 14:33:30 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%85%A5%E9%97%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Erlang入门路线</title>
+      <link>https://suncle.me/2017/12/14/Erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/</link>
+      <pubDate>Thu, 14 Dec 2017 14:33:30 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/12/14/Erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/</guid>
+      <description>&lt;p&gt;间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。&lt;/p&gt;
+&lt;p&gt;主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

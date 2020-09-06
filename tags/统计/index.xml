@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>统计 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E7%BB%9F%E8%AE%A1/</link>
+    <description>Recent content in 统计 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 May 2018 13:38:03 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E7%BB%9F%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hadoop项目：从cdn日志统计直播流量</title>
+      <link>https://suncle.me/2018/05/16/Hadoop-Project-Live-Flow-Statistic/</link>
+      <pubDate>Wed, 16 May 2018 13:38:03 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/05/16/Hadoop-Project-Live-Flow-Statistic/</guid>
+      <description>&lt;p&gt;从在用的四家cdn的大量日志中，统计出每场直播的流量数据，包括国内流量和海外流量。&lt;/p&gt;
+&lt;h1 id=&#34;获取日志&#34;&gt;获取日志&lt;/h1&gt;
+&lt;p&gt;目前已有的数据来源：四家cdn服务商。每个服务商都有自己不同的日志接口，不同的日志获取方式，可以把日志类型分为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;网宿日志、帝联日志、阿里日志，腾讯日志&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;直播日志、录播日志&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;hls日志、rtmp日志、rtmpdist日志、hdl日志，不同协议日志的域名都不相同。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;各家厂商cdn日志的收集方法参见各自官网。获取到的日志示例文件名如下：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;cdn_code&lt;/th&gt;
+&lt;th&gt;log_name&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;netcenter&lt;/td&gt;
+&lt;td&gt;2017-12-06-2300-2330_rtmp-wsz.qukanvideo.com.cn.log.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;dnion&lt;/td&gt;
+&lt;td&gt;hls-d.quklive.com_20180509_03_04.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;alicdn&lt;/td&gt;
+&lt;td&gt;play-a.quklive.com_2017_12_07_1100_1200.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;qukan-&amp;gt;alicdn&lt;/td&gt;
+&lt;td&gt;recordcdn-sz.qukanvideo.com_2017_12_06_1800_1900.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tencent&lt;/td&gt;
+&lt;td&gt;2017120607_hangzhouqukan.cdn.log.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;可以从文件名判断属于日志所属的cdn代码和对应的协议。将cdn代码、播放类型代码、协议代码对应的关系直接存在字典中：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;domain_protocol_dict&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;s1&#34;&gt;&amp;#39;recordcdn.quklive.com&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;qukan&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;record&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;hls&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;通过日志名称匹配到域名，并取得对应的cdn代码、播放类型代码、协议代码，然后对具体的日志做不同的正则处理。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bash on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/Bash/</link>
+    <description>Recent content in Bash on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 30 Mar 2019 01:13:35 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/Bash/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>常用Linux脚本集锦</title>
+      <link>https://suncle.me/2019/03/30/useful-linux-scripts/</link>
+      <pubDate>Sat, 30 Mar 2019 01:13:35 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/03/30/useful-linux-scripts/</guid>
+      <description>&lt;p&gt;常用linux脚本：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux系统bash脚本获取系统硬件资源&lt;/li&gt;
+&lt;li&gt;Aix系统ksh脚本获取系统硬件资源&lt;/li&gt;
+&lt;li&gt;服务器打开session时显示帮助信息&lt;/li&gt;
+&lt;li&gt;curl post中带有变量的脚本&lt;/li&gt;
+&lt;li&gt;金三系统基线包安装部署脚本&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>常用Linux命令集锦</title>
+      <link>https://suncle.me/2019/03/30/useful-linux-commands/</link>
+      <pubDate>Sat, 30 Mar 2019 01:00:15 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/03/30/useful-linux-commands/</guid>
+      <description>&lt;p&gt;常用linux命令:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;随机数&lt;/li&gt;
+&lt;li&gt;时间&lt;/li&gt;
+&lt;li&gt;ip&lt;/li&gt;
+&lt;li&gt;日志分析&lt;/li&gt;
+&lt;li&gt;硬件信息&lt;/li&gt;
+&lt;li&gt;进程端口&lt;/li&gt;
+&lt;li&gt;调整分区大小&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

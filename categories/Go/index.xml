@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/categories/Go/</link>
+    <description>Recent content in Go on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 18 Dec 2018 20:48:22 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/categories/Go/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>直播系统介绍</title>
+      <link>https://suncle.me/2018/12/18/introduce-live-system/</link>
+      <pubDate>Tue, 18 Dec 2018 20:48:22 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/12/18/introduce-live-system/</guid>
+      <description>&lt;h1 id=&#34;演示&#34;&gt;演示&lt;/h1&gt;
+&lt;p&gt;本地演示：ffmpeg/obs + livego + mpv&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;推流选择ffmpeg或者obs&lt;/li&gt;
+&lt;li&gt;流媒体服务直接使用livego&lt;/li&gt;
+&lt;li&gt;播放使用mpv&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;推流截图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/live-20181218/obs-push.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;拉流截图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/live-20181218/hls-pull.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go2school-2</title>
+      <link>https://suncle.me/2018/11/15/go2school-2/</link>
+      <pubDate>Thu, 15 Nov 2018 15:36:59 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/11/15/go2school-2/</guid>
+      <description>&lt;p&gt;go2school 系列的第二道题目&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用 Go 语言实现一个简单的 HTTP Server。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;题目&#34;&gt;题目&lt;/h1&gt;
+&lt;p&gt;简要描述：实现 GET(get), POST(set) 两个功能&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;err&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;读取Redis的&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;path:path2&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;err&#34;&gt;@GET&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;/path/path&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;err&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;将&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;value(=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;写入&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;redis&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;的&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;path:path2&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;err&#34;&gt;@POST&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;/path/path&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;现有可用的redis数据库（已脱敏）：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;Addr&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;t.kezaihui.com:6580&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;Password&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;06ad0c72d5ce41ce9f04ad1237965a4d&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>go2school-1</title>
+      <link>https://suncle.me/2018/10/31/go2school-1/</link>
+      <pubDate>Wed, 31 Oct 2018 20:26:54 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/10/31/go2school-1/</guid>
+      <description>&lt;p&gt;我司大佬&lt;a href=&#34;http://www.liriansu.com/&#34;&gt;紫月苏&lt;/a&gt;最近在QCon上听了关于Go语言的洗脑报告，回来之后给各位普及了go的一些基本情况和未来发展，感觉大家兴致很浓，于是就在我司内部gitlab上开了一个新的repo，叫做go2school，也就是Go语言学习计划。又因为对Java实在无爱，然后妥妥的就加入了Go的大军。&lt;/p&gt;
+&lt;p&gt;下面是我司学习Go的Chapter 1. Grammer。具体就是阅读 &lt;a href=&#34;https://learnxinyminutes.com/docs/zh-cn/go-cn/&#34;&gt;&lt;strong&gt;Learn Go in Y minutes&lt;/strong&gt;&lt;/a&gt; 学习基本语法。然后练习：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用 Go 语言实现一个计算斐波那契数列的函数，从标准输入读入 n, 从标准输出返回 f(n)。（递归版、循环版都要实现）&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

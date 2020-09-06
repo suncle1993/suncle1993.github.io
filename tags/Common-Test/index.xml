@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Common Test on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/Common-Test/</link>
+    <description>Recent content in Common Test on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 29 Jan 2018 18:31:37 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/Common-Test/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Erlang测试全集(挖坑)</title>
+      <link>https://suncle.me/2018/01/29/Erlang-test-knowledge-collection/</link>
+      <pubDate>Mon, 29 Jan 2018 18:31:37 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/01/29/Erlang-test-knowledge-collection/</guid>
+      <description>&lt;h1 id=&#34;erlang测试全集挖坑&#34;&gt;Erlang测试全集(挖坑)&lt;/h1&gt;
+&lt;p&gt;本次只是简要列举Erlang测试相关的框架和概念，Erlang测试的详细使用在实际使用时再进行补充（&lt;strong&gt;挖坑&lt;/strong&gt;），目前所有的Erlang程序中除部分公共基础app需要写单元测试和覆盖率报告之外其他都不需要写。&lt;/p&gt;
+&lt;p&gt;后续会按照以下四个部分介绍Erlang测试相关知识&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;EUnit&lt;/li&gt;
+&lt;li&gt;Common Test&lt;/li&gt;
+&lt;li&gt;Cover&lt;/li&gt;
+&lt;li&gt;Quality Control&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

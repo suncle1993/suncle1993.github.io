@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>2018 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/2018/</link>
+    <description>Recent content in 2018 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 12 Jan 2019 23:36:53 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/2018/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2018个人年度报告</title>
+      <link>https://suncle.me/2019/01/12/2018-annual-report/</link>
+      <pubDate>Sat, 12 Jan 2019 23:36:53 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/01/12/2018-annual-report/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/summary/2018-annual-report/eyeemfiltered1520083346838.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;2018个人年度报告&#34;&gt;2018个人年度报告&lt;/h1&gt;
+&lt;p&gt;每段日子都有可以记录的意义，哪怕再平凡，依然可以找到日后精进的经验。标题本来定为2018年总结，但觉得这样过于简单，还是改为个人年度报告比较合适，这样对于个人而言就有了一个象征性的具有画面感的汇报仪式。&lt;/p&gt;
+&lt;p&gt;先回顾一下 2018 年到底做了些什么事情，时间都花在什么地方了。分为工作和生活两个部分。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>2018 must do and must go</title>
+      <link>https://suncle.me/2018/12/31/2018-must-do-and-must-go/</link>
+      <pubDate>Mon, 31 Dec 2018 23:59:59 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/12/31/2018-must-do-and-must-go/</guid>
+      <description>&lt;p&gt;2018年都已经过了两个月了，还是想写一下2018年的大致计划，不涉及具体计划，只写提纲，包括阅读清单，技术提升，旅行计划等几个部分，特别是阅读这一块，2017年一整年都没有看完《此生未完成》这本生命日记，估计书上已经落满了灰尘，但是2017都过去了，从现在开始尊重每一本书和其中的故事。至于技术类的提升这一块每年到了冬天天气冷就不想动手，这真的是一个不好的习惯，应该努力去克服，虽然现在几乎都在和数据打交道，但是对于web从心底里还是非常有热情的，打算再深入一些，我也想自己做的东西能更炫酷。Java/Go和tensorflow都需要涉猎一些，一来可以更上热潮，二来可以拓宽自己的知识面。至于旅行，这就是我最喜欢做的事情了，在路上有许许多多新奇的故事，很是开心，虽然每年旅游的不多，但我会认证对待每一次灵魂独旅。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;把这篇的创建时间改成2018年12月31号，这样更新的时候就会一直置顶，会督促自己完成此生未完成。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

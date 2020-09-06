@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>基础 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%9F%BA%E7%A1%80/</link>
+    <description>Recent content in 基础 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 18 Apr 2017 23:00:20 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>JavaScript基础</title>
+      <link>https://suncle.me/2017/04/18/JavaScript%E5%9F%BA%E7%A1%80/</link>
+      <pubDate>Tue, 18 Apr 2017 23:00:20 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/04/18/JavaScript%E5%9F%BA%E7%A1%80/</guid>
+      <description>&lt;p&gt;JavaScript 从 Java 中借用其大部分语法，但也受 Awk，Perl 和 Python的影响。因此本篇博客基于对Java和Python的认识来记录JavaScript的差异点。&lt;/p&gt;
+&lt;h1 id=&#34;0x00-letvarconst&#34;&gt;[0x00] let,var,const&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;var 的方式是为了兼容旧版。因为var定义变量， 会提升作用域，var定义的变量，都是全局作用域。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;let 是ES6引入的，如果没有特殊原因， 变量都应该是用let来定义&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;const是定义常量&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;0x01-javascript数据类型&#34;&gt;[0x01] JavaScript数据类型&lt;/h1&gt;
+&lt;p&gt;JavaScript总共有六种基本数据类型&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Glossary/Boolean&#34;&gt;Boolean&lt;/a&gt;.  布尔值，&lt;code&gt;true&lt;/code&gt; 和 &lt;code&gt;false&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Glossary/null&#34;&gt;null&lt;/a&gt;. 一个表明 null 值的特殊关键字。 JavaScript 是大小写敏感的，因此 &lt;code&gt;null &lt;/code&gt;与 &lt;code&gt;Null&lt;/code&gt;、&lt;code&gt;NULL&lt;/code&gt;或其他变量完全不同。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Glossary/undefined&#34;&gt;undefined&lt;/a&gt;.  变量未定义时的属性。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Glossary/Number&#34;&gt;Number&lt;/a&gt;.  表示数字，例如： &lt;code&gt;42&lt;/code&gt; 或者 &lt;code&gt;3.14159。&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Glossary/String&#34;&gt;String&lt;/a&gt;.  表示字符串，例如：&amp;ldquo;Howdy&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Glossary/Symbol&#34;&gt;Symbol&lt;/a&gt; ( 在 ECMAScript 6 中新添加的类型).。一种数据类型，它的实例是唯一且不可改变的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在bool运算中，null和undefined都等价于false&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;除了六种基本数据类型之外，还有复合的object类型。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【填坑系列】Python基础知识总目录</title>
+      <link>https://suncle.me/2016/12/04/%E5%A1%AB%E5%9D%91%E7%B3%BB%E5%88%97Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%9B%AE%E5%BD%95/</link>
+      <pubDate>Sun, 04 Dec 2016 22:47:10 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/12/04/%E5%A1%AB%E5%9D%91%E7%B3%BB%E5%88%97Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%9B%AE%E5%BD%95/</guid>
+      <description>Python基础知识初步分为以下几个部分 pyenv管理python多版本和jupyter的使用 Python基础语法 Python内置结构-列表</description>
+    </item>
+    
+  </channel>
+</rss>

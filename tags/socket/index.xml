@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>socket on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/socket/</link>
+    <description>Recent content in socket on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 11 Dec 2017 14:01:05 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/socket/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>unix domain socket</title>
+      <link>https://suncle.me/2017/12/11/unix-domain-socket/</link>
+      <pubDate>Mon, 11 Dec 2017 14:01:05 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/12/11/unix-domain-socket/</guid>
+      <description>&lt;h1 id=&#34;unix-domain-socket&#34;&gt;unix domain socket&lt;/h1&gt;
+&lt;p&gt;unix domain socket 是在socket架构上发展起来的用于同一台主机的进程间通讯（IPC: Inter-Process Communication），它不需要经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等，只是将应用层数据从一个进程拷贝到另一个进程。UNIX Domain Socket有SOCK_DGRAM或SOCK_STREAM两种工作模式，类似于UDP和TCP，但是面向消息的UNIX Domain Socket也是可靠的，消息既不会丢失也不会顺序错乱。&lt;/p&gt;
+&lt;p&gt;UNIX Domain Socket可用于两个没有亲缘关系的进程，是全双工的，是目前使用最广泛的IPC机制，比如X Window服务器和GUI程序之间就是通过UNIX Domain Socket通讯的。&lt;/p&gt;
+&lt;p&gt;UNIX Domain socket与网络socket类似，可以与网络socket对比应用。&lt;/p&gt;
+&lt;p&gt;上述二者编程的不同如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;address family为AF_UNIX&lt;/li&gt;
+&lt;li&gt;因为应用于IPC，所以UNIXDomain socket不需要IP和端口，取而代之的是文件路径来表示“网络地址”。这点体现在下面两个方面。&lt;/li&gt;
+&lt;li&gt;地址格式不同，UNIXDomain socket用结构体sockaddr_un表示，是一个socket类型的文件在文件系统中的路径，这个socket文件由bind()调用创建，如果调用bind()时该文件已存在，则bind()错误返回。&lt;/li&gt;
+&lt;li&gt;UNIX Domain Socket客户端一般要显式调用bind函数，而不象网络socket一样依赖系统自动分配的地址。客户端bind的socket文件名可以包含客户端的pid，这样服务器就可以区分不同的客户端。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面用python代码演示uds的使用&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Python网络编程</title>
+      <link>https://suncle.me/2017/03/24/Python%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Fri, 24 Mar 2017 22:44:37 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/03/24/Python%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</guid>
+      <description>&lt;p&gt;Python 提供了两个级别访问的网络服务。：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;低级别的网络服务支持基本的 socket，，可以访问底层操作系统Socket接口的方法。&lt;/li&gt;
+&lt;li&gt;高级别的网络服务模块 socketserver， 可以简化网络服务器的开发。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;socket&#34;&gt;socket&lt;/h1&gt;
+&lt;p&gt;查看socket类的帮助如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;socket&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# 导入socket模块&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;help&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;socket&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;socket&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;重点关注初始化函数：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;fm&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;family&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddressFamily&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AF_INET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SocketKind&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SOCK_STREAM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;proto&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fileno&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;None&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;family：网络协议簇，默认值为AF_INET&lt;/li&gt;
+&lt;li&gt;type：套接字的类型，根据是面向连接的还是非连接分为&lt;code&gt;SOCK_STREAM&lt;/code&gt;或&lt;code&gt;SOCK_DGRAM&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;proto：套接字协议，一般默认为0，表示&lt;/li&gt;
+&lt;li&gt;fileno：套接字的int型的文件描述符&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面实现一个TCP聊天室和一个UDP聊天室&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

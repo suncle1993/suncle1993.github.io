@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>重做日志 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97/</link>
+    <description>Recent content in 重做日志 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 Mar 2016 11:24:34 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>重做日志和日志挖掘</title>
+      <link>https://suncle.me/2016/03/16/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E5%92%8C%E6%97%A5%E5%BF%97%E6%8C%96%E6%8E%98/</link>
+      <pubDate>Wed, 16 Mar 2016 11:24:34 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E5%92%8C%E6%97%A5%E5%BF%97%E6%8C%96%E6%8E%98/</guid>
+      <description>&lt;h2 id=&#34;重做日志-redo-log&#34;&gt;重做日志-Redo log&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;首先给出参考资料：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/database/121/ADMIN/onlineredo.htm#ADMIN007&#34;&gt;1、Oracle官网-Managing the Redo Log&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;为什么需要redo-log&#34;&gt;为什么需要redo log&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;内存中数据修改后，不必立即更新到磁盘&amp;mdash;效率&lt;/li&gt;
+&lt;li&gt;由日志完成数据的保护目的&amp;mdash;效率&lt;/li&gt;
+&lt;li&gt;其他副产品
+&lt;ul&gt;
+&lt;li&gt;数据恢复（备份集+归档日志）&lt;/li&gt;
+&lt;li&gt;数据同步（DG，streams，goldengate）&lt;/li&gt;
+&lt;li&gt;日志挖掘&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;什么是redo-log&#34;&gt;什么是Redo log&lt;/h3&gt;
+&lt;p&gt;重做日志包含所有数据产生的历史改变记录。&lt;/p&gt;
+&lt;p&gt;重做日志文件通常用于&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;恢复&lt;/li&gt;
+&lt;li&gt;日志挖掘&lt;/li&gt;
+&lt;li&gt;流&lt;/li&gt;
+&lt;li&gt;数据库产生的每个改动
+&lt;ul&gt;
+&lt;li&gt;写入数据块缓冲之前，先写入redo log buffer &amp;ndash;内存&lt;/li&gt;
+&lt;li&gt;写入数据文件之前先写入日志文件 &amp;ndash;数据文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;当提交后，redo log buffer被刷入redo log files&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;关于vlog视图&#34;&gt;关于v$log视图&lt;/h3&gt;
+&lt;p&gt;v$log从控制文件中显示日志文件的信息。可参考官网资料&lt;a href=&#34;https://docs.oracle.com/database/121/REFRN/GUID-FCD3B70B-7B98-40D8-98AB-9F6A85E69F57.htm#REFRN30127&#34;&gt;v$log&lt;/a&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Column&lt;/th&gt;
+&lt;th&gt;Datatype&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;GROUP#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Log group number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;THREAD#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Log thread number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SEQUENCE#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Log sequence number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;BYTES&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Size of the log (in bytes)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;BLOCKSIZE&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Block size of the logfile (512 or 4096)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MEMBERS&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Number of members in the log group&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ARCHIVED&lt;/td&gt;
+&lt;td&gt;VARCHAR2(3)&lt;/td&gt;
+&lt;td&gt;Archive status (&lt;code&gt;YES&lt;/code&gt;) or (&lt;code&gt;NO&lt;/code&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;STATUS&lt;/td&gt;
+&lt;td&gt;VARCHAR2(16)&lt;/td&gt;
+&lt;td&gt;UNUSED,CURRENT,ACTIVE,CLEARING,CLEARING_CURRENT,INACTIVE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;FIRST_CHANGE#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Lowest system change number (SCN) in the log&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;FIRST_TIME&lt;/td&gt;
+&lt;td&gt;DATE&lt;/td&gt;
+&lt;td&gt;Time of the first SCN in the log&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NEXT_CHANGE#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Highest change number (SCN) in the log. When &lt;code&gt;STATUS=CURRENT&lt;/code&gt;, &lt;code&gt;NEXT_CHANGE#&lt;/code&gt;is set to the highest possible SCN, 281474976710655.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NEXT_TIME&lt;/td&gt;
+&lt;td&gt;DATE&lt;/td&gt;
+&lt;td&gt;Time of the highest SCN in the log. When &lt;code&gt;STATUS=CURRENT&lt;/code&gt;, &lt;code&gt;NEXT_TIME&lt;/code&gt; is set to&lt;code&gt;NULL&lt;/code&gt;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CON_ID&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;0，1，n三种情况&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;日志文件的六种状态UNUSED,CURRENT,ACTIVE,CLEARING,CLEARING_CURRENT,INACTIVE代表的意思分别如下所述：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;UNUSED&lt;/strong&gt; - Online redo log has never been written to. This is the state of a redo log that was just added, or just after a &lt;em&gt;RESETLOGS&lt;/em&gt;, when it is not the current redo log.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CURRENT&lt;/strong&gt; - Current redo log. This implies that the redo log is active. The redo log could be open or closed.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ACTIVE&lt;/strong&gt; - Log is active but is not the current log. It is needed for crash recovery. It may be in use for block recovery. It may or may not be archived.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CLEARING&lt;/strong&gt; - Log is being re-created as an empty log after an &lt;code&gt;ALTER DATABASE CLEAR LOGFILE&lt;/code&gt; statement. After the log is cleared, the status changes to &lt;code&gt;UNUSED&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CLEARING_CURRENT&lt;/strong&gt; - Current log is being cleared of a closed thread. The log can stay in this status if there is some failure in the switch such as an I/O error writing the new log header.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;INACTIVE&lt;/strong&gt; - Log is no longer needed for instance recovery. It may be in use for media recovery. It may or may not be archived.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;lgwr如何重复使用redo-log-files&#34;&gt;LGWR如何重复使用redo log files&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Reuse%20of%20Redo%20Log%20Files%20by%20LGWR.gif&#34; alt=&#34;Figure 11-1 Reuse of Redo Log Files by LGWR&#34;&gt;&lt;/p&gt;
+&lt;p&gt;上图就是Oracle LGWR进程向redo log files中写入redo记录的过程，可见，Oracle数据库每次只是用一个redo log file来存储redo log buffer中的redo记录。LGWR正在写入的那个redo log file就是current redo log file。&lt;/p&gt;
+&lt;p&gt;可用于实例恢复的redo log files就是active redo log files。&lt;/p&gt;
+&lt;p&gt;不再用于实例恢复的redo log files就是inactive redo log files。&lt;/p&gt;
+&lt;p&gt;如果数据库当前是Archivelog模式，那么直到有一个后台归档进程ARCn已经归档成功，数据库才能重用或者覆盖active online log file。&lt;/p&gt;
+&lt;p&gt;如果数据库当前是NoArchivelog模式，当最后一个redo log file写满的时候，LGWR会继续按顺序覆盖下一个inactive redo log file。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

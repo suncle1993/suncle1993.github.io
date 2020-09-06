@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>经验 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E7%BB%8F%E9%AA%8C/</link>
+    <description>Recent content in 经验 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 04 Dec 2016 22:47:22 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E7%BB%8F%E9%AA%8C/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python答疑解惑</title>
+      <link>https://suncle.me/2016/12/04/Python%E7%AD%94%E7%96%91%E8%A7%A3%E6%83%91/</link>
+      <pubDate>Sun, 04 Dec 2016 22:47:22 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/12/04/Python%E7%AD%94%E7%96%91%E8%A7%A3%E6%83%91/</guid>
+      <description>&lt;h1 id=&#34;python自动化运维答疑解惑&#34;&gt;Python自动化运维答疑解惑&lt;/h1&gt;
+&lt;p&gt;以下为Python入门的几个常见疑惑，现在统一在下面列出。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1、如果使用Python3.5.2，但是一般公司的生产环境上都是linux默认的Python，一般是2.6.6，而且没有权限更改，这种情况下我们有什么好的办法吗？&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;python2一般都有的第三方库，在Python3中都会有的，而且Python2在2020年就彻底停止支持了，所以没有特殊情况，直接选择python最新版本即可。除非你的项目必须依赖一个python2的第三方库且这个库在python3中并没有。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;2、Python在现在以及未来主要应用的方向是什么？&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Python的应用的主要方向就是两类，一类是爬虫方向，一类是自动化方向。至于自动化方向，分为自动化运维和自动化测试。Python做web开发在未来几年都不会是主流，web开发的主流还是会Java这种工业语言。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Clickhouse分布式集群搭建 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="目标：1分片2副本的集群 所以需要两台机器，分别是：172.31.59.118|172.31.40.79
+安装参考dockerfile:
+ https://hub.docker.com/r/yandex/clickhouse-client/dockerfile https://hub.docker.com/r/yandex/clickhouse-server/dockerfile " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2019/07/27/clickhouse-build-distributed-cluster/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Clickhouse分布式集群搭建" />
+<meta property="og:description" content="目标：1分片2副本的集群
+所以需要两台机器，分别是：172.31.59.118|172.31.40.79
+安装参考dockerfile:
+
+https://hub.docker.com/r/yandex/clickhouse-client/dockerfile
+https://hub.docker.com/r/yandex/clickhouse-server/dockerfile
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2019/07/27/clickhouse-build-distributed-cluster/" />
+<meta property="article:published_time" content="2019-07-27T17:13:16+00:00" />
+<meta property="article:modified_time" content="2019-07-27T17:13:16+00:00" />
+<meta itemprop="name" content="Clickhouse分布式集群搭建">
+<meta itemprop="description" content="目标：1分片2副本的集群
+所以需要两台机器，分别是：172.31.59.118|172.31.40.79
+安装参考dockerfile:
+
+https://hub.docker.com/r/yandex/clickhouse-client/dockerfile
+https://hub.docker.com/r/yandex/clickhouse-server/dockerfile
+">
+<meta itemprop="datePublished" content="2019-07-27T17:13:16+00:00" />
+<meta itemprop="dateModified" content="2019-07-27T17:13:16+00:00" />
+<meta itemprop="wordCount" content="3539">
+
+
+
+<meta itemprop="keywords" content="clickhouse,分布式,搭建," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Clickhouse分布式集群搭建"/>
+<meta name="twitter:description" content="目标：1分片2副本的集群
+所以需要两台机器，分别是：172.31.59.118|172.31.40.79
+安装参考dockerfile:
+
+https://hub.docker.com/r/yandex/clickhouse-client/dockerfile
+https://hub.docker.com/r/yandex/clickhouse-server/dockerfile
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Clickhouse分布式集群搭建</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-07-27 </span>
+        <div class="post-category">
+            <a href="/categories/Clickhouse/"> Clickhouse </a>
+            </div>
+          <span class="more-meta"> 约 3539 字 </span>
+          <span class="more-meta"> 预计阅读 8 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#目标1分片2副本的集群">目标：1分片2副本的集群</a></li>
+    <li><a href="#安装步骤">安装步骤</a></li>
+    <li><a href="#验证集群功能">验证集群功能</a></li>
+    <li><a href="#jdbc连接clickhouse-cluster">JDBC连接clickhouse cluster</a>
+      <ul>
+        <li><a href="#使用balancedclickhousedatasource">使用BalancedClickhouseDataSource</a></li>
+        <li><a href="#使用slb">使用SLB</a></li>
+      </ul>
+    </li>
+    <li><a href="#原生tcp协议连接clickhouse-cluster">原生TCP协议连接clickhouse cluster</a></li>
+    <li><a href="#clickhouse-python-client的选择">clickhouse python client的选择</a>
+      <ul>
+        <li><a href="#clickhouse-driver">clickhouse-driver</a></li>
+        <li><a href="#inficlickhouse_orm">infi.clickhouse_orm</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="目标1分片2副本的集群">目标：1分片2副本的集群</h1>
+<p>所以需要两台机器，分别是：172.31.59.118|172.31.40.79</p>
+<p>安装参考dockerfile:</p>
+<ul>
+<li><a href="https://hub.docker.com/r/yandex/clickhouse-client/dockerfile">https://hub.docker.com/r/yandex/clickhouse-client/dockerfile</a></li>
+<li><a href="https://hub.docker.com/r/yandex/clickhouse-server/dockerfile">https://hub.docker.com/r/yandex/clickhouse-server/dockerfile</a></li>
+</ul>
+<h1 id="安装步骤">安装步骤</h1>
+<p>Amazon linux 2是centos系的，使用的yum系的安装方式</p>
+<ul>
+<li><a href="https://github.com/Altinity/clickhouse-rpm-install">GitHub - Altinity/clickhouse-rpm-install: How to install clickhouse RPM packages</a></li>
+</ul>
+<p>修改机器时区(不需要重启)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+</code></pre></td></tr></table>
+</div>
+</div><p>开始安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo yum install -y curl
+sudo yum install -y epel-release
+curl -s https://packagecloud.io/install/repositories/altinity/clickhouse/script.rpm.sh <span class="p">|</span> sudo <span class="nv">os</span><span class="o">=</span>centos <span class="nv">dist</span><span class="o">=</span><span class="m">7</span> bash  <span class="c1"># for Amazon Linux</span>
+sudo yum list <span class="s1">&#39;clickhouse*&#39;</span>
+sudo yum install -y clickhouse-server clickhouse-client
+sudo yum list installed <span class="s1">&#39;clickhouse*&#39;</span>
+sudo /etc/init.d/clickhouse-server restart
+clickhouse-client
+</code></pre></td></tr></table>
+</div>
+</div><p>安装zookeeper集群，也可以使用现成的，本次使用现成的，配置如下，后续加入配置文件中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml">    <span class="nt">&lt;zookeeper-servers&gt;</span>
+        <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;1&#34;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;host&gt;</span>172.31.3.79<span class="nt">&lt;/host&gt;</span>
+            <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+        <span class="nt">&lt;/node&gt;</span>
+        <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;2&#34;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;host&gt;</span>172.31.47.229<span class="nt">&lt;/host&gt;</span>
+            <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+        <span class="nt">&lt;/node&gt;</span>
+        <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;3&#34;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;host&gt;</span>172.31.53.227<span class="nt">&lt;/host&gt;</span>
+            <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+        <span class="nt">&lt;/node&gt;</span>
+    <span class="nt">&lt;/zookeeper-servers&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>设置每台机器clickhouse用户和密码，先生成sha256的密码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">PASSWORD</span><span class="o">=</span><span class="k">$(</span>base64 &lt; /dev/urandom <span class="p">|</span> head -c16<span class="k">)</span><span class="p">;</span> <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$PASSWORD</span><span class="s2">&#34;</span><span class="p">;</span> <span class="nb">echo</span> -n <span class="s2">&#34;</span><span class="nv">$PASSWORD</span><span class="s2">&#34;</span> <span class="p">|</span> sha256sum <span class="p">|</span> tr -d <span class="s1">&#39;-&#39;</span>
+rKbfrrze4PO5xWeN
+93626c6535b2817d55eca365d9a00bbe88c63e24fa4941ce8cdaf4c07f4ab4a6
+</code></pre></td></tr></table>
+</div>
+</div><p>添加用户<code>sudo vim /etc/clickhouse-server/users.xml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml">    <span class="nt">&lt;users&gt;</span>
+	      <span class="nt">&lt;zaihui&gt;</span>
+            <span class="nt">&lt;password_sha256_hex&gt;</span>93626c6535b2817d55eca365d9a00bbe88c63e24fa4941ce8cdaf4c07f4ab4a6<span class="nt">&lt;/password_sha256_hex&gt;</span>
+            <span class="nt">&lt;networks</span> <span class="na">incl=</span><span class="s">&#34;networks&#34;</span> <span class="na">replace=</span><span class="s">&#34;replace&#34;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;ip&gt;</span>::/0<span class="nt">&lt;/ip&gt;</span>
+            <span class="nt">&lt;/networks&gt;</span>
+            <span class="nt">&lt;profile&gt;</span>default<span class="nt">&lt;/profile&gt;</span>
+            <span class="nt">&lt;quota&gt;</span>default<span class="nt">&lt;/quota&gt;</span>
+        <span class="nt">&lt;/zaihui&gt;</span>
+    <span class="nt">&lt;/users&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>验证</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">clickhouse-client -u zaihui --password rKbfrrze4PO5xWeN
+clickhouse-client -u zaihui --password rKbfrrze4PO5xWeN
+</code></pre></td></tr></table>
+</div>
+</div><p>修改clickhouse时区配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">&lt;timezone&gt;Asia/Shanghai&lt;/timezone&gt;
+</code></pre></td></tr></table>
+</div>
+</div><p>取消访问来源ip的限制<code>sudo vim /etc/clickhouse-server/config.xml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml">    <span class="c">&lt;!-- &lt;listen_host&gt;::&lt;/listen_host&gt; --&gt;</span>
+    <span class="c">&lt;!-- Same for hosts with disabled ipv6: --&gt;</span>
+    <span class="nt">&lt;listen_host&gt;</span>0.0.0.0<span class="nt">&lt;/listen_host&gt;</span>
+
+    <span class="c">&lt;!-- Default values - try listen localhost on ipv4 and ipv6: --&gt;</span>
+    <span class="c">&lt;!--
+</span><span class="c">    &lt;listen_host&gt;::1&lt;/listen_host&gt;
+</span><span class="c">    &lt;listen_host&gt;127.0.0.1&lt;/listen_host&gt;
+</span><span class="c">    --&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>开始配置集群
+配置<code>sudo vim /etc/clickhouse-server/config.xml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml">    <span class="c">&lt;!-- If element has &#39;incl&#39; attribute, then for it&#39;s value will be used corresponding substitution from another file.
+</span><span class="c">         By default, path to file with substitutions is /etc/metrika.xml. It could be changed in config in &#39;include_from&#39; element.
+</span><span class="c">         Values for substitutions are specified in /yandex/name_of_substitution elements in that file.
+</span><span class="c">      --&gt;</span>
+    <span class="nt">&lt;include_from&gt;</span>/etc/clickhouse-server/metrika.xml<span class="nt">&lt;/include_from&gt;</span>
+    <span class="c">&lt;!-- ZooKeeper is used to store metadata about replicas, when using Replicated tables.
+</span><span class="c">         Optional. If you don&#39;t use replicated tables, you could omit that.
+</span><span class="c">
+</span><span class="c">         See https://clickhouse.yandex/docs/en/table_engines/replication/
+</span><span class="c">      --&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>配置<code>/etc/clickhouse-server/metrika.xml</code>，所有机器都一样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;yandex&gt;</span>
+    <span class="nt">&lt;clickhouse_remote_servers&gt;</span>
+        <span class="nt">&lt;ck_cluster&gt;</span>
+            <span class="nt">&lt;shard&gt;</span>
+                <span class="nt">&lt;weight&gt;</span>1<span class="nt">&lt;/weight&gt;</span>
+                <span class="nt">&lt;internal_replication&gt;</span>true<span class="nt">&lt;/internal_replication&gt;</span>
+                <span class="nt">&lt;replica&gt;</span>
+                    <span class="nt">&lt;host&gt;</span>172.31.59.118<span class="nt">&lt;/host&gt;</span>
+                    <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+                    <span class="nt">&lt;user&gt;</span>zaihui<span class="nt">&lt;/user&gt;</span>
+                    <span class="nt">&lt;password&gt;</span>rKbfrrze4PO5xWeN<span class="nt">&lt;/password&gt;</span>
+                <span class="nt">&lt;/replica&gt;</span>
+                <span class="nt">&lt;replica&gt;</span>
+                    <span class="nt">&lt;host&gt;</span>172.31.40.79<span class="nt">&lt;/host&gt;</span>
+                    <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+                    <span class="nt">&lt;user&gt;</span>zaihui<span class="nt">&lt;/user&gt;</span>
+                    <span class="nt">&lt;password&gt;</span>rKbfrrze4PO5xWeN<span class="nt">&lt;/password&gt;</span>
+                <span class="nt">&lt;/replica&gt;</span>
+            <span class="nt">&lt;/shard&gt;</span>
+        <span class="nt">&lt;/ck_cluster&gt;</span>
+    <span class="nt">&lt;/clickhouse_remote_servers&gt;</span>
+
+    <span class="nt">&lt;zookeeper-servers&gt;</span>
+        <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;1&#34;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;host&gt;</span>172.31.3.79<span class="nt">&lt;/host&gt;</span>
+            <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+        <span class="nt">&lt;/node&gt;</span>
+        <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;2&#34;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;host&gt;</span>172.31.47.229<span class="nt">&lt;/host&gt;</span>
+            <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+        <span class="nt">&lt;/node&gt;</span>
+        <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;3&#34;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;host&gt;</span>172.31.53.227<span class="nt">&lt;/host&gt;</span>
+            <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+        <span class="nt">&lt;/node&gt;</span>
+    <span class="nt">&lt;/zookeeper-servers&gt;</span>
+
+    <span class="nt">&lt;networks&gt;</span>
+        <span class="nt">&lt;ip&gt;</span>::/0<span class="nt">&lt;/ip&gt;</span>
+    <span class="nt">&lt;/networks&gt;</span>
+
+    <span class="nt">&lt;clickhouse_compression&gt;</span>
+        <span class="nt">&lt;case&gt;</span>
+            <span class="nt">&lt;min_part_size&gt;</span>10000000000<span class="nt">&lt;/min_part_size&gt;</span>
+            <span class="nt">&lt;min_part_size_ratio&gt;</span>0.01<span class="nt">&lt;/min_part_size_ratio&gt;</span>
+            <span class="nt">&lt;method&gt;</span>lz4<span class="nt">&lt;/method&gt;</span>
+        <span class="nt">&lt;/case&gt;</span>
+    <span class="nt">&lt;/clickhouse_compression&gt;</span>
+<span class="nt">&lt;/yandex&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>配置<code>/etc/clickhouse-server/config.d/macros.xml</code>，所有机器都不一样，虽然也可以把配置放在metrika.xml中，但是把不同的独立出来更合适</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;yandex&gt;</span>
+    <span class="nt">&lt;macros&gt;</span>
+        <span class="nt">&lt;replica&gt;</span>172.31.59.118<span class="nt">&lt;/replica&gt;</span>
+        <span class="nt">&lt;shard&gt;</span>01<span class="nt">&lt;/shard&gt;</span>
+        <span class="nt">&lt;layer&gt;</span>01<span class="nt">&lt;/layer&gt;</span>
+    <span class="nt">&lt;/macros&gt;</span>
+<span class="nt">&lt;/yandex&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;yandex&gt;</span>
+    <span class="nt">&lt;macros&gt;</span>
+        <span class="nt">&lt;replica&gt;</span>172.31.40.79<span class="nt">&lt;/replica&gt;</span>
+        <span class="nt">&lt;shard&gt;</span>01<span class="nt">&lt;/shard&gt;</span>
+        <span class="nt">&lt;layer&gt;</span>01<span class="nt">&lt;/layer&gt;</span>
+    <span class="nt">&lt;/macros&gt;</span>
+<span class="nt">&lt;/yandex&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>集群配置完成之后重启一下，确保每个机器都能连接成功</p>
+<blockquote>
+<p>使用datagrip连接各个机器，全部成功</p>
+</blockquote>
+<h1 id="验证集群功能">验证集群功能</h1>
+<p>创建以replica结尾的本地表delphi_membership_properties_replica和分布式表delphi_membership_properties</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">create</span> <span class="k">table</span> <span class="n">dm</span><span class="p">.</span><span class="n">delphi_membership_properties_replica</span>
+<span class="p">(</span>
+  <span class="n">membership_id</span>  <span class="nb">int</span><span class="p">,</span>  <span class="c1">-- comment &#39;会员id&#39;,
+</span><span class="c1"></span>  <span class="n">membership_uid</span> <span class="n">String</span><span class="p">,</span> <span class="c1">-- comment &#39;会员uid&#39;,
+</span><span class="c1"></span>  <span class="n">business_group_id</span> <span class="nb">int</span><span class="p">,</span> <span class="c1">-- comment &#39;商户id&#39;,
+</span><span class="c1"></span>  <span class="n">business_group_uid</span> <span class="n">String</span> <span class="p">,</span> <span class="c1">--comment &#39;商户uid&#39;,
+</span><span class="c1"></span>  <span class="n">business_group_name</span> <span class="n">String</span><span class="p">,</span> <span class="c1">-- comment &#39;商户名&#39;,
+</span><span class="c1"></span>  <span class="n">business_id</span> <span class="k">Nullable</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="c1">-- comment &#39;门店id&#39;,
+</span><span class="c1"></span>  <span class="n">business_uid</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;门店uid&#39;,
+</span><span class="c1"></span>  <span class="n">business_name</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;门店name&#39;,
+</span><span class="c1"></span>  <span class="n">membership_source</span> <span class="n">String</span><span class="p">,</span> <span class="c1">-- comment &#39;会员入会来源&#39;,
+</span><span class="c1"></span>  <span class="n">created_at</span> <span class="n">DateTime</span><span class="p">,</span>
+  <span class="n">calendar_date</span> <span class="nb">Date</span><span class="p">,</span>
+  <span class="n">last_visited_date</span> <span class="nb">Date</span><span class="p">,</span> <span class="c1">-- comment &#39;最近一次访问时间&#39;,
+</span><span class="c1"></span>  <span class="n">membership_level</span> <span class="nb">int</span><span class="p">,</span> <span class="c1">-- comment &#39;会员等级&#39;,
+</span><span class="c1"></span>  <span class="n">customer_type</span> <span class="n">String</span><span class="p">,</span> <span class="c1">-- comment &#39;会员类型:新会员/忠诚会员/常来会员/淡忘会员/流失会员，根据最后一次访问时间和商户配置计算而来&#39;,
+</span><span class="c1"></span>  <span class="n">visit_count</span> <span class="nb">int</span><span class="p">,</span> <span class="c1">-- comment &#39;到访次数&#39;,
+</span><span class="c1"></span>  <span class="n">consumptions_count</span> <span class="k">Nullable</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="c1">-- comment &#39;消费次数&#39;,
+</span><span class="c1"></span>  <span class="n">consumptions_original_amount</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">Decimal128</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="c1">-- comment &#39;消费总金额：原始金额&#39;,
+</span><span class="c1"></span>  <span class="n">consumptions_amount</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">Decimal128</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="c1">-- comment &#39;消费总金额：实付金额&#39;,
+</span><span class="c1"></span>  <span class="n">average_consume</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">Decimal128</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="c1">-- comment &#39;平均消费金额：原始金额/消费次数&#39;,
+</span><span class="c1"></span>  <span class="n">account_id</span> <span class="nb">int</span><span class="p">,</span> <span class="c1">-- comment &#39;用户id&#39;,
+</span><span class="c1"></span>  <span class="n">account_uid</span> <span class="n">String</span><span class="p">,</span> <span class="c1">-- comment &#39;用户uid&#39;,
+</span><span class="c1"></span>  <span class="n">account_phone</span> <span class="n">String</span><span class="p">,</span> <span class="c1">-- comment &#39;用户手机&#39;,
+</span><span class="c1"></span>  <span class="n">age</span> <span class="k">Nullable</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="c1">-- comment &#39;年龄&#39;,
+</span><span class="c1"></span>  <span class="n">birthday</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;生日&#39;,
+</span><span class="c1"></span>  <span class="n">birthday_month</span> <span class="k">Nullable</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="c1">-- comment &#39;生日月份&#39;,
+</span><span class="c1"></span>  <span class="n">birthday_day</span> <span class="k">Nullable</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="c1">-- comment &#39;生日天&#39;,
+</span><span class="c1"></span>  <span class="n">birthday_year</span> <span class="k">Nullable</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="c1">-- comment &#39;生日年&#39;,
+</span><span class="c1"></span>  <span class="n">zodiac</span> <span class="n">String</span><span class="p">,</span> <span class="c1">-- comment &#39;星座&#39;,
+</span><span class="c1"></span>  <span class="n">name</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;姓名&#39;,
+</span><span class="c1"></span>  <span class="n">gender</span> <span class="nb">int</span><span class="p">,</span> <span class="c1">-- comment &#39;性别&#39;,
+</span><span class="c1"></span>  <span class="n">profession</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;职业&#39;,
+</span><span class="c1"></span>  <span class="n">country</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;国家&#39;,
+</span><span class="c1"></span>  <span class="n">province</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;省份&#39;,
+</span><span class="c1"></span>  <span class="n">city</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;城市&#39;,
+</span><span class="c1"></span>  <span class="n">region</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;商圈&#39;,
+</span><span class="c1"></span>  <span class="n">head_img_url</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;头像&#39;,
+</span><span class="c1"></span>  <span class="n">wechat_name</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;微信名&#39;,
+</span><span class="c1"></span>  <span class="n">wechat_city</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;微信城市&#39;,
+</span><span class="c1"></span>  <span class="n">wechat_country</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;微信国家&#39;,
+</span><span class="c1"></span>  <span class="n">wechat_province</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;微信省份&#39;,
+</span><span class="c1"></span>  <span class="n">wechat_head_img_url</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;微信头像&#39;,
+</span><span class="c1"></span>  <span class="n">wechat_groupid</span> <span class="nb">int</span><span class="p">,</span> <span class="c1">-- comment &#39;微信组&#39;,
+</span><span class="c1"></span>  <span class="n">wechat_remark</span> <span class="k">Nullable</span><span class="p">(</span><span class="n">String</span><span class="p">),</span> <span class="c1">-- comment &#39;微信备注&#39;
+</span><span class="c1"></span>  <span class="n">insert_time</span> <span class="n">DateTime</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">(),</span> <span class="c1">-- 数据插入时间
+</span><span class="c1"></span>  <span class="n">insert_date</span> <span class="nb">Date</span> <span class="k">DEFAULT</span> <span class="n">toDate</span><span class="p">(</span><span class="n">now</span><span class="p">())</span> <span class="c1">-- 数据插入日期
+</span><span class="c1"></span><span class="p">)</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">ReplicatedMergeTree</span><span class="p">(</span><span class="s1">&#39;/clickhouse/tables/{layer}-{shard}/delphi_membership_properties_replica&#39;</span><span class="p">,</span> <span class="s1">&#39;{replica}&#39;</span><span class="p">)</span>
+<span class="k">order</span> <span class="k">by</span> <span class="p">(</span><span class="n">business_group_uid</span><span class="p">,</span> <span class="n">calendar_date</span><span class="p">,</span> <span class="n">created_at</span><span class="p">,</span> <span class="n">membership_uid</span><span class="p">);</span>
+
+<span class="k">create</span> <span class="k">table</span> <span class="n">dm</span><span class="p">.</span><span class="n">delphi_membership_properties</span> <span class="k">as</span> <span class="n">dm</span><span class="p">.</span><span class="n">delphi_membership_properties_replica</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">Distributed</span><span class="p">(</span><span class="n">ck_cluster</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">delphi_membership_properties_replica</span><span class="p">,</span> <span class="n">rand</span><span class="p">())</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>插入数据：在本地表和分布式表插入时在每个replica中都有数据生成</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">dm</span><span class="p">.</span><span class="n">delphi_membership_properties_replica</span> <span class="p">(</span><span class="n">membership_id</span><span class="p">,</span> <span class="n">membership_uid</span><span class="p">,</span> <span class="n">business_group_id</span><span class="p">,</span> <span class="n">business_group_uid</span><span class="p">,</span> <span class="n">business_group_name</span><span class="p">,</span> <span class="n">business_id</span><span class="p">,</span> <span class="n">business_uid</span><span class="p">,</span> <span class="n">business_name</span><span class="p">,</span> <span class="n">membership_source</span><span class="p">,</span> <span class="n">created_at</span><span class="p">,</span> <span class="n">calendar_date</span><span class="p">,</span> <span class="n">last_visited_date</span><span class="p">,</span> <span class="n">membership_level</span><span class="p">,</span> <span class="n">customer_type</span><span class="p">,</span> <span class="n">visit_count</span><span class="p">,</span> <span class="n">consumptions_count</span><span class="p">,</span> <span class="n">consumptions_original_amount</span><span class="p">,</span> <span class="n">consumptions_amount</span><span class="p">,</span> <span class="n">average_consume</span><span class="p">,</span> <span class="n">account_id</span><span class="p">,</span> <span class="n">account_uid</span><span class="p">,</span> <span class="n">account_phone</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">birthday</span><span class="p">,</span> <span class="n">birthday_month</span><span class="p">,</span> <span class="n">birthday_day</span><span class="p">,</span> <span class="n">birthday_year</span><span class="p">,</span> <span class="n">zodiac</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">gender</span><span class="p">,</span> <span class="n">profession</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">province</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">head_img_url</span><span class="p">,</span> <span class="n">wechat_name</span><span class="p">,</span> <span class="n">wechat_city</span><span class="p">,</span> <span class="n">wechat_country</span><span class="p">,</span> <span class="n">wechat_province</span><span class="p">,</span> <span class="n">wechat_head_img_url</span><span class="p">,</span> <span class="n">wechat_groupid</span><span class="p">,</span> <span class="n">wechat_remark</span><span class="p">,</span> <span class="n">insert_time</span><span class="p">,</span> <span class="n">insert_date</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">3209903</span><span class="p">,</span> <span class="s1">&#39;6735462d5ce444dd8d80763dbcaee746&#39;</span><span class="p">,</span> <span class="mi">2524</span><span class="p">,</span> <span class="s1">&#39;00067f26104445ff89f89820b898af37&#39;</span><span class="p">,</span> <span class="s1">&#39;沐沐茶旅&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;third_party&#39;</span><span class="p">,</span> <span class="s1">&#39;2017-12-24 16:17:34&#39;</span><span class="p">,</span> <span class="s1">&#39;2017-12-24&#39;</span><span class="p">,</span> <span class="s1">&#39;2017-12-24&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Forget&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span> <span class="mi">2754132</span><span class="p">,</span> <span class="s1">&#39;e3c8b0925460435586f05741eaae548f&#39;</span><span class="p">,</span> <span class="s1">&#39;18616566494&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;中国&#39;</span><span class="p">,</span> <span class="s1">&#39;上海&#39;</span><span class="p">,</span> <span class="s1">&#39;黄浦&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;fengyi&#39;</span><span class="p">,</span> <span class="s1">&#39;黄浦&#39;</span><span class="p">,</span> <span class="s1">&#39;中国&#39;</span><span class="p">,</span> <span class="s1">&#39;上海&#39;</span><span class="p">,</span> <span class="s1">&#39;https://thirdwx.qlogo.cn/mmopen/Ria7DkYdO91HKPibgeJm3Inq3lbbFXlwHJAJMFREYOVibwNCriab41qpVvicm6zd3kZqByBQFC9t9pfMuORQoUIroyicBibicSQIIn0Z/132&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;2019-07-10 07:50:00&#39;</span><span class="p">,</span> <span class="s1">&#39;2019-07-10&#39;</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">dm</span><span class="p">.</span><span class="n">delphi_membership_properties</span> <span class="p">(</span><span class="n">membership_id</span><span class="p">,</span> <span class="n">membership_uid</span><span class="p">,</span> <span class="n">business_group_id</span><span class="p">,</span> <span class="n">business_group_uid</span><span class="p">,</span> <span class="n">business_group_name</span><span class="p">,</span> <span class="n">business_id</span><span class="p">,</span> <span class="n">business_uid</span><span class="p">,</span> <span class="n">business_name</span><span class="p">,</span> <span class="n">membership_source</span><span class="p">,</span> <span class="n">created_at</span><span class="p">,</span> <span class="n">calendar_date</span><span class="p">,</span> <span class="n">last_visited_date</span><span class="p">,</span> <span class="n">membership_level</span><span class="p">,</span> <span class="n">customer_type</span><span class="p">,</span> <span class="n">visit_count</span><span class="p">,</span> <span class="n">consumptions_count</span><span class="p">,</span> <span class="n">consumptions_original_amount</span><span class="p">,</span> <span class="n">consumptions_amount</span><span class="p">,</span> <span class="n">average_consume</span><span class="p">,</span> <span class="n">account_id</span><span class="p">,</span> <span class="n">account_uid</span><span class="p">,</span> <span class="n">account_phone</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">birthday</span><span class="p">,</span> <span class="n">birthday_month</span><span class="p">,</span> <span class="n">birthday_day</span><span class="p">,</span> <span class="n">birthday_year</span><span class="p">,</span> <span class="n">zodiac</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">gender</span><span class="p">,</span> <span class="n">profession</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">province</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">head_img_url</span><span class="p">,</span> <span class="n">wechat_name</span><span class="p">,</span> <span class="n">wechat_city</span><span class="p">,</span> <span class="n">wechat_country</span><span class="p">,</span> <span class="n">wechat_province</span><span class="p">,</span> <span class="n">wechat_head_img_url</span><span class="p">,</span> <span class="n">wechat_groupid</span><span class="p">,</span> <span class="n">wechat_remark</span><span class="p">,</span> <span class="n">insert_time</span><span class="p">,</span> <span class="n">insert_date</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">3226176</span><span class="p">,</span> <span class="s1">&#39;50778ff3ca434edcb113f93af43d646a&#39;</span><span class="p">,</span> <span class="mi">2524</span><span class="p">,</span> <span class="s1">&#39;00067f26104445ff89f89820b898af37&#39;</span><span class="p">,</span> <span class="s1">&#39;沐沐茶旅&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;third_party&#39;</span><span class="p">,</span> <span class="s1">&#39;2017-12-25 15:44:41&#39;</span><span class="p">,</span> <span class="s1">&#39;2017-12-25&#39;</span><span class="p">,</span> <span class="s1">&#39;2017-12-25&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Forget&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00</span><span class="p">,</span> <span class="mi">2780924</span><span class="p">,</span> <span class="s1">&#39;c01c3877410144a1965b3ede6e18905c&#39;</span><span class="p">,</span> <span class="s1">&#39;13564809560&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;中国&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;骨头™&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;中国&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;https://thirdwx.qlogo.cn/mmopen/VNMic85jx3X5tq6iaBbVY7spB1dWWsWiae5Dz1p2LCsq0mCxps6Zt9sxPjdb7RkribVVElytAmichfx8ibayvC4QmW0g/132&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;2019-07-10 08:50:11&#39;</span><span class="p">,</span> <span class="s1">&#39;2019-07-10&#39;</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查询数据：停掉一个replica之后仍然能查询出数据</p>
+<h1 id="jdbc连接clickhouse-cluster">JDBC连接clickhouse cluster</h1>
+<p>两种方式，一种是使用clickhouse-jdbc连接集群中的每一个节点，另外一种是使用SLB提供一个对外的统一地址</p>
+<h2 id="使用balancedclickhousedatasource">使用BalancedClickhouseDataSource</h2>
+<p>参考以下clickhouse-jdbc中的代码中的注释：<code>jdbc:clickhouse://localhost:8123,localhost:8123/database?compress=1&amp;decompress=2</code></p>
+<ul>
+<li><a href="https://github.com/yandex/clickhouse-jdbc/blob/master/src/main/java/ru/yandex/clickhouse/BalancedClickhouseDataSource.java">clickhouse-jdbc/BalancedClickhouseDataSource.java at master · yandex/clickhouse-jdbc · GitHub</a></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="cm">/**
+</span><span class="cm">     * create Datasource for clickhouse JDBC connections
+</span><span class="cm">     *
+</span><span class="cm">     * @param url address for connection to the database
+</span><span class="cm">     *            must have the next format {@code jdbc:clickhouse://&lt;first-host&gt;:&lt;port&gt;,&lt;second-host&gt;:&lt;port&gt;/&lt;database&gt;?param1=value1&amp;param2=value2 }
+</span><span class="cm">     *            for example, {@code jdbc:clickhouse://localhost:8123,localhost:8123/database?compress=1&amp;decompress=2 }
+</span><span class="cm">     * @throws IllegalArgumentException if param have not correct format, or error happens when checking host availability
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">BalancedClickhouseDataSource</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">splitUrl</span><span class="o">(</span><span class="n">url</span><span class="o">),</span> <span class="n">getFromUrl</span><span class="o">(</span><span class="n">url</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * create Datasource for clickhouse JDBC connections
+</span><span class="cm">     *
+</span><span class="cm">     * @param url        address for connection to the database
+</span><span class="cm">     * @param properties database properties
+</span><span class="cm">     * @see #BalancedClickhouseDataSource(String)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">BalancedClickhouseDataSource</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">url</span><span class="o">,</span> <span class="n">Properties</span> <span class="n">properties</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">splitUrl</span><span class="o">(</span><span class="n">url</span><span class="o">),</span> <span class="k">new</span> <span class="n">ClickHouseProperties</span><span class="o">(</span><span class="n">properties</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * create Datasource for clickhouse JDBC connections
+</span><span class="cm">     *
+</span><span class="cm">     * @param url        address for connection to the database
+</span><span class="cm">     * @param properties database properties
+</span><span class="cm">     * @see #BalancedClickhouseDataSource(String)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">BalancedClickhouseDataSource</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">url</span><span class="o">,</span> <span class="n">ClickHouseProperties</span> <span class="n">properties</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">splitUrl</span><span class="o">(</span><span class="n">url</span><span class="o">),</span> <span class="n">properties</span><span class="o">.</span><span class="na">merge</span><span class="o">(</span><span class="n">getFromUrlWithoutDefault</span><span class="o">(</span><span class="n">url</span><span class="o">)));</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="使用slb">使用SLB</h2>
+<p>使用LB均衡到各个副本，保证应用方查询单host，本次不使用BalancedClickhouseDataSource，从github issue上看BalancedClickhouseDataSource在之前版本出现副本故障时没能故障转移，不知道是否有修复。</p>
+<p>配置LB：<strong>使用标准JDBC连接时需要映射http协议到clickhouse的8123端口(http监听端口)</strong></p>
+<p>验证LB配置是否生效</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="s1">&#39;SELECT * from dm.delphi_membership_properties FORMAT Pretty&#39;</span> <span class="p">|</span> curl <span class="s1">&#39;internal-clickhouse-prod-621097858.
+</span><span class="s1">cn-north-1.elb.amazonaws.com.cn:80/?&#39;</span> --data-binary @-
+</code></pre></td></tr></table>
+</div>
+</div><p>贴一下在Springboot中使用标准JDBC数据源HikariDataSource÷连接clickhouse的配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.kezaihui.delphi.core.config</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.baomidou.mybatisplus.entity.GlobalConfiguration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.baomidou.mybatisplus.enums.DBType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.baomidou.mybatisplus.enums.IdType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.zaxxer.hikari.HikariDataSource</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.extern.slf4j.Slf4j</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.ibatis.session.SqlSessionFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.mybatis.spring.annotation.MapperScan</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.mybatis.spring.boot.autoconfigure.MybatisProperties</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Qualifier</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.boot.context.properties.ConfigurationProperties</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.context.annotation.Bean</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.context.annotation.Configuration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.core.io.support.PathMatchingResourcePatternResolver</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.core.io.support.ResourcePatternResolver</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.sql.DataSource</span><span class="o">;</span>
+
+<span class="cm">/**
+</span><span class="cm"> * clickhouse 数据源配置
+</span><span class="cm"> *
+</span><span class="cm"> * @author Suncle
+</span><span class="cm"> * @date 2019-07-05
+</span><span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Configuration</span>
+<span class="nd">@MapperScan</span><span class="o">(</span><span class="n">basePackages</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="s">&#34;com.kezaihui.delphi.core.membership.**.mapper&#34;</span>
+<span class="o">},</span> <span class="n">sqlSessionFactoryRef</span> <span class="o">=</span> <span class="s">&#34;ckSqlSessionFactory&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CkDataSourceConfig</span> <span class="o">{</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">MybatisProperties</span> <span class="n">mybatisProperties</span><span class="o">;</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * 读取数据源
+</span><span class="cm">     *
+</span><span class="cm">     * @return javax.sql.DataSource 数据源
+</span><span class="cm">     */</span>
+    <span class="nd">@Bean</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;ckDataSource&#34;</span><span class="o">)</span>
+    <span class="nd">@ConfigurationProperties</span><span class="o">(</span><span class="n">prefix</span> <span class="o">=</span> <span class="s">&#34;spring.clickhouse.datasource&#34;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">DataSource</span> <span class="nf">dataSource</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">HikariDataSource</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * sql 会话工厂配置
+</span><span class="cm">     *
+</span><span class="cm">     * @param ckDataSource javax.sql.DataSource 数据源
+</span><span class="cm">     * @return SqlSessionFactory
+</span><span class="cm">     */</span>
+    <span class="nd">@Bean</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;ckSqlSessionFactory&#34;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">SqlSessionFactory</span> <span class="nf">sqlSessionFactory</span><span class="o">(</span><span class="nd">@Qualifier</span><span class="o">(</span><span class="s">&#34;ckDataSource&#34;</span><span class="o">)</span> <span class="n">DataSource</span> <span class="n">ckDataSource</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">MybatisSqlSessionFactoryBean</span> <span class="n">bean</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MybatisSqlSessionFactoryBean</span><span class="o">();</span>
+        <span class="n">bean</span><span class="o">.</span><span class="na">setDataSource</span><span class="o">(</span><span class="n">ckDataSource</span><span class="o">);</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">GlobalConfiguration</span> <span class="n">configuration</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GlobalConfiguration</span><span class="o">();</span>
+            <span class="n">configuration</span><span class="o">.</span><span class="na">setDbType</span><span class="o">(</span><span class="n">DBType</span><span class="o">.</span><span class="na">OTHER</span><span class="o">.</span><span class="na">name</span><span class="o">());</span>
+            <span class="n">configuration</span><span class="o">.</span><span class="na">setIdType</span><span class="o">(</span><span class="n">IdType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">.</span><span class="na">getKey</span><span class="o">());</span>
+            <span class="n">configuration</span><span class="o">.</span><span class="na">setDbColumnUnderline</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+            <span class="n">bean</span><span class="o">.</span><span class="na">setGlobalConfig</span><span class="o">(</span><span class="n">configuration</span><span class="o">);</span>
+            <span class="n">ResourcePatternResolver</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PathMatchingResourcePatternResolver</span><span class="o">();</span>
+            <span class="n">bean</span><span class="o">.</span><span class="na">setMapperLocations</span><span class="o">(</span><span class="n">mybatisProperties</span><span class="o">.</span><span class="na">resolveMapperLocations</span><span class="o">());</span>
+            <span class="n">bean</span><span class="o">.</span><span class="na">setConfigLocation</span><span class="o">(</span><span class="n">resolver</span><span class="o">.</span><span class="na">getResource</span><span class="o">(</span><span class="n">mybatisProperties</span><span class="o">.</span><span class="na">getConfigLocation</span><span class="o">()));</span>
+            <span class="k">return</span> <span class="n">bean</span><span class="o">.</span><span class="na">getObject</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>配置好之后可以使用mybatis查询数据</p>
+<h1 id="原生tcp协议连接clickhouse-cluster">原生TCP协议连接clickhouse cluster</h1>
+<p>同样是采用SLB映射到不同的节点上，但是映射的时候需要注意不同之处：</p>
+<ul>
+<li><strong>映射TCP协议到clickhouse的9000端口</strong></li>
+</ul>
+<p>连接方式可以参考clickhouse-driver的连接，也可以直接使用python语言clickhouse-driver库</p>
+<h1 id="clickhouse-python-client的选择">clickhouse python client的选择</h1>
+<p>官方没有维护各语言的driver，全部由第三方维护，主要有以下两个，对比参见后面。</p>
+<p>结论：选择clickhouse-driver，数仓项目使用orm的意义不大。因为应用层不是python项目，是java项目</p>
+<h2 id="clickhouse-driver">clickhouse-driver</h2>
+<p><a href="https://github.com/mymarilyn/clickhouse-driver">GitHub - mymarilyn/clickhouse-driver: ClickHouse Python Driver with native interface support</a>
+活跃度高，star数最高。语法主要是执行原生sql</p>
+<h2 id="inficlickhouse_orm">infi.clickhouse_orm</h2>
+<p><a href="https://github.com/Infinidat/infi.clickhouse_orm">GitHub - Infinidat/infi.clickhouse_orm: A Python library for working with the ClickHouse database (https://clickhouse.yandex/)</a>
+活跃度高，star数第二高。是一个为clickhouse封装的orm框架，写起来有django的感觉</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li>
+<p><a href="https://github.com/jneo8/clickhouse-setup">https://github.com/jneo8/clickhouse-setup</a></p>
+</li>
+<li>
+<p><a href="https://clickhouse.yandex/docs/zh/operations/table_engines/replication/">https://clickhouse.yandex/docs/zh/operations/table_engines/replication/</a></p>
+</li>
+<li>
+<p><a href="https://clickhouse.yandex/docs/zh/operations/table_engines/distributed/">https://clickhouse.yandex/docs/zh/operations/table_engines/distributed/</a></p>
+</li>
+<li>
+<p><a href="https://clickhouse.yandex/docs/en/operations/table_engines/replication/">https://clickhouse.yandex/docs/en/operations/table_engines/replication/</a></p>
+</li>
+<li>
+<p><a href="https://clickhouse.yandex/tutorial.html">https://clickhouse.yandex/tutorial.html</a></p>
+</li>
+<li>
+<p><a href="https://hzkeung.com/2018/06/30/clickhouse-cluster-test">https://hzkeung.com/2018/06/30/clickhouse-cluster-test</a></p>
+</li>
+<li>
+<p><a href="https://hzkeung.com/2018/06/21/clickhouse-cluster-install">https://hzkeung.com/2018/06/21/clickhouse-cluster-install</a></p>
+</li>
+<li>
+<p><a href="https://www.jianshu.com/p/383cae967a64">https://www.jianshu.com/p/383cae967a64</a></p>
+</li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-07-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/clickhouse/">clickhouse</a>
+          <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>
+          <a href="/tags/%E6%90%AD%E5%BB%BA/">搭建</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Clickhouse创建分布式表以及表引擎介绍</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2019/07/27/clickhouse-introduction-and-comparison-of-performance/">
+            <span class="next-text nav-default">Clickhouse简介和性能对比</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

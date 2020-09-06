@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="关注Python、Goalng的web后端、DevOps等领域" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/" />
+  <link href="https://suncle.me/index.xml" rel="alternate" type="application/rss+xml" title="Suncle&#39;s Blog" />
+  <link href="https://suncle.me/index.xml" rel="feed" type="application/rss+xml" title="Suncle&#39;s Blog" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Suncle&#39;s Blog" />
+<meta property="og:description" content="关注Python、Goalng的web后端、DevOps等领域" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://suncle.me/" />
+<meta property="og:updated_time" content="2019-12-31T23:59:59+00:00" />
+<meta itemprop="name" content="Suncle&#39;s Blog">
+<meta itemprop="description" content="关注Python、Goalng的web后端、DevOps等领域">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Suncle&#39;s Blog"/>
+<meta name="twitter:description" content="关注Python、Goalng的web后端、DevOps等领域"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/">Python实现通用web框架</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-05-22 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 465 字 </span>
+        <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      概述 Python WSGI规定了Web服务器和Python Web应用程序或Web框架之间的标准接口，主要是为了促进Web应用程序在各种Web服务器上的可
+    </div>
+    <div class="read-more">
+      <a href="/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/">常用Oracle SQL集锦</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-05-10 </span>
+      <div class="post-category">
+          <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+          </div>
+        <span class="more-meta"> 约 2167 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h4 id="常用dml和query开并行">常用dml和query开并行</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--开并行
+</span><span class="c1"></span><span class="k">ALTER</span> <span class="k">SESSION</span> <span class="k">FORCE</span> <span class="n">PARALLEL</span> <span class="n">DML</span> <span class="n">PARALLEL</span> <span class="mi">16</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">SESSION</span> <span class="k">FORCE</span> <span class="n">PARALLEL</span> <span class="n">QUERY</span> <span class="n">PARALLEL</span> <span class="mi">16</span><span class="p">;</span>
+<span class="c1">--关并行
+</span><span class="c1"></span><span class="k">ALTER</span> <span class="k">SESSION</span> <span class="n">DISABLE</span> <span class="n">PARALLEL</span> <span class="n">DML</span> <span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">SESSION</span> <span class="n">DISABLE</span> <span class="n">PARALLEL</span> <span class="n">QUERY</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="索引开并行">索引开并行</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">drop</span> <span class="k">index</span> <span class="n">IDX_SB_SBZT_LRRQ</span><span class="p">;</span>
+<span class="k">create</span> <span class="k">index</span> <span class="n">IDX_SB_SBZT_LRRQ</span> <span class="k">on</span> <span class="n">SB_SBZT</span> <span class="p">(</span><span class="n">LRRQ</span><span class="p">,</span> <span class="n">CWLX_DM</span><span class="p">,</span> <span class="n">SWJG_DM</span><span class="p">)</span>
+  <span class="n">tablespace</span> <span class="n">TS_GS_SB_IDX</span>
+  <span class="n">pctfree</span> <span class="mi">20</span>
+  <span class="n">initrans</span> <span class="mi">2</span>
+  <span class="n">maxtrans</span> <span class="mi">255</span>
+  <span class="k">storage</span>
+  <span class="p">(</span>
+    <span class="n">initial</span> <span class="mi">64</span><span class="n">K</span>
+    <span class="k">next</span> <span class="mi">1</span><span class="n">M</span>
+    <span class="n">minextents</span> <span class="mi">1</span>
+    <span class="n">maxextents</span> <span class="n">unlimited</span>
+  <span class="p">)</span> <span class="n">parallel</span> <span class="mi">6</span><span class="p">;</span>
+
+<span class="k">alter</span> <span class="k">index</span> <span class="n">IDX_SB_SBZT_LRRQ</span> <span class="n">noparallel</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="查看asm">查看ASM</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">-- 查看asm的各个disk group是否超过80%
+</span><span class="c1">-- name：name of the disk group
+</span><span class="c1">-- total_mb：total capacity of the disk group(in megabytes)
+</span><span class="c1">-- free_mb：unused capacity of the disk group(in megabytes)
+</span><span class="c1"></span><span class="k">select</span> <span class="n">t</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="n">t</span><span class="p">.</span><span class="n">TOTAL_MB</span> <span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">TOTAL_MB</span> <span class="o">-</span> <span class="n">t</span><span class="p">.</span><span class="n">FREE_MB</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span><span class="p">.</span><span class="n">TOTAL_MB</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">||</span><span class="s1">&#39;%&#39;</span>
+  <span class="k">from</span> <span class="n">v$asm_diskgroup</span> <span class="n">t</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+    <div class="read-more">
+      <a href="/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/05/10/SQLAlchemy%E4%BD%BF%E7%94%A8/">SQLAlchemy使用</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-05-10 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 2047 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="简介">简介</h1>
+<p>SQLAlchemy是Python语言的一款流行的ORM（Object Relational Mapper）框架，该框架建立在数据库API之上，使用关系对象映射进行数据库操作，即将对象转换成SQL，然后使用数据API执行SQL并获取执行结果。</p>
+<p>安装SQLAlchemy也很简单，直接使用pip安装即可。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">pip install sqlalchemy
+</code></pre></td></tr></table>
+</div>
+</div><p>下面重点介绍SQLAlchemy的使用。</p>
+<h1 id="版本检查">版本检查</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">sqlalchemy</span>
+<span class="n">sqlalchemy</span><span class="o">.</span><span class="n">__version__</span>	<span class="c1"># 1.1.9</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当前sqlalchemy版本为1.1.9</p>
+<h1 id="连接数据库">连接数据库</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;mysql+pymysql://root:123456@192.168.110.13:3306/student&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>engine 是 Engine类的一个对象</li>
+<li>echo=True表明开启logging模块的日志</li>
+<li>数据库连接：<code>engine://user:password@host:port/database</code>，其中engine为mysql+pymysql，或者是mysql+mysqldb，或者是oracle+cx_oracle等等</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2017/05/10/SQLAlchemy%E4%BD%BF%E7%94%A8/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/04/27/react%E5%9F%BA%E7%A1%80/">react基础</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-04-27 </span>
+      <div class="post-category">
+          <a href="/categories/JavaScript/"> JavaScript </a>
+          </div>
+        <span class="more-meta"> 约 1620 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="hello-world">Hello World</h1>
+<p>Hello World作为开篇示例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">ReactDOM</span> <span class="nx">from</span> <span class="s1">&#39;react-dom&#39;</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">Root</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">!&lt;</span><span class="err">/h1&gt;;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Root</span> <span class="o">/&gt;</span><span class="p">,</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">));</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="jsx简介">JSX简介</h1>
+<p>react使用的JSX是JavaScript的一个语法扩展，上述Hello World示例中的return语句即为JSX写法。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/04/27/react%E5%9F%BA%E7%A1%80/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/04/18/JavaScript%E5%87%BD%E6%95%B0%E5%92%8C%E7%B1%BB/">JavaScript函数和类</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-04-18 </span>
+      <div class="post-category">
+          <a href="/categories/JavaScript/"> JavaScript </a>
+          </div>
+        <span class="more-meta"> 约 3294 字 </span>
+        <span class="more-meta"> 预计阅读 7 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="javascript函数">JavaScript函数</h1>
+<h2 id="函数定义">函数定义</h2>
+<p>一个<strong>函数定义</strong>（也称为<strong>函数声明</strong>，或<strong>函数语句</strong>）由一系列的<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Statements/function"><code>函数</code></a>关键字组成, 依次为：</p>
+<ul>
+<li>函数的名称。</li>
+<li>函数参数列表，包围在括号( )中并由逗号( , )区隔。</li>
+<li>函数功能，包围在花括号{ }中，用于定义函数功能的一些JavaScript语句。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>函数参数传递时，如果是传值则是传形参。如果是传对象，则是传引用（函数内部对对象的改变对外部是可见的）。</p>
+<h2 id="函数表达式">函数表达式</h2>
+<p>虽然上面的函数声明在语法上是一个语句，但函数也可以由<strong>函数表达式</strong>创建。这样的函数可以是<strong>匿名</strong>的；它不必有一个名称。例如，函数<code>square</code>也可这样来定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// 第一种定义方式
+</span><span class="c1"></span><span class="kr">const</span> <span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 第二种定义方式
+</span><span class="c1"></span><span class="kr">const</span> <span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">_add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>函数表达式可以直接调用：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">let</span> <span class="nx">val</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+<span class="p">}(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>  <span class="c1">// 输出4
+</span></code></pre></td></tr></table>
+</div>
+</div><p>函数表达式就是把一个函数赋值给变量或者常量</p>
+<p><strong>什么时候使用函数表达式？什么时候使用命名方式的函数表达式？</strong></p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/04/18/JavaScript%E5%87%BD%E6%95%B0%E5%92%8C%E7%B1%BB/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/04/18/JavaScript%E5%9F%BA%E7%A1%80/">JavaScript基础</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-04-18 </span>
+      <div class="post-category">
+          <a href="/categories/JavaScript/"> JavaScript </a>
+          </div>
+        <span class="more-meta"> 约 1752 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>JavaScript 从 Java 中借用其大部分语法，但也受 Awk，Perl 和 Python的影响。因此本篇博客基于对Java和Python的认识来记录JavaScript的差异点。</p>
+<h1 id="0x00-letvarconst">[0x00] let,var,const</h1>
+<ul>
+<li>
+<p>var 的方式是为了兼容旧版。因为var定义变量， 会提升作用域，var定义的变量，都是全局作用域。</p>
+</li>
+<li>
+<p>let 是ES6引入的，如果没有特殊原因， 变量都应该是用let来定义</p>
+</li>
+<li>
+<p>const是定义常量</p>
+</li>
+</ul>
+<h1 id="0x01-javascript数据类型">[0x01] JavaScript数据类型</h1>
+<p>JavaScript总共有六种基本数据类型</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Boolean">Boolean</a>.  布尔值，<code>true</code> 和 <code>false</code>.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/null">null</a>. 一个表明 null 值的特殊关键字。 JavaScript 是大小写敏感的，因此 <code>null </code>与 <code>Null</code>、<code>NULL</code>或其他变量完全不同。</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/undefined">undefined</a>.  变量未定义时的属性。</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Number">Number</a>.  表示数字，例如： <code>42</code> 或者 <code>3.14159。</code></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/String">String</a>.  表示字符串，例如：&ldquo;Howdy&rdquo;</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Symbol">Symbol</a> ( 在 ECMAScript 6 中新添加的类型).。一种数据类型，它的实例是唯一且不可改变的。</li>
+</ul>
+<blockquote>
+<p>在bool运算中，null和undefined都等价于false</p>
+</blockquote>
+<p>除了六种基本数据类型之外，还有复合的object类型。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/04/18/JavaScript%E5%9F%BA%E7%A1%80/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/04/14/Python-pymysql/">Python-pymysql</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-04-14 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 2609 字 </span>
+        <span class="more-meta"> 预计阅读 6 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="安装">安装</h1>
+<p>安装mysql数据库的难度和oracle数据库简直没得比，安装步骤如下：</p>
+<h2 id="安装mariadb">安装MariaDB</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">yum install mariadb mariadb-server  <span class="c1"># 安装，centos7默认的mysql就是mariadb</span>
+systemctl start mariadb  <span class="c1"># 启动mariadb</span>
+systemctl <span class="nb">enable</span> mariadb  <span class="c1"># 开机自启动</span>
+mysql_secure_installation  <span class="c1"># 设置root密码</span>
+mysql -uroot -p  <span class="c1"># 登录</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装pymysql">安装pymysql</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pip install pymysql
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="基本操作">基本操作</h1>
+<p>数据库基本操作主要是：</p>
+<ol>
+<li>创建连接</li>
+<li>获取游标</li>
+<li>执行sql</li>
+<li>提交事务：<strong>针对非查询性SQL</strong></li>
+</ol>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="c1"># connect函数打开数据库连接</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+<span class="c1"># cursor方法创建游标对象cur</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="c1"># execute方法执行SQL语句</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&#34;SELECT VERSION()&#34;</span><span class="p">)</span>
+<span class="c1"># fetchone方法获取单条数据</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="k">print</span> <span class="p">(</span><span class="s1">&#39;Database version : {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="c1"># 关闭游标</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># 关闭数据库连接</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+    <div class="read-more">
+      <a href="/2017/04/14/Python-pymysql/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/">Python-WSGI接口</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-04-07 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 1605 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>Python WSGI规定了Web服务器和Python Web应用程序或Web框架之间的标准接口，主要是为了促进Web应用程序在各种Web服务器上的可移植性。</p>
+<p>上述这句话翻译自Python官方的PEP333标准：<a href="https://www.python.org/dev/peps/pep-0333/">PEP 333 &ndash; Python Web Server Gateway Interface v1.0</a></p>
+<h1 id="wsgi接口概述">WSGI接口概述</h1>
+<p>WSGI的含义：Web Server Gateway Interface（Web服务器网管接口）。</p>
+<p>WSGI接口包含两方面：server/gateway端 及 application/framework端。后面直接使用server和application来说明，不再使用gateway和framework。server端直接调用application端提供的<strong>可调用对象</strong>。另外在server和application之间还可以有一种称作middleware的中间件。中间件对于server来说就是一个application，但是对于application来说中间件却是一个server。</p>
+<p>上述可调用对象是指：函数、方法、类或者带有<code>__call__</code>方法的实例。</p>
+<p>以下分别介绍application端，Server端和middleware三个部分</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/04/04/%E7%81%B5%E9%AD%82%E7%8B%AC%E6%97%85%E4%B9%8B%E6%B5%B7%E5%A4%A9%E4%BD%9B%E5%9B%BD%E6%99%AE%E9%99%80%E5%B1%B1/">灵魂独旅之海天佛国普陀山</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-04-04 </span>
+      <div class="post-category">
+          <a href="/categories/%E7%81%B5%E9%AD%82%E7%8B%AC%E6%97%85/"> 灵魂独旅 </a>
+          </div>
+        <span class="more-meta"> 约 1259 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>曾经去过那么多的地方，走过那么多的路，爬过那么多的山，陪哥嫂和曾经的对象艰难的夜爬华山最终登顶看到绝美的日出，穿着一件单薄的衬衣淋着淅沥沥的春雨伴着青石的台阶跨过三重天最终见到了巍峨庄严的武当金顶，和大学室友四人路过风吹草低见牛羊的青海草场拂过青海湖一望无际的碧蓝涟漪，还有数不清的数不尽的旅行，每一次出行都有亲密熟识的朋友们陪伴，姑且就把曾经的对象也称为过往的亲密朋友，这么多年来一直期望有一次说走就走的一个人的旅行，抛开过去的一切。2017年4月1号的晚上终于下定了决心，毅然决然的定下了出行的票。就这样，2号的晚上打完了最后一把游戏，就开始准备着3号凌晨5点的出行，太兴奋，以致于一个晚上都没休息好。5点起了个大早，到了做大巴的地方还得等一个多小时，就顺便去西湖逛了一圈，就让西湖美景作为开篇第一图吧</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tour/putuoshan/IMG_20170403_061410.jpg" alt="清晨西湖美景"></p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/04/04/%E7%81%B5%E9%AD%82%E7%8B%AC%E6%97%85%E4%B9%8B%E6%B5%B7%E5%A4%A9%E4%BD%9B%E5%9B%BD%E6%99%AE%E9%99%80%E5%B1%B1/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/">CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-03-30 </span>
+      <div class="post-category">
+          <a href="/categories/Http/"> Http </a>
+          </div>
+        <span class="more-meta"> 约 1514 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="lets-encrypt">Let&rsquo;s-Encrypt</h1>
+<p>为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：</p>
+<ul>
+<li><a href="https://letsencrypt.org/">Let&rsquo;s-Encrypt</a>，本文即将介绍，Let&rsquo;s-Encrypt大法好。</li>
+<li><a href="https://caddyserver.com/">caddy</a>，原生支持 HTTP/2，自动创建 <a href="http://www.appinn.com/use-letsencrypt-with-nginx/">Let’s Encrypt</a> 证书，非常简单易用。</li>
+</ul>
+<h2 id="安装">安装</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">yum install epel-release -y
+yum install certbot -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置">配置</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>--webroot</code>表示以webroot模式运行，此处我们不选择standalone模式</li>
+<li><code>-w /www/html</code>表示站点根目录在/www/html</li>
+<li><code>-d suncle.me -d www.suncle.me</code>表示为@主机和www主机生成共同的证书</li>
+</ul>
+<p>按照提示操作成功后，提示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will
+   expire on 2017-06-28. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run &#34;certbot
+   renew&#34;
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let&#39;s Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+    <div class="read-more">
+      <a href="/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    </section>
+  
+  <nav class="pagination">
+    <a class="prev" href="/page/7/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    <a class="next" href="/page/9/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

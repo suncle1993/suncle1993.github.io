@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="关注Python、Goalng的web后端、DevOps等领域" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/" />
+  <link href="https://suncle.me/index.xml" rel="alternate" type="application/rss+xml" title="Suncle&#39;s Blog" />
+  <link href="https://suncle.me/index.xml" rel="feed" type="application/rss+xml" title="Suncle&#39;s Blog" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Suncle&#39;s Blog" />
+<meta property="og:description" content="关注Python、Goalng的web后端、DevOps等领域" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://suncle.me/" />
+<meta property="og:updated_time" content="2019-12-31T23:59:59+00:00" />
+<meta itemprop="name" content="Suncle&#39;s Blog">
+<meta itemprop="description" content="关注Python、Goalng的web后端、DevOps等领域">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Suncle&#39;s Blog"/>
+<meta name="twitter:description" content="关注Python、Goalng的web后端、DevOps等领域"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/11/08/%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86http302%E9%87%8D%E5%AE%9A%E5%90%91%E6%9C%BA%E5%88%B6/">重新认识HTTP3xx重定向机制</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-11-08 </span>
+      <div class="post-category">
+          <a href="/categories/Http/"> Http </a>
+          </div>
+        <span class="more-meta"> 约 1378 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="问题引入">问题引入</h1>
+<p>前段时间做数据收集时需要下载网宿cdn的日志进行分析。而网宿对日志下载的接口搞得很复杂，又没有提供相应的sdk，只是提供了一个shell脚本，虽然在ubuntu上使用很方便，但是脚本里面的各种重定向分析非常复杂。故此想对重定向在深入了解一点。</p>
+<p><strong>查询网宿日志列表的脚本</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/sh
+</span><span class="cp"></span>
+<span class="nv">TMP_FILE</span><span class="o">=</span><span class="s2">&#34;/tmp/wslog_query_client.log&#34;</span>
+<span class="c1">#Usage</span>
+Usage<span class="o">()</span> <span class="o">{</span>
+	<span class="nb">echo</span> <span class="s2">&#34;wslog_query_client.sh [query_url] [user] [passwd] [start_time] [end_time] [channels]&#34;</span>
+	<span class="k">return</span> <span class="m">0</span>
+<span class="o">}</span>
+<span class="c1">#check input parameters</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -eq <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+	<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$1</span><span class="s2">&#34;</span> <span class="o">=</span> <span class="s2">&#34;-h&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+		Usage
+		<span class="nb">exit</span> <span class="m">0</span>
+	<span class="k">else</span>
+		Usage
+		<span class="nb">exit</span> -1
+	<span class="k">fi</span>
+<span class="k">elif</span> <span class="o">[</span> <span class="nv">$#</span> -ne <span class="m">6</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+	Usage
+	<span class="nb">exit</span> -1
+<span class="k">fi</span>
+<span class="c1">#params set</span>
+<span class="nv">url</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">user</span><span class="o">=</span><span class="nv">$2</span>
+<span class="nv">passwd</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="nv">$3</span> <span class="p">|</span> sed <span class="s1">&#39;s/&amp;/%26/g&#39;</span> <span class="sb">`</span>
+<span class="nv">start_time</span><span class="o">=</span><span class="nv">$4</span>
+<span class="nv">end_time</span><span class="o">=</span><span class="nv">$5</span>
+<span class="nv">channels</span><span class="o">=</span><span class="nv">$6</span>
+<span class="c1">#access logQuery access API</span>
+curl -s -D <span class="nv">$TMP_FILE</span> <span class="nv">$1</span>
+cat <span class="nv">$TMP_FILE</span> <span class="p">|</span> grep <span class="s2">&#34;HTTP/&#34;</span> <span class="p">|</span> grep <span class="s2">&#34;302&#34;</span> &gt; /dev/null
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -ne <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+	<span class="nb">exit</span> -2
+<span class="k">fi</span>
+<span class="c1">#redirect to verify url with user and passwd</span>
+<span class="nv">TMP_URL</span><span class="o">=</span><span class="sb">`</span>cat <span class="nv">$TMP_FILE</span> <span class="p">|</span> grep <span class="s2">&#34;Location: &#34;</span><span class="p">|</span>sed <span class="s1">&#39;s/\r//&#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> sed <span class="s1">&#39;s/http:/https:/&#39;</span><span class="sb">`</span>
+<span class="nv">TMP_URL</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">TMP_URL</span><span class="si">}</span><span class="s2">?u=</span><span class="nv">$user</span><span class="s2">&amp;p=</span><span class="nv">$passwd</span><span class="s2">&amp;channel=</span><span class="nv">$channels</span><span class="s2">&#34;</span>
+curl -s -k -D <span class="nv">$TMP_FILE</span> <span class="nv">$TMP_URL</span>
+cat <span class="nv">$TMP_FILE</span> <span class="p">|</span> grep <span class="s2">&#34;HTTP/&#34;</span> <span class="p">|</span> grep <span class="s2">&#34;302&#34;</span> &gt; /dev/null
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -ne <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+	<span class="nb">exit</span> -3
+<span class="k">fi</span>
+<span class="c1">#redirect to query url with start_time, end_time and channels</span>
+<span class="nv">TMP_URL</span><span class="o">=</span><span class="sb">`</span>cat <span class="nv">$TMP_FILE</span> <span class="p">|</span> grep <span class="s2">&#34;Location: &#34;</span><span class="p">|</span>sed <span class="s1">&#39;s/\r//&#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span><span class="sb">`</span>
+<span class="nv">TMP_URL</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">TMP_URL</span><span class="si">}</span><span class="s2">&amp;start_time=</span><span class="nv">$start_time</span><span class="s2">&amp;end_time=</span><span class="nv">$end_time</span><span class="s2">&amp;channels=</span><span class="nv">$channels</span><span class="s2">&#34;</span>
+curl -s -D <span class="nv">$TMP_FILE</span> <span class="nv">$TMP_URL</span>
+<span class="c1">#check query result</span>
+cat <span class="nv">$TMP_FILE</span> <span class="p">|</span> grep <span class="s2">&#34;HTTP/&#34;</span> <span class="p">|</span> grep <span class="s2">&#34;200&#34;</span> &gt; /dev/null
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -ne <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+	<span class="k">if</span> 
+		cat <span class="nv">$TMP_FILE</span> <span class="p">|</span> grep <span class="s2">&#34;HTTP/&#34;</span> <span class="p">|</span> grep <span class="s2">&#34;404&#34;</span> &gt; /dev/null
+	<span class="k">then</span>
+		<span class="nb">exit</span> -404
+	<span class="k">else</span>
+		<span class="nb">exit</span> -4
+	<span class="k">fi</span>
+<span class="k">fi</span>
+<span class="nb">exit</span> <span class="m">0</span>
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+    <div class="read-more">
+      <a href="/2017/11/08/%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86http302%E9%87%8D%E5%AE%9A%E5%90%91%E6%9C%BA%E5%88%B6/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4Python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/">思考一次整体调整Python项目规范性的过程</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-10-31 </span>
+      <div class="post-category">
+          <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/"> 设计思想 </a>
+          </div>
+        <span class="more-meta"> 约 1757 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>本篇文章主要是记录整体调整Python数据统计分析项目规范性的过程，以及自己的一些思考。</p>
+<h1 id="为什么要调整">为什么要调整？</h1>
+<ol>
+<li>主要是为了解决数据类程序不容易测试发现错误的现状。调整公共模块出错时抛出错误到业务层，便于报警模块上传错误信息到kafka，最后能主动发出报警邮件。以及方便加入报警之外的其他程序埋点。</li>
+<li>调整所有Python数据统计分析程序满足pep8规范和Google Python风格规范，减少IDE提示。</li>
+<li>完善代码注释和文档便于后续维护（之前的开发人员是Erlang风格，主张不写或者少写注释）。</li>
+</ol>
+    </div>
+    <div class="read-more">
+      <a href="/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4Python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/10/31/%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%9F%8B%E7%82%B9%E7%9A%84%E6%80%9D%E8%80%83/">关于程序埋点的思考</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-10-31 </span>
+      <div class="post-category">
+          <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/"> 设计思想 </a>
+          </div>
+        <span class="more-meta"> 约 1102 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="埋点目的">埋点目的</h1>
+<p>对于本次修改的数据统计分析程序的埋点，只是为了统计数据中出现的一些不易发现的错误，全部让程序主动跑出来。但是只要是主动抛出统计数据，都属于埋点。</p>
+<p>数据埋点是数据分析的准备工作，只有埋点了才可以获得数据进行分析。在做足数据埋点之后，才能拿到想要的目标数据：</p>
+<ol>
+<li>行为数据：时间、地点、人物、交互、交互的内容；</li>
+<li>质量数据：浏览器加载情况、错误异常等；</li>
+<li>环境数据：浏览器相关的元数据以及地理、运营商等；</li>
+<li>运营数据：PV、UV、转化率、留存率（很直观的数据）</li>
+</ol>
+<p>整体调整Python项目规范性之后加入错误数据埋点就属于质量数据部分。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/10/31/%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%9F%8B%E7%82%B9%E7%9A%84%E6%80%9D%E8%80%83/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/10/31/%E4%BB%8EPython%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88%E8%8E%B7%E5%8F%96%E8%A1%8C%E5%8F%B7%E7%AD%89%E4%BF%A1%E6%81%AF/">从Python调用堆栈获取行号等信息</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-10-31 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 820 字 </span>
+        <span class="more-meta"> 预计阅读 2 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>程序中的日志打印，或者消息上传，比如kafka消息等等。经常上传的消息中需要上传堆栈信息中的文件名、行号、上层调用者等具体用于定位的消息。Python提供了以下两种方法：</p>
+<ul>
+<li><code>sys._getframe</code>， 基础方法</li>
+<li><code>inspect.currentframe</code>， 推荐方法，提供除了<code>sys._getframe</code>方法之外更多的frame相关的方法</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2017/10/31/%E4%BB%8EPython%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88%E8%8E%B7%E5%8F%96%E8%A1%8C%E5%8F%B7%E7%AD%89%E4%BF%A1%E6%81%AF/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/">详解supervisor进程管理</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-09-25 </span>
+      <div class="post-category">
+          <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"> 工具使用 </a>
+          </div>
+        <span class="more-meta"> 约 5470 字 </span>
+        <span class="more-meta"> 预计阅读 11 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="supervisor">supervisor</h1>
+<p>使用Python编写的进程管理程序supervisor来管理Python程序那是最合适不过了，supervisor基于CS架构，主要有以下两个组成部分：</p>
+<ol>
+<li><strong>supervisord</strong>：supervisord是supervisor的服务端程序。负责启动子程序，应答客户端命令，子程序日志记录，对进程变化发送事件通知等</li>
+<li><strong>supervisorctl：</strong> 客户端命令行工具，可以连接服务器端，进行进程的启动、关闭、重启、状态查看等。重要的一点是，supervisorctl不仅可以连接到本机上的supervisord，还可以连接到远程的supervisord，当然在本机上面是通过UNIX socket连接的，远程是通过TCP socket连接的。supervisorctl和supervisord之间的通信，是通过xml_rpc完成的。 相应的配置在[supervisorctl]块里面</li>
+</ol>
+    </div>
+    <div class="read-more">
+      <a href="/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/09/07/Python%E6%97%B6%E9%97%B4%E6%A8%A1%E5%9D%97%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/">Python时间模块常用操作总结</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-09-07 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 1749 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      时间模块常用操作总结为下列各个函数： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52
+    </div>
+    <div class="read-more">
+      <a href="/2017/09/07/Python%E6%97%B6%E9%97%B4%E6%A8%A1%E5%9D%97%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/">ubuntu16.04配置samba解决linux的svn使用舒适问题</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-09-02 </span>
+      <div class="post-category">
+          <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"> 工具使用 </a>
+          </div>
+        <span class="more-meta"> 约 565 字 </span>
+        <span class="more-meta"> 预计阅读 2 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>个人感觉，svn的命令行使用起来没有git那么舒适，但是windows上的svn GUI客户端TortoiseSVN 使用非常方便。因此对于经常在虚拟机中做服务程序开发但是又不得不用svn的同学来说，结合linux开发环境和TortoiseSVN 来管理代码版本就显得尤其有用。</p>
+<h1 id="安装配置samba">安装配置samba</h1>
+<p>ubuntu上使用apt-get安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">apt-get install samba samba-common
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+    <div class="read-more">
+      <a href="/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/">设计一个基于flask的高并发高可用的查询ip的http服务</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-08-16 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 5129 字 </span>
+        <span class="more-meta"> 预计阅读 11 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="结构设计">结构设计</h1>
+<p>基础架构为flask+gunicorn+负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。</p>
+<p><strong>使用nginx软件负载结构图</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/python/%E4%BD%BF%E7%94%A8nginx%E8%BD%AF%E4%BB%B6%E8%B4%9F%E8%BD%BD%E7%BB%93%E6%9E%84%E5%9B%BE.jpg" alt=""></p>
+<p><strong>使用阿里云硬件负载均衡服务结构图</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/python/%E4%BD%BF%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E7%A1%AC%E4%BB%B6%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9C%8D%E5%8A%A1%E7%BB%93%E6%9E%84%E5%9B%BE.jpg" alt=""></p>
+<p>因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">Erlang学习笔记(1)</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-08-11 </span>
+      <div class="post-category">
+          <a href="/categories/Erlang/"> Erlang </a>
+          </div>
+        <span class="more-meta"> 约 3078 字 </span>
+        <span class="more-meta"> 预计阅读 7 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h3 id="0x00-说在前面">0x00 说在前面</h3>
+<p>Erlang读音<code>/ˈɜːrlæŋ/</code>。第一次见到的时候总感觉怎么读都读不对，后来在维基上看到Erlang标注了音标，才能准确的读出来，而且也没那么怪异。因为工作才有机会接触这门语言，也因此只有三天的时间可以看《Erlang程序设计》这本书。学习这门语言的时候带着一个工作目标：把一个Erlang日志收集分析统计的代码转换成Python的。而Erlang的风格是尽量不写注释，尽量在写函数名和变量名的时候表达清楚代码的含义。这样一来学习Erlang就成了必要的，很庆幸，领导给了三天时间学习，三天时间基本也足够了。除了这一片基础语法的入门篇之外，后续还有一篇或者两篇并发编程和分布式编程的，毕竟这个才是Erlang擅长的领域。话不多说，<code>show me your article</code></p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/05/23/CMDB/">结合公司现状浅谈CMDB</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-05-23 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 2329 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。</p>
+<h1 id="cmdb概述">CMDB概述</h1>
+<p>CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个<strong>集中式</strong>的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。</p>
+<h1 id="公司运维现状">公司运维现状</h1>
+<p><strong>资产现状</strong></p>
+<p>全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。</p>
+<p><strong>运维情况现状</strong></p>
+<p>由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/05/23/CMDB/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    </section>
+  
+  <nav class="pagination">
+    <a class="prev" href="/page/6/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    <a class="next" href="/page/8/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

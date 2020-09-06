@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/categories/Linux/</link>
+    <description>Recent content in Linux on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 30 Mar 2019 01:13:35 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/categories/Linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>常用Linux脚本集锦</title>
+      <link>https://suncle.me/2019/03/30/useful-linux-scripts/</link>
+      <pubDate>Sat, 30 Mar 2019 01:13:35 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/03/30/useful-linux-scripts/</guid>
+      <description>&lt;p&gt;常用linux脚本：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux系统bash脚本获取系统硬件资源&lt;/li&gt;
+&lt;li&gt;Aix系统ksh脚本获取系统硬件资源&lt;/li&gt;
+&lt;li&gt;服务器打开session时显示帮助信息&lt;/li&gt;
+&lt;li&gt;curl post中带有变量的脚本&lt;/li&gt;
+&lt;li&gt;金三系统基线包安装部署脚本&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>常用Linux命令集锦</title>
+      <link>https://suncle.me/2019/03/30/useful-linux-commands/</link>
+      <pubDate>Sat, 30 Mar 2019 01:00:15 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/03/30/useful-linux-commands/</guid>
+      <description>&lt;p&gt;常用linux命令:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;随机数&lt;/li&gt;
+&lt;li&gt;时间&lt;/li&gt;
+&lt;li&gt;ip&lt;/li&gt;
+&lt;li&gt;日志分析&lt;/li&gt;
+&lt;li&gt;硬件信息&lt;/li&gt;
+&lt;li&gt;进程端口&lt;/li&gt;
+&lt;li&gt;调整分区大小&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>linux配置c&#43;&#43;11编译环境</title>
+      <link>https://suncle.me/2016/12/29/linux%E9%85%8D%E7%BD%AEc-11%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/</link>
+      <pubDate>Thu, 29 Dec 2016 14:39:17 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/12/29/linux%E9%85%8D%E7%BD%AEc-11%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/</guid>
+      <description>&lt;h1 id=&#34;linux配置c11编译环境&#34;&gt;linux配置c++11编译环境&lt;/h1&gt;
+&lt;h2 id=&#34;配置yum源&#34;&gt;配置yum源&lt;/h2&gt;
+&lt;p&gt;此处我们使用163的yum源，配置如下&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;首先备份/etc/yum.repos.d/CentOS-Base.repo&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;下载对应版本repo文件, 放入/etc/yum.repos.d/(操作前请做好相应备份)，以下为下载链接&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mirrors.163.com/.help/CentOS6-Base-163.repo&#34;&gt;https://mirrors.163.com/.help/CentOS6-Base-163.repo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;运行以下命令生成yum缓存&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;yum clean all
+yum makecache
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>运维人员常用的Linux命令总结</title>
+      <link>https://suncle.me/2016/03/28/%E8%BF%90%E7%BB%B4%E4%BA%BA%E5%91%98%E5%B8%B8%E7%94%A8%E7%9A%84Linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Mon, 28 Mar 2016 10:35:56 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/28/%E8%BF%90%E7%BB%B4%E4%BA%BA%E5%91%98%E5%B8%B8%E7%94%A8%E7%9A%84Linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;目录结构&#34;&gt;目录结构&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;目录&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;/bin&lt;/td&gt;
+&lt;td&gt;存放可执行文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/boot&lt;/td&gt;
+&lt;td&gt;核心与启动相关文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/dev&lt;/td&gt;
+&lt;td&gt;设备有关的文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc&lt;/td&gt;
+&lt;td&gt;相关的配置信息&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc/rc.d&lt;/td&gt;
+&lt;td&gt;存放开关机过程中用到的脚本文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc/rc.d/init.d&lt;/td&gt;
+&lt;td&gt;所以服务默认的启动脚本都放在这里&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc/xinetd.d&lt;/td&gt;
+&lt;td&gt;启动服务可在此找到&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc/X11&lt;/td&gt;
+&lt;td&gt;与X windows有关的配置文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/lib&lt;/td&gt;
+&lt;td&gt;执行或编译某些程序时用到的函数库&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/proc&lt;/td&gt;
+&lt;td&gt;系统核心与执行程序所需要的一些信息。都是内存中的数据&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/root&lt;/td&gt;
+&lt;td&gt;系统管理员根目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/sbin&lt;/td&gt;
+&lt;td&gt;系统管理常用的程序&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/tmp&lt;/td&gt;
+&lt;td&gt;存放临时文件的地方&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/usr&lt;/td&gt;
+&lt;td&gt;存放系统信息，用来存放程序与指令。类似windows下的program  flies&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;其中重点需要掌握的是/etc目录和/proc目录。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux进程管理</title>
+      <link>https://suncle.me/2016/01/22/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Fri, 22 Jan 2016 19:59:28 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/22/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;h2 id=&#34;进程的概念&#34;&gt;进程的概念&lt;/h2&gt;
+&lt;h3 id=&#34;linux系统中进程的类型&#34;&gt;Linux系统中进程的类型&lt;/h3&gt;
+&lt;p&gt;分为三种不同的类型，分别是:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;交互进程：由一个启动的进程，交互进程既可以在前台运行，也可以后台运行。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;批处理进程：不与特定的终端相关联，提交到等待队列中顺序执行的进程。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;守护进程：在Linux在启动时初始化，需要时运行于后台的进程。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;进程的启动方式&#34;&gt;进程的启动方式&lt;/h3&gt;
+&lt;p&gt;手工启动：1、前台启动  2、后台启动&lt;/p&gt;
+&lt;p&gt;调度启动：事先进行设置，根据用户要求自行启动&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux网络配置和管理</title>
+      <link>https://suncle.me/2016/01/22/Linux%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E5%92%8C%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Fri, 22 Jan 2016 19:59:15 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/22/Linux%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E5%92%8C%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;h2 id=&#34;网络设备信息查看和配置&#34;&gt;网络设备信息查看和配置&lt;/h2&gt;
+&lt;h3 id=&#34;文件配置&#34;&gt;文件配置&lt;/h3&gt;
+&lt;p&gt;在CentOS中，系统网络设备的配置文件保存在“/etc/sysconfig/network-scripts”目录下，ifcfg-eth0包含第一块网卡的配置信息，ifcfg-eth1包含第二块网卡的配置信息。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;vi /etc/sysconfig/network-scripts/ifcfg-eth0
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可以得到配置信息&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;DEVICE=eth0
+HWADDR=00:0C:29:35:50:5B
+TYPE=Ethernet
+UUID=e9e3400b-1e20-49c1-a12c-de3b6b221048
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=static
+IPADDR=192.168.118.10
+NETMASK=255.255.255.0
+NETWORK=192.168.118.0
+BROADCAST=192.168.118.255
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;若希望手工修改网络地址，可以通过修改对应的文件（ifcfg-ethN）或创建新的文件来实现。&lt;/p&gt;
+&lt;p&gt;具体对应修改方法参见我的csdn博客：&lt;a href=&#34;https://blog.csdn.net/u013637931/article/details/49287643&#34;&gt;CentOS6.7配置静态IP&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux的文件和文件系统的管理</title>
+      <link>https://suncle.me/2016/01/14/Linux%E7%9A%84%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Thu, 14 Jan 2016 23:20:34 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/14/Linux%E7%9A%84%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;文件权限&#34;&gt;文件权限&lt;/h2&gt;
+&lt;h3 id=&#34;什么是文件系统&#34;&gt;什么是文件系统？&lt;/h3&gt;
+&lt;p&gt;文件系统是操作系统在分区上保存文件信息的方法和数据结构。&lt;/p&gt;
+&lt;h3 id=&#34;文件有哪些权限&#34;&gt;文件有哪些权限？&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Flowsnow%E6%96%87%E4%BB%B6%E6%9C%89%E5%93%AA%E4%BA%9B%E6%9D%83%E9%99%90.jpg&#34; alt=&#34;文件有那些权限&#34;&gt;&lt;/p&gt;
+&lt;p&gt;三种基本权限分别为：读、写、执行，说明如下：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;代表字符&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;权限&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;对文件的意义&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;对目录的意义&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;读权限&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以读文件内容&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以列出目录中的文件列表&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;w&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;写权限&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以修改和删除文件&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以在目录中创建和删除文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;x&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;执行权限&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以执行该文件&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以使用cd命令进入该目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ol&gt;
+&lt;li&gt;目录上只有执行权限，便是可以进入或穿越他进入更深层次的子目录&lt;/li&gt;
+&lt;li&gt;目录上只有执行权限，要访问该目录下的又读权限的文件，必须知道文件名才可以访问&lt;/li&gt;
+&lt;li&gt;目录上只有执行权限，不能列出目录列表也不能删除该目录&lt;/li&gt;
+&lt;li&gt;目录上执行权限和读权限，表示可以进入目录并且列出目录列表&lt;/li&gt;
+&lt;li&gt;目录上执行权限和写权限的组合，表示可以在目录中创建、删除和重命名文件&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;特殊权限&#34;&gt;特殊权限&lt;/h3&gt;
+&lt;p&gt;有三种特殊权限suid、sgid和sticky bit。参见&lt;a href=&#34;http://alan-hjkl.iteye.com/blog/1526858&#34;&gt;Linux中的文件特殊权限&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux vi的使用</title>
+      <link>https://suncle.me/2016/01/10/Linux-vi%E7%9A%84%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Sun, 10 Jan 2016 14:15:34 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/10/Linux-vi%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
+      <description>&lt;h1 id=&#34;linux-vi的使用&#34;&gt;Linux vi的使用&lt;/h1&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;vi模式转换&#34;&gt;vi模式转换&lt;/h2&gt;
+&lt;p&gt;经常使用的三种基本模式：命令模式(Command Mode)，输入模式(Input Mode)，末行模式(Last Line Mode)，其他的9种模式不做介绍，很少会使用。&lt;/p&gt;
+&lt;p&gt;三种基本模式的相互转换如下图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Flowsnowvi%E6%A8%A1%E5%BC%8F%E8%BD%AC%E6%8D%A2.jpg&#34; alt=&#34;vi模式转换&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux用户和组管理</title>
+      <link>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Sat, 09 Jan 2016 00:16:04 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;概述&#34;&gt;概述&lt;/h2&gt;
+&lt;p&gt;只有root用户才能管理用户和组，所以一切命令都是root执行。&lt;/p&gt;
+&lt;h3 id=&#34;用户分类&#34;&gt;用户分类&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;超级用户：root，UID=0&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;普通用户：具有操作系统有限的权限，500&amp;lt;=UID&amp;lt;=65535(2^32-1),有限个&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;伪用户：为了安全,1&amp;lt;=UID&amp;lt;=499&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;伪用户解释：linux中任何一个命令的操作都必须有一个用户的身份。伪用户一般和系统或者程序服务相关，比如bin,daemon,shutdown ,halt等，linux默认都有这些伪用户，伪用户通常不需要或无法登陆系统（nologin），可以没有宿主目录&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>虚拟机的三种网络模式</title>
+      <link>https://suncle.me/2016/01/08/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 08 Jan 2016 17:47:21 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/08/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;虚拟机的三种网络模式&#34;&gt;虚拟机的三种网络模式&lt;/h1&gt;
+&lt;p&gt;首先说下写这篇文章的原因，记得刚开始接触Linux的时候，使用的是ubuntu Kylin 14.04，那时候为了联上互联网使用Vmware的NAT模式。后来开始学习服务器的相关知识，换成了CentOS6.7，这时候为了能远程登录使用的是Bridge模式，但是一直没有让这个服务器连互联网（Bridge模式是可以联网的），连安装软件都是通过本地的yum源，现在放假回家，电脑连的是无线网（没有插网线），突然发现一直ping不同虚拟机，才发现是模式选择的问题，查了资料之后才发现原来是需要使用Host-Only模式，由此我就想写一下三种模式的区别。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux规划、安装、远程管理</title>
+      <link>https://suncle.me/2015/12/27/Linux%E8%A7%84%E5%88%92%E5%AE%89%E8%A3%85%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Sun, 27 Dec 2015 23:43:53 +0000</pubDate>
+      
+      <guid>https://suncle.me/2015/12/27/Linux%E8%A7%84%E5%88%92%E5%AE%89%E8%A3%85%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;h2 id=&#34;linux规划&#34;&gt;Linux规划&lt;/h2&gt;
+&lt;p&gt;一定要根据服务项目，才来进行硬盘的规划。&lt;/p&gt;
+&lt;p&gt;如果是邮件主机，一般/var通常会给个数GB的大小， 如此一来就可以不担心会邮件空间不足！如果是多用户多终端主机,一般/home通常比较大。这些都是和当初预计的主机服务是有关的！&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

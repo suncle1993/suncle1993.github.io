@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>一次奇怪的http状态码改变 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="最近将一个很久没有更新的部署在物理机上的一个老服务迁移到k8s时，发现在gitlab ci跑pytest的过程中出现以下报错：
+1 2 3 4 5 6 7 8 9 10  ___________________________ HelloTests.test_redirect ___________________________ self = &amp;lt;tests.test_hello.HelloTests testMethod=test_redirect&amp;gt; def test_redirect(self): resp = self.get(&amp;#39;/api/hello&amp;#39;) &amp;gt; self.assertEqual(http.HTTPStatus.MOVED_PERMANENTLY.value, resp.status_code) E AssertionError: 301 != 308 tests/test_hello.py:18: AssertionError   按照python系的习惯，一般而言，我们习惯在接口最后加上一个slash，因此会将所有不带slash的接口301重定向到带slash。但是这一次提示重定向的状态码是308。
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2019/11/13/http-3xx-status-code/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="一次奇怪的http状态码改变" />
+<meta property="og:description" content="最近将一个很久没有更新的部署在物理机上的一个老服务迁移到k8s时，发现在gitlab ci跑pytest的过程中出现以下报错：
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+___________________________ HelloTests.test_redirect ___________________________
+
+self = &lt;tests.test_hello.HelloTests testMethod=test_redirect&gt;
+
+    def test_redirect(self):
+        resp = self.get(&#39;/api/hello&#39;)
+&gt;       self.assertEqual(http.HTTPStatus.MOVED_PERMANENTLY.value, resp.status_code)
+E       AssertionError: 301 != 308
+
+tests/test_hello.py:18: AssertionError
+
+
+按照python系的习惯，一般而言，我们习惯在接口最后加上一个slash，因此会将所有不带slash的接口301重定向到带slash。但是这一次提示重定向的状态码是308。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2019/11/13/http-3xx-status-code/" />
+<meta property="article:published_time" content="2019-11-13T20:14:44+00:00" />
+<meta property="article:modified_time" content="2019-11-13T20:14:44+00:00" />
+<meta itemprop="name" content="一次奇怪的http状态码改变">
+<meta itemprop="description" content="最近将一个很久没有更新的部署在物理机上的一个老服务迁移到k8s时，发现在gitlab ci跑pytest的过程中出现以下报错：
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+___________________________ HelloTests.test_redirect ___________________________
+
+self = &lt;tests.test_hello.HelloTests testMethod=test_redirect&gt;
+
+    def test_redirect(self):
+        resp = self.get(&#39;/api/hello&#39;)
+&gt;       self.assertEqual(http.HTTPStatus.MOVED_PERMANENTLY.value, resp.status_code)
+E       AssertionError: 301 != 308
+
+tests/test_hello.py:18: AssertionError
+
+
+按照python系的习惯，一般而言，我们习惯在接口最后加上一个slash，因此会将所有不带slash的接口301重定向到带slash。但是这一次提示重定向的状态码是308。">
+<meta itemprop="datePublished" content="2019-11-13T20:14:44+00:00" />
+<meta itemprop="dateModified" content="2019-11-13T20:14:44+00:00" />
+<meta itemprop="wordCount" content="1573">
+
+
+
+<meta itemprop="keywords" content="http,状态码,重定向," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="一次奇怪的http状态码改变"/>
+<meta name="twitter:description" content="最近将一个很久没有更新的部署在物理机上的一个老服务迁移到k8s时，发现在gitlab ci跑pytest的过程中出现以下报错：
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+___________________________ HelloTests.test_redirect ___________________________
+
+self = &lt;tests.test_hello.HelloTests testMethod=test_redirect&gt;
+
+    def test_redirect(self):
+        resp = self.get(&#39;/api/hello&#39;)
+&gt;       self.assertEqual(http.HTTPStatus.MOVED_PERMANENTLY.value, resp.status_code)
+E       AssertionError: 301 != 308
+
+tests/test_hello.py:18: AssertionError
+
+
+按照python系的习惯，一般而言，我们习惯在接口最后加上一个slash，因此会将所有不带slash的接口301重定向到带slash。但是这一次提示重定向的状态码是308。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">一次奇怪的http状态码改变</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-13 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%80%BB%E7%BB%93%E6%84%9F%E6%82%9F/"> 总结感悟 </a>
+            </div>
+          <span class="more-meta"> 约 1573 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#问题排查">问题排查</a></li>
+            <li><a href="#http-3xx-介绍">http 3xx 介绍</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>最近将一个很久没有更新的部署在物理机上的一个老服务迁移到k8s时，发现在gitlab ci跑pytest的过程中出现以下报错：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">___________________________ HelloTests.test_redirect ___________________________
+
+self = &lt;tests.test_hello.HelloTests testMethod=test_redirect&gt;
+
+    def test_redirect(self):
+        resp = self.get(&#39;/api/hello&#39;)
+&gt;       self.assertEqual(http.HTTPStatus.MOVED_PERMANENTLY.value, resp.status_code)
+E       AssertionError: 301 != 308
+
+tests/test_hello.py:18: AssertionError
+</code></pre></td></tr></table>
+</div>
+</div><p>按照python系的习惯，一般而言，我们习惯在接口最后加上一个slash，因此会将所有不带slash的接口301重定向到带slash。但是这一次提示重定向的状态码是308。</p>
+<h3 id="问题排查">问题排查</h3>
+<p>经排查，发现是使用的WSGI服务器WerkZeug的版本发生了升级由<code>Werkzeug-0.12.0</code>升级到<code>Werkzeug-0.16.0</code>，通过查看<code>Werkzeug-0.12.0</code>的重定向确实是301，源代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">RequestRedirect</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">,</span> <span class="n">RoutingException</span><span class="p">):</span>
+
+    <span class="s2">&#34;&#34;&#34;Raise if the map requests a redirect. This is for example the case if
+</span><span class="s2">    `strict_slashes` are activated and an url that requires a trailing slash.
+</span><span class="s2">
+</span><span class="s2">    The attribute `new_url` contains the absolute destination url.
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="mi">301</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_url</span><span class="p">):</span>
+        <span class="n">RoutingException</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_url</span> <span class="o">=</span> <span class="n">new_url</span>
+
+    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>而<code>Werkzeug-0.16.0</code>的重定向却变成了308，源代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">RequestRedirect</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">,</span> <span class="n">RoutingException</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;Raise if the map requests a redirect. This is for example the case if
+</span><span class="s2">    `strict_slashes` are activated and an url that requires a trailing slash.
+</span><span class="s2">
+</span><span class="s2">    The attribute `new_url` contains the absolute destination url.
+</span><span class="s2">    &#34;&#34;&#34;</span>
+
+    <span class="n">code</span> <span class="o">=</span> <span class="mi">308</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_url</span><span class="p">):</span>
+        <span class="n">RoutingException</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_url</span> <span class="o">=</span> <span class="n">new_url</span>
+
+    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查阅Werkzeug代码的更新历史，在<a href="https://github.com/pallets/werkzeug/pull/1342/">https://github.com/pallets/werkzeug/pull/1342/</a>这个pr中将301改成了308。pr中的conversation的讨论主要是有以下观点：</p>
+<ul>
+<li>根据MDN，除Windows &lt;= 8上的IE之外，所有浏览器均支持308。Windows 8也快完蛋了。 如果仍然有人需要支持非常老的浏览器，则可以修改RequestRedirect.code = 301支持301重定向</li>
+<li>由/a重定向到/a/并不会改变method，301和308对于多数人没有什么影响</li>
+</ul>
+<p>相关pr：https://github.com/pallets/werkzeug/pull/1402/files</p>
+<h3 id="http-3xx-介绍">http 3xx 介绍</h3>
+<p>介绍3xx之前，再大致过一遍目前的状态码复习一遍</p>
+<ul>
+<li>1xx：临时的响应，旨在在服务器继续处理请求时使用。很少被用到</li>
+<li>2xx：成功-事情按预期工作时使用的状态码。 根据请求返回不同的成功代码</li>
+<li>3xx：重定向—用于告诉客户端在其他地方查找所请求资源的状态</li>
+<li>4xx：客户端错误-这些状态码告诉客户端它做错了什么</li>
+<li>5xx：服务端错误-服务器上某些东西无法正常工作时的状态码</li>
+</ul>
+<p>关于3xx的http状态码，简单做一下介绍：</p>
+<h4 id="http-301-moved-permanently">HTTP 301 Moved Permanently</h4>
+<p>永久重定向：被请求的资源已永久移动到新位置，并且将来任何对此资源的引用都应该使用本响应返回的若干个 URI 之一。如果可能，拥有链接编辑功能的客户端应当自动把请求的地址修改为从服务器反馈回来的地址。除非额外指定，否则这个响应也是可缓存的。</p>
+<h4 id="http-302-found">HTTP 302 Found</h4>
+<p>临时重定向：请求的资源现在临时从不同的 URI 响应请求。由于这样的重定向是临时的，客户端应当继续向原有地址发送以后的请求。只有在Cache-Control或Expires中进行了指定的情况下，这个响应才是可缓存的。</p>
+<h4 id="http-303-see-other">HTTP 303 See Other</h4>
+<p>对应当前请求的响应可以在另一个 URI 上被找到，而且客户端应当采用 GET 的方式访问那个资源。这个方法的存在主要是为了允许由脚本激活的POST请求输出重定向到一个新的资源。</p>
+<h4 id="http-304-not-modified">HTTP 304 Not Modified</h4>
+<p>如果客户端发送了一个带条件的 GET 请求且该请求已被允许，而文档的内容（自上次访问以来或者根据请求的条件）并没有改变，则服务器应当返回这个状态码。304 响应禁止包含消息体，因此始终以消息头后的第一个空行结尾。</p>
+<h4 id="http-305-use-proxy">HTTP 305 Use Proxy</h4>
+<p>被请求的资源必须通过指定的代理才能被访问。Location 域中将给出指定的代理所在的 URI 信息，接收者需要重复发送一个单独的请求，通过这个代理才能访问相应资源。只有原始服务器才能建立305响应。</p>
+<h4 id="http-306-switch-proxy">HTTP 306 Switch Proxy</h4>
+<p>这个状态最初是指后续请求应使用指定的代理。但是已经被弃用了</p>
+<h4 id="http-307-temporary-redirect">HTTP 307 Temporary Redirect</h4>
+<p>临时重定向且不能修改之后的请求方法，302的扩充</p>
+<h4 id="http-308-permanent-redirect">HTTP 308 Permanent Redirect</h4>
+<p>永久重定向且不能修改之后的请求方法，301的扩充</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/http/">http</a>
+          <a href="/tags/%E7%8A%B6%E6%80%81%E7%A0%81/">状态码</a>
+          <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/">重定向</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2019/11/13/Lu-Rong-behavioral-finance/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">陆蓉的行为金融学</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2019/11/13/how-to-consider-working-from-travel/">
+            <span class="next-text nav-default">如何看待work from travel</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

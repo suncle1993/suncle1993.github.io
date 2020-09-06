@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>详解supervisor进程管理 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="supervisor 使用Python编写的进程管理程序supervisor来管理Python程序那是最合适不过了，supervisor基于CS架构，主要有以下两个组成部分：
+ supervisord：supervisord是supervisor的服务端程序。负责启动子程序，应答客户端命令，子程序日志记录，对进程变化发送事件通知等 supervisorctl： 客户端命令行工具，可以连接服务器端，进行进程的启动、关闭、重启、状态查看等。重要的一点是，supervisorctl不仅可以连接到本机上的supervisord，还可以连接到远程的supervisord，当然在本机上面是通过UNIX socket连接的，远程是通过TCP socket连接的。supervisorctl和supervisord之间的通信，是通过xml_rpc完成的。 相应的配置在[supervisorctl]块里面 " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="详解supervisor进程管理" />
+<meta property="og:description" content="supervisor
+使用Python编写的进程管理程序supervisor来管理Python程序那是最合适不过了，supervisor基于CS架构，主要有以下两个组成部分：
+
+supervisord：supervisord是supervisor的服务端程序。负责启动子程序，应答客户端命令，子程序日志记录，对进程变化发送事件通知等
+supervisorctl： 客户端命令行工具，可以连接服务器端，进行进程的启动、关闭、重启、状态查看等。重要的一点是，supervisorctl不仅可以连接到本机上的supervisord，还可以连接到远程的supervisord，当然在本机上面是通过UNIX socket连接的，远程是通过TCP socket连接的。supervisorctl和supervisord之间的通信，是通过xml_rpc完成的。 相应的配置在[supervisorctl]块里面
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" />
+<meta property="article:published_time" content="2017-09-25T17:05:22+00:00" />
+<meta property="article:modified_time" content="2017-09-25T17:05:22+00:00" />
+<meta itemprop="name" content="详解supervisor进程管理">
+<meta itemprop="description" content="supervisor
+使用Python编写的进程管理程序supervisor来管理Python程序那是最合适不过了，supervisor基于CS架构，主要有以下两个组成部分：
+
+supervisord：supervisord是supervisor的服务端程序。负责启动子程序，应答客户端命令，子程序日志记录，对进程变化发送事件通知等
+supervisorctl： 客户端命令行工具，可以连接服务器端，进行进程的启动、关闭、重启、状态查看等。重要的一点是，supervisorctl不仅可以连接到本机上的supervisord，还可以连接到远程的supervisord，当然在本机上面是通过UNIX socket连接的，远程是通过TCP socket连接的。supervisorctl和supervisord之间的通信，是通过xml_rpc完成的。 相应的配置在[supervisorctl]块里面
+">
+<meta itemprop="datePublished" content="2017-09-25T17:05:22+00:00" />
+<meta itemprop="dateModified" content="2017-09-25T17:05:22+00:00" />
+<meta itemprop="wordCount" content="5470">
+
+
+
+<meta itemprop="keywords" content="supervisor,进程," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="详解supervisor进程管理"/>
+<meta name="twitter:description" content="supervisor
+使用Python编写的进程管理程序supervisor来管理Python程序那是最合适不过了，supervisor基于CS架构，主要有以下两个组成部分：
+
+supervisord：supervisord是supervisor的服务端程序。负责启动子程序，应答客户端命令，子程序日志记录，对进程变化发送事件通知等
+supervisorctl： 客户端命令行工具，可以连接服务器端，进行进程的启动、关闭、重启、状态查看等。重要的一点是，supervisorctl不仅可以连接到本机上的supervisord，还可以连接到远程的supervisord，当然在本机上面是通过UNIX socket连接的，远程是通过TCP socket连接的。supervisorctl和supervisord之间的通信，是通过xml_rpc完成的。 相应的配置在[supervisorctl]块里面
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">详解supervisor进程管理</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-09-25 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"> 工具使用 </a>
+            </div>
+          <span class="more-meta"> 约 5470 字 </span>
+          <span class="more-meta"> 预计阅读 11 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#supervisor">supervisor</a></li>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#supervisordconf详解">supervisord.conf详解</a></li>
+    <li><a href="#提取supervisordconf模板">提取supervisord.conf模板</a></li>
+    <li><a href="#提取programconf模板">提取program.conf模板</a></li>
+    <li><a href="#常用supervisorctl命令">常用supervisorctl命令</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="supervisor">supervisor</h1>
+<p>使用Python编写的进程管理程序supervisor来管理Python程序那是最合适不过了，supervisor基于CS架构，主要有以下两个组成部分：</p>
+<ol>
+<li><strong>supervisord</strong>：supervisord是supervisor的服务端程序。负责启动子程序，应答客户端命令，子程序日志记录，对进程变化发送事件通知等</li>
+<li><strong>supervisorctl：</strong> 客户端命令行工具，可以连接服务器端，进行进程的启动、关闭、重启、状态查看等。重要的一点是，supervisorctl不仅可以连接到本机上的supervisord，还可以连接到远程的supervisord，当然在本机上面是通过UNIX socket连接的，远程是通过TCP socket连接的。supervisorctl和supervisord之间的通信，是通过xml_rpc完成的。 相应的配置在[supervisorctl]块里面</li>
+</ol>
+<h1 id="安装">安装</h1>
+<p>基于ubuntu16.04，不同linux发行版均可使用包管理器进行安装，也可以使用源码安装和pip安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">apt-get install python-setuptools
+apt-get install supervisor
+</code></pre></td></tr></table>
+</div>
+</div><p>pip安装方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">pip install supervisor
+</code></pre></td></tr></table>
+</div>
+</div><p>当前最新版本3.3.3，supervisord.conf 和supervisord.d文件夹已自动生成在/etc/supervisor/目录下。可以使用echo_supervisord_conf命令将配置信息重定向到制定目录，比如/etc</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">echo_supervisord_conf &gt; /etc/supervisor/supervisord.conf
+</code></pre></td></tr></table>
+</div>
+</div><p>服务端启动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">supervisord -c /etc/supervisor/supervisord.conf
+</code></pre></td></tr></table>
+</div>
+</div><p>查看supervisord是否在运行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">ps aux | grep supervisord
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="supervisordconf详解">supervisord.conf详解</h1>
+<p>使用echo_supervisord_conf查看supervisord.conf可选的配置项：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">echo_supervisord_conf <span class="nb">help</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>详情如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1">; Sample supervisor config file.</span>
+<span class="c1">;</span>
+<span class="c1">; For more information on the config file, please see:</span>
+<span class="c1">; http://supervisord.org/configuration.html</span>
+<span class="c1">;</span>
+<span class="c1">; Notes:</span>
+<span class="c1">;  - Shell expansion (&#34;~&#34; or &#34;$HOME&#34;) is not supported.  Environment</span>
+<span class="c1">;    variables can be expanded using this syntax: &#34;%(ENV_HOME)s&#34;.</span>
+<span class="c1">;  - Comments must have a leading space: &#34;a=b ;comment&#34; not &#34;a=b;comment&#34;.</span>
+
+<span class="k">[unix_http_server]</span>
+<span class="na">file</span><span class="o">=</span><span class="s">/tmp/supervisor.sock   ; socket 文件路径</span>
+<span class="c1">;chmod=0700                 ; socket 文件 模式 (默认 0700)</span>
+<span class="c1">;chown=nobody:nogroup       ; socket file uid:gid owner</span>
+<span class="c1">;username=user              ; 使用supervisorctl连接的用户,默认没有用户</span>
+<span class="c1">;password=123               ; 使用supervisorctl连接的用户密码,默认没有密码</span>
+
+<span class="c1">;[inet_http_server]         ; Web Server和远程的supervisorctl 配置块(默认关闭)</span>
+<span class="c1">;port=127.0.0.1:9001        ; 监听的地址和端口</span>
+<span class="c1">;username=user              ; 登录用户，默认没有用户</span>
+<span class="c1">;password=123               ; 登录密码，默认没有密码</span>
+
+<span class="k">[supervisord]</span>
+<span class="na">logfile</span><span class="o">=</span><span class="s">/tmp/supervisord.log ; supervisord进程日志路径</span>
+<span class="na">logfile_maxbytes</span><span class="o">=</span><span class="s">50MB        ; supervisord进程单个日志文件大小，默认为50M</span>
+<span class="na">logfile_backups</span><span class="o">=</span><span class="s">10           ; 日志文件个数，默认为10个</span>
+<span class="na">loglevel</span><span class="o">=</span><span class="s">info                ; 日志级别，默认为info，还支持debug,warn,trace)</span>
+<span class="na">pidfile</span><span class="o">=</span><span class="s">/tmp/supervisord.pid ; supervisord的pid文件路径。</span>
+<span class="na">nodaemon</span><span class="o">=</span><span class="s">false               ; 如果是true，supervisord进程将在前台运行 默认为false(后台运行)</span>
+<span class="na">minfds</span><span class="o">=</span><span class="s">1024                  ; 这个是最少系统空闲的文件描述符，低于这个值supervisor将不会启动</span>
+<span class="na">minprocs</span><span class="o">=</span><span class="s">200                 ; 最小可用的进程描述符，低于这个值supervisor也将不会正常启动</span>
+<span class="c1">;umask=022                   ; 进程创建文件的掩码 (默认 022)</span>
+<span class="c1">;user=chrism                 ; user参数指定的用户也可以对supervisord进行管理</span>
+<span class="c1">;identifier=supervisor       ; supervisord的标识符，默认supervisor</span>
+<span class="c1">;directory=/tmp              ; 当supervisord以守护进程运行的时候，启动supervisord进程之前，会先切换到这个目录</span>
+<span class="c1">;nocleanup=true              ; false的时候 supervisord进程启动的时候 会在把以前子进程产生的临时文件清除掉(true不清除)</span>
+<span class="c1">;childlogdir=/tmp            ; 当子进程日志路径为AUTO的时候，子进程日志文件的存放路径 (默认 $TMP)</span>
+<span class="c1">;environment=KEY=&#34;value&#34;     ; 这个是用来设置环境变量的，supervisord在linux中启动默认继承了linux的 环境变量，在这里可以设置supervisord进程特有的其他环境变量supervisord启动子进程时，子进程会拷贝父进程的内存空间内容。 所以设置的这些环境变量也会被子进程继承 (默认不设置)</span>
+<span class="c1">;strip_ansi=false            ; 默认为falsh，如果设置为true，会清除子进程日志中的所有ANSI(\n,\t) 序列</span>
+
+<span class="c1">; 这个选项是给XML_RPC用的，如果想使用supervisord或者web server 必须要开启</span>
+<span class="k">[rpcinterface:supervisor]</span>
+<span class="na">supervisor.rpcinterface_factory</span> <span class="o">=</span> <span class="s">supervisor.rpcinterface:make_main_rpcinterface</span>
+
+<span class="k">[supervisorctl]</span>
+<span class="na">serverurl</span><span class="o">=</span><span class="s">unix:///tmp/supervisor.sock ; supervisorctl本地连接supervisord，使用本地UNIX socket</span>
+<span class="c1">;serverurl=http://127.0.0.1:9001 ; supervisorctl远程连接supervisord的时候，用到的地址和端口</span>
+<span class="c1">;username=chris              ; 连接登录的用户名，需要和http_username一致</span>
+<span class="c1">;password=123                ; 连接登录的密码，需要和http_password一致</span>
+<span class="c1">;prompt=mysupervisor         ; 输入用户名密码时候的提示符 默认:mysupervisor </span>
+<span class="c1">;history_file=~/.sc_history  ; 指定历史命令的文件</span>
+
+
+<span class="c1">;[program:theprogramname]      ; 指定program配置</span>
+<span class="c1">;command=/bin/cat              ; 要执行的进程 可带参数 $1 $2 $3  注意!! 执行的进程不能是守护进程 ! !</span>
+<span class="c1">;process_name=%(program_name)s ; numprocs参数为1时，就不用管这个参数 默认值%(program_name)s也就是上面的那个program冒号后面的名字</span>
+<span class="c1">;numprocs=1                    ; 启动进程的数目。当不为1时，就是进程池的概念，默认为1</span>
+<span class="c1">;directory=/tmp                ; 进程运行前，会前切换到这个目录</span>
+<span class="c1">;umask=022                     ; 进程掩码 (default None)</span>
+<span class="c1">;priority=999                  ; 子进程启动关闭优先级，优先级低的，最先启动，关闭的时候最后关闭 (default 999)</span>
+<span class="c1">;autostart=true                ; 设置为true 子进程将在supervisord启动后被自动启动，默认为true</span>
+<span class="c1">;startsecs=1                   ; 设置子进程启动多少秒之后，此时状态如果是running，则我们认为启动成功</span>
+<span class="c1">;startretries=3                ; 进程启动失败后，最大尝试启动的次数 当超过3次后，supervisor将把此进程的状态置为FAIL</span>
+<span class="c1">;autorestart=unexpected        ; 设置子进程挂掉后自动重启的情况，有三个选项，false,unexpected和true。如果为false的时候，无论什么情况下，都不会被重新启动，如果为unexpected，只有当进程的退出码不在上面的exitcodes里面定义的退出码的时候，&amp;gt;才会被自动重启。当为true的时候，只要子进程挂掉，将会被无条件的重启。默认为unexpected</span>
+<span class="c1">;exitcodes=0,2                 ; 注意和上面的的autorestart=unexpected对应 exitcodes里面的定义的退出码是expected的。</span>
+<span class="c1">;stopsignal=QUIT               ; 进程停止信号，可以为TERM, HUP, INT, QUIT, KILL, USR1, or USR2等信号 默认为TERM 当用设定的信号去杀掉进程，退出码会被认为是expected</span>
+<span class="c1">;stopwaitsecs=10               ; 这个是当我们向子进程发送stopsignal信号后，到系统返回信息给supervisord，所等待的最大时间。 超过这个时间，supervisord会向该子进程发送一个强制kill的信号(默认10秒)</span>
+<span class="c1">;stopasgroup=false             ; 这个东西主要用于，supervisord管理的子进程，这个子进程本身还有子进程 那么我们如果仅仅干掉supervisord的子进程的话，子进程的子进程有可能会变成孤儿进程 所以咱们可以设置这个选项，把整个该子进程的整个进程组都干掉  设置为true的话，一般killasgroup也会被设置为true 该选项发送的是stop信号(def false)</span>
+<span class="c1">;killasgroup=false             ; 这个和上面的stopasgroup类似，不过发送的是kill信号(def false)</span>
+<span class="c1">;user=chrism                   ; 如果supervisord是root启动，我们在这里设置这个非root用户，可以用来管理该program 默认不设置</span>
+<span class="c1">;redirect_stderr=true          ; 为true，则stderr的日志会被写入stdout日志文件中 (default false)</span>
+<span class="c1">;stdout_logfile=/a/path        ; 子进程的stdout的日志路径，可以指定路径，AUTO，none等三个选项 设置为none的话，将没有日志产生。设置为AUTO的话，将随机找一个地方成日志文件，而且当supervisord重新启动的时候，以前的日志文件会被清空。当 redirect_stderr=true的时候，sterr也会写进这个日志文件</span>
+<span class="c1">;stdout_logfile_maxbytes=1MB   ; 日志文件最大大小，和[supervisord]中定义的一样 (default 50MB)</span>
+<span class="c1">;stdout_logfile_backups=10     ; 和[supervisord]定义的一样 (0 means none, default 10)</span>
+<span class="c1">;stdout_capture_maxbytes=1MB   ; 这个东西是设定capture管道的大小，当值不为0的时候，子进程可以从stdout发送信息，而supervisor可以根据信息，发送相应的event  (default 0)</span>
+<span class="c1">;stdout_events_enabled=false   ; 为ture的时候，当子进程由stdout向文件描述符中写日志的时候，将触发supervisord发送PROCESS_LOG_STDOUT类型的event(default false)</span>
+<span class="c1">;stderr_logfile=/a/path        ; 设置stderr写的日志路径，当redirect_stderr=true。这个就不用设置了，设置了也是白搭。因为它会被写入stdout_logfile的同一个文件中 default AUTO(随便找个地存，supervisord重启被清空)</span>
+<span class="c1">;stderr_logfile_maxbytes=1MB   ; max # logfile bytes b4 rotation (default 50MB)</span>
+<span class="c1">;stderr_logfile_backups=10     ; # of stderr logfile backups (default 10)</span>
+<span class="c1">;stderr_capture_maxbytes=1MB   ; number of bytes in &#39;capturemode&#39; (default 0)</span>
+<span class="c1">;stderr_events_enabled=false   ; emit events on stderr writes (default false)</span>
+<span class="c1">;environment=A=&#34;1&#34;,B=&#34;2&#34;       ; 这个是该子进程的环境变量，和别的子进程是不共享的</span>
+<span class="c1">;serverurl=AUTO                ; override serverurl computation (childutils)</span>
+
+<span class="c1">;[eventlistener:theeventlistenername]    ; eventlistener其实和program的地位是一样的，也是suopervisor启动的子进程，不过它干的活是订阅supervisord发送的event。他的名字就叫listener了。我们可以在listener里面做一系列处理，比如报警....</span>
+<span class="c1">;command=/bin/eventlistener    ; 和上面的program一样，表示listener的可执行文件的路径</span>
+<span class="c1">;process_name=%(program_name)s ; 这个也一样，进程名，当下面的numprocs为多个的时候，才需要。否则默认就OK了</span>
+<span class="c1">;numprocs=1                    ; 相同的listener启动的个数，默认1</span>
+<span class="c1">;events=EVENT                  ; event event事件的类型，也就是说，只有写在这个地方的事件类型。才会被发送</span>
+<span class="c1">;buffer_size=10                ; event队列缓存大小 (default 10)</span>
+<span class="c1">;directory=/tmp                ; 进程执行前，会切换到这个目录下执行 (def no cwd)</span>
+<span class="c1">;umask=022                     ; umask for process (default None)</span>
+<span class="c1">;priority=-1                   ; 启动优先级 (default -1)</span>
+<span class="c1">;autostart=true                ; supervisord启动时一起启动 (default: true)</span>
+<span class="c1">;startsecs=1                   ; 设置子进程启动多少秒之后，此时状态如果是running，则我们认为启动成功了 (def. 1)</span>
+<span class="c1">;startretries=3                ; 失败最大尝试次数 (default 3)</span>
+<span class="c1">;autorestart=unexpected        ; 和program一样 (def: unexpected)</span>
+<span class="c1">;exitcodes=0,2                 ; &#39;expected&#39; exit codes used with autorestart (default 0,2)</span>
+<span class="c1">;stopsignal=QUIT               ; signal used to kill process (default TERM)</span>
+<span class="c1">;stopwaitsecs=10               ; max num secs to wait b4 SIGKILL (default 10)</span>
+<span class="c1">;stopasgroup=false             ; send stop signal to the UNIX process group (default false)</span>
+<span class="c1">;killasgroup=false             ; SIGKILL the UNIX process group (def false)</span>
+<span class="c1">;user=chrism                   ; setuid to this UNIX account to run the program</span>
+<span class="c1">;redirect_stderr=false         ; redirect_stderr=true is not allowed for eventlisteners</span>
+<span class="c1">;stdout_logfile=/a/path        ; stdout log path, NONE for none; default AUTO</span>
+<span class="c1">;stdout_logfile_maxbytes=1MB   ; max # logfile bytes b4 rotation (default 50MB)</span>
+<span class="c1">;stdout_logfile_backups=10     ; # of stdout logfile backups (default 10)</span>
+<span class="c1">;stdout_events_enabled=false   ; emit events on stdout writes (default false)</span>
+<span class="c1">;stderr_logfile=/a/path        ; stderr log path, NONE for none; default AUTO</span>
+<span class="c1">;stderr_logfile_maxbytes=1MB   ; max # logfile bytes b4 rotation (default 50MB)</span>
+<span class="c1">;stderr_logfile_backups=10     ; # of stderr logfile backups (default 10)</span>
+<span class="c1">;stderr_events_enabled=false   ; emit events on stderr writes (default false)</span>
+<span class="c1">;environment=A=&#34;1&#34;,B=&#34;2&#34;       ; process environment additions</span>
+<span class="c1">;serverurl=AUTO                ; override serverurl computation (childutils)</span>
+
+<span class="c1">;[group:thegroupname]          ; 给programs分组，划分到组里面的program。我们就不用一个一个去操作了 我们可以对组名进行统一的操作。 注意：program被划分到组里面之后，就相当于原来的配置从supervisor的配置文件里消失了supervisor只会对组进行管理，而不再会对组里面的单个program进行管理了</span>
+<span class="c1">;programs=progname1,progname2  ; 组成员，用逗号分开</span>
+<span class="c1">;priority=999                  ; 优先级，相对于组和组之间 (default 999)</span>
+
+<span class="c1">;[include]                     ;包含的程序配置文件</span>
+<span class="c1">;files = relative/directory/*.ini</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="提取supervisordconf模板">提取supervisord.conf模板</h1>
+<p>采用supervisord.conf和program.conf分离的方式进行本机进程管理，从默认配置中抽取出常用的supervisord模板</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1">; supervisor config file</span>
+
+<span class="k">[unix_http_server]</span>
+<span class="na">file</span><span class="o">=</span><span class="s">/var/run/supervisor.sock   ; (the path to the socket file)</span>
+
+<span class="na">[inet_http_server]         ; inet (TCP) server disabled by default</span>
+<span class="na">port</span><span class="o">=</span><span class="s">127.0.0.1:9001        ; (ip_address:port specifier, *:port for all iface)</span>
+<span class="na">username</span><span class="o">=</span><span class="s">erow              ; (default is no username (open server))</span>
+<span class="na">password</span><span class="o">=</span><span class="s">j                 ; (default is no password (open server))</span>
+
+<span class="k">[supervisord]</span>
+<span class="na">logfile</span><span class="o">=</span><span class="s">/var/log/supervisor/supervisord.log ; (main log file;default $CWD/supervisord.log)</span>
+<span class="na">pidfile</span><span class="o">=</span><span class="s">/var/run/supervisord.pid ; (supervisord pidfile;default supervisord.pid)</span>
+<span class="na">loglevel</span><span class="o">=</span><span class="s">debug               ; (log level;default info; others: debug,warn,trace)</span>
+<span class="na">logfile_maxbytes</span><span class="o">=</span><span class="s">10MB        ; (max main logfile bytes b4 rotation;default 50MB)</span>
+<span class="na">logfile_backups</span><span class="o">=</span><span class="s">10           ; (num of main logfile rotation backups;default 10)</span>
+
+<span class="k">[rpcinterface:supervisor]</span>
+<span class="na">supervisor.rpcinterface_factory</span> <span class="o">=</span> <span class="s">supervisor.rpcinterface:make_main_rpcinterface</span>
+
+<span class="k">[supervisorctl]</span>
+<span class="na">serverurl</span><span class="o">=</span><span class="s">unix:///var/run/supervisor.sock ; use a unix:// URL  for a unix socket</span>
+
+<span class="k">[include]</span>
+<span class="na">files</span> <span class="o">=</span> <span class="s">/etc/supervisor/conf.d/*.ini</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>模板抽取基于以下考虑</p>
+<ul>
+<li>必填选项不可少</li>
+<li>服务端支持本地supervisorctl客户端连接也支持远程连接</li>
+<li>测试环境日志级别设置为debug，生产环境日志级别设置为info，修改loglevel字段即可</li>
+<li>日志文件大小和个数需要参考服务端所在机器的磁盘大小，会产生stderr和stdout两种日志</li>
+<li>pid文件和log文件都不建议存放在/tmp下面，容易被误删除，因此放在var目录下</li>
+</ul>
+<h1 id="提取programconf模板">提取program.conf模板</h1>
+<p>从默认配置中抽取出常用的program模板</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[program:concurrency_statistician]</span>
+<span class="na">directory</span> <span class="o">=</span> <span class="s">/root/qk_python/data/statistic/concurrency_statistician</span>
+<span class="na">command</span> <span class="o">=</span> <span class="s">python concurrency_statistician.py</span>
+<span class="na">autostart</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">startsecs</span> <span class="o">=</span> <span class="s">5</span>
+<span class="na">autorestart</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">startretries</span> <span class="o">=</span> <span class="s">3</span>
+<span class="na">user</span> <span class="o">=</span> <span class="s">root</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果单独调整program日志大小和个数，则加入stdout和stderr四个参数，新的配置文件如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[program:concurrency_statistician]</span>
+<span class="na">directory</span> <span class="o">=</span> <span class="s">/root/qk_python/data/statistic/concurrency_statistician</span>
+<span class="na">command</span> <span class="o">=</span> <span class="s">python concurrency_statistician.py</span>
+<span class="na">autostart</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">startsecs</span> <span class="o">=</span> <span class="s">5</span>
+<span class="na">autorestart</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">startretries</span> <span class="o">=</span> <span class="s">3</span>
+<span class="na">user</span> <span class="o">=</span> <span class="s">root</span>
+<span class="na">stdout_logfile_maxbytes</span> <span class="o">=</span> <span class="s">10MB</span>
+<span class="na">stdout_logfile_backups</span> <span class="o">=</span> <span class="s">10</span>
+<span class="na">stderr_logfile_maxbytes</span> <span class="o">=</span> <span class="s">10MB</span>
+<span class="na">stderr_logfile_backups</span> <span class="o">=</span> <span class="s">10</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>一般情况下，不需要指定日志文件名称，默认的日志文件名称组成为</p>
+<ul>
+<li>程序名称+日志类型（stdout和stderr）+ supervisor+进程号+日志编号</li>
+</ul>
+<p>文件名称示例：concurrency_statistician-stderr&mdash;supervisor-OpZ5di.log.2</p>
+<blockquote>
+<p>需要注意：supervisor服务端程序supervisord重新启动之后，会产生新的pid。因此日志只会在新的进程日志中产生，老的子进程日志不会被删除。因此如果需要重新启动supervisord，则需要注意是否要保留老进程日志，以免超过磁盘大小。</p>
+<p>一般情况下，生产环境中不会经常重启supervisord</p>
+</blockquote>
+<h1 id="常用supervisorctl命令">常用supervisorctl命令</h1>
+<p>可以进入 supervisorctl 的 shell 界面，也可以直接在 bash 终端运行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 停止某一个进程，program_name 为 [program:x] 里的 x</span>
+supervisorctl stop program_name
+<span class="c1"># 启动某个进程</span>
+supervisorctl start program_name
+<span class="c1"># 重启某个进程</span>
+supervisorctl restart program_name
+<span class="c1"># 停止全部进程，注：start、restart、stop 都不会载入最新的配置文件</span>
+supervisorctl stop all
+<span class="c1"># 载入最新的配置文件，停止原有进程并按新的配置启动、管理所有进程</span>
+supervisorctl reload
+<span class="c1"># 根据最新的配置文件，启动新配置或有改动的进程，配置没有改动的进程不会受影响而重启</span>
+supervisorctl update
+</code></pre></td></tr></table>
+</div>
+</div><p>关于program groups的命令使用较少暂不介绍</p>
+<hr>
+<p>参考资料：</p>
+<ol>
+<li><a href="http://supervisord.org/">supervisor 官方文档</a></li>
+<li><a href="http://wangshengzhuang.com/2017/05/26/%E8%BF%90%E7%BB%B4%E7%9B%B8%E5%85%B3/Supervisor/Supervisor%E7%AE%80%E4%BB%8B/"> 小强斋太-Supervisor简介、安装、配置</a></li>
+<li><a href="http://liyangliang.me/posts/2015/06/using-supervisor/">使用supervisor管理进程</a></li>
+<li><a href="https://www.liaoxuefeng.com/article/0013738926914703df5e93589a14c19807f0e285194fe84000">廖雪峰-Linux后台进程管理利器：supervisor</a></li>
+<li><a href="https://wuguiyunwei.com/index.php/2017/06/26/1028.html">乌龟运维-Supervisor 安装及配置</a></li>
+<li><a href="https://my.oschina.net/crooner/blog/395069">oschina-SUPERVISOR进程管理器配置指南</a></li>
+</ol>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-09-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/supervisor/">supervisor</a>
+          <a href="/tags/%E8%BF%9B%E7%A8%8B/">进程</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/10/31/%E4%BB%8EPython%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88%E8%8E%B7%E5%8F%96%E8%A1%8C%E5%8F%B7%E7%AD%89%E4%BF%A1%E6%81%AF/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">从Python调用堆栈获取行号等信息</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/09/07/Python%E6%97%B6%E9%97%B4%E6%A8%A1%E5%9D%97%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/">
+            <span class="next-text nav-default">Python时间模块常用操作总结</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

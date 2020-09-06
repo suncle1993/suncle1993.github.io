@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wrapper class on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/wrapper-class/</link>
+    <description>Recent content in wrapper class on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 22 Jan 2019 21:52:33 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/wrapper-class/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Best practice on when to use the wrapper class and primitive type in Java</title>
+      <link>https://suncle.me/2019/01/22/Best-practice-on-when-to-use-the-wrapper-class-and-primitive-type-in-Java/</link>
+      <pubDate>Tue, 22 Jan 2019 21:52:33 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/01/22/Best-practice-on-when-to-use-the-wrapper-class-and-primitive-type-in-Java/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Best practice on when to use the wrapper class and primitive type in Java&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;四个概念：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;primitive type：原始类型&lt;/li&gt;
+&lt;li&gt;wrapper class：包装类型&lt;/li&gt;
+&lt;li&gt;autoboxing：自动包装&lt;/li&gt;
+&lt;li&gt;unboxing：解包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;对应关系：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Primitive type&lt;/th&gt;
+&lt;th&gt;Wrapper class&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;boolean&lt;/td&gt;
+&lt;td&gt;Boolean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;byte&lt;/td&gt;
+&lt;td&gt;Byte&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;char&lt;/td&gt;
+&lt;td&gt;Character&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;float&lt;/td&gt;
+&lt;td&gt;Float&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;int&lt;/td&gt;
+&lt;td&gt;Integer&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;long&lt;/td&gt;
+&lt;td&gt;Long&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;short&lt;/td&gt;
+&lt;td&gt;Short&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;double&lt;/td&gt;
+&lt;td&gt;Double&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;在 Effective Java 的第五项中, Joshua Bloch 有这样的观点：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The lesson is clear: &lt;strong&gt;prefer primitives to boxed primitives, and watch out for unintentional autoboxing&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;意思就是：相对于 &lt;code&gt;boxed primitive&lt;/code&gt; 更喜欢 &lt;code&gt;primitive&lt;/code&gt;，并且需要注意无意识的 &lt;strong&gt;autoboxing&lt;/strong&gt; 机制。&lt;/p&gt;
+&lt;p&gt;类的一个很好的用途是作为泛型类型（包括Collection类，比如list和map），或者当你想要将它们转化为其他类型而不进行隐式转换时（例如 &lt;code&gt;Intege类&lt;/code&gt;具有方法 &lt;code&gt;doubleValue()&lt;/code&gt; or &lt;code&gt;byteValue()&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;因此，最佳实践是能使用primitive的都用primitive，除非你正在处理泛型（确保你知道 autoboxing 和 unboxing）&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

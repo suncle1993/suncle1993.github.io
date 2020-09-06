@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>博客域名迁移 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="突然就想给本站换个域名了，那么就动手了
+目标：
+ 网站使用Git Hooks自动部署到VPS， nginx解析域名到VPS，并开启https和http2 老域名 flowsnow.net 301永久重定向到新域名 suncle.me 更改Google收录和Baidu收录索引，尽可能少的影响权重 使用valine评论系统，迁移disqus评论数据到valine " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2019/03/31/migrate-blog-domain/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="博客域名迁移" />
+<meta property="og:description" content="突然就想给本站换个域名了，那么就动手了
+目标：
+
+网站使用Git Hooks自动部署到VPS，
+nginx解析域名到VPS，并开启https和http2
+老域名 flowsnow.net 301永久重定向到新域名 suncle.me
+更改Google收录和Baidu收录索引，尽可能少的影响权重
+使用valine评论系统，迁移disqus评论数据到valine
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2019/03/31/migrate-blog-domain/" />
+<meta property="article:published_time" content="2019-03-31T01:00:56+00:00" />
+<meta property="article:modified_time" content="2019-03-31T01:00:56+00:00" />
+<meta itemprop="name" content="博客域名迁移">
+<meta itemprop="description" content="突然就想给本站换个域名了，那么就动手了
+目标：
+
+网站使用Git Hooks自动部署到VPS，
+nginx解析域名到VPS，并开启https和http2
+老域名 flowsnow.net 301永久重定向到新域名 suncle.me
+更改Google收录和Baidu收录索引，尽可能少的影响权重
+使用valine评论系统，迁移disqus评论数据到valine
+">
+<meta itemprop="datePublished" content="2019-03-31T01:00:56+00:00" />
+<meta itemprop="dateModified" content="2019-03-31T01:00:56+00:00" />
+<meta itemprop="wordCount" content="1534">
+
+
+
+<meta itemprop="keywords" content="Hexo,Nginx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="博客域名迁移"/>
+<meta name="twitter:description" content="突然就想给本站换个域名了，那么就动手了
+目标：
+
+网站使用Git Hooks自动部署到VPS，
+nginx解析域名到VPS，并开启https和http2
+老域名 flowsnow.net 301永久重定向到新域名 suncle.me
+更改Google收录和Baidu收录索引，尽可能少的影响权重
+使用valine评论系统，迁移disqus评论数据到valine
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">博客域名迁移</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-31 </span>
+        <div class="post-category">
+            <a href="/categories/Hexo%E5%8D%9A%E5%AE%A2/"> Hexo博客 </a>
+            </div>
+          <span class="more-meta"> 约 1534 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#网站自动部署到vps">网站自动部署到VPS</a></li>
+        <li><a href="#nginx解析域名到vps">nginx解析域名到VPS</a></li>
+        <li><a href="#nginx-实现永久重定向">Nginx 实现永久重定向</a></li>
+        <li><a href="#迁移google和baidu收录索引">迁移Google和Baidu收录索引</a></li>
+        <li><a href="#迁移disqus到valine">迁移Disqus到Valine</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>突然就想给本站换个域名了，那么就动手了</p>
+<p>目标：</p>
+<ol>
+<li>网站使用Git Hooks自动部署到VPS，</li>
+<li>nginx解析域名到VPS，并开启https和http2</li>
+<li>老域名 <code>flowsnow.net</code> 301永久重定向到新域名 <code>suncle.me</code></li>
+<li>更改Google收录和Baidu收录索引，尽可能少的影响权重</li>
+<li>使用valine评论系统，迁移disqus评论数据到valine</li>
+</ol>
+<h2 id="网站自动部署到vps">网站自动部署到VPS</h2>
+<p>首先需要建立好本地到VPS的ssh链接，开启互信</p>
+<p>在VPS上建立git裸库</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> ~
+mkdir blog.git    <span class="c1"># 创建git仓库文件夹</span>
+<span class="nb">cd</span> blog.git       <span class="c1"># 进入仓库目录</span>
+git init --bare   <span class="c1"># 使用--bare参数初始化为裸仓库，这样创建的仓库不包含工作区</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>配置Git Hooks，创建post-receive文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> ~/blog.git/hooks  <span class="c1"># 切换到hooks目录下</span>
+vim post-receive     <span class="c1"># 创建文件</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>写入一下内容实现基于复制的自动部署</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span><span class="nv">GIT_REPO</span><span class="o">=</span>/root/blog.git
+<span class="nv">TMP_GIT_CLONE</span><span class="o">=</span>/tmp/blog
+<span class="nv">PUBLIC_WWW</span><span class="o">=</span>/data/www
+rm -rf <span class="si">${</span><span class="nv">TMP_GIT_CLONE</span><span class="si">}</span>
+git clone <span class="nv">$GIT_REPO</span> <span class="nv">$TMP_GIT_CLONE</span>
+rm -rf <span class="si">${</span><span class="nv">PUBLIC_WWW</span><span class="si">}</span>/*
+cp -rf <span class="si">${</span><span class="nv">TMP_GIT_CLONE</span><span class="si">}</span>/* <span class="si">${</span><span class="nv">PUBLIC_WWW</span><span class="si">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>保存退出后，执行：<code>chmod +x post-receive</code> 赋予可执行权限。</p>
+<p>在hexo博客站点配置文件_config.yml文件中，修改部署配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="c"># Deployment</span><span class="w">
+</span><span class="w"></span><span class="c">## Docs: https://hexo.io/docs/deployment.html</span><span class="w">
+</span><span class="w"></span><span class="k">deploy</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">type</span><span class="p">:</span><span class="w"> </span>git<span class="w">
+</span><span class="w">    </span><span class="k">repo</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="c"># github: git@github.com:Flowsnow/Flowsnow.github.io.git,master</span><span class="w">
+</span><span class="w">      </span><span class="c"># coding: git@git.coding.net:Flowsnow/Flowsnow.git,coding-pages</span><span class="w">
+</span><span class="w">      </span><span class="k">linode</span><span class="p">:</span><span class="w"> </span>root@<span class="m">139.162.108.44</span><span class="p">:</span>blog.git<span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="nginx解析域名到vps">nginx解析域名到VPS</h2>
+<p>在VPS上使用 <code>apt-get install -y nginx</code> 安装好 <code>nginx</code> 之后，新增配置 <code>/etc/nginx/sites-available/suncle.me</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">server</span> <span class="p">{</span>
+    <span class="kn">server_name</span> <span class="s">suncle.me</span><span class="p">;</span>
+    <span class="kn">root</span> <span class="s">/data/www</span><span class="p">;</span>
+    <span class="kn">index</span> <span class="s">index.html</span><span class="p">;</span>
+
+    <span class="c1"># Media: images, icons, video, audio, HTC
+</span><span class="c1"></span>    <span class="kn">location</span> <span class="p">~</span><span class="sr">*</span> <span class="s">\.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|mp4|ogg|ogv|webm|htc)</span>$ <span class="p">{</span>
+        <span class="kn">access_log</span> <span class="no">off</span><span class="p">;</span>
+        <span class="kn">add_header</span> <span class="s">Cache-Control</span> <span class="s">&#34;max-age=2592000&#34;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1"># CSS and Javascript
+</span><span class="c1"></span>    <span class="kn">location</span> <span class="p">~</span><span class="sr">*</span> <span class="s">\.(?:css|js)</span>$ <span class="p">{</span>
+        <span class="kn">add_header</span> <span class="s">Cache-Control</span> <span class="s">&#34;max-age=31536000&#34;</span><span class="p">;</span>
+        <span class="kn">access_log</span> <span class="no">off</span><span class="p">;</span>
+    <span class="p">}</span>
+
+
+    <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span> <span class="s">http2</span><span class="p">;</span> <span class="c1"># managed by Certbot
+</span><span class="c1"></span>    <span class="kn">ssl_certificate</span> <span class="s">/etc/letsencrypt/live/suncle.me/fullchain.pem</span><span class="p">;</span> <span class="c1"># managed by Certbot
+</span><span class="c1"></span>    <span class="kn">ssl_certificate_key</span> <span class="s">/etc/letsencrypt/live/suncle.me/privkey.pem</span><span class="p">;</span> <span class="c1"># managed by Certbot
+</span><span class="c1"></span>    <span class="kn">include</span> <span class="s">/etc/letsencrypt/options-ssl-nginx.conf</span><span class="p">;</span> <span class="c1"># managed by Certbot
+</span><span class="c1"></span>    <span class="kn">ssl_dhparam</span> <span class="s">/etc/letsencrypt/ssl-dhparams.pem</span><span class="p">;</span> <span class="c1"># managed by Certbot
+</span><span class="c1"></span>
+<span class="p">}</span>
+<span class="k">server</span> <span class="p">{</span>
+    <span class="kn">if</span> <span class="s">(</span><span class="nv">$host</span> <span class="p">=</span> <span class="s">suncle.me)</span> <span class="p">{</span>
+        <span class="kn">return</span> <span class="mi">301</span> <span class="s">https://suncle.me</span><span class="nv">$request_uri</span><span class="p">;</span>
+    <span class="p">}</span> <span class="c1"># managed by Certbot: redirect http to https
+</span><span class="c1"></span>
+    <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+    <span class="kn">server_name</span> <span class="s">suncle.me</span><span class="p">;</span>
+    <span class="kn">return</span> <span class="mi">404</span><span class="p">;</span> <span class="c1"># managed by Certbot
+</span><span class="c1"></span><span class="p">}</span>
+<span class="k">server</span> <span class="p">{</span>
+    <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+    <span class="kn">server_name</span> <span class="s">www.suncle.me</span><span class="p">;</span>
+    <span class="kn">return</span> <span class="mi">301</span> <span class="s">https://suncle.me</span><span class="nv">$request_uri</span><span class="p">;</span>  <span class="c1"># redirect www to non-www
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>创建软连接</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">ln -s /etc/nginx/sites-available/suncle.me /etc/nginx/sites-enabled/
+</code></pre></td></tr></table>
+</div>
+</div><p>切换用户为 <code>root</code>，开启 <code>gzip_static</code> 压缩，关闭日志，修改 <code>nginx.conf</code> 如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">user</span> <span class="s">root</span><span class="p">;</span>
+<span class="k">worker_processes</span> <span class="s">auto</span><span class="p">;</span>
+<span class="k">pid</span> <span class="s">/run/nginx.pid</span><span class="p">;</span>
+
+<span class="k">events</span> <span class="p">{</span>
+    <span class="kn">worker_connections</span> <span class="mi">768</span><span class="p">;</span>
+    <span class="c1"># multi_accept on;
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="k">http</span> <span class="p">{</span>
+
+    <span class="c1"># Basic Settings
+</span><span class="c1"></span>
+    <span class="kn">sendfile</span> <span class="no">on</span><span class="p">;</span>
+    <span class="kn">tcp_nopush</span> <span class="no">on</span><span class="p">;</span>
+    <span class="kn">tcp_nodelay</span> <span class="no">on</span><span class="p">;</span>
+    <span class="kn">keepalive_timeout</span> <span class="mi">65</span><span class="p">;</span>
+    <span class="kn">types_hash_max_size</span> <span class="mi">2048</span><span class="p">;</span>
+    <span class="c1"># server_tokens off;
+</span><span class="c1"></span>
+    <span class="c1"># server_names_hash_bucket_size 64;
+</span><span class="c1"></span>    <span class="c1"># server_name_in_redirect off;
+</span><span class="c1"></span>
+    <span class="kn">include</span> <span class="s">/etc/nginx/mime.types</span><span class="p">;</span>
+    <span class="kn">default_type</span> <span class="s">application/octet-stream</span><span class="p">;</span>
+
+    <span class="c1"># SSL Settings
+</span><span class="c1"></span>
+    <span class="kn">ssl_protocols</span> <span class="s">TLSv1</span> <span class="s">TLSv1.1</span> <span class="s">TLSv1.2</span><span class="p">;</span> <span class="c1"># Dropping SSLv3, ref: POODLE
+</span><span class="c1"></span>    <span class="kn">ssl_prefer_server_ciphers</span> <span class="no">on</span><span class="p">;</span>
+
+    <span class="c1"># Logging Settings
+</span><span class="c1"></span>
+    <span class="c1"># access_log /var/log/nginx/access.log;
+</span><span class="c1"></span>    <span class="c1"># error_log /var/log/nginx/error.log;
+</span><span class="c1"></span>
+    <span class="c1"># Gzip Settings
+</span><span class="c1"></span>
+    <span class="kn">gzip_static</span> <span class="no">on</span><span class="p">;</span>
+    <span class="kn">gzip</span> <span class="no">on</span><span class="p">;</span>
+    <span class="kn">gzip_disable</span> <span class="s">&#34;msie6&#34;</span><span class="p">;</span>
+
+    <span class="c1"># gzip_vary on;
+</span><span class="c1"></span>    <span class="c1"># gzip_proxied any;
+</span><span class="c1"></span>    <span class="c1"># gzip_comp_level 6;
+</span><span class="c1"></span>    <span class="c1"># gzip_buffers 16 8k;
+</span><span class="c1"></span>    <span class="c1"># gzip_http_version 1.1;
+</span><span class="c1"></span>    <span class="c1"># gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+</span><span class="c1"></span>
+    <span class="c1"># Virtual Host Configs
+</span><span class="c1"></span>
+    <span class="kn">include</span> <span class="s">/etc/nginx/conf.d/*.conf</span><span class="p">;</span>
+    <span class="kn">include</span> <span class="s">/etc/nginx/sites-enabled/*</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后使用一下命令启动/重启 <code>nginx</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">systemctl start nginx
+systemctl restart nginx
+</code></pre></td></tr></table>
+</div>
+</div><p>配置https和http2，先安装certbot</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">apt-get install software-properties-common
+add-apt-repository ppa:certbot/certbot
+apt-get update
+apt-get install python-certbot-nginx
+</code></pre></td></tr></table>
+</div>
+</div><p>运行certbot</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">certbot --nginx
+</code></pre></td></tr></table>
+</div>
+</div><p>设置好之后重启nginx即可。</p>
+<p>设置定时更新Https证书，在crontab中加入以下定时任务，每天凌晨3点执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">0 3 * * * certbot renew
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="nginx-实现永久重定向">Nginx 实现永久重定向</h2>
+<p>使用nginx将老域名永久重定向到新域名，site-enabled目录下新增以下配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">server {
+    listen 80 default_server;
+    server_name flowsnow.net;
+    index index.html index.htm index.php;
+    root /home/wwwroot/default;
+
+    if ( $scheme = &#34;http&#34; ) {
+        return 301 https://suncle.me$request_uri;
+    }
+    location / {
+        rewrite ^(.*)$  https://suncle.me$1 permanent;
+    }
+}
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="迁移google和baidu收录索引">迁移Google和Baidu收录索引</h2>
+<p>Baidu收录可以直接使用Baidu网站改版工具实现，Google收录可以使用Google更改网站地址工具实现，但是前提是需要配置好301重定向。Google提交更换地址申请页面如下：
+<img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/migrate-blog-domain/google-replace-domain.jpg" alt=""></p>
+<h2 id="迁移disqus到valine">迁移Disqus到Valine</h2>
+<p>觉得valine评论系统看着还不错，而且disqus由于被墙之前一直是加了一个disqus-proxy的反向代理才能使访客看到评论，比较麻烦而且需要一台VPS。</p>
+<p>Valine基于LeanCloud，不得不说，LeanCloud的服务一直都是比较稳定的，而且有免费额度可以使用。</p>
+<p>迁移Disqus评论数据到Valine可以使用Disqus2LeanCloud这个工具，见下图，具体使用可以参考后面的参考链接</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/migrate-blog-domain/Disqus2LeadCloud.jpg" alt=""></p>
+<hr>
+<p>参考：</p>
+<ol>
+<li><a href="https://www.zhihu.com/question/270176706">知乎-网站更换域名收录怎么办？</a></li>
+<li><a href="https://medium.com/@jasonrigden/how-to-host-a-static-website-with-nginx-8b2dd0c5b301">How to Host a Static Website with Nginx – Jason Rigden – Medium</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/37312476">Hexo建站使用Git部署到VPS</a></li>
+<li><a href="http://www.html580.com/tool/nginx/index.php">Nginx 在线美化器</a></li>
+<li><a href="https://www.google.com/webmasters/tools/change-address">Google 网站改版</a></li>
+<li><a href="https://www.imydl.tech/lnmp/315.html">博客更换域名后利用Nginx实现完美301跳转 - 运维学习笔记博客</a></li>
+<li><a href="https://ioliu.cn/2017/add-valine-comments-to-your-blog/">使用valine评论系统</a></li>
+<li><a href="http://disqus.panjunwen.com/">disqus评论迁移到valine</a></li>
+</ol>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-03-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Hexo/">Hexo</a>
+          <a href="/tags/Nginx/">Nginx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2019/04/15/10-tang-poems/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">精选唐诗十首</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2019/03/30/useful-linux-scripts/">
+            <span class="next-text nav-default">常用Linux脚本集锦</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

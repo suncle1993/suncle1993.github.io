@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>常用Linux脚本集锦 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="常用linux脚本：
+ Linux系统bash脚本获取系统硬件资源 Aix系统ksh脚本获取系统硬件资源 服务器打开session时显示帮助信息 curl post中带有变量的脚本 金三系统基线包安装部署脚本 " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2019/03/30/useful-linux-scripts/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="常用Linux脚本集锦" />
+<meta property="og:description" content="常用linux脚本：
+
+Linux系统bash脚本获取系统硬件资源
+Aix系统ksh脚本获取系统硬件资源
+服务器打开session时显示帮助信息
+curl post中带有变量的脚本
+金三系统基线包安装部署脚本
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2019/03/30/useful-linux-scripts/" />
+<meta property="article:published_time" content="2019-03-30T01:13:35+00:00" />
+<meta property="article:modified_time" content="2019-03-30T01:13:35+00:00" />
+<meta itemprop="name" content="常用Linux脚本集锦">
+<meta itemprop="description" content="常用linux脚本：
+
+Linux系统bash脚本获取系统硬件资源
+Aix系统ksh脚本获取系统硬件资源
+服务器打开session时显示帮助信息
+curl post中带有变量的脚本
+金三系统基线包安装部署脚本
+">
+<meta itemprop="datePublished" content="2019-03-30T01:13:35+00:00" />
+<meta itemprop="dateModified" content="2019-03-30T01:13:35+00:00" />
+<meta itemprop="wordCount" content="5824">
+
+
+
+<meta itemprop="keywords" content="Linux,Bash," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="常用Linux脚本集锦"/>
+<meta name="twitter:description" content="常用linux脚本：
+
+Linux系统bash脚本获取系统硬件资源
+Aix系统ksh脚本获取系统硬件资源
+服务器打开session时显示帮助信息
+curl post中带有变量的脚本
+金三系统基线包安装部署脚本
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">常用Linux脚本集锦</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-30 </span>
+        <div class="post-category">
+            <a href="/categories/Linux/"> Linux </a>
+            </div>
+          <span class="more-meta"> 约 5824 字 </span>
+          <span class="more-meta"> 预计阅读 12 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#linux系统bash脚本获取系统硬件资源">Linux系统bash脚本获取系统硬件资源</a></li>
+        <li><a href="#aix系统ksh脚本获取系统硬件资源">Aix系统ksh脚本获取系统硬件资源</a></li>
+        <li><a href="#服务器打开session时显示帮助信息">服务器打开session时显示帮助信息</a></li>
+        <li><a href="#curl-post中带有变量的脚本">curl post中带有变量的脚本</a></li>
+        <li><a href="#金三系统基线包安装部署脚本">金三系统基线包安装部署脚本</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>常用linux脚本：</p>
+<ul>
+<li>Linux系统bash脚本获取系统硬件资源</li>
+<li>Aix系统ksh脚本获取系统硬件资源</li>
+<li>服务器打开session时显示帮助信息</li>
+<li>curl post中带有变量的脚本</li>
+<li>金三系统基线包安装部署脚本</li>
+</ul>
+<h2 id="linux系统bash脚本获取系统硬件资源">Linux系统bash脚本获取系统硬件资源</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/sh
+</span><span class="cp"></span><span class="nb">echo</span> <span class="s2">&#34;系统资源使用情况：以下各个数字均为百分比%&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;CPU平均使用率：&#34;</span>
+top -n <span class="m">3</span> b<span class="p">|</span>grep <span class="s1">&#39;Cpu(s)&#39;</span><span class="p">|</span>awk <span class="s1">&#39;{print $2}&#39;</span><span class="p">|</span>cut -d <span class="s1">&#39;%&#39;</span> -f 1<span class="p">|</span>awk <span class="s1">&#39;{sum+= $1} END {printf &#34;%.2f\n&#34;,sum/3}&#39;</span>
+<span class="nb">echo</span> <span class="s2">&#34;内存使用率：&#34;</span>
+free<span class="p">|</span>grep <span class="s1">&#39;Mem:&#39;</span><span class="p">|</span>awk <span class="s1">&#39;{realused=$3-$6-$7} END {printf &#34;%.2f\n&#34;,realused*100/$2}&#39;</span>
+<span class="nb">echo</span> <span class="s2">&#34;磁盘使用率：&#34;</span>
+df<span class="p">|</span>awk <span class="s1">&#39;{if(length($6)==1) print $5}&#39;</span><span class="p">|</span>cut -d <span class="s1">&#39;%&#39;</span> -f <span class="m">1</span>
+<span class="nb">echo</span> <span class="s2">&#34;Inode使用率：&#34;</span>
+df -i<span class="p">|</span>awk <span class="s1">&#39;{if(length($6)==1) print $5}&#39;</span><span class="p">|</span>cut -d <span class="s1">&#39;%&#39;</span> -f <span class="m">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="aix系统ksh脚本获取系统硬件资源">Aix系统ksh脚本获取系统硬件资源</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="cp">#!/bin/sh
+</span><span class="cp"></span><span class="nb">echo</span> <span class="s2">&#34;以下数据均为百分比&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;cpu&#34;</span>
+vmstat <span class="m">1</span> 3<span class="p">|</span>sed -n <span class="s1">&#39;7,9p&#39;</span><span class="p">|</span>awk <span class="s1">&#39;{free+=$16} END {printf &#34;%.2f\n&#34;,100-free/3.0}&#39;</span>
+<span class="nb">echo</span> <span class="s2">&#34;memory&#34;</span>
+svmon<span class="p">|</span>grep memory<span class="p">|</span>awk <span class="s1">&#39;{printf &#34;%.2f\n&#34;,1.0*$3/$2}&#39;</span>
+<span class="nb">echo</span> <span class="s2">&#34;disk&#34;</span>
+df /u01<span class="p">|</span>sed -n 2p<span class="p">|</span>awk <span class="s1">&#39;{print $4}&#39;</span><span class="p">|</span>cut -d <span class="s1">&#39;%&#39;</span> -f <span class="m">1</span>
+<span class="nb">echo</span> <span class="s2">&#34;Inode&#34;</span>
+df /u01<span class="p">|</span>sed -n 2p<span class="p">|</span>awk <span class="s1">&#39;{print $6}&#39;</span><span class="p">|</span>cut -d <span class="s1">&#39;%&#39;</span> -f <span class="m">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="服务器打开session时显示帮助信息">服务器打开session时显示帮助信息</h2>
+<p>将脚本的执行语句写在用户profile中，登录时即可看到帮助信息</p>
+<p>脚本名称：help.sh</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">tput setaf <span class="m">2</span>
+tput blink
+<span class="nb">echo</span> <span class="s2">&#34;====================测试服务器133======================&#34;</span>
+tput sgr0
+tput setaf <span class="m">2</span>
+<span class="nb">echo</span> <span class="s2">&#34;
+</span><span class="s2">--------------**支持dt,hx,sj,js---------------------
+</span><span class="s2"> log-gs**.sh            查看日志
+</span><span class="s2"> re-gs**.sh             重启应用
+</span><span class="s2">--------------**支持dt,hx,sj,js---------------------
+</span><span class="s2">
+</span><span class="s2"> *****    help.sh       呼唤帮助信息      *****&#34;</span>
+tput blink  
+<span class="nb">echo</span> <span class="s2">&#34;====================测试服务器133======================&#34;</span>
+tput sgr0
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="curl-post中带有变量的脚本">curl post中带有变量的脚本</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span><span class="nv">username</span><span class="o">=</span><span class="s2">&#34;suncle&#34;</span>
+<span class="nv">apiKey</span><span class="o">=</span><span class="s2">&#34;xxxxxx&#34;</span>
+<span class="nv">domain</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nb">echo</span> <span class="nv">$domain</span>
+<span class="nv">date</span><span class="o">=</span><span class="sb">`</span>date -R -u <span class="p">|</span> awk <span class="s1">&#39;{print $1&#34; &#34;$2&#34; &#34;$3&#34; &#34;$4&#34; &#34;$5&#34; GMT&#34;}&#39;</span><span class="sb">`</span>
+<span class="nv">password</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> -en <span class="s2">&#34;</span><span class="nv">$date</span><span class="s2">&#34;</span> <span class="p">|</span> openssl dgst -sha1 -hmac <span class="nv">$apiKey</span> -binary <span class="p">|</span> openssl enc -base64<span class="sb">`</span>
+curl -i --url <span class="s2">&#34;https://open.chinanetcenter.com/api/report/flow/stream/detail&#34;</span> <span class="se">\
+</span><span class="se"></span>-X <span class="s2">&#34;POST&#34;</span> <span class="se">\
+</span><span class="se"></span>-u <span class="nv">$username</span>:<span class="nv">$password</span> <span class="se">\
+</span><span class="se"></span>-H <span class="s2">&#34;Date: </span><span class="nv">$date</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="se"></span>-H <span class="s2">&#34;Accept: application/json&#34;</span> <span class="se">\
+</span><span class="se"></span>-d <span class="s1">&#39;{
+</span><span class="s1">    &#34;dateFrom&#34;: &#34;2018-03-01T00:00:00+08:00&#34;,
+</span><span class="s1">    &#34;dateTo&#34;: &#34;2018-03-02T00:00:00+08:00&#34;,
+</span><span class="s1">    &#34;domainStream&#34;: [
+</span><span class="s1">        {
+</span><span class="s1">            &#34;domain&#34;: &#34;&#39;</span><span class="s2">&#34;</span><span class="nv">$domain</span><span class="s2">&#34;</span><span class="s1">&#39;&#34;
+</span><span class="s1">        }
+</span><span class="s1">    ],
+</span><span class="s1">    &#34;dataType&#34;: &#34;bandwidth&#34;,
+</span><span class="s1">    &#34;dataInterval&#34;: &#34;5m&#34;
+</span><span class="s1">}&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>参见domain变量的处理：&ldquo;domain&rdquo;: &ldquo;'&ldquo;$domain&rdquo;'&rdquo;</p>
+</blockquote>
+<h2 id="金三系统基线包安装部署脚本">金三系统基线包安装部署脚本</h2>
+<p><strong>判断weblogic用户和组是否存在，判断/weblogic目录是否存在</strong></p>
+<blockquote>
+<p>脚本名称：install-gs-1-init.sh</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/sh
+</span><span class="cp"></span>
+<span class="nv">USER_NAME</span><span class="o">=</span><span class="s2">&#34;weblogic&#34;</span>
+<span class="nv">GROUP_NAME</span><span class="o">=</span><span class="s2">&#34;weblogic&#34;</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;root&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m当前登录用户不是root用户，请使用root用户操作。\033[0m&#34;</span><span class="p">;</span><span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m该脚本需在所有应用服务器执行。\033[0m&#34;</span>
+
+<span class="nv">testing1</span><span class="o">=</span><span class="k">$(</span>egrep <span class="s2">&#34;^</span><span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span><span class="s2">:&#34;</span> /etc/passwd<span class="k">)</span>
+<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">testing1</span><span class="si">}</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nv">GROUP_ID</span><span class="o">=</span><span class="k">$(</span>egrep <span class="s2">&#34;^</span><span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span><span class="s2">:&#34;</span> /etc/passwd<span class="p">|</span>cut -d <span class="s2">&#34;:&#34;</span> -f 4<span class="k">)</span>
+    <span class="nv">GROUP_NAME</span><span class="o">=</span><span class="k">$(</span>egrep <span class="s2">&#34;:</span><span class="si">${</span><span class="nv">GROUP_ID</span><span class="si">}</span><span class="s2">:&#34;</span> /etc/group<span class="p">|</span>cut -d <span class="s2">&#34;:&#34;</span> -f 1<span class="k">)</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m用户</span><span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span><span class="s2">已存在，用户组为</span><span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span><span class="s2">。\033[0m&#34;</span>
+<span class="k">else</span>
+    <span class="nv">testing2</span><span class="o">=</span><span class="k">$(</span>egrep <span class="s2">&#34;^</span><span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span><span class="s2">:&#34;</span> /etc/group<span class="k">)</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$testing2</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        useradd -g <span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span> <span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m用户组</span><span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span><span class="s2">存在，但用户</span><span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span><span class="s2">不存在，已创建。\033[0m&#34;</span>
+    <span class="k">else</span>
+        groupadd <span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span><span class="p">;</span>useradd -g <span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span> <span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m用户组</span><span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span><span class="s2">和用户</span><span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span><span class="s2">都不存在，均已创建。\033[0m&#34;</span>
+    <span class="k">fi</span>
+<span class="k">fi</span>
+
+<span class="k">if</span> <span class="nb">test</span> -d /weblogic<span class="p">;</span> <span class="k">then</span>
+    <span class="nv">CURRENT_TIME</span><span class="o">=</span><span class="k">$(</span>date +%Y%m%d%H%M%S<span class="k">)</span>
+    mv /weblogic /weblogic_<span class="si">${</span><span class="nv">CURRENT_TIME</span><span class="si">}</span>
+    mkdir -p /weblogic<span class="p">;</span>chown -R <span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span>:<span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span> /weblogic
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m目录/weblogic已存在，自动备份为/weblogic_</span><span class="si">${</span><span class="nv">CURRENT_TIME</span><span class="si">}</span><span class="s2">，并重新创建空目录/weblogic。\033[0m&#34;</span>
+<span class="k">else</span>
+    mkdir -p /weblogic<span class="p">;</span>chown -R <span class="si">${</span><span class="nv">USER_NAME</span><span class="si">}</span>:<span class="si">${</span><span class="nv">GROUP_NAME</span><span class="si">}</span> /weblogic
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m目录/weblogic不存在，已创建。\033[0m&#34;</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m请确认已设置weblogic用户的密码。\033[0m&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>解压安装weblogic中间件和jdk并且设置环境变量</strong></p>
+<blockquote>
+<p>脚本名称：install-gs-2-base.sh</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/sh
+</span><span class="cp"></span>
+<span class="nv">INITIAL_PATH</span><span class="o">=</span><span class="s2">&#34;/tmp/weblogic_initial&#34;</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;weblogic&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m当前登录用户不是weblogic用户，请使用weblogic用户操作。\033[0m&#34;</span><span class="p">;</span><span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m该脚本需在所有应用服务器执行。\033[0m&#34;</span>
+
+<span class="k">if</span> <span class="nb">test</span> -d <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nv">CURRENT_TIME</span><span class="o">=</span><span class="k">$(</span>date +%Y%m%d%H%M%S<span class="k">)</span>
+    mv <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span> <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>_<span class="si">${</span><span class="nv">CURRENT_TIME</span><span class="si">}</span><span class="o">&amp;&amp;</span>mkdir -p <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="o">&amp;&amp;</span><span class="nb">echo</span> -e <span class="s2">&#34;\033[31m目录</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">已存在，自动备份为</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">CURRENT_TIME</span><span class="si">}</span><span class="s2">，并重新创建空目录</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">。\033[0m&#34;</span>
+<span class="k">else</span>
+    mkdir -p <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="o">&amp;&amp;</span><span class="nb">echo</span> -e <span class="s2">&#34;\033[32m目录</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">不存在，已创建。\033[0m&#34;</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;请将基础软件包weblogic_base_*.tar.bz2上传到该服务器</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">目录下。\033[31m请使用weblogic用户上传。\033[0m&#34;</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m上传完毕后，\033[0m请按任意键继续...&#34;</span>
+<span class="nb">read</span> -n <span class="m">1</span> var
+
+<span class="nv">num</span><span class="o">=</span><span class="k">$(</span>ls <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/weblogic_base_*.tar.bz2<span class="p">|</span>wc -l<span class="k">)</span>
+<span class="k">while</span> <span class="nb">true</span>
+<span class="k">do</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;检测到【</span><span class="si">${</span><span class="nv">num</span><span class="si">}</span><span class="s2">】个基础软件包</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">/weblogic_base_*.tar.bz2&#34;</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="si">${</span><span class="nv">num</span><span class="si">}</span> -eq <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m请确认是否已正确上传。\033[0m&#34;</span>
+    <span class="k">elif</span> <span class="o">[</span> <span class="si">${</span><span class="nv">num</span><span class="si">}</span> -gt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m请移除多余的base包。\033[0m&#34;</span>
+    <span class="k">else</span>
+        <span class="nv">base_package</span><span class="o">=</span><span class="k">$(</span>ls <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/weblogic_base_*.tar.bz2<span class="k">)</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;包名为\033[32m</span><span class="si">${</span><span class="nv">base_package</span><span class="si">}</span><span class="s2">\033[0m&#34;</span>
+        <span class="nb">read</span> -p <span class="s2">&#34;请确认包名是否正确？正确输入Y，否则输入N。&#34;</span> yn
+        <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;Y&#34;</span> -o  <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;y&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+            <span class="nv">yn</span><span class="o">=</span>
+            <span class="nb">break</span>
+        <span class="k">else</span>
+            <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m输入不是Y，包名错误，需要重新上传。\033[0m&#34;</span>
+            <span class="nv">yn</span><span class="o">=</span>
+        <span class="k">fi</span>
+    <span class="k">fi</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m处理完毕后，\033[0m请按任意键继续...&#34;</span>
+    <span class="nb">read</span> -n <span class="m">1</span> var
+    <span class="nv">num</span><span class="o">=</span><span class="k">$(</span>ls <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/weblogic_base_*.tar.bz2<span class="p">|</span>wc -l<span class="k">)</span>
+<span class="k">done</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;开始解压安装包...&#34;</span>
+tar -xjvf <span class="si">${</span><span class="nv">base_package</span><span class="si">}</span> -C /
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[32m解压base包到/weblogic完毕。\033[0m&#34;</span>
+
+mkdir -p /weblogic/user_projects/domains
+mkdir -p /weblogic/user_projects/scripts
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;~&#34;</span> !<span class="o">=</span> <span class="s2">&#34;/weblogic&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    cp /weblogic/.bash_profile ~/.bash_profile
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m用户环境变量已经更新，请执行命令source ~/.bash_profile使环境变量生效。\033[0m&#34;</span>
+<span class="k">fi</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>根据具体服务器情况抽取相应的应用到各台服务器</p>
+<blockquote>
+<p>脚本名称：install-gs-3-gsap.sh</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/sh
+</span><span class="cp"></span>
+<span class="nv">INITIAL_PATH</span><span class="o">=</span><span class="s2">&#34;/tmp/weblogic_initial&#34;</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;weblogic&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m当前登录用户不是weblogic用户，请使用weblogic用户操作。\033[0m&#34;</span><span class="p">;</span><span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m该脚本只需在【**一台[可任选]**】应用服务器执行。\n\033[0m&#34;</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m请确认【**所有**】应用服务器都已经成功执行过脚本1和脚本2？\033[0m&#34;</span>
+<span class="nb">read</span> -p <span class="s2">&#34;已执行过输入Y，否则输入N。&#34;</span> yn
+<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;Y&#34;</span> -a <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;y&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nv">yn</span><span class="o">=</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m输入不是Y，请先在所有服务器都执行脚本1和脚本2。\033[0m&#34;</span>
+    <span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="k">if</span> <span class="nb">test</span> -d <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects<span class="p">;</span> <span class="k">then</span>
+    <span class="nv">CURRENT_TIME</span><span class="o">=</span><span class="k">$(</span>date +%Y%m%d%H%M%S<span class="k">)</span>
+    mv <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects_<span class="si">${</span><span class="nv">CURRENT_TIME</span><span class="si">}</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m目录</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">/user_projects已存在，自动备份为</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">/user_projects_</span><span class="si">${</span><span class="nv">CURRENT_TIME</span><span class="si">}</span><span class="s2">。\033[0m&#34;</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;请将个税应用包weblogic_gsap_*.tar.bz2上传到该服务器</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">目录下&#34;</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m上传完毕后，\033[0m请按任意键继续...&#34;</span>
+<span class="nb">read</span> -n <span class="m">1</span> var
+
+<span class="nv">num</span><span class="o">=</span><span class="k">$(</span>ls <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/weblogic_gsap_*.tar.bz2<span class="p">|</span>wc -l<span class="k">)</span>
+<span class="k">while</span> <span class="nb">true</span>
+<span class="k">do</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;检测到【</span><span class="si">${</span><span class="nv">num</span><span class="si">}</span><span class="s2">】个个税应用包</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">/weblogic_gsap_*.tar.bz2&#34;</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="si">${</span><span class="nv">num</span><span class="si">}</span> -eq <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m请确认是否已正确上传。\033[0m&#34;</span>
+    <span class="k">elif</span> <span class="o">[</span> <span class="si">${</span><span class="nv">num</span><span class="si">}</span> -gt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m请移除多余的gsap包。\033[0m&#34;</span>
+    <span class="k">else</span>
+        <span class="nv">gsap_package</span><span class="o">=</span><span class="k">$(</span>ls <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/weblogic_gsap_*.tar.bz2<span class="k">)</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;包名为\033[32m</span><span class="si">${</span><span class="nv">gsap_package</span><span class="si">}</span><span class="s2">\033[0m&#34;</span>
+        <span class="nb">read</span> -p <span class="s2">&#34;请确认包名是否正确？正确输入Y，否则输入N。&#34;</span> yn
+        <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;Y&#34;</span> -o  <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;y&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+            <span class="nv">yn</span><span class="o">=</span>
+            <span class="nb">break</span>
+        <span class="k">else</span>
+            <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m输入不是Y，包名错误，需要重新上传。\033[0m&#34;</span>
+            <span class="nv">yn</span><span class="o">=</span>
+        <span class="k">fi</span>
+    <span class="k">fi</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m处理完毕后，\033[0m请按任意键继续...&#34;</span>
+    <span class="nb">read</span> -n <span class="m">1</span> var
+    <span class="nv">num</span><span class="o">=</span><span class="k">$(</span>ls <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/weblogic_gsap_*.tar.bz2<span class="p">|</span>wc -l<span class="k">)</span>
+<span class="k">done</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;开始解压安装包...&#34;</span>
+tar -xjvf <span class="si">${</span><span class="nv">gsap_package</span><span class="si">}</span> -C <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[32m解压gsap包到</span><span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span><span class="s2">完毕。\033[0m&#34;</span>
+
+
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[32m开始安装管理节点应用：\n\033[0m&#34;</span>
+<span class="k">while</span> <span class="nb">true</span>
+<span class="k">do</span>
+    <span class="nb">read</span> -p <span class="s2">&#34;请输入【管理节点】所在服务器的IP：&#34;</span> IP_gl
+    <span class="nb">echo</span> -e <span class="s2">&#34;输入的\033[32m【管理节点】\033[0m所在服务器</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">的IP为：\033[32m【</span><span class="si">${</span><span class="nv">IP_gl</span><span class="si">}</span><span class="s2">】\033[0m&#34;</span> 
+    <span class="nb">read</span> -p <span class="s2">&#34;请确认是否正确？正确输入Y，否则输入N。&#34;</span> yn
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;Y&#34;</span> -o  <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;y&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nv">yn</span><span class="o">=</span>
+        <span class="nb">break</span>
+    <span class="k">else</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&#34;</span>
+        <span class="nv">yn</span><span class="o">=</span>
+    <span class="k">fi</span>
+<span class="k">done</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;【管理节点】所在服务器(IP：</span><span class="si">${</span><span class="nv">IP_gl</span><span class="si">}</span><span class="s2">)包含应用为：&#34;</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;个税管理：gsadmin_domain&#34;</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;开始抽取管理节点domain到</span><span class="si">${</span><span class="nv">IP_gl</span><span class="si">}</span><span class="s2">/weblogic/user_projects/domains，请耐心等待。&#34;</span>
+scp -r <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/domains/gsadmin_domain <span class="si">${</span><span class="nv">IP_gl</span><span class="si">}</span>:/weblogic/user_projects/domains
+scp -r <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/scripts/*-gsadmin.sh <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/scripts/upgrade-*.sh <span class="si">${</span><span class="nv">IP_gl</span><span class="si">}</span>:/weblogic/user_projects/scripts
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[32m管理节点应用抽取完毕。\n\033[0m&#34;</span>
+
+
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[32m开始安装前端应用：\n\033[0m&#34;</span>
+<span class="k">while</span> <span class="nb">true</span>
+<span class="k">do</span>
+    <span class="nb">read</span> -p <span class="s2">&#34;请输入【前端】服务器台数(注意：只能是1/2/3/4四种情况之一)：&#34;</span> number_qd
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$number_qd</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;1&#34;</span> -a <span class="s2">&#34;</span><span class="nv">$number_qd</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;2&#34;</span> -a <span class="s2">&#34;</span><span class="nv">$number_qd</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;3&#34;</span> -a <span class="s2">&#34;</span><span class="nv">$number_qd</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;4&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;输入服务器台数\033[31m【</span><span class="nv">$number_qd</span><span class="s2">】\033[0m，输入有误，需要重新输入。&#34;</span>
+        <span class="k">continue</span>
+    <span class="k">fi</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;设置【前端】服务器\033[32m【</span><span class="nv">$number_qd</span><span class="s2">】\033[0m台。&#34;</span>
+    <span class="nb">read</span> -p <span class="s2">&#34;请确认设置是否正确？正确输入Y，否则输入N。&#34;</span> yn
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;Y&#34;</span> -o  <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;y&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nv">yn</span><span class="o">=</span>
+        <span class="nb">break</span>
+    <span class="k">else</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&#34;</span>
+        <span class="nv">yn</span><span class="o">=</span>
+        <span class="k">continue</span>
+    <span class="k">fi</span>
+<span class="k">done</span>
+
+<span class="k">for</span> <span class="o">((</span> <span class="nv">i</span><span class="o">=</span>1<span class="p">;</span> i&lt;<span class="o">=</span><span class="nv">$number_qd</span><span class="p">;</span> <span class="nv">i</span><span class="o">=</span>i+1 <span class="o">))</span>
+<span class="k">do</span>
+	<span class="k">while</span> <span class="nb">true</span>
+    <span class="k">do</span>
+        <span class="nb">read</span> -p <span class="s2">&#34;请输入【前端】服务器</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">的IP：&#34;</span> IP_qd
+        <span class="nb">echo</span> -e <span class="s2">&#34;输入的【前端】服务器</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">的IP为：\033[32m【</span><span class="si">${</span><span class="nv">IP_qd</span><span class="si">}</span><span class="s2">】\033[0m&#34;</span> 
+        <span class="nb">read</span> -p <span class="s2">&#34;请确认是否正确？正确输入Y，否则输入N。&#34;</span> yn
+        <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;Y&#34;</span> -o  <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;y&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+            <span class="nv">yn</span><span class="o">=</span>
+            <span class="nb">break</span>
+        <span class="k">else</span>
+            <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&#34;</span>
+            <span class="nv">yn</span><span class="o">=</span>
+        <span class="k">fi</span>
+    <span class="k">done</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;【前端】服务器</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2"> (IP：</span><span class="si">${</span><span class="nv">IP_qd</span><span class="si">}</span><span class="s2">)包含应用为：&#34;</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;个税大厅：gsdt0</span>$<span class="s2">[ i ]_domain、gsdt0</span>$<span class="s2">[ i + number_qd ]_domain；查询统计：cxtj0</span>$<span class="s2">[ i ]_domain；&#34;</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;开始抽取需要的domain到</span><span class="si">${</span><span class="nv">IP_qd</span><span class="si">}</span><span class="s2">:/weblogic/user_projects/domains，请耐心等待。&#34;</span>
+	scp -r <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/domains/gsdt0$<span class="o">[</span> i <span class="o">]</span>_domain <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/domains/gsdt0$<span class="o">[</span> i + number_qd <span class="o">]</span>_domain  <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/domains/cxtj0$<span class="o">[</span> i <span class="o">]</span>_domain <span class="si">${</span><span class="nv">IP_qd</span><span class="si">}</span>:/weblogic/user_projects/domains
+	scp -r <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/scripts/*-gsdt.sh <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/scripts/*-cxtj.sh  <span class="si">${</span><span class="nv">IP_gl</span><span class="si">}</span>:/weblogic/user_projects/scripts
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m前端应用抽取完毕。\n\033[0m&#34;</span>
+<span class="k">done</span>
+
+
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[32m开始安装后端应用：\n\033[0m&#34;</span>
+<span class="k">while</span> <span class="nb">true</span>
+<span class="k">do</span>
+    <span class="nb">read</span> -p <span class="s2">&#34;请输入【后端】服务器台数(注意：只能是1/2/3/4四种情况之一)：&#34;</span> number_hd
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$number_hd</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;1&#34;</span> -a <span class="s2">&#34;</span><span class="nv">$number_hd</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;2&#34;</span> -a <span class="s2">&#34;</span><span class="nv">$number_hd</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;3&#34;</span> -a <span class="s2">&#34;</span><span class="nv">$number_hd</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;4&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;输入服务器台数\033[31m【</span><span class="nv">$number_hd</span><span class="s2">】\033[0m，输入有误，需要重新输入。&#34;</span>
+        <span class="k">continue</span>
+    <span class="k">fi</span>   
+    <span class="nb">echo</span> -e <span class="s2">&#34;设置【后端】服务器\033[32m【</span><span class="nv">$number_hd</span><span class="s2">】\033[0m台。&#34;</span>
+    <span class="nb">read</span> -p <span class="s2">&#34;请确认设置是否正确？正确输入Y，否则输入N。&#34;</span> yn
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;Y&#34;</span> -o  <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;y&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nv">yn</span><span class="o">=</span>
+        <span class="nb">break</span>
+    <span class="k">else</span>
+        <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&#34;</span>
+        <span class="nv">yn</span><span class="o">=</span>
+        <span class="k">continue</span>
+    <span class="k">fi</span>
+<span class="k">done</span>
+
+<span class="k">for</span> <span class="o">((</span> <span class="nv">i</span><span class="o">=</span>1<span class="p">;</span> i&lt;<span class="o">=</span><span class="nv">$number_hd</span><span class="p">;</span> <span class="nv">i</span><span class="o">=</span>i+1 <span class="o">))</span>
+<span class="k">do</span>
+	<span class="k">while</span> <span class="nb">true</span>
+    <span class="k">do</span>
+        <span class="nb">read</span> -p <span class="s2">&#34;请输入【后端】服务器</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">的IP：&#34;</span> IP_hd
+        <span class="nb">echo</span> -e <span class="s2">&#34;输入的【后端】服务器</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">的IP为：\033[32m【</span><span class="si">${</span><span class="nv">IP_hd</span><span class="si">}</span><span class="s2">】\033[0m&#34;</span> 
+        <span class="nb">read</span> -p <span class="s2">&#34;请确认是否正确？正确输入Y，否则输入N。&#34;</span> yn
+        <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;Y&#34;</span> -o  <span class="s2">&#34;</span><span class="nv">$yn</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="s2">&#34;y&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+            <span class="nv">yn</span><span class="o">=</span>
+            <span class="nb">break</span>
+        <span class="k">else</span>
+            <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&#34;</span>
+            <span class="nv">yn</span><span class="o">=</span>
+        <span class="k">fi</span>
+    <span class="k">done</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;【后端】服务器</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2"> (IP：</span><span class="si">${</span><span class="nv">IP_hd</span><span class="si">}</span><span class="s2">)包含应用为：&#34;</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;个税核心：gshx0</span>$<span class="s2">[ i ]_domain、gshx0</span>$<span class="s2">[ i + number_hd ]_domain；个税工作流：gswf0</span>$<span class="s2">[ i ]_domain；个税间接登记：gsjjdj0</span>$<span class="s2">[ i ]_domain&#34;</span>
+    <span class="nb">echo</span> -e <span class="s2">&#34;开始抽取需要的domain到</span><span class="si">${</span><span class="nv">IP_hd</span><span class="si">}</span><span class="s2">:/weblogic/user_projects/domains，请耐心等待。&#34;</span>
+	scp -r <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/domains/gshx0$<span class="o">[</span> i <span class="o">]</span>_domain <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/domains/gshx0$<span class="o">[</span> i + number_hd <span class="o">]</span>_domain <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/domains/gswf0$<span class="o">[</span> i <span class="o">]</span>_domain <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/domains/gsjjdj0$<span class="o">[</span> i <span class="o">]</span>_domain <span class="si">${</span><span class="nv">IP_hd</span><span class="si">}</span>:/weblogic/user_projects/domains
+	scp -r <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/scripts/*-gshx.sh <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/scripts/*-gswf.sh <span class="si">${</span><span class="nv">INITIAL_PATH</span><span class="si">}</span>/user_projects/scripts/*-gsjjdj.sh <span class="si">${</span><span class="nv">IP_gl</span><span class="si">}</span>:/weblogic/user_projects/scripts
+    <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m后端应用抽取完毕。\n\033[0m&#34;</span>
+<span class="k">done</span>
+
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[32m安装完毕。\n\033[0m&#34;</span>
+<span class="nb">echo</span> -e <span class="s2">&#34;\033[31m请根据说明文档继续手工修改某些配置。\n\033[0m&#34;</span>
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-03-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Linux/">Linux</a>
+          <a href="/tags/Bash/">Bash</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2019/03/31/migrate-blog-domain/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">博客域名迁移</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2019/03/30/useful-linux-commands/">
+            <span class="next-text nav-default">常用Linux命令集锦</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

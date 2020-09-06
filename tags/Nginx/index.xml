@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nginx on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/Nginx/</link>
+    <description>Recent content in Nginx on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 31 Mar 2019 01:00:56 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/Nginx/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>博客域名迁移</title>
+      <link>https://suncle.me/2019/03/31/migrate-blog-domain/</link>
+      <pubDate>Sun, 31 Mar 2019 01:00:56 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/03/31/migrate-blog-domain/</guid>
+      <description>&lt;p&gt;突然就想给本站换个域名了，那么就动手了&lt;/p&gt;
+&lt;p&gt;目标：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;网站使用Git Hooks自动部署到VPS，&lt;/li&gt;
+&lt;li&gt;nginx解析域名到VPS，并开启https和http2&lt;/li&gt;
+&lt;li&gt;老域名 &lt;code&gt;flowsnow.net&lt;/code&gt; 301永久重定向到新域名 &lt;code&gt;suncle.me&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;更改Google收录和Baidu收录索引，尽可能少的影响权重&lt;/li&gt;
+&lt;li&gt;使用valine评论系统，迁移disqus评论数据到valine&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书</title>
+      <link>https://suncle.me/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/</link>
+      <pubDate>Thu, 30 Mar 2017 15:49:46 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/</guid>
+      <description>&lt;h1 id=&#34;lets-encrypt&#34;&gt;Let&amp;rsquo;s-Encrypt&lt;/h1&gt;
+&lt;p&gt;为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s-Encrypt&lt;/a&gt;，本文即将介绍，Let&amp;rsquo;s-Encrypt大法好。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://caddyserver.com/&#34;&gt;caddy&lt;/a&gt;，原生支持 HTTP/2，自动创建 &lt;a href=&#34;http://www.appinn.com/use-letsencrypt-with-nginx/&#34;&gt;Let’s Encrypt&lt;/a&gt; 证书，非常简单易用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;安装&#34;&gt;安装&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;yum install epel-release -y
+yum install certbot -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;配置&#34;&gt;配置&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--webroot&lt;/code&gt;表示以webroot模式运行，此处我们不选择standalone模式&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-w /www/html&lt;/code&gt;表示站点根目录在/www/html&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-d suncle.me -d www.suncle.me&lt;/code&gt;表示为@主机和www主机生成共同的证书&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;按照提示操作成功后，提示：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will
+   expire on 2017-06-28. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run &amp;#34;certbot
+   renew&amp;#34;
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let&amp;#39;s Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>CentOS7-Nginx编译安装</title>
+      <link>https://suncle.me/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Thu, 30 Mar 2017 14:29:45 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</guid>
+      <description>&lt;h1 id=&#34;安装编译环境&#34;&gt;安装编译环境&lt;/h1&gt;
+&lt;p&gt;需先安装好编译环境make，gcc和g++ 开发库&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;yum -y install gcc automake autoconf libtool make
+yum install gcc gcc-c++
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id=&#34;安装pcre&#34;&gt;安装pcre&lt;/h1&gt;
+&lt;p&gt;pcre(Perl Compatible Regular Expressions)： perl 兼容的正则表达式库。&lt;/p&gt;
+&lt;p&gt;以下各编译安装的源码包均放在&lt;code&gt;/usr/local/src&lt;/code&gt;下，Nginx依赖pcre是为了重写rewrite。&lt;/p&gt;
+&lt;p&gt;从ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/下载pcre包，不宜太新，推荐使用pcre8.39或8.40，太新的pcre版本Nginx不支持。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /usr/local/src
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.gz
+tar -zxvf pcre-8.39.tar.gz
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; pcre-8.39
+./configure
+make
+make install
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

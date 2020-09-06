@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>多电脑 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%A4%9A%E7%94%B5%E8%84%91/</link>
+    <description>Recent content in 多电脑 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 Mar 2016 20:23:24 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%A4%9A%E7%94%B5%E8%84%91/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hexo博客换电脑步骤</title>
+      <link>https://suncle.me/2016/03/16/Hexo%E5%8D%9A%E5%AE%A2%E6%8D%A2%E7%94%B5%E8%84%91%E6%AD%A5%E9%AA%A4/</link>
+      <pubDate>Wed, 16 Mar 2016 20:23:24 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/Hexo%E5%8D%9A%E5%AE%A2%E6%8D%A2%E7%94%B5%E8%84%91%E6%AD%A5%E9%AA%A4/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;http://upload.chinaz.com/2015/1016/1444964380585.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;hexo博客固然好，但是在多个电脑上怎么同步写博客呢？&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>事务 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E4%BA%8B%E5%8A%A1/</link>
+    <description>Recent content in 事务 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 19 Dec 2019 19:42:19 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E4%BA%8B%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>记录一次mybatis缓存和事务传播行为导致ut挂的排查过程</title>
+      <link>https://suncle.me/2019/12/19/record-a-troubleshooting-process-of-ut-hanging-caused-by-mybatis-cache-and-transaction-propagation/</link>
+      <pubDate>Thu, 19 Dec 2019 19:42:19 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/12/19/record-a-troubleshooting-process-of-ut-hanging-caused-by-mybatis-cache-and-transaction-propagation/</guid>
+      <description>&lt;p&gt;记录一次mybatis缓存和事务传播行为导致ut挂的排查过程&lt;/p&gt;
+&lt;h2 id=&#34;起因&#34;&gt;起因&lt;/h2&gt;
+&lt;p&gt;rhea项目有两个ut一直都是挂的，之前也经过几个同事排查过，但是都没有找到解决办法，慢慢的这个问题就搁置了。因为之前负责rhea项目的同事离职，我临时接手了这个项目，刚好最近来了一个新同事在做新的功能开发的时候遇到了这个问题，于是我就接了一个锅，最终证明这个锅很好玩。&lt;/p&gt;
+&lt;p&gt;rhea是一个典型的使用mybatis orm的springboot项目，我们使用h2内存数据库做单元测试，每个单元测试都在一个事务内，都由Transactional进行注解。testGetBGWechatAccountByOpenid这个ut的核心调用链如下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/troubleshoot-a-problem-caused-by-mybatis-cache/call-chain.jpg&#34; alt=&#34;调用链&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>事务Transaction</title>
+      <link>https://suncle.me/2016/03/23/%E4%BA%8B%E5%8A%A1Transaction/</link>
+      <pubDate>Wed, 23 Mar 2016 11:00:22 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/23/%E4%BA%8B%E5%8A%A1Transaction/</guid>
+      <description>&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/cd/E11882_01/server.112/e40540/transact.htmhttps://docs.oracle.com/cd/E11882_01/server.112/e40540/transact.htm&#34; rel=&#34;nofollow&#34;&gt;Transactions&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/junmail/article/details/5556561&#34;&gt;关于Oracle事务的总结&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;什么是事务&#34;&gt;什么是事务？&lt;/h2&gt;
+&lt;p&gt;事务(Transaction)是访问并可能更新数据库中各种&lt;a href=&#34;http://baike.baidu.com/view/178581.htm&#34;&gt;数据项&lt;/a&gt;的一个程序执行单元(unit)。事务由事务开始(&lt;strong&gt;begin transaction&lt;/strong&gt;)和事务结束(&lt;strong&gt;end transaction&lt;/strong&gt;)之间执行的全体操作组成。&lt;/p&gt;
+&lt;h2 id=&#34;事务的属性-acid&#34;&gt;事务的属性-ACID&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;原子性（Atomicity）&lt;/strong&gt;-事务的原子性强调了一个事物是一个逻辑工作单元，是一个整体，是不可分割的。一个事务所包含的操作要么全部做，要不全部不做。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;一致性（Consistency）&lt;/strong&gt;-一个事务执行一项数据库操作，事务使数据库从一种一致性的状态变换成另一种一致性状态。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;隔离性（Isolation）&lt;/strong&gt;-在事务未提交前，它操作的数据，对其他用户不可见。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;持久性（Durability）&lt;/strong&gt;-一旦事务成功完成，该事务对数据库所施加的所有更新都是永久的。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;redo日志&amp;ndash;提交的事务被永久的记录到redo日志中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

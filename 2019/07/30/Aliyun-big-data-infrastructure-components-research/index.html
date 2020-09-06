@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>阿里云大数据基础组件调研 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="阿里云大数据基础组件调研
+EMR 阿里云 Elastic MapReduce（E-MapReduce）是运行在阿里云平台上的一种大数据处理的系统解决方案。
+ E-MapReduce_大数据处理平台解决方案_集群管理解决方案 – 阿里云 E-MapReduce-阿里云 AWS | Amazon EMR | 定价 费用组成_产品定价_E-MapReduce-阿里云 " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2019/07/30/Aliyun-big-data-infrastructure-components-research/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="阿里云大数据基础组件调研" />
+<meta property="og:description" content="阿里云大数据基础组件调研
+EMR
+阿里云 Elastic MapReduce（E-MapReduce）是运行在阿里云平台上的一种大数据处理的系统解决方案。
+
+E-MapReduce_大数据处理平台解决方案_集群管理解决方案 – 阿里云
+E-MapReduce-阿里云
+AWS | Amazon EMR | 定价
+费用组成_产品定价_E-MapReduce-阿里云
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2019/07/30/Aliyun-big-data-infrastructure-components-research/" />
+<meta property="article:published_time" content="2019-07-30T14:34:32+00:00" />
+<meta property="article:modified_time" content="2019-07-30T14:34:32+00:00" />
+<meta itemprop="name" content="阿里云大数据基础组件调研">
+<meta itemprop="description" content="阿里云大数据基础组件调研
+EMR
+阿里云 Elastic MapReduce（E-MapReduce）是运行在阿里云平台上的一种大数据处理的系统解决方案。
+
+E-MapReduce_大数据处理平台解决方案_集群管理解决方案 – 阿里云
+E-MapReduce-阿里云
+AWS | Amazon EMR | 定价
+费用组成_产品定价_E-MapReduce-阿里云
+">
+<meta itemprop="datePublished" content="2019-07-30T14:34:32+00:00" />
+<meta itemprop="dateModified" content="2019-07-30T14:34:32+00:00" />
+<meta itemprop="wordCount" content="3960">
+
+
+
+<meta itemprop="keywords" content="Aliyun,BigData," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="阿里云大数据基础组件调研"/>
+<meta name="twitter:description" content="阿里云大数据基础组件调研
+EMR
+阿里云 Elastic MapReduce（E-MapReduce）是运行在阿里云平台上的一种大数据处理的系统解决方案。
+
+E-MapReduce_大数据处理平台解决方案_集群管理解决方案 – 阿里云
+E-MapReduce-阿里云
+AWS | Amazon EMR | 定价
+费用组成_产品定价_E-MapReduce-阿里云
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">阿里云大数据基础组件调研</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-07-30 </span>
+        <div class="post-category">
+            <a href="/categories/BigData/"> BigData </a>
+            </div>
+          <span class="more-meta"> 约 3960 字 </span>
+          <span class="more-meta"> 预计阅读 8 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#emr">EMR</a>
+      <ul>
+        <li><a href="#组件">组件</a></li>
+        <li><a href="#价格">价格</a>
+          <ul>
+            <li><a href="#付费配置">付费配置</a></li>
+            <li><a href="#包年包月">包年包月</a></li>
+            <li><a href="#按量付费">按量付费</a></li>
+            <li><a href="#结论">结论</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#maxcompute">MaxCompute</a></li>
+    <li><a href="#实时计算">实时计算</a></li>
+    <li><a href="#olap">OLAP</a>
+      <ul>
+        <li><a href="#分析型数据库mysql版">分析型数据库MySQL版</a></li>
+        <li><a href="#分析型数据库postgresql版">分析型数据库PostgreSQL版</a></li>
+        <li><a href="#hybriddb-for-mysql-原petadata">HybridDB for MySQL (原PetaData)</a></li>
+        <li><a href="#data-lake-analytics">Data Lake Analytics</a></li>
+        <li><a href="#结论-1">结论</a></li>
+        <li><a href="#列式数据库更适合olap场景的原因">列式数据库更适合OLAP场景的原因？</a>
+          <ul>
+            <li><a href="#inputoutput">Input/output</a></li>
+            <li><a href="#cpu">CPU</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>阿里云大数据基础组件调研</p>
+<h1 id="emr">EMR</h1>
+<p>阿里云 Elastic MapReduce（E-MapReduce）是运行在阿里云平台上的一种大数据处理的系统解决方案。</p>
+<ul>
+<li><a href="https://www.aliyun.com/product/emapreduce?spm=5176.12825654.eofdhaal5.146.e9392c4aO4b222">E-MapReduce_大数据处理平台解决方案_集群管理解决方案 – 阿里云</a></li>
+<li><a href="https://help.aliyun.com/product/28066.html?spm=a2c4g.750001.list.183.6c137b13gTnbYq">E-MapReduce-阿里云</a></li>
+<li><a href="https://amazonaws-china.com/cn/emr/pricing/?nc=sn&amp;loc=4">AWS | Amazon EMR | 定价</a></li>
+<li><a href="https://help.aliyun.com/document_detail/34946.html?spm=a2c4g.11186623.6.548.70a440ac4LBjI0">费用组成_产品定价_E-MapReduce-阿里云</a></li>
+</ul>
+<h2 id="组件">组件</h2>
+<p>阿里云EMR包含的组件（以EMR-3.20.0为例）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">版本</th>
+<th align="left">EMR-3.19.1</th>
+<th align="left">EMR-3.20.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">发布时间</td>
+<td align="left">2019.4</td>
+<td align="left">2019.5</td>
+</tr>
+<tr>
+<td align="left">Hadoop</td>
+<td align="left">2.8.5</td>
+<td align="left">2.8.5</td>
+</tr>
+<tr>
+<td align="left">Knox</td>
+<td align="left">1.1.0</td>
+<td align="left">1.1.0</td>
+</tr>
+<tr>
+<td align="left">ApacheDS</td>
+<td align="left">2.0.0</td>
+<td align="left">2.0.0</td>
+</tr>
+<tr>
+<td align="left">Spark</td>
+<td align="left">2.4.1</td>
+<td align="left">2.4.2</td>
+</tr>
+<tr>
+<td align="left">Hive</td>
+<td align="left">3.1.1</td>
+<td align="left">3.1.1</td>
+</tr>
+<tr>
+<td align="left">Tez</td>
+<td align="left">0.9.1</td>
+<td align="left">0.9.1</td>
+</tr>
+<tr>
+<td align="left">Pig</td>
+<td align="left">0.14.0</td>
+<td align="left">0.14.0</td>
+</tr>
+<tr>
+<td align="left">Sqoop</td>
+<td align="left">1.4.7</td>
+<td align="left">1.4.7</td>
+</tr>
+<tr>
+<td align="left">YARN</td>
+<td align="left">2.8.5</td>
+<td align="left">2.8.5</td>
+</tr>
+<tr>
+<td align="left">HDFS</td>
+<td align="left">2.8.5</td>
+<td align="left">2.8.5</td>
+</tr>
+<tr>
+<td align="left">Flink</td>
+<td align="left">1.7.2</td>
+<td align="left">1.7.2</td>
+</tr>
+<tr>
+<td align="left">Druid</td>
+<td align="left">0.13.0</td>
+<td align="left">0.13.0</td>
+</tr>
+<tr>
+<td align="left">HBase</td>
+<td align="left">1.4.9</td>
+<td align="left">1.4.9</td>
+</tr>
+<tr>
+<td align="left">Phoenix</td>
+<td align="left">4.14.1</td>
+<td align="left">4.14.1</td>
+</tr>
+<tr>
+<td align="left">Zookeeper</td>
+<td align="left">3.4.13</td>
+<td align="left">3.4.13</td>
+</tr>
+<tr>
+<td align="left">Livy</td>
+<td align="left">0.60.</td>
+<td align="left">0.60.</td>
+</tr>
+<tr>
+<td align="left">Presto</td>
+<td align="left">0.213</td>
+<td align="left">0.213</td>
+</tr>
+<tr>
+<td align="left">Storm</td>
+<td align="left">1.2.2</td>
+<td align="left">1.2.2</td>
+</tr>
+<tr>
+<td align="left">Impala</td>
+<td align="left">2.12.2</td>
+<td align="left">2.12.2</td>
+</tr>
+<tr>
+<td align="left">Flume</td>
+<td align="left">1.8.0</td>
+<td align="left">1.8.0</td>
+</tr>
+<tr>
+<td align="left">Hue</td>
+<td align="left">4.1.0</td>
+<td align="left">4.1.0</td>
+</tr>
+<tr>
+<td align="left">Oozie</td>
+<td align="left">4.2.0</td>
+<td align="left">5.1.0</td>
+</tr>
+<tr>
+<td align="left">Zeppelin</td>
+<td align="left">0.8.0</td>
+<td align="left">0.8.1</td>
+</tr>
+<tr>
+<td align="left">Ranger</td>
+<td align="left">1.2.0</td>
+<td align="left">1.2.0</td>
+</tr>
+<tr>
+<td align="left">Ganglia</td>
+<td align="left">3.7.2</td>
+<td align="left">3.7.2</td>
+</tr>
+<tr>
+<td align="left">OS</td>
+<td align="left">CentOS 7.4</td>
+<td align="left">CentOS 7.4</td>
+</tr>
+<tr>
+<td align="left">Tensorflow</td>
+<td align="left"></td>
+<td align="left">1.8.0</td>
+</tr>
+<tr>
+<td align="left">Kafka</td>
+<td align="left">1.1.1</td>
+<td align="left">2.11</td>
+</tr>
+<tr>
+<td align="left">Superset</td>
+<td align="left">0.28.1</td>
+<td align="left">0.28.1</td>
+</tr>
+<tr>
+<td align="left">Jupyter</td>
+<td align="left"></td>
+<td align="left">4.4.0</td>
+</tr>
+<tr>
+<td align="left">Analytics Zoo</td>
+<td align="left"></td>
+<td align="left">0.2.0</td>
+</tr>
+</tbody>
+</table>
+<p>不清楚的组件说明：</p>
+<ol>
+<li>Oozie：Oozie是一个用于管理Apache Hadoop的任务的工作流调度系统，类似于airflow，都是用DAG</li>
+<li>Livy：Apache Livy是一个通过REST接口和Spark集群交互的服务</li>
+<li>Flink：Apache Flink可以替代MapReduce，并在很多方面对其进行改进。 除了其他功能之外，Flink还提供了更好的性能，并为Java和Scala提供了易用的API</li>
+<li>Zeppelin：Apache Zeppelin是一个让交互式数据分析变得可行的基于网页的notebook。Zeppelin提供了数据可视化的框架</li>
+<li>Ranger：Apache Ranger是一个集中式安全管理框架, 解决细颗粒度的授权和审计等问题</li>
+<li>Ganglia：Ganglia是一种可伸缩的分布式监控系统，广泛用于监控hadoop相关指标</li>
+<li>Impala：Apache Impala是一个开源的大规模并行处理(MPP) SQL查询引擎(数据存储在hadoop上)。但是单表查询速度慢于Presto，可以不用考虑</li>
+<li>Phoenix：Apache Phoenix是一个开源的、大规模并行关系数据库引擎（支持对HBase做OLTP处理）</li>
+<li>Knox：Apache Hadoop生态系统中的REST API和应用程序网关</li>
+<li>Pig：Pig是一个高级语言平台，用于分析和查询存储在HDFS中的大型数据集。 Pig中使用的语言称为PigLatin</li>
+<li>Flume：Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统</li>
+<li>Kerberos认证：E-MapReduce 从 2.7.x/3.5.x 版本开始支持创建安全类型的集群，即集群中的开源组件以 Kerberos 的安全模式启动，在这种安全环境下只有经过认证的客户端（Client）才能访问集群的服务（Service，如 HDFS）。</li>
+<li>Druid：Druid 是 Metamarkets 公司（一家为在线媒体或广告公司提供数据分析服务的公司）推出的一个分布式内存实时分析系统，用于解决如何在大规模数据集下进行快速的、交互式的查询和分析。</li>
+<li>Superset：Apache Superset是一个现代的、企业级商业智能web应用程序(by Airbnb)</li>
+<li>Analytics Zoo：在Spark和BigDL上快速构建深度学习应用的端到端的分析+AI平台</li>
+</ol>
+<h2 id="价格">价格</h2>
+<p>目前使用的AWS的EMR的生产机器配置为</p>
+<ul>
+<li>1 Master 和 4 Slave：1CPU-4Core-8vCore-32G-500G SSD</li>
+</ul>
+<p>因为Master节点主要是存储元数据和一些主要组件的log以及做一些airflow等调度工作，不负责主要的计算任务，因此CPU可以比Slave节点低，但是内存应该比Slave高，因为元数据都是存在内存中。在之前的AWS EMR 32G环境中出现过OOM，同时阿里云也支持不同的节点使用不同的配置，还支持双Master配置。</p>
+<ul>
+<li><strong>在购买创建集群时一定记得勾选高可用选项，勾选后就会有双Master</strong></li>
+</ul>
+<p>最终，以2Master 和 4 Slave的配置进行价格计算：</p>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>机器型号</th>
+<th>Cpu(vCore)</th>
+<th>Mem(GB)</th>
+<th>Disk(SSD GB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Master1</td>
+<td>ecs.g5.2xlarge</td>
+<td>8</td>
+<td>32</td>
+<td>120+500</td>
+</tr>
+<tr>
+<td>Master2</td>
+<td>ecs.g5.2xlarge</td>
+<td>8</td>
+<td>32</td>
+<td>120+500</td>
+</tr>
+<tr>
+<td>Slave1</td>
+<td>ecs.g5.2xlarge</td>
+<td>8</td>
+<td>32</td>
+<td>120+100*4</td>
+</tr>
+<tr>
+<td>Slave2</td>
+<td>ecs.g5.2xlarge</td>
+<td>8</td>
+<td>32</td>
+<td>120+100*4</td>
+</tr>
+<tr>
+<td>Slave3</td>
+<td>ecs.g5.2xlarge</td>
+<td>8</td>
+<td>32</td>
+<td>120+100*4</td>
+</tr>
+<tr>
+<td>Slave4</td>
+<td>ecs.g5.2xlarge</td>
+<td>8</td>
+<td>32</td>
+<td>120+100*4</td>
+</tr>
+</tbody>
+</table>
+<h3 id="付费配置">付费配置</h3>
+<p>包年包月是一次性支付一个长期的费用，价格相对来说会比较便宜，特别是包三年的时候折扣会很大。按量付费是根据实际使用的小时数来支付费用，每个小时计一次费用。适合与短期的测试或者是灵活的动态任务，价格相对来说会贵一些。</p>
+<ul>
+<li>按量付费</li>
+<li>包年包月
+<ul>
+<li><strong>付费时长</strong>：您可选择购买 1 个月、2 个月、3 个月、6 个月、9 个月、1 年、2 年、3 年。包年包月如果<strong>购买一年则会在原价（12个月）的基础上打 85 折</strong>。</li>
+<li><strong>自动续费</strong>：到期前7天执行自动续费操作，续费时长为一个月。</li>
+</ul>
+</li>
+</ul>
+<h3 id="包年包月">包年包月</h3>
+<p><strong>AWS EMR</strong></p>
+<p>AWS EMR是按年购买的，价格由两部分组成：EC2 + 产品费和流量费</p>
+<p>目前AWS EMR生产5台机器测试3台机器，每台机器一年15000￥</p>
+<p>AMS EMR每个月的产品费账单价格是3600￥，所以生产的5台机器占用2250￥</p>
+<p>所以AWS EMR生产环境5台机器一年的价格是<code>15000 * 5 + 2250 * 12 = 102000</code></p>
+<p><strong>Aliyun EMR</strong></p>
+<p>阿里云EMR 双Master的价格为：</p>
+<ol>
+<li>
+<p>1年：￥88944省: ￥35354.88 (单Master时的价格为73400)</p>
+</li>
+<li>
+<p>2年：￥143904省: ￥104693.76</p>
+</li>
+<li>
+<p>3年：￥158904省: ￥213992.64</p>
+</li>
+</ol>
+<h3 id="按量付费">按量付费</h3>
+<p>现价: ￥15.868/小时省: ￥2.124/小时</p>
+<ol>
+<li>
+<p>1年<code>365*24*15.868=139003.68</code></p>
+</li>
+<li>
+<p>2年<code>139003.68 * 2 =278007.36 </code></p>
+</li>
+<li>
+<p>3年<code>139003.68 * 3 = 417011.04</code></p>
+</li>
+</ol>
+<h3 id="结论">结论</h3>
+<p>选择包年购买的价格比按量购买的价格低很多，相同配置下Aliyun和Aws的价格几乎相同，但是Aliyun支持双Master，因此选用Aliyun支持双Master保证HA</p>
+<h1 id="maxcompute">MaxCompute</h1>
+<p>大数据计算服务（MaxCompute，原名ODPS）是一种快速、完全托管的EB级数据仓库一站式解决方案。</p>
+<p>和AWS的RedShift类似</p>
+<ul>
+<li><a href="https://www.aliyun.com/product/odps?spm=5176.12825654.eofdhaal5.143.e9392c4aO4b222">MaxCompute_大数据计算服务_阿里云数加大数据仓库解决方案</a></li>
+<li><a href="https://help.aliyun.com/product/27797.html?spm=a2c4g.750001.list.182.6c137b13gTnbYq">MaxCompute-阿里云</a></li>
+</ul>
+<p>有EMR的情况下意义不大</p>
+<h1 id="实时计算">实时计算</h1>
+<p>阿里云实时计算是一套基于Apache Flink构建的一站式、高性能实时大数据处理平台，广泛适用于流式数据处理、离线数据处理、DataLake计算等场景。(本质是Flink加上一些运维管理和监控报警)</p>
+<ul>
+<li><a href="https://data.aliyun.com/product/sc?spm=5176.12825654.eofdhaal5.144.e9392c4aO4b222">阿里云流计算_实时计算_流式数据分析_流式分析_实时数据分析平台</a></li>
+<li><a href="https://help.aliyun.com/product/45029.html?spm=a2c4g.750001.list.185.6c137b13gTnbYq">实时计算-阿里云</a></li>
+</ul>
+<p>有EMR的情况下意义不大</p>
+<h1 id="olap">OLAP</h1>
+<p>Online analytical processing</p>
+<h2 id="分析型数据库mysql版">分析型数据库MySQL版</h2>
+<ul>
+<li><a href="https://www.aliyun.com/product/ads?spm=5176.10695662.cwnn_jpze.65.6728269bCvBINR">分析型数据库ADB-analyticDB-数据仓库-在线实时数据分析-大数据集群-MySQL-海量数据-阿里云购买</a></li>
+<li><a href="https://help.aliyun.com/product/92664.html?spm=a2c4g.750001.list.42.7ab07b13j72Vzz">分析型数据库MySQL版</a></li>
+</ul>
+<h2 id="分析型数据库postgresql版">分析型数据库PostgreSQL版</h2>
+<ul>
+<li><a href="https://www.aliyun.com/product/gpdb?spm=5176.10695662.cwnn_jpze.66.6728269bCvBINR">AnalyticDB for PostgreSQL-分析型数据库-PB级实时数据仓储方案 - 阿里云</a></li>
+<li><a href="https://help.aliyun.com/product/35364.html?spm=a2c4g.750001.list.43.7ab07b13j72Vzz">分析型数据库PostgreSQL版</a></li>
+</ul>
+<h2 id="hybriddb-for-mysql-原petadata">HybridDB for MySQL (原PetaData)</h2>
+<p>云数据库HybridDB for MySQL （原名PetaData）是同时支持海量数据在线事务（OLTP）和在线分析（OLAP）的HTAP（Hybrid Transaction/Analytical Processing）关系型数据库。</p>
+<p>理论上来说，啥都行的结果就是啥都不行</p>
+<ul>
+<li><a href="https://www.aliyun.com/product/petadata?spm=5176.10695662.cwnn_jpze.67.6728269bCvBINR">云数据库HybridDB for MySQL_产品详情_阿里云</a></li>
+<li><a href="https://help.aliyun.com/product/26320.html?spm=a2c4g.750001.list.44.7ab07b13j72Vzz">HybridDB for MySQL</a></li>
+</ul>
+<h2 id="data-lake-analytics">Data Lake Analytics</h2>
+<p>Data Lake Analytics是无服务器（Serverless）化的云上交互式查询分析服务。无需ETL，就可通过此服务在云上通过标准JDBC直接对阿里云OSS、TableStore的数据轻松进行查询和分析，以及无缝集成商业分析工具</p>
+<ul>
+<li><a href="https://www.aliyun.com/product/datalakeanalytics?spm=5176.10695662.cwnn_jpze.68.6728269bCvBINR">Data Lake Analytics_云上交互式数据查询分析服务_数据分析平台|系统 - 阿里云</a></li>
+<li><a href="https://help.aliyun.com/product/70174.html?spm=a2c4g.750001.list.188.7ab07b13j72Vzz">Data Lake Analytics</a></li>
+</ul>
+<h2 id="结论-1">结论</h2>
+<p>目前OLAP领域表现比较好的数据库都是列式的，阿里云提供的分析型数据都不是列式数据库，暂时不考虑使用阿里云的OLAP服务。</p>
+<p>so，在单表查询性能上暂时没有找到可以替代clickhouse的阿里云OLAP数据库，在初期clickhouse维护比较麻烦的情况下，对于性能查询不敏感的还是使用综合性能更好的presto+hive</p>
+<h2 id="列式数据库更适合olap场景的原因">列式数据库更适合OLAP场景的原因？</h2>
+<p>下面部分的解释原因来自于Clickhouse官网：</p>
+<p>列式数据库更适合于OLAP场景(对于大多数查询而言，处理速度至少提高了100倍)，下面详细解释了原因(通过图片更有利于直观理解)：</p>
+<p><strong>行式</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/Aliyun-big-data-infrastructure-components-research/row_oriented.gif" alt="Row oriented"></p>
+<p><strong>列式</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/Aliyun-big-data-infrastructure-components-research/column_oriented.gif" alt="Column oriented"></p>
+<p>看到差别了么？下面将详细介绍为什么会发生这种情况。</p>
+<h3 id="inputoutput">Input/output</h3>
+<ol>
+<li>针对分析类查询，通常只需要读取表的一小部分列。在列式数据库中你可以只读取你需要的数据。例如，如果只需要读取100列中的5列，这将帮助你最少减少20倍的I/O消耗。</li>
+<li>由于数据总是打包成批量读取的，所以压缩是非常容易的。同时数据按列分别存储这也更容易压缩。这进一步降低了I/O的体积。</li>
+<li>由于I/O的降低，这将帮助更多的数据被系统缓存。</li>
+</ol>
+<p>例如，查询“统计每个广告平台的记录数量”需要读取“广告平台ID”这一列，它在未压缩的情况下需要1个字节进行存储。如果大部分流量不是来自广告平台，那么这一列至少可以以十倍的压缩率被压缩。当采用快速压缩算法，它的解压速度最少在十亿字节(未压缩数据)每秒。换句话说，这个查询可以在单个服务器上以每秒大约几十亿行的速度进行处理。这实际上是当前实现的速度。</p>
+<h3 id="cpu">CPU</h3>
+<p>由于执行一个查询需要处理大量的行，因此在整个向量上执行所有操作将比在每一行上执行所有操作更加高效。同时这将有助于实现一个几乎没有调用成本的查询引擎。如果你不这样做，使用任何一个机械硬盘，查询引擎都不可避免的停止CPU进行等待。所以，在数据按列存储并且按列执行是很有意义的。</p>
+<p>有两种方法可以做到这一点：</p>
+<ol>
+<li>向量引擎：所有的操作都是为向量而不是为单个值编写的。这意味着多个操作之间的不再需要频繁的调用，并且调用的成本基本可以忽略不计。操作代码包含一个优化的内部循环。</li>
+<li>代码生成：生成一段代码，包含查询中的所有操作。</li>
+</ol>
+<p>这是不应该在一个通用数据库中实现的，因为这在运行简单查询时是没有意义的。但是也有例外，例如，MemSQL使用代码生成来减少处理SQL查询的延迟(只是为了比较，分析型数据库通常需要优化的是吞吐而不是延迟)。</p>
+<p>请注意，为了提高CPU效率，查询语言必须是声明型的(SQL或MDX)， 或者至少一个向量(J，K)。 查询应该只包含隐式循环，允许进行优化。</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-07-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Aliyun/">Aliyun</a>
+          <a href="/tags/BigData/">BigData</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2019/08/02/Comparison-of-the-Open-Source-OLAP-Systems-for-BigData/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">大数据OLAP系统比较</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/">
+            <span class="next-text nav-default">Clickhouse创建分布式表以及表引擎介绍</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用ab和wrk对腾讯CLS进行benchmark测试 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="使用ab和wrk对CLS进行benchmark测试 使用ab和wrk对腾讯云日志服务CLS进行压力测试，以此为例对ab和wrk进行说明
+ab ab，全称是apache benchmark，是apache官方推出的工具。该工具是用来测试Apache服务器的性能的。查看安装的apache的服务器能提供的服务能力，每秒可以处理多少次请求。ab 执行时常用的选项如下表：
+   选项 作用     -c 并发数， 一次发送的总请求数，默认是一次发一个请求。   -k 打开keep-alive，在一个HTTP Session中请求多次。默认是关闭的。   -n 请求数， 整个benchmark测试过程中需要发送的请求次数。默认是一次，默认情况下得到的性能参数没有代表性。   -t 最大时间，benchmark测试最长时间，默认没有限制。   -u 上传文件，PUT操作时使用，需要设置-T选项   -T 设置上传文件的Content-Type   -p postfile，指定包含post数据的文件   -r 当接收到socket错误的时候ab不退出   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用ab和wrk对腾讯CLS进行benchmark测试" />
+<meta property="og:description" content="使用ab和wrk对CLS进行benchmark测试
+使用ab和wrk对腾讯云日志服务CLS进行压力测试，以此为例对ab和wrk进行说明
+ab
+ab，全称是apache benchmark，是apache官方推出的工具。该工具是用来测试Apache服务器的性能的。查看安装的apache的服务器能提供的服务能力，每秒可以处理多少次请求。ab 执行时常用的选项如下表：
+
+
+
+选项
+作用
+
+
+
+
+-c
+并发数， 一次发送的总请求数，默认是一次发一个请求。
+
+
+-k
+打开keep-alive，在一个HTTP Session中请求多次。默认是关闭的。
+
+
+-n
+请求数， 整个benchmark测试过程中需要发送的请求次数。默认是一次，默认情况下得到的性能参数没有代表性。
+
+
+-t
+最大时间，benchmark测试最长时间，默认没有限制。
+
+
+-u
+上传文件，PUT操作时使用，需要设置-T选项
+
+
+-T
+设置上传文件的Content-Type
+
+
+-p
+postfile，指定包含post数据的文件
+
+
+-r
+当接收到socket错误的时候ab不退出
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/" />
+<meta property="article:published_time" content="2018-02-01T18:46:45+00:00" />
+<meta property="article:modified_time" content="2018-02-01T18:46:45+00:00" />
+<meta itemprop="name" content="使用ab和wrk对腾讯CLS进行benchmark测试">
+<meta itemprop="description" content="使用ab和wrk对CLS进行benchmark测试
+使用ab和wrk对腾讯云日志服务CLS进行压力测试，以此为例对ab和wrk进行说明
+ab
+ab，全称是apache benchmark，是apache官方推出的工具。该工具是用来测试Apache服务器的性能的。查看安装的apache的服务器能提供的服务能力，每秒可以处理多少次请求。ab 执行时常用的选项如下表：
+
+
+
+选项
+作用
+
+
+
+
+-c
+并发数， 一次发送的总请求数，默认是一次发一个请求。
+
+
+-k
+打开keep-alive，在一个HTTP Session中请求多次。默认是关闭的。
+
+
+-n
+请求数， 整个benchmark测试过程中需要发送的请求次数。默认是一次，默认情况下得到的性能参数没有代表性。
+
+
+-t
+最大时间，benchmark测试最长时间，默认没有限制。
+
+
+-u
+上传文件，PUT操作时使用，需要设置-T选项
+
+
+-T
+设置上传文件的Content-Type
+
+
+-p
+postfile，指定包含post数据的文件
+
+
+-r
+当接收到socket错误的时候ab不退出
+
+
+">
+<meta itemprop="datePublished" content="2018-02-01T18:46:45+00:00" />
+<meta itemprop="dateModified" content="2018-02-01T18:46:45+00:00" />
+<meta itemprop="wordCount" content="1964">
+
+
+
+<meta itemprop="keywords" content="benchmark,ab,wrk," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用ab和wrk对腾讯CLS进行benchmark测试"/>
+<meta name="twitter:description" content="使用ab和wrk对CLS进行benchmark测试
+使用ab和wrk对腾讯云日志服务CLS进行压力测试，以此为例对ab和wrk进行说明
+ab
+ab，全称是apache benchmark，是apache官方推出的工具。该工具是用来测试Apache服务器的性能的。查看安装的apache的服务器能提供的服务能力，每秒可以处理多少次请求。ab 执行时常用的选项如下表：
+
+
+
+选项
+作用
+
+
+
+
+-c
+并发数， 一次发送的总请求数，默认是一次发一个请求。
+
+
+-k
+打开keep-alive，在一个HTTP Session中请求多次。默认是关闭的。
+
+
+-n
+请求数， 整个benchmark测试过程中需要发送的请求次数。默认是一次，默认情况下得到的性能参数没有代表性。
+
+
+-t
+最大时间，benchmark测试最长时间，默认没有限制。
+
+
+-u
+上传文件，PUT操作时使用，需要设置-T选项
+
+
+-T
+设置上传文件的Content-Type
+
+
+-p
+postfile，指定包含post数据的文件
+
+
+-r
+当接收到socket错误的时候ab不退出
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用ab和wrk对腾讯CLS进行benchmark测试</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-02-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"> 工具使用 </a>
+            </div>
+          <span class="more-meta"> 约 1964 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#使用ab和wrk对cls进行benchmark测试">使用ab和wrk对CLS进行benchmark测试</a></li>
+    <li><a href="#ab">ab</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#注意事项">注意事项</a></li>
+        <li><a href="#使用示例">使用示例</a></li>
+        <li><a href="#结果分析">结果分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#wrk">wrk</a>
+      <ul>
+        <li><a href="#安装-1">安装</a></li>
+        <li><a href="#使用示例-1">使用示例</a></li>
+        <li><a href="#结果分析-1">结果分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="使用ab和wrk对cls进行benchmark测试">使用ab和wrk对CLS进行benchmark测试</h1>
+<p>使用ab和wrk对腾讯云日志服务CLS进行压力测试，以此为例对ab和wrk进行说明</p>
+<h1 id="ab">ab</h1>
+<p>ab，全称是apache benchmark，是apache官方推出的工具。该工具是用来测试Apache服务器的性能的。查看安装的apache的服务器能提供的服务能力，每秒可以处理多少次请求。ab 执行时常用的选项如下表：</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-c</td>
+<td>并发数， 一次发送的总请求数，默认是一次发一个请求。</td>
+</tr>
+<tr>
+<td>-k</td>
+<td>打开keep-alive，在一个HTTP Session中请求多次。默认是关闭的。</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>请求数， 整个benchmark测试过程中需要发送的请求次数。默认是一次，默认情况下得到的性能参数没有代表性。</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>最大时间，benchmark测试最长时间，默认没有限制。</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>上传文件，PUT操作时使用，需要设置-T选项</td>
+</tr>
+<tr>
+<td>-T</td>
+<td>设置上传文件的Content-Type</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>postfile，指定包含post数据的文件</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>当接收到socket错误的时候ab不退出</td>
+</tr>
+</tbody>
+</table>
+<h2 id="安装">安装</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">apt-get install apache2-utils
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="注意事项">注意事项</h2>
+<ul>
+<li>观察测试工具ab所在机器，以及被测试的前端机的CPU，内存，网络等都不超过最高限度的75%。</li>
+<li>测试中可能出现端口不足导致的测试失败</li>
+</ul>
+<p>需要调整内核参数以支持端口重用，在Linux平台下需要在<code>/etc/sysctl.conf</code>文件中添加如下内容</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_fin_timeout = 30
+kernel.printk = 7 4 1 7
+</code></pre></td></tr></table>
+</div>
+</div><p>然后运行<code>sudo sysctl –p</code>生效</p>
+<h2 id="使用示例">使用示例</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">ab -c <span class="m">50</span> -t <span class="m">60</span> -n <span class="m">300000</span> -k -T <span class="s1">&#39;application/x-protobuf&#39;</span> -p /tmp/post_data.txt -H <span class="s1">&#39;Host: ap-shanghai.cls.myqcloud.com&#39;</span> -H <span class="s1">&#39;Authorization: q-sign-algorithm=sha1&amp;q-ak=AKIDMfonbuXfqpcFicn3YrzwivMelfNwFWcW&amp;q-sign-time=1517472219;1517493819&amp;q-key-time=1517472219;1517493819&amp;q-header-list=content-type;host&amp;q-url-param-list=&amp;q-signature=4a4ed6ddc8ba1dfea73d2bee62def9dce8b0ca3c&#39;</span> http://ap-shanghai.cls.myqcloud.com/log
+</code></pre></td></tr></table>
+</div>
+</div><p>/tmp/post_data.txt数据为google protocol buffer格式的数据</p>
+<h2 id="结果分析">结果分析</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">This is ApacheBench, Version 2.3 &lt;$Revision: 1796539 $&gt;
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, https://www.apache.org/
+
+Benchmarking ap-shanghai.cls.myqcloud.com (be patient)
+Completed 30000 requests
+Completed 60000 requests
+Completed 90000 requests
+Completed 120000 requests
+Completed 150000 requests
+Completed 180000 requests
+Completed 210000 requests
+Finished 223877 requests
+
+
+Server Software:        openresty
+Server Hostname:        ap-shanghai.cls.myqcloud.com
+Server Port:            80
+
+Document Path:          /log
+Document Length:        0 bytes
+
+Concurrency Level:      50
+Time taken for tests:   60.001 seconds
+Complete requests:      223877
+Failed requests:        0
+Keep-Alive requests:    223027
+Total transferred:      38726471 bytes
+Total body sent:        108604595
+HTML transferred:       0 bytes
+Requests per second:    3731.24 [#/sec] (mean)
+Time per request:       13.400 [ms] (mean)
+Time per request:       0.268 [ms] (mean, across all concurrent requests)
+Transfer rate:          630.31 [Kbytes/sec] received
+                        1767.63 kb/s sent
+                        2397.94 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.5      0      34
+Processing:     9   13   3.8     13     164
+Waiting:        8   13   3.8     13     164
+Total:          9   13   3.8     13     164
+
+Percentage of the requests served within a certain time (ms)
+  50%     13
+  66%     14
+  75%     14
+  80%     14
+  90%     15
+  95%     17
+  98%     22
+  99%     26
+ 100%    164 (longest request)
+</code></pre></td></tr></table>
+</div>
+</div><p>从测试结果，我们可以看到</p>
+<ul>
+<li>在50个并发请求的情况下，请求60秒，平均每秒可以处理3731次（也就是说，客户端在这种压力下，看到的QPS为3731）</li>
+<li>平均每次请求处理的Latency为13.4ms</li>
+<li>由于开启了keep-alive，连接几乎不耗时间</li>
+<li>99%的请求都在26ms内完成，最长的请求是164ms</li>
+</ul>
+<p>使用腾讯云主机测试结果如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">This is ApacheBench, Version 2.3 &lt;$Revision: 1706008 $&gt;
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, https://www.apache.org/
+
+Benchmarking ap-shanghai.cls.myqcloud.com (be patient)
+
+Completed 30000 requests
+Completed 60000 requests
+Completed 90000 requests
+Completed 120000 requests
+Completed 150000 requests
+Completed 180000 requests
+Completed 210000 requests
+Completed 240000 requests
+Completed 270000 requests
+Completed 300000 requests
+Finished 300000 requests
+
+
+Server Software:        openresty
+Server Hostname:        ap-shanghai.cls.myqcloud.com
+Server Port:            80
+
+Document Path:          /log
+Document Length:        0 bytes
+
+Concurrency Level:      50
+Time taken for tests:   40.095 seconds
+Complete requests:      300000
+Failed requests:        0
+Keep-Alive requests:    298850
+Total transferred:      51894250 bytes
+Total body sent:        145500000
+HTML transferred:       0 bytes
+Requests per second:    7482.21 [#/sec] (mean)
+Time per request:       6.683 [ms] (mean)
+Time per request:       0.134 [ms] (mean, across all concurrent requests)
+Transfer rate:          1263.94 [Kbytes/sec] received
+                        3543.82 kb/s sent
+                        4807.77 kb/s total
+                       
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       6
+Processing:     4    7   2.9      6     157
+Waiting:        4    7   2.9      6     157
+Total:          4    7   2.9      6     157
+
+Percentage of the requests served within a certain time (ms)
+  50%      6
+  66%      7
+  75%      7
+  80%      8
+  90%      9
+  95%     10
+  98%     14
+  99%     18
+ 100%    157 (longest request)
+</code></pre></td></tr></table>
+</div>
+</div><p>从结果我们可以看到，QPS是非腾讯云主机的2倍，为7482</p>
+<h1 id="wrk">wrk</h1>
+<p>wrk是一个用来做HTTP benchmark测试的工具。可以产生显著的压力。</p>
+<h2 id="安装-1">安装</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">apt-get install libssl-dev
+git clone https://github.com/wg/wrk.git
+<span class="nb">cd</span> wrk
+make
+cp wrk /usr/sbin
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="使用示例-1">使用示例</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">wrk -c <span class="m">50</span> -d <span class="m">60</span> -t <span class="m">5</span> -s /tmp/wrk_post.lua http://ap-shanghai.cls.myqcloud.com
+</code></pre></td></tr></table>
+</div>
+</div><p>请求的内容在<code>/tmp/wrk_post.lua</code>中规定，有5个线程，开启的连接有50个，运行60秒</p>
+<p>其中<code>/tmp/wrk_post.lua</code>中的内容是</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-lua" data-lang="lua"><span class="n">request</span> <span class="o">=</span> <span class="kr">function</span><span class="p">()</span>
+  <span class="n">mypath</span> <span class="o">=</span> <span class="s2">&#34;/tmp/post_data.txt&#34;</span><span class="p">;</span>
+  <span class="kd">local</span> <span class="n">file</span> <span class="o">=</span> <span class="n">io.open</span><span class="p">(</span><span class="n">mypath</span><span class="p">,</span> <span class="s2">&#34;r&#34;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
+  <span class="kd">local</span> <span class="n">body</span> <span class="o">=</span> <span class="n">file</span><span class="p">:</span><span class="n">read</span><span class="p">(</span><span class="s2">&#34;*a&#34;</span><span class="p">);</span>      <span class="c1">-- 读取所有内容</span>
+  <span class="n">file</span><span class="p">:</span><span class="n">close</span><span class="p">();</span>
+  <span class="n">wrk.body</span> <span class="o">=</span> <span class="n">body</span>
+  <span class="n">path</span> <span class="o">=</span> <span class="s2">&#34;/log&#34;</span>
+  <span class="n">wrk.headers</span><span class="p">[</span><span class="s2">&#34;Content-Type&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;application/x-protobuf&#34;</span>
+  <span class="n">wrk.headers</span><span class="p">[</span><span class="s2">&#34;Host&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;ap-shanghai.cls.myqcloud.com&#34;</span>
+  <span class="n">wrk.headers</span><span class="p">[</span><span class="s2">&#34;Authorization&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;q-sign-algorithm=sha1&amp;q-ak=AKIDMfonbuXfqpcFicn3YrzwivMelfNwFWcW&amp;q-sign-time=1517472219;1517493819&amp;q-key-time=1517472219;1517493819&amp;q-header-list=content-type;host&amp;q-url-param-list=&amp;q-signature=4a4ed6ddc8ba1dfea73d2bee62def9dce8b0ca3c&#34;</span>
+  <span class="kr">return</span> <span class="n">wrk.format</span><span class="p">(</span><span class="s2">&#34;POST&#34;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="kr">end</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="结果分析-1">结果分析</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Running 1m test @ http://ap-shanghai.cls.myqcloud.com
+  5 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.91ms   25.52ms 880.85ms   98.05%
+    Req/Sec   745.32    105.11   848.00     94.79%
+  221561 requests in 1.00m, 36.55MB read
+Requests/sec:   3688.17
+Transfer/sec:    623.03KB
+</code></pre></td></tr></table>
+</div>
+</div><p>从测试结果，我们可以看到</p>
+<ul>
+<li>在5个并发请求的情况下，开启50个连接，请求60秒，平均每秒可以处理3688次（也就是说，客户端在这种压力下，看到的QPS为3688）</li>
+<li>平均每次请求处理的Latency为15.91ms</li>
+</ul>
+<p>使用腾讯云主机测试结果如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Running 1m test @ http://ap-shanghai.cls.myqcloud.com
+  5 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.77ms    3.42ms  90.45ms   94.82%
+    Req/Sec     1.53k   119.04     1.74k    79.27%
+  457574 requests in 1.00m, 75.48MB read
+Requests/sec:   7623.03
+Transfer/sec:      1.26MB
+</code></pre></td></tr></table>
+</div>
+</div><p>从结果我们可以看到，QPS是非腾讯云主机的2倍，为7623</p>
+<h1 id="总结">总结</h1>
+<p>以上就是用开源的benchmark工具来从客户端的角度来衡量所能获取的QPS以及Latency。但从客户端看到的性能会受到各种因素的影响，例如请求的方式，本机的资源（CPU，内存，网络），CLS的网络状况，CLS的负载等都会影响客户端看到的性能指标。需要根据实际情况来查看性能瓶颈是来自于CLS还是来自于本机。</p>
+<hr>
+<p>参考：</p>
+<ol>
+<li><a href="https://yq.aliyun.com/articles/35251">使用ab和wrk对OSS进行benchmark测试</a></li>
+</ol>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-02-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/benchmark/">benchmark</a>
+          <a href="/tags/ab/">ab</a>
+          <a href="/tags/wrk/">wrk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2018/02/06/Python-Google-Protocol-Buffer/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Python Google Protocol Buffer</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2018/02/01/HmacSHA1-vs-SHA1/">
+            <span class="next-text nav-default">HmacSHA1和原生SHA1的比较</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

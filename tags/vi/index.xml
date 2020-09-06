@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vi on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/vi/</link>
+    <description>Recent content in vi on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 10 Jan 2016 14:15:34 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/vi/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Linux vi的使用</title>
+      <link>https://suncle.me/2016/01/10/Linux-vi%E7%9A%84%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Sun, 10 Jan 2016 14:15:34 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/10/Linux-vi%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
+      <description>&lt;h1 id=&#34;linux-vi的使用&#34;&gt;Linux vi的使用&lt;/h1&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;vi模式转换&#34;&gt;vi模式转换&lt;/h2&gt;
+&lt;p&gt;经常使用的三种基本模式：命令模式(Command Mode)，输入模式(Input Mode)，末行模式(Last Line Mode)，其他的9种模式不做介绍，很少会使用。&lt;/p&gt;
+&lt;p&gt;三种基本模式的相互转换如下图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Flowsnowvi%E6%A8%A1%E5%BC%8F%E8%BD%AC%E6%8D%A2.jpg&#34; alt=&#34;vi模式转换&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

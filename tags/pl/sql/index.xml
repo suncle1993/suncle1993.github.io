@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>pl/sql on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/pl/sql/</link>
+    <description>Recent content in pl/sql on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    
+	<atom:link href="https://suncle.me/tags/pl/sql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>PL/SQL Developer连接本地Oracle 11g 64位数据库</title>
+      <link>https://suncle.me/2016/03/22/PL-SQL-Developer%E8%BF%9E%E6%8E%A5%E6%9C%AC%E5%9C%B0Oracle-11g-64%E4%BD%8D%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+      <pubDate>Tue, 22 Mar 2016 11:02:40 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/22/PL-SQL-Developer%E8%BF%9E%E6%8E%A5%E6%9C%AC%E5%9C%B0Oracle-11g-64%E4%BD%8D%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+      <description>&lt;h2 id=&#34;登陆plsql&#34;&gt;登陆PL/SQL&lt;/h2&gt;
+&lt;p&gt;假定本地电脑中已经安装了Oracle 11gR2数据库和PL/SQL developer。&lt;/p&gt;
+&lt;p&gt;如果没有安装可以在一下地址下载安装：&lt;/p&gt;
+&lt;p&gt;Oracle 11gR2数据库：&lt;a href=&#34;https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-win64soft-094461.html&#34;&gt;https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-win64soft-094461.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;PL/SQL developer(含注册机)：&lt;a href=&#34;https://pan.baidu.com/s/1kUfY8GB&#34;&gt;https://pan.baidu.com/s/1kUfY8GB&lt;/a&gt; 密码: 1ky8&lt;/p&gt;
+&lt;p&gt;首先打开PL/SQL，会发现没有database可以选择，我们可以以非登录方式登陆PL/SQL（直接点cancel即可）。&lt;/p&gt;
+&lt;p&gt;开始设置：Tools-&amp;gt;Preferences，进入后点击Oracle下面的connection，设置Oracle home和oci library。&lt;/p&gt;
+&lt;p&gt;由于我已经设置过了，如下图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-PLSQL%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AE.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;图中路径可能不一样，具体的看你的Oracle Home目录，如果不知道自己的Oracle Home目录的，可以去自己的环境变量中看一下。&lt;/p&gt;
+&lt;p&gt;点击Apply-&amp;gt;OK，退出PL/SQL Developer，再次登录。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

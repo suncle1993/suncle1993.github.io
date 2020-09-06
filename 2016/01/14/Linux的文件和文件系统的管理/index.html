@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Linux的文件和文件系统的管理 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content=" 文件权限 什么是文件系统？ 文件系统是操作系统在分区上保存文件信息的方法和数据结构。
+文件有哪些权限？ 三种基本权限分别为：读、写、执行，说明如下：
+   代表字符 权限 对文件的意义 对目录的意义     r 读权限 可以读文件内容 可以列出目录中的文件列表   w 写权限 可以修改和删除文件 可以在目录中创建和删除文件   x 执行权限 可以执行该文件 可以使用cd命令进入该目录     目录上只有执行权限，便是可以进入或穿越他进入更深层次的子目录 目录上只有执行权限，要访问该目录下的又读权限的文件，必须知道文件名才可以访问 目录上只有执行权限，不能列出目录列表也不能删除该目录 目录上执行权限和读权限，表示可以进入目录并且列出目录列表 目录上执行权限和写权限的组合，表示可以在目录中创建、删除和重命名文件  特殊权限 有三种特殊权限suid、sgid和sticky bit。参见Linux中的文件特殊权限
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2016/01/14/Linux%E7%9A%84%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Linux的文件和文件系统的管理" />
+<meta property="og:description" content="
+文件权限
+什么是文件系统？
+文件系统是操作系统在分区上保存文件信息的方法和数据结构。
+文件有哪些权限？
+
+三种基本权限分别为：读、写、执行，说明如下：
+
+
+
+代表字符
+权限
+对文件的意义
+对目录的意义
+
+
+
+
+r
+读权限
+可以读文件内容
+可以列出目录中的文件列表
+
+
+w
+写权限
+可以修改和删除文件
+可以在目录中创建和删除文件
+
+
+x
+执行权限
+可以执行该文件
+可以使用cd命令进入该目录
+
+
+
+
+目录上只有执行权限，便是可以进入或穿越他进入更深层次的子目录
+目录上只有执行权限，要访问该目录下的又读权限的文件，必须知道文件名才可以访问
+目录上只有执行权限，不能列出目录列表也不能删除该目录
+目录上执行权限和读权限，表示可以进入目录并且列出目录列表
+目录上执行权限和写权限的组合，表示可以在目录中创建、删除和重命名文件
+
+特殊权限
+有三种特殊权限suid、sgid和sticky bit。参见Linux中的文件特殊权限" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2016/01/14/Linux%E7%9A%84%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86/" />
+<meta property="article:published_time" content="2016-01-14T23:20:34+00:00" />
+<meta property="article:modified_time" content="2016-01-14T23:20:34+00:00" />
+<meta itemprop="name" content="Linux的文件和文件系统的管理">
+<meta itemprop="description" content="
+文件权限
+什么是文件系统？
+文件系统是操作系统在分区上保存文件信息的方法和数据结构。
+文件有哪些权限？
+
+三种基本权限分别为：读、写、执行，说明如下：
+
+
+
+代表字符
+权限
+对文件的意义
+对目录的意义
+
+
+
+
+r
+读权限
+可以读文件内容
+可以列出目录中的文件列表
+
+
+w
+写权限
+可以修改和删除文件
+可以在目录中创建和删除文件
+
+
+x
+执行权限
+可以执行该文件
+可以使用cd命令进入该目录
+
+
+
+
+目录上只有执行权限，便是可以进入或穿越他进入更深层次的子目录
+目录上只有执行权限，要访问该目录下的又读权限的文件，必须知道文件名才可以访问
+目录上只有执行权限，不能列出目录列表也不能删除该目录
+目录上执行权限和读权限，表示可以进入目录并且列出目录列表
+目录上执行权限和写权限的组合，表示可以在目录中创建、删除和重命名文件
+
+特殊权限
+有三种特殊权限suid、sgid和sticky bit。参见Linux中的文件特殊权限">
+<meta itemprop="datePublished" content="2016-01-14T23:20:34+00:00" />
+<meta itemprop="dateModified" content="2016-01-14T23:20:34+00:00" />
+<meta itemprop="wordCount" content="3143">
+
+
+
+<meta itemprop="keywords" content="文件系统,Linux," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linux的文件和文件系统的管理"/>
+<meta name="twitter:description" content="
+文件权限
+什么是文件系统？
+文件系统是操作系统在分区上保存文件信息的方法和数据结构。
+文件有哪些权限？
+
+三种基本权限分别为：读、写、执行，说明如下：
+
+
+
+代表字符
+权限
+对文件的意义
+对目录的意义
+
+
+
+
+r
+读权限
+可以读文件内容
+可以列出目录中的文件列表
+
+
+w
+写权限
+可以修改和删除文件
+可以在目录中创建和删除文件
+
+
+x
+执行权限
+可以执行该文件
+可以使用cd命令进入该目录
+
+
+
+
+目录上只有执行权限，便是可以进入或穿越他进入更深层次的子目录
+目录上只有执行权限，要访问该目录下的又读权限的文件，必须知道文件名才可以访问
+目录上只有执行权限，不能列出目录列表也不能删除该目录
+目录上执行权限和读权限，表示可以进入目录并且列出目录列表
+目录上执行权限和写权限的组合，表示可以在目录中创建、删除和重命名文件
+
+特殊权限
+有三种特殊权限suid、sgid和sticky bit。参见Linux中的文件特殊权限"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Linux的文件和文件系统的管理</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-01-14 </span>
+        <div class="post-category">
+            <a href="/categories/Linux/"> Linux </a>
+            </div>
+          <span class="more-meta"> 约 3143 字 </span>
+          <span class="more-meta"> 预计阅读 7 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#文件权限">文件权限</a>
+          <ul>
+            <li><a href="#什么是文件系统">什么是文件系统？</a></li>
+            <li><a href="#文件有哪些权限">文件有哪些权限？</a></li>
+            <li><a href="#特殊权限">特殊权限</a></li>
+          </ul>
+        </li>
+        <li><a href="#文件格式和类型">文件格式和类型</a>
+          <ul>
+            <li><a href="#链接文件">链接文件</a></li>
+          </ul>
+        </li>
+        <li><a href="#改变文件权限">改变文件权限</a>
+          <ul>
+            <li><a href="#权限范围的表示法">权限范围的表示法</a></li>
+            <li><a href="#chmod命令">chmod命令</a></li>
+            <li><a href="#chown">chown</a></li>
+            <li><a href="#chgrp">chgrp</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <hr>
+<h2 id="文件权限">文件权限</h2>
+<h3 id="什么是文件系统">什么是文件系统？</h3>
+<p>文件系统是操作系统在分区上保存文件信息的方法和数据结构。</p>
+<h3 id="文件有哪些权限">文件有哪些权限？</h3>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Flowsnow%E6%96%87%E4%BB%B6%E6%9C%89%E5%93%AA%E4%BA%9B%E6%9D%83%E9%99%90.jpg" alt="文件有那些权限"></p>
+<p>三种基本权限分别为：读、写、执行，说明如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">代表字符</th>
+<th align="center">权限</th>
+<th align="center">对文件的意义</th>
+<th align="center">对目录的意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">r</td>
+<td align="center">读权限</td>
+<td align="center">可以读文件内容</td>
+<td align="center">可以列出目录中的文件列表</td>
+</tr>
+<tr>
+<td align="center">w</td>
+<td align="center">写权限</td>
+<td align="center">可以修改和删除文件</td>
+<td align="center">可以在目录中创建和删除文件</td>
+</tr>
+<tr>
+<td align="center">x</td>
+<td align="center">执行权限</td>
+<td align="center">可以执行该文件</td>
+<td align="center">可以使用cd命令进入该目录</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>目录上只有执行权限，便是可以进入或穿越他进入更深层次的子目录</li>
+<li>目录上只有执行权限，要访问该目录下的又读权限的文件，必须知道文件名才可以访问</li>
+<li>目录上只有执行权限，不能列出目录列表也不能删除该目录</li>
+<li>目录上执行权限和读权限，表示可以进入目录并且列出目录列表</li>
+<li>目录上执行权限和写权限的组合，表示可以在目录中创建、删除和重命名文件</li>
+</ol>
+<h3 id="特殊权限">特殊权限</h3>
+<p>有三种特殊权限suid、sgid和sticky bit。参见<a href="http://alan-hjkl.iteye.com/blog/1526858">Linux中的文件特殊权限</a></p>
+<h4 id="suid和sgid">suid和sgid</h4>
+<p>例如查看/usr/bin/passwd 与/etc/passwd文件的权限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@MyLinux ~<span class="o">]</span><span class="c1"># ls -l /usr/bin/passwd /etc/passwd</span>
+-rw-r--r-- <span class="m">1</span> root root  <span class="m">1549</span> 08-19 13:54 /etc/passwd
+-rwsr-xr-x <span class="m">1</span> root root <span class="m">22984</span> 2007-01-07 /usr/bin/passwd
+</code></pre></td></tr></table>
+</div>
+</div><p>众所周知，/etc/passwd文件存放的各个用户的账号与密码信息，/usr/bin/passwd是执行修改和查看此文件的程序，但从权限上看，/etc/passwd仅有root权限的写（w）权，可实际上每个用户都可以通过/usr/bin/passwd命令修改这个文件，于是这里就涉及了linux里的特殊权限setuid，如-rwsr-xr-x中的s</p>
+<p><strong>suid就是：让普通用户拥有可以执行“只有root权限才能执行”的特殊权限，sgid同理指”组“</strong></p>
+<p>作为普通用户是没有权限修改/etc/passwd文件的，但给/usr/bin/passwd以suid权限后，普通用户就可以通过执行passwd命令，临时的拥有root权限，去修改/etc/passwd文件了</p>
+<h4 id="sticky-bit">sticky bit</h4>
+<p>例如查看/tmp目录的权限：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># ll -d /tmp</span>
+drwxrwxrwt. <span class="m">4</span> root root <span class="m">4096</span> 1月  <span class="m">18</span> 03:53 /tmp
+</code></pre></td></tr></table>
+</div>
+</div><p>tmp目录是所有用户共有的临时文件夹，所有用户都拥有读写权限，这就必然出现一个问题，A用户在/tmp里创建了文件a.file，此时B用户看了不爽，在/tmp里把它给删了（因为拥有读写权限），那肯定是不行的。实际上是不会发生这种情况，因为有特殊权限sticky bit（粘贴位）权限，正如drwxrwxrwt中的最后一个t。</p>
+<p><strong>sticky bit (粘贴位)就是：除非目录的属主和root用户有权限删除它，除此之外其它用户不能删除和修改这个目录</strong>。</p>
+<p>也就是说，在/tmp目录中，只有文件的拥有者和root才能对其进行修改和删除，其他用户则不行，避免了上面所说的问题产生。</p>
+<p><strong>粘贴位的用途一般是把一个文件夹的的权限都打开，然后来共享文件，象/tmp目录一样。</strong></p>
+<h2 id="文件格式和类型">文件格式和类型</h2>
+<p>一切皆文件。</p>
+<p>Linu系统下的文件类型包括：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">普通文件(-)
+目录(d)
+符号链接(l)
+字符设备文件(c)
+块设备文件(b)
+套接字(s)
+命名管道(p)
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="链接文件">链接文件</h3>
+<p>链接文件分为软链接和硬链接</p>
+<h4 id="硬链接hard-link">硬链接（Hard Link）</h4>
+<p>硬链接指通过索引节点来进行连接。在Linux的文件系统中，保存在磁盘分区中的文件不管是什么类型都给它分配一个编号，称为索引节点号(Inode Index)。在Linux中，多个文件名指向同一索引节点是存在的。一般这种连接就是硬链接。硬链接的作用是允许一个文件拥有多个有效路径名，这样用户就可以建立硬链接到重要文件，以防止“误删”的功能。其原因如上所述，因为对应该目录的索引节点有一个以上的连接。只删除一个连接并不影响索引节点本身和其它的连接，只有当最后一个连接被删除后，文件的数据块及目录的连接才会被释放。</p>
+<p>也就是说，文件真正删除的条件是与之相关的所有硬链接文件均被删除。</p>
+<h4 id="软链接symbolic-link">软链接（Symbolic Link）</h4>
+<p>除了硬链接之外的一种连接称之为符号连接（Symbolic Link），也叫软连接。软链接文件有类似于Windows的快捷方式。它实际上是一个特殊的文件。在符号连接中，文件实际上是一个文本文件，其中包含的有另一文件的位置信息。</p>
+<h4 id="硬链接和软链接的区别演示">硬链接和软链接的区别演示</h4>
+<p>ln命令，参见<a href="https://man.linuxde.net/ln">ln命令</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># touch file1	#创建一个测试文件file1</span>
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># ln file1 file2	#创建file1的一个硬链接文件file2</span>
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># ln -s file1 file3	#创建file1的一个软链接文件file3</span>
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># ls -li	#-i参数显示文件的inode节点信息</span>
+总用量 <span class="m">0</span>
+<span class="m">528483</span> -rw-r--r--. <span class="m">2</span> root root <span class="m">0</span> 1月  <span class="m">18</span> 05:46 file1
+<span class="m">528483</span> -rw-r--r--. <span class="m">2</span> root root <span class="m">0</span> 1月  <span class="m">18</span> 05:46 file2
+<span class="m">528484</span> lrwxrwxrwx. <span class="m">1</span> root root <span class="m">5</span> 1月  <span class="m">18</span> 05:47 file3 -&gt; file1
+</code></pre></td></tr></table>
+</div>
+</div><p>从上面的结果中可以看出，硬连接文件file2与原文件file1的inode节点相同，均为528483，然而符号连接文件的inode节点不同。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># echo &#34;hello liuyifei&#34; &gt;&gt;file1	#向file1中输入信息</span>
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># cat file1</span>
+hello liuyifei
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># cat file2</span>
+hello liuyifei
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># cat file3</span>
+hello liuyifei
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># rm -f file1</span>
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># ls -li</span>
+总用量 <span class="m">4</span>
+<span class="m">528483</span> -rw-r--r--. <span class="m">1</span> root root <span class="m">15</span> 1月  <span class="m">18</span> 05:53 file2
+<span class="m">528484</span> lrwxrwxrwx. <span class="m">1</span> root root  <span class="m">5</span> 1月  <span class="m">18</span> 05:47 file3 -&gt; file1
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># cat file2</span>
+hello liuyifei
+<span class="o">[</span>root@localhost test<span class="o">]</span><span class="c1"># cat file3	#可以发现file3这个软链接虽然在，但是没有内容了</span>
+cat: file3: 没有那个文件或目录
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="改变文件权限">改变文件权限</h2>
+<p>改变文件权限的命令：chmod，chown（更改所有者），chgrp（更改用户组）</p>
+<p>三个命令使用方法参见：</p>
+<ul>
+<li><a href="https://man.linuxde.net/chmod">https://man.linuxde.net/chmod</a></li>
+<li><a href="https://man.linuxde.net/chown">https://man.linuxde.net/chown</a></li>
+<li><a href="https://man.linuxde.net/chgrp">https://man.linuxde.net/chgrp</a></li>
+</ul>
+<h3 id="权限范围的表示法">权限范围的表示法</h3>
+<p><code>u</code> User，即文件或目录的拥有者；</p>
+<p><code>g</code> Group，即文件或目录的所属群组；</p>
+<p><code>o</code> Other，除了文件或目录拥有者或所属群组之外，其他用户皆属于这个范围；</p>
+<p><code>a</code> All，即全部的用户，包含拥有者，所属群组以及其他用户；</p>
+<p><code>r</code> 读取权限，数字代号为“4”;</p>
+<p><code>w</code> 写入权限，数字代号为“2”；</p>
+<p><code>x</code> 执行或切换权限，数字代号为“1”；</p>
+<p><code>-</code>不具任何权限，数字代号为“0”；</p>
+<p><code>s</code> 特殊功能说明：变更文件或目录的权限。</p>
+<h3 id="chmod命令">chmod命令</h3>
+<p>语法：chmod (选项) (参数)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">-f或--quiet或--silent：不显示错误信息； 
+
+-R或--recursive：递归处理，将指令目录下的所有文件及子目录一并处理； 
+
+-v或--verbose：显示指令执行过程； 
+
+--reference=&lt;参考文件或目录&gt;：把指定文件或目录的所属群组全部设成和参考文件或目录的所属群组相同；
+
+&lt;权限范围&gt;+&lt;权限设置&gt;：开启权限范围的文件或目录的该选项权限设置； 
+
+&lt;权限范围&gt;-&lt;权限设置&gt;：关闭权限范围的文件或目录的该选项权限设置； 
+
+&lt;权限范围&gt;=&lt;权限设置&gt;：指定权限范围的文件或目录的该选项权限设置；
+</code></pre></td></tr></table>
+</div>
+</div><p>例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">chmod u+x,g+w file1　　<span class="c1">#为文件file1设置自己可以执行，组员可以写入的权限</span> 
+chmod <span class="nv">u</span><span class="o">=</span>rwx,g<span class="o">=</span>rw,o<span class="o">=</span>r file1 
+chmod <span class="m">764</span> file1	<span class="c1">#数字设定法，rwxrw-r--</span>
+chmod a+x file1	<span class="c1">#对文件file1的u,g,o都设置可执行属性</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="chown">chown</h3>
+<p>改变某个文件或目录的所有者和所属的组，只有文件主和超级用户才可以使用该命令。</p>
+<p>选项：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">-f或--quite或——silent：不显示错误信息； 
+-h或--no-dereference：只对符号连接的文件作修改，而不更改其他任何相关文件； 
+-R或——recursive：递归处理，将指定目录下的所有文件及子目录一并处理； 
+-v：显示指令执行过程；
+</code></pre></td></tr></table>
+</div>
+</div><p>参数：</p>
+<blockquote>
+<p>用户:组：指定所有者和所属工作组。当省略“：组”，仅改变文件所有者；</p>
+<p>文件：指定要改变所有者和工作组的文件列表。支持多个文件和目标，支持shell通配符。</p>
+</blockquote>
+<p>例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">chown -R liuyifei /usr/test	<span class="c1">#将目录/tmp/test及其下面的所有文件、子目录的文件主改成 liuyifei</span>
+chown liuyifei:mingxing file1　　//把文件file1属主改成liuyifei，属组改为mingxing
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="chgrp">chgrp</h3>
+<p>用来改变文件或目录所属的用户组，只有文件主和超级用户才可以使用该命令。</p>
+<p>语法：chgrp(选项)(参数)</p>
+<p>选项：类似chown</p>
+<p>参数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">组：指定新组名称； 
+文件：指定要改变所属组的文件列表。多个文件或者目录之间使用空格隔开。
+</code></pre></td></tr></table>
+</div>
+</div><p>例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">chgrp -R mengxin .	<span class="c1">#将当前目录及子目录下的所有文件的用户组改为liuyifei</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-01-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+          <a href="/tags/Linux/">Linux</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2016/01/22/Linux%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E5%92%8C%E7%AE%A1%E7%90%86/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Linux网络配置和管理</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/">
+            <span class="next-text nav-default">Sublime Text 3解决中文乱码</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Python-pymysql - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="安装 安装mysql数据库的难度和oracle数据库简直没得比，安装步骤如下：
+安装MariaDB 1 2 3 4 5  yum install mariadb mariadb-server # 安装，centos7默认的mysql就是mariadb systemctl start mariadb # 启动mariadb systemctl enable mariadb # 开机自启动 mysql_secure_installation # 设置root密码 mysql -uroot -p # 登录   安装pymysql 1  pip install pymysql   基本操作 数据库基本操作主要是：
+ 创建连接 获取游标 执行sql 提交事务：针对非查询性SQL  代码
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  import pymysql # connect函数打开数据库连接 conn = pymysql.connect(host=&amp;#39;192.168.110.13&amp;#39;, user=&amp;#39;root&amp;#39;, password=&amp;#39;123456&amp;#39;, database=&amp;#39;student&amp;#39;) # cursor方法创建游标对象cur cur = conn.cursor() # execute方法执行SQL语句 cur.execute(&amp;#34;SELECT VERSION()&amp;#34;) # fetchone方法获取单条数据 data = cur.fetchone() print (&amp;#39;Database version : {}&amp;#39;.format(data)) # 关闭游标 cur.close() # 关闭数据库连接 conn.close()   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/04/14/Python-pymysql/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Python-pymysql" />
+<meta property="og:description" content="安装
+安装mysql数据库的难度和oracle数据库简直没得比，安装步骤如下：
+安装MariaDB
+
+
+1
+2
+3
+4
+5
+
+
+yum install mariadb mariadb-server  # 安装，centos7默认的mysql就是mariadb
+systemctl start mariadb  # 启动mariadb
+systemctl enable mariadb  # 开机自启动
+mysql_secure_installation  # 设置root密码
+mysql -uroot -p  # 登录
+
+
+安装pymysql
+
+
+1
+
+
+pip install pymysql
+
+
+基本操作
+数据库基本操作主要是：
+
+创建连接
+获取游标
+执行sql
+提交事务：针对非查询性SQL
+
+代码
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+
+
+import pymysql
+
+# connect函数打开数据库连接
+conn = pymysql.connect(host=&#39;192.168.110.13&#39;, user=&#39;root&#39;, password=&#39;123456&#39;, database=&#39;student&#39;)
+# cursor方法创建游标对象cur
+cur = conn.cursor()
+# execute方法执行SQL语句
+cur.execute(&#34;SELECT VERSION()&#34;)
+# fetchone方法获取单条数据
+data = cur.fetchone()
+print (&#39;Database version : {}&#39;.format(data))
+# 关闭游标
+cur.close()
+# 关闭数据库连接
+conn.close()
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/04/14/Python-pymysql/" />
+<meta property="article:published_time" content="2017-04-14T22:29:54+00:00" />
+<meta property="article:modified_time" content="2017-04-14T22:29:54+00:00" />
+<meta itemprop="name" content="Python-pymysql">
+<meta itemprop="description" content="安装
+安装mysql数据库的难度和oracle数据库简直没得比，安装步骤如下：
+安装MariaDB
+
+
+1
+2
+3
+4
+5
+
+
+yum install mariadb mariadb-server  # 安装，centos7默认的mysql就是mariadb
+systemctl start mariadb  # 启动mariadb
+systemctl enable mariadb  # 开机自启动
+mysql_secure_installation  # 设置root密码
+mysql -uroot -p  # 登录
+
+
+安装pymysql
+
+
+1
+
+
+pip install pymysql
+
+
+基本操作
+数据库基本操作主要是：
+
+创建连接
+获取游标
+执行sql
+提交事务：针对非查询性SQL
+
+代码
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+
+
+import pymysql
+
+# connect函数打开数据库连接
+conn = pymysql.connect(host=&#39;192.168.110.13&#39;, user=&#39;root&#39;, password=&#39;123456&#39;, database=&#39;student&#39;)
+# cursor方法创建游标对象cur
+cur = conn.cursor()
+# execute方法执行SQL语句
+cur.execute(&#34;SELECT VERSION()&#34;)
+# fetchone方法获取单条数据
+data = cur.fetchone()
+print (&#39;Database version : {}&#39;.format(data))
+# 关闭游标
+cur.close()
+# 关闭数据库连接
+conn.close()
+
+
+">
+<meta itemprop="datePublished" content="2017-04-14T22:29:54+00:00" />
+<meta itemprop="dateModified" content="2017-04-14T22:29:54+00:00" />
+<meta itemprop="wordCount" content="2609">
+
+
+
+<meta itemprop="keywords" content="pymysql,mysql,MariaDB," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python-pymysql"/>
+<meta name="twitter:description" content="安装
+安装mysql数据库的难度和oracle数据库简直没得比，安装步骤如下：
+安装MariaDB
+
+
+1
+2
+3
+4
+5
+
+
+yum install mariadb mariadb-server  # 安装，centos7默认的mysql就是mariadb
+systemctl start mariadb  # 启动mariadb
+systemctl enable mariadb  # 开机自启动
+mysql_secure_installation  # 设置root密码
+mysql -uroot -p  # 登录
+
+
+安装pymysql
+
+
+1
+
+
+pip install pymysql
+
+
+基本操作
+数据库基本操作主要是：
+
+创建连接
+获取游标
+执行sql
+提交事务：针对非查询性SQL
+
+代码
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+
+
+import pymysql
+
+# connect函数打开数据库连接
+conn = pymysql.connect(host=&#39;192.168.110.13&#39;, user=&#39;root&#39;, password=&#39;123456&#39;, database=&#39;student&#39;)
+# cursor方法创建游标对象cur
+cur = conn.cursor()
+# execute方法执行SQL语句
+cur.execute(&#34;SELECT VERSION()&#34;)
+# fetchone方法获取单条数据
+data = cur.fetchone()
+print (&#39;Database version : {}&#39;.format(data))
+# 关闭游标
+cur.close()
+# 关闭数据库连接
+conn.close()
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Python-pymysql</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-04-14 </span>
+        <div class="post-category">
+            <a href="/categories/Python/"> Python </a>
+            </div>
+          <span class="more-meta"> 约 2609 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a>
+      <ul>
+        <li><a href="#安装mariadb">安装MariaDB</a></li>
+        <li><a href="#安装pymysql">安装pymysql</a></li>
+      </ul>
+    </li>
+    <li><a href="#基本操作">基本操作</a></li>
+    <li><a href="#ddl">DDL</a></li>
+    <li><a href="#dml">DML</a>
+      <ul>
+        <li><a href="#insert">insert</a></li>
+        <li><a href="#update">update</a></li>
+        <li><a href="#delete">delete</a></li>
+      </ul>
+    </li>
+    <li><a href="#query">QUERY</a>
+      <ul>
+        <li><a href="#基础查询">基础查询</a></li>
+        <li><a href="#dictcursor">DictCursor</a></li>
+      </ul>
+    </li>
+    <li><a href="#参数化查询">参数化查询</a>
+      <ul>
+        <li><a href="#基础的sql注入">基础的SQL注入</a></li>
+        <li><a href="#使用参数化查询">使用参数化查询</a></li>
+      </ul>
+    </li>
+    <li><a href="#上下文管理">上下文管理</a></li>
+    <li><a href="#数据库连接池">数据库连接池</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="安装">安装</h1>
+<p>安装mysql数据库的难度和oracle数据库简直没得比，安装步骤如下：</p>
+<h2 id="安装mariadb">安装MariaDB</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">yum install mariadb mariadb-server  <span class="c1"># 安装，centos7默认的mysql就是mariadb</span>
+systemctl start mariadb  <span class="c1"># 启动mariadb</span>
+systemctl <span class="nb">enable</span> mariadb  <span class="c1"># 开机自启动</span>
+mysql_secure_installation  <span class="c1"># 设置root密码</span>
+mysql -uroot -p  <span class="c1"># 登录</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装pymysql">安装pymysql</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pip install pymysql
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="基本操作">基本操作</h1>
+<p>数据库基本操作主要是：</p>
+<ol>
+<li>创建连接</li>
+<li>获取游标</li>
+<li>执行sql</li>
+<li>提交事务：<strong>针对非查询性SQL</strong></li>
+</ol>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="c1"># connect函数打开数据库连接</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+<span class="c1"># cursor方法创建游标对象cur</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="c1"># execute方法执行SQL语句</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&#34;SELECT VERSION()&#34;</span><span class="p">)</span>
+<span class="c1"># fetchone方法获取单条数据</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="k">print</span> <span class="p">(</span><span class="s1">&#39;Database version : {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="c1"># 关闭游标</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># 关闭数据库连接</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="ddl">DDL</h1>
+<p>DDL：数据定义语言。包括创建表，创建索引等等</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="c1"># connect函数打开数据库连接</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+
+<span class="c1"># cursor方法创建游标对象cur</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="c1"># 创建表</span>
+<span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;create table user (
+</span><span class="s1">         name char(20) not null,
+</span><span class="s1">         age int,  
+</span><span class="s1">         sex char(1))&#39;&#39;&#39;</span>
+
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
+<span class="c1"># 关闭游标</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># 关闭数据库连接</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="dml">DML</h1>
+<p>DML：数据操作语言，包含增删改三项操作。</p>
+<h2 id="insert">insert</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="c1"># connect函数打开数据库连接</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+
+<span class="c1"># cursor方法创建游标对象cur</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="c1"># 创建表</span>
+<span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;insert into user(name, age, sex) values(&#39;suncle&#39;, 18, &#39;m&#39;)&#39;&#39;&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># 执行sql语句</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    <span class="c1"># 提交到数据库执行</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="c1"># 如果发生错误则回滚</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+
+<span class="c1"># 关闭游标</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># 关闭数据库连接</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="update">update</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="c1"># connect函数打开数据库连接</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+
+<span class="c1"># cursor方法创建游标对象cur</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="c1"># 创建表</span>
+<span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;update user t set t.age = 20 where t.name=&#39;suncle&#39; &#39;&#39;&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># 执行sql语句</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    <span class="c1"># 提交到数据库执行</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="c1"># 如果发生错误则回滚</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+
+<span class="c1"># 关闭游标</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># 关闭数据库连接</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="delete">delete</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="c1"># connect函数打开数据库连接</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+
+<span class="c1"># cursor方法创建游标对象cur</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="c1"># 创建表</span>
+<span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;delete from user where age=20 &#39;&#39;&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># 执行sql语句</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    <span class="c1"># 提交到数据库执行</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="c1"># 如果发生错误则回滚</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+
+<span class="c1"># 关闭游标</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># 关闭数据库连接</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="query">QUERY</h1>
+<h2 id="基础查询">基础查询</h2>
+<p>主要有三个函数</p>
+<ul>
+<li>cursor.fetchall 返回行的元组</li>
+<li>cursor.fetchmany 返回行的元组， 可以指定返回前N行 相当于对fetchall切片fetchall[:N]</li>
+<li>cursor.fetchone 返回首行， 相当于fetchall[0]</li>
+</ul>
+<p>查询语句如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;select * from user t where t.age&lt;=19;&#39;&#39;&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>三种方法得到的结果分别为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>  <span class="c1"># ((&#39;suncle&#39;, 18, &#39;m&#39;), (&#39;suncle1&#39;, 19, &#39;m&#39;))</span>
+
+<span class="n">cur</span><span class="o">.</span><span class="n">fetchmany</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># ((&#39;suncle&#39;, 18, &#39;m&#39;),)</span>
+
+<span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>  <span class="c1"># (&#39;suncle&#39;, 18, &#39;m&#39;)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可见：每行数据也是一个元组， 元组的内容由sql决定</p>
+<p>如果要让返回的数据带上列名，也就是要返回字典，那么就需要用到cursors.DictCursor。</p>
+<h2 id="dictcursor">DictCursor</h2>
+<p>创建cursor时创建DictCursor类型的就可以fetch回来字典形式的结果了</p>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+
+<span class="c1"># 创建cursor时指定cursor参数cursor=pymysql.cursors.DictCursor表示cursor类型</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span><span class="n">cursor</span><span class="o">=</span><span class="n">pymysql</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">DictCursor</span><span class="p">)</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;select * from user t where t.age&lt;=20;&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>fetchall返回结果为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="p">[{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;suncle&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;suncle1&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;suncle2&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">}]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>返回每一行记录都是一个字典，整体结果是由字典组成的列表。而默认的cursor是由元组组成的元组。</p>
+<h1 id="参数化查询">参数化查询</h1>
+<h2 id="基础的sql注入">基础的SQL注入</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">age</span><span class="o">=</span><span class="mi">18</span><span class="p">):</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;select * from user t where t.age&lt;={};&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="n">get_user</span><span class="p">()</span>  <span class="c1"># 返回((&#39;suncle&#39;, 18, &#39;m&#39;),)</span>
+
+<span class="n">get_user</span><span class="p">(</span><span class="s1">&#39;18 or 1=1&#39;</span><span class="p">)</span>  <span class="c1"># 返回((&#39;suncle&#39;, 18, &#39;m&#39;), (&#39;suncle1&#39;, 19, &#39;m&#39;))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当传入参数的age中带sql条件的时候，就会发生sql注入，使得结果可能并不满足要求。</p>
+<p>为了解决sql注入，我们可以使用参数化查询。</p>
+<h2 id="使用参数化查询">使用参数化查询</h2>
+<p>以上代码做以下修改之后就可以避免sql注入</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">age</span><span class="o">=</span><span class="mi">18</span><span class="p">):</span>
+    <span class="c1"># 不管数据库定义的是什么类型，统一使用%s</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;select * from user t where t.age&lt;=</span><span class="si">%s</span><span class="s1">;&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="p">))</span>  <span class="c1"># 参数化查询</span>
+    <span class="k">return</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>参数化查询最大的优势在于避免了SQL注入，同时参数化之后避免了sql多次硬解析，能提高查询效率。所以，总是应该使用参数化查询。</p>
+<h1 id="上下文管理">上下文管理</h1>
+<p>数据库连接和游标都支持上下文管理。</p>
+<p><strong>游标</strong></p>
+<p>查看cur实例对应Cursor类的方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">help</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对应的with语句使用如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">with</span> <span class="n">cur</span><span class="p">:</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;select * from user&#39;&#39;&#39;</span><span class="p">)</span>
+
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;select * from user&#39;&#39;&#39;</span><span class="p">)</span>  <span class="c1"># 抛出错误：ProgrammingError: Cursor closed</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>with语句块结束之后cur就已经关闭了。</p>
+<p><strong>连接</strong></p>
+<p>通过help命令查看Connection类的<code>__enter__</code>和<code>__exit__</code>两种方法的实现</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+<span class="n">help</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>  <span class="c1"># conn是Connection类</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查看结果如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"> <span class="o">|</span>  <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+ <span class="o">|</span>      <span class="n">Context</span> <span class="n">manager</span> <span class="n">that</span> <span class="n">returns</span> <span class="n">a</span> <span class="n">Cursor</span>
+ <span class="o">|</span>  
+ <span class="o">|</span>  <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">)</span>
+ <span class="o">|</span>      <span class="n">On</span> <span class="n">successful</span> <span class="nb">exit</span><span class="p">,</span> <span class="n">commit</span><span class="o">.</span> <span class="n">On</span> <span class="n">exception</span><span class="p">,</span> <span class="n">rollback</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>__enter__</code>方法会返回一个游标</li>
+<li><code>__exit__</code>方法：如果成功推出就会自动提交commit，如果发生异常就会回滚rollback</li>
+</ul>
+<p>对应的with语句使用如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">with</span> <span class="n">conn</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;update user t set t.age = 20 where t.name=&#39;suncle&#39; &#39;&#39;&#39;</span><span class="p">)</span>
+
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;select * from user&#39;&#39;&#39;</span><span class="p">)</span>  <span class="c1"># 退出with块之后游标仍然没有关闭</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>虽然游标没有关闭， 但是数据库操作已经提交。</p>
+<p><strong>游标和连接共同上下文管理</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">with</span> <span class="n">conn</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;update user t set t.age = 20 where t.name=&#39;suncle&#39; &#39;&#39;&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>退出整个上下文管理块之后，游标会关闭，并且会自动提交。</p>
+<h1 id="数据库连接池">数据库连接池</h1>
+<p>一般来说，应用程序访问数据库的过程是：</p>
+<ol>
+<li>装载数据库驱动程序</li>
+<li>建立数据库连接</li>
+<li>访问数据库，执行sql语句</li>
+<li>断开数据库连接</li>
+</ol>
+<p>相对于性能正常的SQL的执行效率来说，建立连接是一个费时的活动，而且系统还要为每一个连接分配内存资源。在现在web请求的大并发量情况下，必然会导致频繁的数据库操作。而频繁的进行数据库连接操作势必占用很多的系统资源，使得系统的响应速度下降，严重的甚至会造成服务器的崩溃。</p>
+<p><strong>引入数据库连接池技术之后，应用程序访问数据库的过程是：</strong></p>
+<ol>
+<li>请求数据库操作时，从连接池中取出创建好的数据库连接</li>
+<li>执行sql语句</li>
+<li>不断开数据库连接，而是放回连接池中，等待下次使用</li>
+</ol>
+<p>连接池还有个优点就是能控制数据库的压力，当大量用户同时涌入时，连接池只会使用池限制数据库连接数目，而不会不停的向数据库请求连接，最后导致服务器崩溃。</p>
+<p><strong>Python实现数据库连接池</strong></p>
+<ul>
+<li>使用队列Queue保存数据库连接</li>
+</ul>
+<p>代码如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="k">class</span> <span class="nc">ConnectionPool</span><span class="p">():</span>  <span class="c1"># args和kwargs用来接收数据库url信息</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">())</span>
+            
+    <span class="k">def</span> <span class="nf">_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_close</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+ 
+    <span class="k">def</span> <span class="nf">return_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+ 
+    <span class="k">def</span> <span class="nf">close_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_empty</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+ 
+    <span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">is_full</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">full</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">current_connection_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">qsize</span><span class="p">()</span>
+    
+    
+<span class="n">pool</span> <span class="o">=</span> <span class="n">ConnectionPool</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>  <span class="c1"># 获取数据库连接</span>
+<span class="k">print</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>  <span class="c1"># &lt;pymysql.connections.Connection at 0x7f6290300940&gt;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">current_connection_count</span><span class="p">())</span>  <span class="c1"># 19</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&#34;SELECT VERSION()&#34;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="k">print</span> <span class="p">(</span><span class="s1">&#39;Database version : {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">pool</span><span class="o">.</span><span class="n">return_connection</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>  <span class="c1"># 关闭游标之后需要回收数据库连接</span>
+<span class="k">print</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">current_connection_count</span><span class="p">())</span>  <span class="c1"># 20</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-04-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/pymysql/">pymysql</a>
+          <a href="/tags/mysql/">mysql</a>
+          <a href="/tags/MariaDB/">MariaDB</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/04/18/JavaScript%E5%9F%BA%E7%A1%80/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">JavaScript基础</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/">
+            <span class="next-text nav-default">Python-WSGI接口</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

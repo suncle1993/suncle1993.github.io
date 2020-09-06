@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rman on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/Rman/</link>
+    <description>Recent content in Rman on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 18 Mar 2016 15:47:01 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/Rman/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Rman备份恢复和管理</title>
+      <link>https://suncle.me/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Fri, 18 Mar 2016 15:47:01 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Rman%E7%BB%84%E4%BB%B6.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.cnblogs.com/Ronger/archive/2011/12/29/2306367.html&#34;&gt;Oracle之Rman入门指南&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.5ienet.com/note/html/rman/index.shtml&#34;&gt;一步一步学Rman&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;rman简介&#34;&gt;Rman简介&lt;/h2&gt;
+&lt;p&gt;Rman-Recover manager恢复管理工具。&lt;/p&gt;
+&lt;p&gt;Oracle集成了很多环境的一个数据库备份和恢复的工具。&lt;/p&gt;
+&lt;p&gt;Rman可以做下列事情：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库热备份
+&lt;ul&gt;
+&lt;li&gt;全库备份和恢复
+&lt;ul&gt;
+&lt;li&gt;数据库克隆（DG）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;增量备份和恢复&lt;/li&gt;
+&lt;li&gt;表空间备份和恢复&lt;/li&gt;
+&lt;li&gt;数据文件备份和恢复&lt;/li&gt;
+&lt;li&gt;归档备份和恢复&lt;/li&gt;
+&lt;li&gt;控制文件和参数文件备份和恢复&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;数据库冷备份&lt;/li&gt;
+&lt;li&gt;备份集的管理
+&lt;ul&gt;
+&lt;li&gt;备份策略&lt;/li&gt;
+&lt;li&gt;保留和删除备份数据&lt;/li&gt;
+&lt;li&gt;&amp;hellip;&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

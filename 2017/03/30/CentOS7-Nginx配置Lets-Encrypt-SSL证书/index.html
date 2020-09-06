@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="Let&amp;rsquo;s-Encrypt 为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：
+ Let&amp;rsquo;s-Encrypt，本文即将介绍，Let&amp;rsquo;s-Encrypt大法好。 caddy，原生支持 HTTP/2，自动创建 Let’s Encrypt 证书，非常简单易用。  安装 1 2  yum install epel-release -y yum install certbot -y   配置 1  certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me    --webroot表示以webroot模式运行，此处我们不选择standalone模式 -w /www/html表示站点根目录在/www/html -d suncle.me -d www.suncle.me表示为@主机和www主机生成共同的证书  按照提示操作成功后，提示：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17  IMPORTANT NOTES: - Congratulations! Your certificate and chain have been saved at /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will expire on 2017-06-28. To obtain a new or tweaked version of this certificate in the future, simply run certbot again. To non-interactively renew *all* of your certificates, run &amp;#34;certbot renew&amp;#34; - Your account credentials have been saved in your Certbot configuration directory at /etc/letsencrypt. You should make a secure backup of this folder now. This configuration directory will also contain certificates and private keys obtained by Certbot so making regular backups of this folder is ideal. - If you like Certbot, please consider supporting our work by: Donating to ISRG / Let&amp;#39;s Encrypt: https://letsencrypt.org/donate Donating to EFF: https://eff.org/donate-le   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书" />
+<meta property="og:description" content="Let&rsquo;s-Encrypt
+为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：
+
+Let&rsquo;s-Encrypt，本文即将介绍，Let&rsquo;s-Encrypt大法好。
+caddy，原生支持 HTTP/2，自动创建 Let’s Encrypt 证书，非常简单易用。
+
+安装
+
+
+1
+2
+
+
+yum install epel-release -y
+yum install certbot -y
+
+
+配置
+
+
+1
+
+
+certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me
+
+
+
+--webroot表示以webroot模式运行，此处我们不选择standalone模式
+-w /www/html表示站点根目录在/www/html
+-d suncle.me -d www.suncle.me表示为@主机和www主机生成共同的证书
+
+按照提示操作成功后，提示：
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will
+   expire on 2017-06-28. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run &#34;certbot
+   renew&#34;
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let&#39;s Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/" />
+<meta property="article:published_time" content="2017-03-30T15:49:46+00:00" />
+<meta property="article:modified_time" content="2017-03-30T15:49:46+00:00" />
+<meta itemprop="name" content="CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书">
+<meta itemprop="description" content="Let&rsquo;s-Encrypt
+为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：
+
+Let&rsquo;s-Encrypt，本文即将介绍，Let&rsquo;s-Encrypt大法好。
+caddy，原生支持 HTTP/2，自动创建 Let’s Encrypt 证书，非常简单易用。
+
+安装
+
+
+1
+2
+
+
+yum install epel-release -y
+yum install certbot -y
+
+
+配置
+
+
+1
+
+
+certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me
+
+
+
+--webroot表示以webroot模式运行，此处我们不选择standalone模式
+-w /www/html表示站点根目录在/www/html
+-d suncle.me -d www.suncle.me表示为@主机和www主机生成共同的证书
+
+按照提示操作成功后，提示：
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will
+   expire on 2017-06-28. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run &#34;certbot
+   renew&#34;
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let&#39;s Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+
+
+">
+<meta itemprop="datePublished" content="2017-03-30T15:49:46+00:00" />
+<meta itemprop="dateModified" content="2017-03-30T15:49:46+00:00" />
+<meta itemprop="wordCount" content="1514">
+
+
+
+<meta itemprop="keywords" content="CentOS,Nginx,Let&#39;s-Encrypt,SSL," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书"/>
+<meta name="twitter:description" content="Let&rsquo;s-Encrypt
+为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：
+
+Let&rsquo;s-Encrypt，本文即将介绍，Let&rsquo;s-Encrypt大法好。
+caddy，原生支持 HTTP/2，自动创建 Let’s Encrypt 证书，非常简单易用。
+
+安装
+
+
+1
+2
+
+
+yum install epel-release -y
+yum install certbot -y
+
+
+配置
+
+
+1
+
+
+certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me
+
+
+
+--webroot表示以webroot模式运行，此处我们不选择standalone模式
+-w /www/html表示站点根目录在/www/html
+-d suncle.me -d www.suncle.me表示为@主机和www主机生成共同的证书
+
+按照提示操作成功后，提示：
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will
+   expire on 2017-06-28. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run &#34;certbot
+   renew&#34;
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let&#39;s Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-03-30 </span>
+        <div class="post-category">
+            <a href="/categories/Http/"> Http </a>
+            </div>
+          <span class="more-meta"> 约 1514 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#lets-encrypt">Let&rsquo;s-Encrypt</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#配置">配置</a></li>
+        <li><a href="#证书自动更新">证书自动更新</a></li>
+      </ul>
+    </li>
+    <li><a href="#配置nginx-ssl证书">配置Nginx SSL证书</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="lets-encrypt">Let&rsquo;s-Encrypt</h1>
+<p>为http站点添加https支持，需要从证书发行机构获取SSL/TLS 证书。常见的免费证书有两种：</p>
+<ul>
+<li><a href="https://letsencrypt.org/">Let&rsquo;s-Encrypt</a>，本文即将介绍，Let&rsquo;s-Encrypt大法好。</li>
+<li><a href="https://caddyserver.com/">caddy</a>，原生支持 HTTP/2，自动创建 <a href="http://www.appinn.com/use-letsencrypt-with-nginx/">Let’s Encrypt</a> 证书，非常简单易用。</li>
+</ul>
+<h2 id="安装">安装</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">yum install epel-release -y
+yum install certbot -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置">配置</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">certbot certonly --webroot -w /www/html -d suncle.me -d www.suncle.me
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>--webroot</code>表示以webroot模式运行，此处我们不选择standalone模式</li>
+<li><code>-w /www/html</code>表示站点根目录在/www/html</li>
+<li><code>-d suncle.me -d www.suncle.me</code>表示为@主机和www主机生成共同的证书</li>
+</ul>
+<p>按照提示操作成功后，提示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/suncle.me/fullchain.pem. Your cert will
+   expire on 2017-06-28. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run &#34;certbot
+   renew&#34;
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let&#39;s Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="证书自动更新">证书自动更新</h2>
+<p>Let’s Encrypt 只有3个月的有效期，所以我们需要定时去更新证书。</p>
+<p>可以通过运行：<code>certbot renew --dry-run</code> 来测试自动生成是否能够正常运行。如果正确执行，我们就可以通过以下命令更新证书:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">certbot renew 
+</code></pre></td></tr></table>
+</div>
+</div><p>如果要达到自动更新证书，可以借助<code>crontab</code>或者<code>systemd</code>定时执行上面的更新命令。Let’s Encrypt官方建议一天更新两次最好。因为证书没有到期之前是不会更新，因此即使一天执行两次也不会有什么影响。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 每天3:00和19:00点更新证书</span>
+<span class="m">0</span> 3,19 * * * certbot renew
+</code></pre></td></tr></table>
+</div>
+</div><p>具体执行时间可以参考以下crontab格式进行修改：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command to be executed
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="配置nginx-ssl证书">配置Nginx SSL证书</h1>
+<p>修改/usr/local/nginx/nginx.conf文件如下（最好先备份）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="c1"># Nginx以root用户启动
+</span><span class="c1"></span><span class="k">user</span> <span class="s">root</span><span class="p">;</span>
+<span class="c1"># Nginx开启的进程数
+</span><span class="c1"></span><span class="k">worker_processes</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="k">events</span> <span class="p">{</span>
+    <span class="c1"># Nginx连接的最大个数
+</span><span class="c1"></span>    <span class="kn">worker_connections</span>  <span class="mi">65535</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">http</span> <span class="p">{</span>
+    <span class="c1"># 如果路径中出现通配符，mime.types可配置多个文件
+</span><span class="c1"></span>    <span class="kn">include</span> <span class="s">mime.types</span><span class="p">;</span> 
+    <span class="c1"># 默认文件类型
+</span><span class="c1"></span>    <span class="kn">default_type</span> <span class="s">application/octet-stream</span><span class="p">;</span>
+    <span class="c1"># 日志格式  
+</span><span class="c1"></span>    <span class="kn">log_format</span> <span class="s">main</span> <span class="s">&#39;</span><span class="nv">$remote_addr</span> <span class="s">-</span> <span class="nv">$remote_user</span> <span class="s">[</span><span class="nv">$time_local]</span> <span class="s">&#34;</span><span class="nv">$request&#34;</span> <span class="s">&#39;</span>
+                      <span class="s">&#39;</span><span class="nv">$status</span> <span class="nv">$body_bytes_sent</span> <span class="s">&#34;</span><span class="nv">$http_referer&#34;</span> <span class="s">&#39;</span>
+                      <span class="s">&#39;&#34;</span><span class="nv">$http_user_agent&#34;</span> <span class="s">&#34;</span><span class="nv">$http_x_forwarded_for&#34;&#39;</span><span class="p">;</span>
+    <span class="c1"># 记录访问日志
+</span><span class="c1"></span>    <span class="kn">access_log</span> <span class="s">logs/access.log</span> <span class="s">main</span><span class="p">;</span>
+    <span class="c1"># 开启sendfile，提升文件传输效率
+</span><span class="c1"></span>    <span class="kn">sendfile</span> <span class="no">on</span><span class="p">;</span>
+    <span class="c1"># 死链判断：客户端连接保持活动的超时时间
+</span><span class="c1"></span>    <span class="kn">keepalive_timeout</span> <span class="mi">65</span><span class="p">;</span>
+
+    <span class="c1">#设置非安全连接永久跳转到安全连接
+</span><span class="c1"></span>    <span class="kn">server{</span>
+        <span class="s">listen</span> <span class="mi">80</span><span class="p">;</span>
+        <span class="kn">server_name</span> <span class="s">www.suncle.me</span> <span class="s">suncle.net</span> <span class="s">blog.suncle.net</span><span class="p">;</span>
+        <span class="c1">#告诉浏览器有效期内只准用 https 访问
+</span><span class="c1"></span>        <span class="kn">add_header</span> <span class="s">Strict-Transport-Security</span> <span class="s">max-age=15768000</span><span class="p">;</span>
+        <span class="c1">#永久重定向到 https 站点
+</span><span class="c1"></span>        <span class="kn">return</span> <span class="mi">301</span> <span class="s">https://</span><span class="nv">$server_name$request_uri</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">server</span> <span class="p">{</span>
+        <span class="c1">#启用 https, 使用 http/2 协议, nginx 1.9.11 启用 http/2 会有bug, 已在 1.9.12 版本中修复.
+</span><span class="c1"></span>        <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span> <span class="s">http2</span><span class="p">;</span>
+        <span class="kn">server_name</span> <span class="s">www.suncle.me</span> <span class="s">suncle.net</span> <span class="s">blog.suncle.net</span><span class="p">;</span>
+        <span class="c1">#告诉浏览器当前页面禁止被frame
+</span><span class="c1"></span>        <span class="kn">add_header</span> <span class="s">X-Frame-Options</span> <span class="s">DENY</span><span class="p">;</span>
+        <span class="c1">#告诉浏览器不要猜测mime类型
+</span><span class="c1"></span>        <span class="kn">add_header</span> <span class="s">X-Content-Type-Options</span> <span class="s">nosniff</span><span class="p">;</span>
+        <span class="kn">root</span> <span class="s">/www/html</span><span class="p">;</span>
+
+        <span class="c1">#证书路径
+</span><span class="c1"></span>        <span class="kn">ssl_certificate</span> <span class="s">/etc/letsencrypt/live/suncle.me/fullchain.pem</span><span class="p">;</span>
+        <span class="c1">#私钥路径
+</span><span class="c1"></span>        <span class="kn">ssl_certificate_key</span> <span class="s">/etc/letsencrypt/live/suncle.me/privkey.pem</span><span class="p">;</span>
+        <span class="c1">#安全链接可选的加密协议
+</span><span class="c1"></span>        <span class="kn">ssl_protocols</span> <span class="s">TLSv1</span> <span class="s">TLSv1.1</span> <span class="s">TLSv1.2</span><span class="p">;</span>
+        <span class="c1">#可选的加密算法,顺序很重要,越靠前的优先级越高.
+</span><span class="c1"></span>        <span class="kn">ssl_ciphers</span> <span class="s">ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-RC4-SHA:!ECDHE-RSA-RC4-SHA:ECDH-ECDSA-RC4-SHA:ECDH-RSA-RC4-SHA:ECDHE-RSA-AES256-SHA:HIGH:!RC4-SHA:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!CBC:!EDH:!kEDH:!PSK:!SRP:!kECDH</span><span class="p">;</span>
+        <span class="c1">#在 SSLv3 或 TLSv1 握手过程一般使用客户端的首选算法,如果启用下面的配置,则会使用服务器端的首选算法.
+</span><span class="c1"></span>        <span class="kn">ssl_prefer_server_ciphers</span> <span class="no">on</span><span class="p">;</span>
+        <span class="c1">#储存SSL会话的缓存类型和大小
+</span><span class="c1"></span>        <span class="kn">ssl_session_cache</span> <span class="s">shared:SSL:10m</span><span class="p">;</span>
+        <span class="c1">#缓存有效期
+</span><span class="c1"></span>        <span class="kn">ssl_session_timeout</span> <span class="mi">60m</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>以上配置文件nginx.conf中需要修改的字段主要有：</p>
+<ul>
+<li>server_name <a href="http://www.suncle.me">www.suncle.me</a> suncle.net blog.suncle.net;</li>
+<li>ssl_certificate /etc/letsencrypt/live/suncle.me/fullchain.pem;</li>
+<li>ssl_certificate_key /etc/letsencrypt/live/suncle.me/privkey.pem;</li>
+</ul>
+<blockquote>
+<p><code>listen 443 ssl http2;</code>这一句中，如果Nginx编译安装的时候没有安装<code>ngx_http_v2_module</code>模块，则需要先安装。或者不采用http2协议，直接<code>listen 443 ssl</code>即可</p>
+</blockquote>
+<p>保存配置，检查是否报错，重启Nginx</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">/usr/local/nginx/nginx -t
+/usr/local/nginx/nginx -s reload
+</code></pre></td></tr></table>
+</div>
+</div><p>Nginx 的 SSL 证书到此配置完成。</p>
+<hr>
+<p>参考</p>
+<ol>
+<li><a href="https://blog.itnmg.net/letsencrypt-ssl/">CentOS 7 Nginx Let’ s Encrypt SSL 证书安装配置</a></li>
+<li><a href="http://blog.lzuer.net/2016/10/25/https/">开启Https之旅</a></li>
+<li><a href="https://www.arayzou.com/2016/08/12/nginx+https+http2%E6%90%AD%E5%BB%BA(%E4%BA%8C)/">nginx+https+http2搭建(二)</a></li>
+<li><a href="http://xianglong.me/article/linux-crontab/">Linux Crontab使用总结</a></li>
+</ol>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-03-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/CentOS/">CentOS</a>
+          <a href="/tags/Nginx/">Nginx</a>
+          <a href="/tags/Lets-Encrypt/">Let&#39;s-Encrypt</a>
+          <a href="/tags/SSL/">SSL</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/04/04/%E7%81%B5%E9%AD%82%E7%8B%AC%E6%97%85%E4%B9%8B%E6%B5%B7%E5%A4%A9%E4%BD%9B%E5%9B%BD%E6%99%AE%E9%99%80%E5%B1%B1/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">灵魂独旅之海天佛国普陀山</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/">
+            <span class="next-text nav-default">CentOS7-Nginx编译安装</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

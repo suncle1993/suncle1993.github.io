@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>设计思想 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/</link>
+    <description>Recent content in 设计思想 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 27 Dec 2018 16:54:05 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>微信点餐的需求和技术演变</title>
+      <link>https://suncle.me/2018/12/27/wechat-order-evolution/</link>
+      <pubDate>Thu, 27 Dec 2018 16:54:05 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/12/27/wechat-order-evolution/</guid>
+      <description>&lt;p&gt;微信点餐的需求和技术演变&lt;/p&gt;
+&lt;h1 id=&#34;背景&#34;&gt;背景&lt;/h1&gt;
+&lt;p&gt;先解释下什么是Hack版本，什么是Saas版本？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hack版本就是指使用侵入的手段破解点菜机的各种信息，使得点菜机看起来就像是我们自己的一样。&lt;/p&gt;
+&lt;p&gt;Saas版本就是指做我们自己的点菜机，还要做成服务的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;为什么要做Saas版本的微信点餐？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因为目前的hack版本面向未来开发导致现实问题很多，多到让微信点餐产品看不到未来，商户静悄悄的越来越少&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>关于冷热数据备份和恢复的思考</title>
+      <link>https://suncle.me/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/</link>
+      <pubDate>Mon, 22 Jan 2018 16:28:13 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/</guid>
+      <description>&lt;h1 id=&#34;关于冷热数据备份和恢复的思考&#34;&gt;关于冷热数据备份和恢复的思考&lt;/h1&gt;
+&lt;p&gt;数据库：Mysql InnoDB&lt;/p&gt;
+&lt;p&gt;目标：备份指定数据表指定时间段的全字段数据到数据文件，并删除掉数据库中已备份数据&lt;/p&gt;
+&lt;p&gt;说明：这里说的数据备份不是灾备，而且通过备份基本不会使用的数据来缓解数据库压力，要求备份的数据是可以恢复的&lt;/p&gt;
+&lt;p&gt;持久化存储：文本格式的数据文件，存储于oss中&lt;/p&gt;
+&lt;p&gt;思考：不同表中可能含有多个时间字段，可能的组合如下&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;update_time&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;create_time&lt;/code&gt; &amp;amp; &lt;code&gt;update_time&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;create_time&lt;/code&gt; &amp;amp; &lt;code&gt;update_time&lt;/code&gt; &amp;amp; 业务时间（由程序插入，可能是datetime可能是date可能是timestamp）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一般数据表设计时都会带上创建时间和修改时间。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据一般都是快速增长，较少或者几乎不更新，属于记录型的数据&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>基于消息传递的并发模型</title>
+      <link>https://suncle.me/2017/12/18/%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Mon, 18 Dec 2017 15:27:32 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/12/18/%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</guid>
+      <description>&lt;blockquote&gt;An object oriented language is a language with good support for objects.&lt;br&gt;A concurrency oriented language has good support for concurrency.&lt;br&gt;&lt;br&gt;--Joe Armstrong&lt;/blockquote&gt;
+&lt;p&gt;两类通用并发模型：参考七周七并发模型&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;共享内存型Shared Memory&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;线程Threads&lt;/li&gt;
+&lt;li&gt;锁Locks&lt;/li&gt;
+&lt;li&gt;互斥l量Mutexes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;消息传送型（CSP和Actor模型）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;进程Processes&lt;/li&gt;
+&lt;li&gt;消息Messages&lt;/li&gt;
+&lt;li&gt;不共享数据(状态)No shared data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;重点介绍消息传送型的两种模型Actor和CSP（Communicating Sequential Process）的各项对比&lt;/p&gt;
+&lt;p&gt;主要目的：除了常用的Python、Java等用的并发模型之外，还存在这么个东西&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>思考一次整体调整Python项目规范性的过程</title>
+      <link>https://suncle.me/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4Python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Tue, 31 Oct 2017 09:44:25 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4Python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/</guid>
+      <description>&lt;p&gt;本篇文章主要是记录整体调整Python数据统计分析项目规范性的过程，以及自己的一些思考。&lt;/p&gt;
+&lt;h1 id=&#34;为什么要调整&#34;&gt;为什么要调整？&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;主要是为了解决数据类程序不容易测试发现错误的现状。调整公共模块出错时抛出错误到业务层，便于报警模块上传错误信息到kafka，最后能主动发出报警邮件。以及方便加入报警之外的其他程序埋点。&lt;/li&gt;
+&lt;li&gt;调整所有Python数据统计分析程序满足pep8规范和Google Python风格规范，减少IDE提示。&lt;/li&gt;
+&lt;li&gt;完善代码注释和文档便于后续维护（之前的开发人员是Erlang风格，主张不写或者少写注释）。&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>关于程序埋点的思考</title>
+      <link>https://suncle.me/2017/10/31/%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%9F%8B%E7%82%B9%E7%9A%84%E6%80%9D%E8%80%83/</link>
+      <pubDate>Tue, 31 Oct 2017 09:44:12 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/10/31/%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%9F%8B%E7%82%B9%E7%9A%84%E6%80%9D%E8%80%83/</guid>
+      <description>&lt;h1 id=&#34;埋点目的&#34;&gt;埋点目的&lt;/h1&gt;
+&lt;p&gt;对于本次修改的数据统计分析程序的埋点，只是为了统计数据中出现的一些不易发现的错误，全部让程序主动跑出来。但是只要是主动抛出统计数据，都属于埋点。&lt;/p&gt;
+&lt;p&gt;数据埋点是数据分析的准备工作，只有埋点了才可以获得数据进行分析。在做足数据埋点之后，才能拿到想要的目标数据：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;行为数据：时间、地点、人物、交互、交互的内容；&lt;/li&gt;
+&lt;li&gt;质量数据：浏览器加载情况、错误异常等；&lt;/li&gt;
+&lt;li&gt;环境数据：浏览器相关的元数据以及地理、运营商等；&lt;/li&gt;
+&lt;li&gt;运营数据：PV、UV、转化率、留存率（很直观的数据）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;整体调整Python项目规范性之后加入错误数据埋点就属于质量数据部分。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>threading on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/threading/</link>
+    <description>Recent content in threading on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 23 Mar 2017 01:57:30 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/threading/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python多线程</title>
+      <link>https://suncle.me/2017/03/23/Python%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
+      <pubDate>Thu, 23 Mar 2017 01:57:30 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/03/23/Python%E5%A4%9A%E7%BA%BF%E7%A8%8B/</guid>
+      <description>&lt;h1 id=&#34;多线程基础概念&#34;&gt;多线程基础概念&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;并行与并发&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;并行：同时处理多个任务，必须在多核环境下&lt;/li&gt;
+&lt;li&gt;一段时间内同时处理多个任务，单核也可以并发&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;并发手段&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;线程：内核空间的调度&lt;/li&gt;
+&lt;li&gt;进程：内核空间的调度&lt;/li&gt;
+&lt;li&gt;协程：用户空间的调度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;线程可以允许程序在同一进程空间中并发运行多个操作。本次主要介绍Python标准库中的多线程模块threading。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

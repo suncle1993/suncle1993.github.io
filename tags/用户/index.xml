@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>用户 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E7%94%A8%E6%88%B7/</link>
+    <description>Recent content in 用户 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 09 Jan 2016 00:16:04 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E7%94%A8%E6%88%B7/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Linux用户和组管理</title>
+      <link>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Sat, 09 Jan 2016 00:16:04 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;概述&#34;&gt;概述&lt;/h2&gt;
+&lt;p&gt;只有root用户才能管理用户和组，所以一切命令都是root执行。&lt;/p&gt;
+&lt;h3 id=&#34;用户分类&#34;&gt;用户分类&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;超级用户：root，UID=0&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;普通用户：具有操作系统有限的权限，500&amp;lt;=UID&amp;lt;=65535(2^32-1),有限个&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;伪用户：为了安全,1&amp;lt;=UID&amp;lt;=499&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;伪用户解释：linux中任何一个命令的操作都必须有一个用户的身份。伪用户一般和系统或者程序服务相关，比如bin,daemon,shutdown ,halt等，linux默认都有这些伪用户，伪用户通常不需要或无法登陆系统（nologin），可以没有宿主目录&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

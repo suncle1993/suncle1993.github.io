@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>状态码 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E7%8A%B6%E6%80%81%E7%A0%81/</link>
+    <description>Recent content in 状态码 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 13 Nov 2019 20:14:44 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E7%8A%B6%E6%80%81%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>一次奇怪的http状态码改变</title>
+      <link>https://suncle.me/2019/11/13/http-3xx-status-code/</link>
+      <pubDate>Wed, 13 Nov 2019 20:14:44 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/11/13/http-3xx-status-code/</guid>
+      <description>&lt;p&gt;最近将一个很久没有更新的部署在物理机上的一个老服务迁移到k8s时，发现在gitlab ci跑pytest的过程中出现以下报错：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;___________________________ HelloTests.test_redirect ___________________________
+
+self = &amp;lt;tests.test_hello.HelloTests testMethod=test_redirect&amp;gt;
+
+    def test_redirect(self):
+        resp = self.get(&amp;#39;/api/hello&amp;#39;)
+&amp;gt;       self.assertEqual(http.HTTPStatus.MOVED_PERMANENTLY.value, resp.status_code)
+E       AssertionError: 301 != 308
+
+tests/test_hello.py:18: AssertionError
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;按照python系的习惯，一般而言，我们习惯在接口最后加上一个slash，因此会将所有不带slash的接口301重定向到带slash。但是这一次提示重定向的状态码是308。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

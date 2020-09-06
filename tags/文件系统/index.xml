@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>文件系统 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link>
+    <description>Recent content in 文件系统 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 14 Jan 2016 23:20:34 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Linux的文件和文件系统的管理</title>
+      <link>https://suncle.me/2016/01/14/Linux%E7%9A%84%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Thu, 14 Jan 2016 23:20:34 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/14/Linux%E7%9A%84%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;文件权限&#34;&gt;文件权限&lt;/h2&gt;
+&lt;h3 id=&#34;什么是文件系统&#34;&gt;什么是文件系统？&lt;/h3&gt;
+&lt;p&gt;文件系统是操作系统在分区上保存文件信息的方法和数据结构。&lt;/p&gt;
+&lt;h3 id=&#34;文件有哪些权限&#34;&gt;文件有哪些权限？&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Flowsnow%E6%96%87%E4%BB%B6%E6%9C%89%E5%93%AA%E4%BA%9B%E6%9D%83%E9%99%90.jpg&#34; alt=&#34;文件有那些权限&#34;&gt;&lt;/p&gt;
+&lt;p&gt;三种基本权限分别为：读、写、执行，说明如下：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;代表字符&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;权限&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;对文件的意义&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;对目录的意义&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;读权限&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以读文件内容&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以列出目录中的文件列表&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;w&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;写权限&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以修改和删除文件&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以在目录中创建和删除文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;x&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;执行权限&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以执行该文件&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;可以使用cd命令进入该目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ol&gt;
+&lt;li&gt;目录上只有执行权限，便是可以进入或穿越他进入更深层次的子目录&lt;/li&gt;
+&lt;li&gt;目录上只有执行权限，要访问该目录下的又读权限的文件，必须知道文件名才可以访问&lt;/li&gt;
+&lt;li&gt;目录上只有执行权限，不能列出目录列表也不能删除该目录&lt;/li&gt;
+&lt;li&gt;目录上执行权限和读权限，表示可以进入目录并且列出目录列表&lt;/li&gt;
+&lt;li&gt;目录上执行权限和写权限的组合，表示可以在目录中创建、删除和重命名文件&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;特殊权限&#34;&gt;特殊权限&lt;/h3&gt;
+&lt;p&gt;有三种特殊权限suid、sgid和sticky bit。参见&lt;a href=&#34;http://alan-hjkl.iteye.com/blog/1526858&#34;&gt;Linux中的文件特殊权限&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>结合公司现状浅谈CMDB - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。
+CMDB概述 CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个集中式的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。
+公司运维现状 资产现状
+全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。
+运维情况现状
+由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/05/23/CMDB/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="结合公司现状浅谈CMDB" />
+<meta property="og:description" content="本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。
+CMDB概述
+CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个集中式的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。
+公司运维现状
+资产现状
+全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。
+运维情况现状
+由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/05/23/CMDB/" />
+<meta property="article:published_time" content="2017-05-23T16:24:48+00:00" />
+<meta property="article:modified_time" content="2017-05-23T16:24:48+00:00" />
+<meta itemprop="name" content="结合公司现状浅谈CMDB">
+<meta itemprop="description" content="本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。
+CMDB概述
+CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个集中式的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。
+公司运维现状
+资产现状
+全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。
+运维情况现状
+由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。">
+<meta itemprop="datePublished" content="2017-05-23T16:24:48+00:00" />
+<meta itemprop="dateModified" content="2017-05-23T16:24:48+00:00" />
+<meta itemprop="wordCount" content="2329">
+
+
+
+<meta itemprop="keywords" content="CMDB,Python," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="结合公司现状浅谈CMDB"/>
+<meta name="twitter:description" content="本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。
+CMDB概述
+CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个集中式的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。
+公司运维现状
+资产现状
+全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。
+运维情况现状
+由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">结合公司现状浅谈CMDB</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-05-23 </span>
+        <div class="post-category">
+            <a href="/categories/Python/"> Python </a>
+            </div>
+          <span class="more-meta"> 约 2329 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#cmdb概述">CMDB概述</a></li>
+    <li><a href="#公司运维现状">公司运维现状</a></li>
+    <li><a href="#cmdb现状">CMDB现状</a></li>
+    <li><a href="#cmdb设计">CMDB设计</a>
+      <ul>
+        <li><a href="#最简单的设计一种配置一个表">最简单的设计：一种配置一个表</a></li>
+        <li><a href="#复杂点的设计列式数据存储">复杂点的设计：列式数据存储</a></li>
+        <li><a href="#更复杂的设计数据多版本和回滚">更复杂的设计：数据多版本和回滚</a></li>
+      </ul>
+    </li>
+    <li><a href="#cmdb使用结论">CMDB使用结论</a></li>
+    <li><a href="#cmdb替代方案">CMDB替代方案</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。</p>
+<h1 id="cmdb概述">CMDB概述</h1>
+<p>CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个<strong>集中式</strong>的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。</p>
+<h1 id="公司运维现状">公司运维现状</h1>
+<p><strong>资产现状</strong></p>
+<p>全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。</p>
+<p><strong>运维情况现状</strong></p>
+<p>由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。</p>
+<h1 id="cmdb现状">CMDB现状</h1>
+<p>目前公司里面还没有产生建设CMDB的萌芽，资产管理部门和运维中心团队有自己的配置库，也就是自建库。但是并没有将产品团队的软件资产列入配置管理的范围。各个产品团队使用Confluence文档服务器或者Excel表格（这种情况较多）管理自己的软硬件资源，并称之为资源台账。就服务器而言，经常不知道一个ip对应的服务器是否正在使用，由谁使用，这些信息一无所知。如果各个团队使用自建库，而不是通过文档形式来管理，那这种CMDB最多也只能算是各自为政的CMDB，并不是集中式的数据托管。</p>
+<h1 id="cmdb设计">CMDB设计</h1>
+<h2 id="最简单的设计一种配置一个表">最简单的设计：一种配置一个表</h2>
+<p>比如，ip单独成表，host单独成表</p>
+<p>优点：配置简单直观</p>
+<p>缺点：一旦某种配置需要修改字段，就需要修改代码，代码维护成本太高</p>
+<h2 id="复杂点的设计列式数据存储">复杂点的设计：列式数据存储</h2>
+<p>表名，列名，列值，行分开存放到四张张表(schema, filed, value, entity)</p>
+<ul>
+<li>schema：一个配置表在schema中就是一条记录，记录表的信息和描述。</li>
+<li>field：每一列的列名和列相关的meta信息都存放在field表中。</li>
+<li>entity：当作rowid使用，表示唯一衡量传统意义上的一行数据。</li>
+<li>value：存放每一条记录的每一列的值，即一个entity和一个field既可以确定一个值。</li>
+</ul>
+<p>表的设计如下图：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/cmdb/cmdb.jpg" alt=""></p>
+<p>整个设计的sql如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="c1">-- MySQL Workbench Forward Engineering
+</span><span class="c1"></span>
+<span class="kt">SET</span> <span class="o">@</span><span class="n">OLD_UNIQUE_CHECKS</span><span class="o">=@@</span><span class="n">UNIQUE_CHECKS</span><span class="p">,</span> <span class="n">UNIQUE_CHECKS</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="kt">SET</span> <span class="o">@</span><span class="n">OLD_FOREIGN_KEY_CHECKS</span><span class="o">=@@</span><span class="n">FOREIGN_KEY_CHECKS</span><span class="p">,</span> <span class="n">FOREIGN_KEY_CHECKS</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="kt">SET</span> <span class="o">@</span><span class="n">OLD_SQL_MODE</span><span class="o">=@@</span><span class="n">SQL_MODE</span><span class="p">,</span> <span class="n">SQL_MODE</span><span class="o">=</span><span class="s1">&#39;TRADITIONAL,ALLOW_INVALID_DATES&#39;</span><span class="p">;</span>
+
+<span class="c1">-- -----------------------------------------------------
+</span><span class="c1">-- Schema mydb
+</span><span class="c1">-- -----------------------------------------------------
+</span><span class="c1"></span>
+<span class="c1">-- -----------------------------------------------------
+</span><span class="c1">-- Schema mydb
+</span><span class="c1">-- -----------------------------------------------------
+</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span> <span class="k">DEFAULT</span> <span class="k">CHARACTER</span> <span class="kt">SET</span> <span class="n">utf8</span> <span class="p">;</span>
+<span class="k">USE</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span> <span class="p">;</span>
+
+<span class="c1">-- -----------------------------------------------------
+</span><span class="c1">-- Table `mydb`.`schema`
+</span><span class="c1">-- -----------------------------------------------------
+</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">schema</span><span class="o">`</span> <span class="p">(</span>
+  <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">name</span><span class="o">`</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="o">`</span><span class="k">desc</span><span class="o">`</span> <span class="kt">TEXT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">),</span>
+  <span class="k">UNIQUE</span> <span class="k">INDEX</span> <span class="o">`</span><span class="n">name_UNIQUE</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">name</span><span class="o">`</span> <span class="k">ASC</span><span class="p">))</span>
+<span class="kp">ENGINE</span> <span class="o">=</span> <span class="n">InnoDB</span><span class="p">;</span>
+
+
+<span class="c1">-- -----------------------------------------------------
+</span><span class="c1">-- Table `mydb`.`field`
+</span><span class="c1">-- -----------------------------------------------------
+</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">field</span><span class="o">`</span> <span class="p">(</span>
+  <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">name</span><span class="o">`</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">meta</span><span class="o">`</span> <span class="kt">TEXT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">schema_id</span><span class="o">`</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="o">`</span><span class="n">fk_field_schema_idx</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">schema_id</span><span class="o">`</span> <span class="k">ASC</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="o">`</span><span class="n">fk_field_schema</span><span class="o">`</span>
+    <span class="k">FOREIGN</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">schema_id</span><span class="o">`</span><span class="p">)</span>
+    <span class="k">REFERENCES</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">schema</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span>
+    <span class="k">ON</span> <span class="k">DELETE</span> <span class="n">NO</span> <span class="n">ACTION</span>
+    <span class="k">ON</span> <span class="k">UPDATE</span> <span class="n">NO</span> <span class="n">ACTION</span><span class="p">)</span>
+<span class="kp">ENGINE</span> <span class="o">=</span> <span class="n">InnoDB</span><span class="p">;</span>
+
+
+<span class="c1">-- -----------------------------------------------------
+</span><span class="c1">-- Table `mydb`.`entity`
+</span><span class="c1">-- -----------------------------------------------------
+</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">entity</span><span class="o">`</span> <span class="p">(</span>
+  <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="o">`</span><span class="k">key</span><span class="o">`</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">schema_id</span><span class="o">`</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="o">`</span><span class="n">fk_entity_schema1_idx</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">schema_id</span><span class="o">`</span> <span class="k">ASC</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="o">`</span><span class="n">fk_entity_schema1</span><span class="o">`</span>
+    <span class="k">FOREIGN</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">schema_id</span><span class="o">`</span><span class="p">)</span>
+    <span class="k">REFERENCES</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">schema</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span>
+    <span class="k">ON</span> <span class="k">DELETE</span> <span class="n">NO</span> <span class="n">ACTION</span>
+    <span class="k">ON</span> <span class="k">UPDATE</span> <span class="n">NO</span> <span class="n">ACTION</span><span class="p">)</span>
+<span class="kp">ENGINE</span> <span class="o">=</span> <span class="n">InnoDB</span><span class="p">;</span>
+
+
+<span class="c1">-- -----------------------------------------------------
+</span><span class="c1">-- Table `mydb`.`value`
+</span><span class="c1">-- -----------------------------------------------------
+</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">value</span><span class="o">`</span> <span class="p">(</span>
+  <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">value</span><span class="o">`</span> <span class="kt">TEXT</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">field_id</span><span class="o">`</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">entity_id</span><span class="o">`</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="o">`</span><span class="n">fk_value_field1_idx</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">field_id</span><span class="o">`</span> <span class="k">ASC</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="o">`</span><span class="n">fk_value_entity1_idx</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">entity_id</span><span class="o">`</span> <span class="k">ASC</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="o">`</span><span class="n">ux_value</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">field_id</span><span class="o">`</span> <span class="k">ASC</span><span class="p">,</span> <span class="o">`</span><span class="n">entity_id</span><span class="o">`</span> <span class="k">ASC</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="o">`</span><span class="n">fk_value_field1</span><span class="o">`</span>
+    <span class="k">FOREIGN</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">field_id</span><span class="o">`</span><span class="p">)</span>
+    <span class="k">REFERENCES</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">field</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span>
+    <span class="k">ON</span> <span class="k">DELETE</span> <span class="n">NO</span> <span class="n">ACTION</span>
+    <span class="k">ON</span> <span class="k">UPDATE</span> <span class="n">NO</span> <span class="n">ACTION</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="o">`</span><span class="n">fk_value_entity1</span><span class="o">`</span>
+    <span class="k">FOREIGN</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">entity_id</span><span class="o">`</span><span class="p">)</span>
+    <span class="k">REFERENCES</span> <span class="o">`</span><span class="n">mydb</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">entity</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span>
+    <span class="k">ON</span> <span class="k">DELETE</span> <span class="n">NO</span> <span class="n">ACTION</span>
+    <span class="k">ON</span> <span class="k">UPDATE</span> <span class="n">NO</span> <span class="n">ACTION</span><span class="p">)</span>
+<span class="kp">ENGINE</span> <span class="o">=</span> <span class="n">InnoDB</span><span class="p">;</span>
+
+
+<span class="kt">SET</span> <span class="n">SQL_MODE</span><span class="o">=@</span><span class="n">OLD_SQL_MODE</span><span class="p">;</span>
+<span class="kt">SET</span> <span class="n">FOREIGN_KEY_CHECKS</span><span class="o">=@</span><span class="n">OLD_FOREIGN_KEY_CHECKS</span><span class="p">;</span>
+<span class="kt">SET</span> <span class="n">UNIQUE_CHECKS</span><span class="o">=@</span><span class="n">OLD_UNIQUE_CHECKS</span><span class="p">;</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>数据库查询时需要提供(entity, schema, field, value)这样一个四元组才能得到结果。</p>
+<p><strong>优点</strong>：在线定义，表有变动时不需要修改代码，增加一列只需要向field表中插入一个字段。</p>
+<p><strong>缺点</strong>：复杂，增删改查时需要同时操作多个表，对数据的约束需要在应用层去实现，需要自己封装ORM，每一列的约束信息存放在field表的meta字段中。</p>
+<h2 id="更复杂的设计数据多版本和回滚">更复杂的设计：数据多版本和回滚</h2>
+<p><strong>增加数据多版本</strong></p>
+<p>CMDB存放的信息都是非常重要的信息，因此不允许修改数据，每一次修改数据都单独增加一条记录，这样就可以保证数据多版本。因此可以增加一个snapshot快照表，用来存放各个历史版本的数据。snapshot表的具体设计较复杂，暂不使用。</p>
+<p><strong>增加回滚</strong></p>
+<p>增加数据多版本之后对应的就可以增加一个回滚的功能，多版本基础上的回滚功能可以参考git的实现。</p>
+<h1 id="cmdb使用结论">CMDB使用结论</h1>
+<p>强烈反对大型集中式CMDB。CMDB团队执行力不强，需求多变，短期内看不到价值等多种原因导致在大多数互联网公司CMDB是无法落地的，到目前为止除了华为也没几家公司能把CMDB落地直到发挥CMDB的价值（华为都花了7年的时间，更别说别的公司了）。</p>
+<p>如果一定要使用CMDB，那只能使用分散式的各自为政的，各个团队使用各个团队的自建库，比如管IP库的就专门设计IP库，管账号库的就专门设计账号库，数据库之间通过各自提供的api通讯。但是分散式的缺点是从领导的角度看，看不到全局的数据，因此还需要做一个集中化的dashboard。</p>
+<h1 id="cmdb替代方案">CMDB替代方案</h1>
+<p>CMDB在大多数互联网公司不可行，因此很多公司都另辟蹊径，比如一种方式常用的方式 Mesos</p>
+<ul>
+<li>Mesos：托管于Apache下C++开发的开源分布式资源管理系统</li>
+</ul>
+<p>Mesos的调度框架可以有多种语言开发，包括Python。</p>
+<hr>
+<p>参考</p>
+<ul>
+<li><a href="http://mp.weixin.qq.com/s/t2X2hCY1kwO__qdKfS-fAQ">冰与火之歌，华为CMDB是如何炼成的</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Configuration_management_database">维基-Configuration management database</a></li>
+<li><a href="https://www.csdn.net/article/a/2016-01-25/15834593">CMDB经验分享之 – 剖析CMDB的设计过程</a></li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-05-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/CMDB/">CMDB</a>
+          <a href="/tags/Python/">Python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Erlang学习笔记(1)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/">
+            <span class="next-text nav-default">Python实现通用web框架</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

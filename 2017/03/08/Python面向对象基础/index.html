@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Python面向对象基础 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="类的定义 类的定义的语法
+1 2 3 4 5 6  class ClassName: &amp;lt;statement-1&amp;gt; . . . &amp;lt;statement-N&amp;gt;   示例代码
+1 2 3 4  class Door: def __init__(self, number, status): self.number = number self.status = status   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/03/08/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Python面向对象基础" />
+<meta property="og:description" content="类的定义
+类的定义的语法
+
+
+1
+2
+3
+4
+5
+6
+
+
+class ClassName:
+    &lt;statement-1&gt;
+    .
+    .
+    .
+    &lt;statement-N&gt;
+
+
+示例代码
+
+
+1
+2
+3
+4
+
+
+class Door:
+    def __init__(self, number, status):
+        self.number = number
+        self.status = status
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/03/08/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/" />
+<meta property="article:published_time" content="2017-03-08T12:22:42+00:00" />
+<meta property="article:modified_time" content="2017-03-08T12:22:42+00:00" />
+<meta itemprop="name" content="Python面向对象基础">
+<meta itemprop="description" content="类的定义
+类的定义的语法
+
+
+1
+2
+3
+4
+5
+6
+
+
+class ClassName:
+    &lt;statement-1&gt;
+    .
+    .
+    .
+    &lt;statement-N&gt;
+
+
+示例代码
+
+
+1
+2
+3
+4
+
+
+class Door:
+    def __init__(self, number, status):
+        self.number = number
+        self.status = status
+
+
+">
+<meta itemprop="datePublished" content="2017-03-08T12:22:42+00:00" />
+<meta itemprop="dateModified" content="2017-03-08T12:22:42+00:00" />
+<meta itemprop="wordCount" content="4970">
+
+
+
+<meta itemprop="keywords" content="Python,面向对象," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python面向对象基础"/>
+<meta name="twitter:description" content="类的定义
+类的定义的语法
+
+
+1
+2
+3
+4
+5
+6
+
+
+class ClassName:
+    &lt;statement-1&gt;
+    .
+    .
+    .
+    &lt;statement-N&gt;
+
+
+示例代码
+
+
+1
+2
+3
+4
+
+
+class Door:
+    def __init__(self, number, status):
+        self.number = number
+        self.status = status
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Python面向对象基础</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-03-08 </span>
+        <div class="post-category">
+            <a href="/categories/Python/"> Python </a>
+            </div>
+          <span class="more-meta"> 约 4970 字 </span>
+          <span class="more-meta"> 预计阅读 10 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#类的定义">类的定义</a></li>
+    <li><a href="#类的实例化">类的实例化</a></li>
+    <li><a href="#作用域">作用域</a>
+      <ul>
+        <li><a href="#类变量">类变量</a></li>
+        <li><a href="#属性查找顺序">属性查找顺序</a></li>
+        <li><a href="#类装饰器">类装饰器</a></li>
+        <li><a href="#类方法静态方法">类方法/静态方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#访问控制">访问控制</a>
+      <ul>
+        <li><a href="#双下划线">双下划线</a></li>
+        <li><a href="#单下划线">单下划线</a></li>
+        <li><a href="#property装饰器">property装饰器</a></li>
+      </ul>
+    </li>
+    <li><a href="#继承">继承</a>
+      <ul>
+        <li><a href="#单继承">单继承</a></li>
+        <li><a href="#方法重写">方法重写</a></li>
+        <li><a href="#多继承与mro">多继承与MRO</a>
+          <ul>
+            <li><a href="#等效的类定义">等效的类定义</a></li>
+            <li><a href="#多继承">多继承</a></li>
+            <li><a href="#mro">MRO</a></li>
+          </ul>
+        </li>
+        <li><a href="#mixin类">Mixin类</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="类的定义">类的定义</h1>
+<p>类的定义的语法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">ClassName</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">statement</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">&lt;</span><span class="n">statement</span><span class="o">-</span><span class="n">N</span><span class="o">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>示例代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Door</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">status</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="类的实例化">类的实例化</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Door</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">status</span>
+
+<span class="n">door</span> <span class="o">=</span> <span class="n">Door</span><span class="p">(</span><span class="mi">1001</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">)</span>
+<span class="n">door</span><span class="o">.</span><span class="n">number</span>
+<span class="n">door</span><span class="o">.</span><span class="n">status</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>创建对象使用<code>类名(__init__ 函数除第一个参数外的参数列表)</code></li>
+<li>创建对象的时候实际执行了 <code>__init__</code>函数</li>
+<li><code>__init__</code> 函数并不会创建对象</li>
+</ul>
+<p>函数创建及初始化的过程</p>
+<ol>
+<li>首先创建对象</li>
+<li>对象作为self参数传递给<code>__init__</code>函数</li>
+<li>返回self</li>
+</ol>
+<h1 id="作用域">作用域</h1>
+<h2 id="类变量">类变量</h2>
+<p>示例代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span>  <span class="c1"># 类的直接下级作用域 叫做类变量</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># 关联到实例的变量 叫做实例变量</span>
+   <span class="o">...</span><span class="p">:</span>          
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="s1">&#39;a&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">A</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">A</span><span class="o">.</span><span class="n">name</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span>                            <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">6</span><span class="o">-</span><span class="mi">61</span><span class="n">c1cc534250</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">A</span><span class="o">.</span><span class="n">name</span>
+
+<span class="ne">AttributeError</span><span class="p">:</span> <span class="nb">type</span> <span class="nb">object</span> <span class="s1">&#39;A&#39;</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;name&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="s1">&#39;a2&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">a2</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">a2</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;A2&#39;</span>  <span class="c1"># 给示例a2的类变量NAME赋值</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">a2</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="s1">&#39;A2&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">A</span><span class="o">.</span><span class="n">NAME</span>  <span class="c1"># 类变量没有变化</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">a2</span><span class="o">.</span><span class="n">xxx</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="n">a2</span><span class="o">.</span><span class="n">xxx</span>  <span class="c1"># 赋值之后a2多了xxx属性</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="n">A</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;AA&#39;</span>  <span class="c1"># 直接修改类的类变量</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="n">A</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="s1">&#39;AA&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">NAME</span>  <span class="c1"># 对应的实例的类变量也发生了改变</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="s1">&#39;AA&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">18</span><span class="p">]:</span> <span class="n">a2</span><span class="o">.</span><span class="n">NAME</span>  <span class="c1"># a2的类变量在之前的赋值被覆盖了，因此改变类变量的并不会影响a2</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">18</span><span class="p">]:</span> <span class="s1">&#39;A2&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>所以</p>
+<ul>
+<li>类变量对类和实例都可见</li>
+<li>所有实例共享类变量</li>
+<li>当给实例的类变量赋值时，相当于动态的给这个实例增加了一个属性，覆盖了类变量</li>
+</ul>
+<h2 id="属性查找顺序">属性查找顺序</h2>
+<ul>
+<li><code>__dict__</code>： 实例变量的字典</li>
+<li><code>__class__</code>： 得到实例对应的类</li>
+<li>先查找<code>__dict__</code>在查找<code>__class__</code></li>
+</ul>
+<p>代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+   <span class="o">...</span><span class="p">:</span>         
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;a&#39;</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__class__</span>  <span class="c1"># a.__class__表示实例对应的类</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">__main__</span><span class="o">.</span><span class="n">A</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;AA&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__dict__</span>  <span class="c1"># 覆盖类变量之后__dict__增加了一个键值对</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="p">{</span><span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;AA&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;a&#39;</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;NAME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;AAA&#39;</span>  <span class="c1"># 可以直接修改__dict__</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="p">{</span><span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;AAA&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;a&#39;</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">12</span><span class="p">]:</span> 
+<span class="n">mappingproxy</span><span class="p">({</span><span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;__dict__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">attribute</span> <span class="s1">&#39;__dict__&#39;</span> <span class="n">of</span> <span class="s1">&#39;A&#39;</span> <span class="n">objects</span><span class="o">&gt;</span><span class="p">,</span>
+              <span class="s1">&#39;__doc__&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+              <span class="s1">&#39;__init__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">__main__</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="fm">__init__</span><span class="o">&gt;</span><span class="p">,</span>
+              <span class="s1">&#39;__module__&#39;</span><span class="p">:</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;__weakref__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">attribute</span> <span class="s1">&#39;__weakref__&#39;</span> <span class="n">of</span> <span class="s1">&#39;A&#39;</span> <span class="n">objects</span><span class="o">&gt;</span><span class="p">})</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="类装饰器">类装饰器</h2>
+<p>参数是一个类，并且返回一个类的函数就可以是一个类装饰器。</p>
+<p>类装饰器通常用于给类增加属性，如果增加方法，则都是类级的方法。</p>
+<p><strong>代码1：给类增加属性</strong></p>
+<p>函数方法增加：定义set_name函数给类F增加一个NAME属性</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">class</span> <span class="nc">F</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">pass</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>  <span class="c1"># 给cls增加属性NAME=name</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="bp">cls</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="n">name</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="bp">cls</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">F1</span> <span class="o">=</span> <span class="n">set_name</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">)</span>  <span class="c1"># 返回F本身，并且F1指向F</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">F1</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="s1">&#39;F&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">f1</span> <span class="o">=</span> <span class="n">F1</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">f1</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="s1">&#39;F&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">F1</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> 
+<span class="n">mappingproxy</span><span class="p">({</span><span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;__dict__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">attribute</span> <span class="s1">&#39;__dict__&#39;</span> <span class="n">of</span> <span class="s1">&#39;F&#39;</span> <span class="n">objects</span><span class="o">&gt;</span><span class="p">,</span>
+              <span class="s1">&#39;__doc__&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+              <span class="s1">&#39;__module__&#39;</span><span class="p">:</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;__weakref__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">attribute</span> <span class="s1">&#39;__weakref__&#39;</span> <span class="n">of</span> <span class="s1">&#39;F&#39;</span> <span class="n">objects</span><span class="o">&gt;</span><span class="p">})</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">f1</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="p">{}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">f1</span><span class="o">.</span><span class="vm">__class__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">__main__</span><span class="o">.</span><span class="n">F</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">F</span><span class="o">.</span><span class="vm">__dict__</span>  <span class="c1"># 本质上增加的还是类F</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> 
+<span class="n">mappingproxy</span><span class="p">({</span><span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;__dict__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">attribute</span> <span class="s1">&#39;__dict__&#39;</span> <span class="n">of</span> <span class="s1">&#39;F&#39;</span> <span class="n">objects</span><span class="o">&gt;</span><span class="p">,</span>
+              <span class="s1">&#39;__doc__&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+              <span class="s1">&#39;__module__&#39;</span><span class="p">:</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;__weakref__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">attribute</span> <span class="s1">&#39;__weakref__&#39;</span> <span class="n">of</span> <span class="s1">&#39;F&#39;</span> <span class="n">objects</span><span class="o">&gt;</span><span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对set_name函数进行柯里化，实现带参数的类装饰器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>   <span class="c1"># 传入参数name</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>   <span class="c1"># 装饰器是wrap</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="bp">cls</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="n">name</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="bp">cls</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">wrap</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="nd">@set_name</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span> <span class="k">class</span> <span class="nc">G</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">pass</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">G</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="s1">&#39;G&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="k">class</span> <span class="nc">G</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">pass</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">G</span> <span class="o">=</span> <span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">)(</span><span class="n">G</span><span class="p">)</span>  <span class="c1"># 装饰器的函数调用方法</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">G</span><span class="o">.</span><span class="n">NAME</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="s1">&#39;G&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>代码2：给类增加方法</strong></p>
+<p>类装饰器<code>get_name</code>给类H增加一个方法<code>__get_name__</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">_get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="bp">cls</span><span class="o">.</span><span class="n">__get_name__</span> <span class="o">=</span> <span class="n">_get_name</span>  <span class="c1"># 给cls增加__get_name__指向_get_name</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="bp">cls</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="nd">@get_name</span>
+   <span class="o">...</span><span class="p">:</span> <span class="k">class</span> <span class="nc">H</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">pass</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">h</span> <span class="o">=</span> <span class="n">H</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">h</span><span class="o">.</span><span class="n">__get_name__</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="s1">&#39;H&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">H</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> 
+<span class="n">mappingproxy</span><span class="p">({</span><span class="s1">&#39;__dict__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">attribute</span> <span class="s1">&#39;__dict__&#39;</span> <span class="n">of</span> <span class="s1">&#39;H&#39;</span> <span class="n">objects</span><span class="o">&gt;</span><span class="p">,</span>
+              <span class="s1">&#39;__doc__&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+              <span class="s1">&#39;__get_name__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">__main__</span><span class="o">.</span><span class="n">get_name</span><span class="o">.&lt;</span><span class="nb">locals</span><span class="o">&gt;.</span><span class="n">_get_name</span><span class="o">&gt;</span><span class="p">,</span>
+              <span class="s1">&#39;__module__&#39;</span><span class="p">:</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;__weakref__&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">attribute</span> <span class="s1">&#39;__weakref__&#39;</span> <span class="n">of</span> <span class="s1">&#39;H&#39;</span> <span class="n">objects</span><span class="o">&gt;</span><span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="类方法静态方法">类方法/静态方法</h2>
+<p>方法的定义都是类级的，但是有的方法使用实例调用，有的方法使用类来调用</p>
+<ul>
+<li>类方法：当一个方法，被classmethod装饰时， 第一个参数会变成类本身， 这样的方法叫类方法</li>
+<li>当一个方法， 被staticmethod装饰的时候，不会自动传递第一个参数， 这样的方法叫静态方法</li>
+</ul>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">I</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># 实例方法</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;instance method&#39;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_print</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>  <span class="c1"># 类方法</span>
+        <span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;class method&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span> 
+    <span class="k">def</span> <span class="nf">static_print</span><span class="p">():</span>  <span class="c1"># 静态方法</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;static method&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">xxx_print</span><span class="p">():</span>  <span class="c1"># 一个普通方法</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;this is a function&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>实例方法只能由实例调用</li>
+<li>类方法可以被类和实例使用，并且被实例使用时，传入的第一个参数还是类</li>
+<li>静态方法可以被类和实例使用，都不会传入第一个参数</li>
+<li>类中的普通方法，因为没有传入self，因此只能被类使用，实例无法使用</li>
+<li>各种方法根据首参来决定。</li>
+</ul>
+<h1 id="访问控制">访问控制</h1>
+<h2 id="双下划线">双下划线</h2>
+<ul>
+<li>所有<strong>双下划线开始，非双下划线结尾</strong>的成员，都是私有成员</li>
+<li>严格的说， Python里没有真正私有成员</li>
+<li>Python的私有成员是通过<strong>改名</strong>实现的：_类名 + 带双下划綫的属性</li>
+<li><strong>除非真的有必要，并且清除明白的知道会有什么后果，否则不要通过改名规则修改私有成员</strong></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">class</span> <span class="nc">Door</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">__status</span> <span class="o">=</span> <span class="n">status</span>  <span class="c1"># 双下划线开始， 非双下划綫结尾的都是私有的， 在类外部无法访问</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">__status</span> <span class="o">=</span> <span class="s1">&#39;opening&#39;</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">__status</span> <span class="o">=</span> <span class="s1">&#39;closed&#39;</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__status</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">__set_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>  <span class="c1"># # 双下滑先开始， 非双下划线结尾的方法也是私有方法</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
+   <span class="o">...</span><span class="p">:</span>         
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">door</span> <span class="o">=</span> <span class="n">Door</span><span class="p">(</span><span class="mi">1001</span><span class="p">,</span> <span class="s1">&#39;closed&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">__status</span>  <span class="c1"># 无法访问私有属性</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span>                            <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">d55234f04e7f</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">door</span><span class="o">.</span><span class="n">__status</span>
+
+<span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">&#39;Door&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;__status&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="vm">__dict__</span>  <span class="c1"># door对象含有的属性_Door__status</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="p">{</span><span class="s1">&#39;_Door__status&#39;</span><span class="p">:</span> <span class="s1">&#39;closed&#39;</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">:</span> <span class="mi">1001</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">__status</span> <span class="o">=</span> <span class="s1">&#39;hahaha&#39;</span>  <span class="c1"># 给对象创建了新的属性，并没有修改到__status</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">__status</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="s1">&#39;hahaha&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="p">{</span><span class="s1">&#39;_Door__status&#39;</span><span class="p">:</span> <span class="s1">&#39;closed&#39;</span><span class="p">,</span> <span class="s1">&#39;__status&#39;</span><span class="p">:</span> <span class="s1">&#39;hahaha&#39;</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">:</span> <span class="mi">1001</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="s1">&#39;closed&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="s1">&#39;opening&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">__set_number</span><span class="p">(</span><span class="mi">1002</span><span class="p">)</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span>                            <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">888</span><span class="n">a73f63746</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">door</span><span class="o">.</span><span class="n">__set_number</span><span class="p">(</span><span class="mi">1002</span><span class="p">)</span>
+
+<span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">&#39;Door&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;__set_number&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">_Door__status</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="s1">&#39;opening&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">_Door__status</span> <span class="o">=</span> <span class="s1">&#39;hehehe&#39;</span>  <span class="c1"># _类名 + 带双下划綫的属性的方式直接修改私有成员</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="n">door</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="s1">&#39;hehehe&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="单下划线">单下划线</h2>
+<ul>
+<li>单下划线是一种惯用法， 人为标记此成员为私有， 但是解释器不不做任何处理</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">=</span> <span class="mi">3</span>
+   <span class="o">...</span><span class="p">:</span>         
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">_a</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">_a</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="n">_a</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="mi">4</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">a</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="p">{</span><span class="s1">&#39;_a&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="property装饰器">property装饰器</h2>
+<p><strong>引入property装饰器</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Door</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__number</span> <span class="o">=</span> <span class="n">number</span>
+
+    <span class="k">def</span> <span class="nf">get_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__number</span>
+
+    <span class="k">def</span> <span class="nf">set_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__number</span> <span class="o">=</span> <span class="n">number</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当把<code>number</code>属性变成私有属性<code>__number</code>之后，无法直接访问得到，只能通过<code>get_number</code>和<code>set_number</code>两个函数访问<code>__number</code>属性。</p>
+<p>如果既能限制参数访问，又可以用类似属性这样简单的方式来访问类的变量，这个时候就可以使用property装饰器了。</p>
+<ul>
+<li><strong>Python内置的<code>@property</code>装饰器就是负责把一个方法变成属性调用的</strong></li>
+</ul>
+<p><strong>property装饰器使用</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Door</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__number</span> <span class="o">=</span> <span class="n">number</span>
+
+    <span class="c1"># property 装饰器会把一个仅有self参数的函数，变成一个属性， 属性的值，为方法的返回值</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__number</span>
+
+    <span class="c1"># property setter 装饰器， 可以把一个方法转化为对此赋值，但此方法有一定要求</span>
+    <span class="c1"># 1.同名 2.必须接收两个参数 self 和 value， value为所赋的值</span>
+    <span class="nd">@number.setter</span>
+    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__number</span> <span class="o">=</span> <span class="n">number</span>
+
+    <span class="nd">@number.deleter</span>
+    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;cannot remove number property&#39;</span><span class="p">)</span>
+
+<span class="n">door</span> <span class="o">=</span> <span class="n">Door</span><span class="p">(</span><span class="mi">1001</span><span class="p">)</span>
+<span class="n">door</span><span class="o">.</span><span class="n">number</span>  <span class="c1"># 返回1001</span>
+<span class="n">door</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">1002</span>
+<span class="n">door</span><span class="o">.</span><span class="n">number</span>  <span class="c1"># 返回1002</span>
+<span class="k">del</span> <span class="n">door</span><span class="o">.</span><span class="n">number</span>  <span class="c1"># 输出cannot remove number property</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="继承">继承</h1>
+<h2 id="单继承">单继承</h2>
+<ul>
+<li>在类名后加括号 括号中是继承列表， 称之为父类或者基类或者超类</li>
+<li>继承一个明显的好处就是可以获取父类的属性和方法</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Base</span><span class="p">:</span>
+    <span class="n">PUBLIC_CLASS_VAR</span> <span class="o">=</span> <span class="s1">&#39;PUBLIC_CLASS_VAR&#39;</span>
+    <span class="n">__PRIVATE_CLASS_VAR</span> <span class="o">=</span> <span class="s1">&#39;PRIVATE_CLASS_VAR&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">public_instance_var</span> <span class="o">=</span> <span class="s1">&#39;public_instance_var&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__private_instance_var</span> <span class="o">=</span> <span class="s1">&#39;private__instance_var&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">public_class_method</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;public_class_method&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__private_class_method</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;private_class_method&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">public_static_method</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s1">&#39;public static method&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__private_static_method</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s1">&#39;private static method&#39;</span>
+
+    <span class="k">def</span> <span class="nf">public_instance_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;public_instance_method&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__private_instance_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;private_instance_method&#39;</span>
+
+<span class="k">class</span> <span class="nc">Sub</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">sub</span> <span class="o">=</span> <span class="n">Sub</span><span class="p">()</span>
+<span class="n">sub</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="c1"># 输出</span>
+<span class="p">{</span><span class="s1">&#39;_Base__private_instance_var&#39;</span><span class="p">:</span> <span class="s1">&#39;private__instance_var&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;public_instance_var&#39;</span><span class="p">:</span> <span class="s1">&#39;public_instance_var&#39;</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>凡是公有的都能继承</li>
+<li>凡是私有的都不能继承</li>
+<li>原来是什么，继承过来还是什么</li>
+</ul>
+<h2 id="方法重写">方法重写</h2>
+<ul>
+<li>当子类和父类有同名成员的时候， 子类的成员会覆盖父类的同名成员</li>
+<li>当父类含有一个带参数的初始化方法的时候，子类一定需要一个初始化方法，并且在初始化方法中调用父类的初始化方法</li>
+<li>super方法：super(type, obj) =》type:类名，obj:传递给后续方法的第一个参数</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Base</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__a</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Base.print&#39;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">cls_print</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Base.cls_print&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Sub</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1">## 当子类和父类有同名成员的时候， 子类的成员会覆盖父类的同名成员</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Sub.print&#39;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">cls_print</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Sub.cls_print&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 调用父类的print</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="k">print</span><span class="p">()</span>
+        <span class="c1"># super(Sub, self).print()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">cls_foo</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1">#cls.cls_print()</span>
+        <span class="c1">#Base.cls_print()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">cls_print</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">SubSub</span><span class="p">(</span><span class="n">Sub</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;SubSub.print&#39;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">cls_print</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;SubSub.cls_print&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 调用Base的print</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SubSub</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="k">print</span><span class="p">()</span>
+        <span class="c1"># 代理 TYPE 的父类的方法， 并且使用 obj 绑定  第一个参数 指定调用谁的直接父类， 第二个参数指定当调用时，传递什么作为方法的第一个参数</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Sub</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="k">print</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SubSub</span><span class="p">,</span> <span class="n">SubSub</span><span class="p">)</span><span class="o">.</span><span class="n">cls_print</span><span class="p">()</span>  <span class="c1"># 类方法的时候可以传递类，也可以传递实例self</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">cls_foo</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Base.cls_print()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Sub</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">cls_print</span><span class="p">()</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="多继承与mro">多继承与MRO</h2>
+<h3 id="等效的类定义">等效的类定义</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">A</span><span class="p">():</span>
+    <span class="n">passs</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="多继承">多继承</h3>
+<ul>
+<li>在继承列表里存在多个类的时候表示多继承</li>
+<li>多继承会把继承列表里的所有公有成员都继承过来</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;method of A&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">B</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;method of B&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">C</span><span class="p">()</span>
+<span class="n">c</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>  <span class="c1"># 输出method of A</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="mro">MRO</h3>
+<p>定义一个多继承，如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;method of A&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">B</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;method of B&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;method of E&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">F</span><span class="p">()</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>  <span class="c1"># 输出method of E</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果定义类G继承自(A, E)，如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">G</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span>  <span class="c1"># 在定义的时候会直接报错</span>
+    <span class="k">pass</span>
+
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">51</span><span class="o">-</span><span class="n">dcac33a3d00c</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="k">class</span> <span class="nc">G</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span>
+      <span class="mi">2</span>     <span class="k">pass</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">Cannot</span> <span class="n">create</span> <span class="n">a</span> <span class="n">consistent</span> <span class="n">method</span> <span class="n">resolution</span>
+<span class="n">order</span> <span class="p">(</span><span class="n">MRO</span><span class="p">)</span> <span class="k">for</span> <span class="n">bases</span> <span class="n">E</span><span class="p">,</span> <span class="n">A</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>报错显示：Cannot create a consistent method resolution order (MRO) for bases E, A</p>
+<blockquote>
+<p>方法解析顺序(MRO)不满足报错</p>
+</blockquote>
+<p><strong>分析基类E,A的MRO</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">A</span><span class="o">.</span><span class="vm">__mro__</span>
+<span class="p">(</span><span class="n">__main__</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">E</span><span class="o">.</span><span class="vm">__mro__</span>
+<span class="p">(</span><span class="n">__main__</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">__main__</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">F</span><span class="o">.</span><span class="vm">__mro__</span>
+<span class="p">(</span><span class="n">__main__</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">__main__</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">__main__</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>所以，mro序列就是继承的先后顺序</p>
+<p>那么G类的mro序列应该就是(G, A, E, object)，Python通过C3算法来确定多继承的时候是否满足<strong>mro的两个原则</strong>：</p>
+<ol>
+<li>本地优先： 自己定义或重写的方法优先，按照继承列表，从左到右查找</li>
+<li>单调性：所有子类，也要满足查找顺序</li>
+</ol>
+<p>C3算法的主要作用是：在多继承时判断属性来自于哪个类，无法判断时抛出TypeError</p>
+<p><strong>C3算法</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">class B(O) ：则B的mro序列为： [B, O]
+class B(A1, A2, ..., An) ：则B的mro序列为： [B] + merge(mro(A1), mro(A2), ..., mro(An), [A1, A2, ..., An, O])
+</code></pre></td></tr></table>
+</div>
+</div><p>merge操作就是C3算法的核心，merge步骤如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown"><span class="k">*</span> 遍历列表
+<span class="k">*</span> 看第一个列表的首元素
+    <span class="k">*</span> 它在其他列表中也是首元素
+    <span class="k">*</span> 或者它在其他列表不存在
+<span class="k">*</span> 满足以上条件，则移除该首元素，合并到mro中
+<span class="k">*</span> 不满足，则抛出异常
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>C3算法分析F类的mro</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">mro(F) -&gt; [F] + merge(mro(E), mro(A), [E, A, O])
+	-&gt; [F] + merge([E, A, O], [A, O], [E, A, O])
+    -&gt; [F, E] + merge([A, O], [A, O], [A, O])
+    -&gt; [F, E, A] + merge([O], [O], [O])
+    -&gt; [F, E, A, O]
+</code></pre></td></tr></table>
+</div>
+</div><p>merge操作成功，mro解析正确，最终mro为[F, E, A, O]</p>
+<p><strong>C3算法分析G类的mro</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">mro(G) -&gt; [G] + merge(mro(A), mro(E), [A, E, O])
+	-&gt; [G] + merge([A, O], [E, A, O], [A, E, O])
+    -&gt; raise TypeError:
+</code></pre></td></tr></table>
+</div>
+</div><p>第一个列表的首元素为A，在第二个列表中存在但不是首元素，不满足merge的条件，直接抛出异常。</p>
+<p><strong>结论</strong>：</p>
+<ol>
+<li><strong>应该尽量避免多继承</strong></li>
+<li>多继承会对程序的心智负担造成非常大的压力</li>
+</ol>
+<h2 id="mixin类">Mixin类</h2>
+<p>参考</p>
+<ol>
+<li><a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014318680104044a55f4a9dbf8452caf71e8dc68b75a18000">廖雪峰-多重继承与MixIn</a></li>
+<li><a href="https://www.zhihu.com/question/20778853">知乎-Mixin是什么概念?</a></li>
+<li><a href="https://python3-cookbook.readthedocs.io/zh_CN/latest/c08/p18_extending_classes_with_mixins.html">Python Cookbook-利用Mixins扩展类功能</a></li>
+</ol>
+<p>在编程中，mixin是指为继承自它的class提供额外的功能, 但它自身却是不单独使用的类.。在具有多继承能力的编程语言中， mixin可以为类增加额外功能或方法。</p>
+<p>因此，MixIn模式的目的就是给一个类增加多个功能，这样，在设计类的时候，我们优先考虑通过多重继承来组合多个MixIn的功能，而不是设计多层次的复杂的继承关系。</p>
+<p>在Python 3.5.2 源代码 socketserver.py 中的639到643行可以看到以下四个类的定义</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">ForkingUDPServer</span><span class="p">(</span><span class="n">ForkingMixIn</span><span class="p">,</span> <span class="n">UDPServer</span><span class="p">):</span> <span class="k">pass</span>
+<span class="k">class</span> <span class="nc">ForkingTCPServer</span><span class="p">(</span><span class="n">ForkingMixIn</span><span class="p">,</span> <span class="n">TCPServer</span><span class="p">):</span> <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">ThreadingUDPServer</span><span class="p">(</span><span class="n">ThreadingMixIn</span><span class="p">,</span> <span class="n">UDPServer</span><span class="p">):</span> <span class="k">pass</span>
+<span class="k">class</span> <span class="nc">ThreadingTCPServer</span><span class="p">(</span><span class="n">ThreadingMixIn</span><span class="p">,</span> <span class="n">TCPServer</span><span class="p">):</span> <span class="k">pass</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>BaseServer：server类的基类</li>
+<li>UDPServer：UDP server class，继承自BaseServer</li>
+<li>TCPServer：TCP server class，继承自BaseServer</li>
+<li>ForkingMixIn：Mix-in class to handle each request in a new process.</li>
+<li>ThreadingMixIn：Mix-in class to handle each request in a new thread.</li>
+</ul>
+<p>Python自带了<code>TCPServer</code>和<code>UDPServer</code>这两类网络服务，而要同时服务多个用户就必须使用多进程或多线程模型，这两种模型由<code>ForkingMixIn</code>和<code>ThreadingMixIn</code>提供。通过组合，就可以得到以上四个类。</p>
+<p>这几个类之间的关系如下图：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/MixIn.jpg" alt="socketserver继承关系"></p>
+<p>可以看到，从BaseServer开始逐层继承的过程中，混入(MixIn)了ForkingMixIn类和ThreadingMixIn类。</p>
+<p>这样的多重继承的技巧称为MixIn。</p>
+<p>如果不采用MixIn技术，而是采用层次复杂的单继承实现，则类的数量会呈指数增长。</p>
+<p>具体不采用MixIn技术设计的继承层次关系参见：<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014318680104044a55f4a9dbf8452caf71e8dc68b75a18000">廖雪峰-多重继承与MixIn</a>中的Animal类的设计思路。</p>
+<p><strong>MixIn总结</strong></p>
+<p>MixIn其实也是一种组合的方式。通常来说，组合优于继承</p>
+<p>Mixin 类的限制</p>
+<ul>
+<li>Mixin类不应该有初始化方法</li>
+<li>Mixin类通常不能独立工作</li>
+<li>Mixin类的祖先也应该是Mixin类</li>
+</ul>
+<p>通常情况下，Mixin类总在继承列表的第一位</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-03-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Python/">Python</a>
+          <a href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/03/15/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Python面向对象的魔术方法</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/03/05/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">
+            <span class="next-text nav-default">Python异常处理</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

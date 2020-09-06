@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ASM on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/ASM/</link>
+    <description>Recent content in ASM on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 21 Mar 2016 10:08:50 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/ASM/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>自动存储管理ASM</title>
+      <link>https://suncle.me/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/</link>
+      <pubDate>Mon, 21 Mar 2016 10:08:50 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/</guid>
+      <description>&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036&#34;&gt;https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;什么是asm&#34;&gt;什么是ASM？&lt;/h2&gt;
+&lt;p&gt;ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。&lt;/p&gt;
+&lt;p&gt;In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.&lt;/p&gt;
+&lt;h2 id=&#34;为什么使用asm&#34;&gt;为什么使用ASM？&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;提供高效率的存储管理&lt;/li&gt;
+&lt;li&gt;提供完整的集群文件系统和卷管理能力&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;ASM的优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mirroring and Striping&lt;/strong&gt;（镜像化和条带化）&lt;/p&gt;
+&lt;p&gt;条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。&lt;/p&gt;
+&lt;p&gt;ASM镜像化选项:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Mirroring Option&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2-way mirroring&lt;/td&gt;
+&lt;td&gt;Each extent has 1 mirrored copy.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3-way mirroring&lt;/td&gt;
+&lt;td&gt;Each extent has 2 mirrored copies.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Unprotected&lt;/td&gt;
+&lt;td&gt;ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

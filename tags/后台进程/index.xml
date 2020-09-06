@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>后台进程 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/</link>
+    <description>Recent content in 后台进程 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 Mar 2016 11:22:28 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Oracle内存结构和后台进程</title>
+      <link>https://suncle.me/2016/03/16/Oracle%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/</link>
+      <pubDate>Wed, 16 Mar 2016 11:22:28 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/Oracle%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Oracle%E5%86%85%E5%AD%98%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Oracle实例=内存+后台进程&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Oracle数据库=实例+物理存储结构&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;由上图可知Oracle实例（一个Instance）由内存结构和程序结构组成，内存结构主要是SGA，程序结构主要是后台进程。&lt;/p&gt;
+&lt;p&gt;物理存储结构主要是数据库文件。&lt;/p&gt;
+&lt;p&gt;这次仔细学习了Oracle实例的具体内容。&lt;/p&gt;
+&lt;h2 id=&#34;为什么oracle数据库做的这么复杂&#34;&gt;为什么Oracle数据库做的这么复杂？&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;内存&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据查询的速度&lt;/li&gt;
+&lt;li&gt;更好的提升数据处理的速度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;后台进程&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;为了完成特定的任务的服务进程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;数据文件&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据的永久性保存&lt;/li&gt;
+&lt;li&gt;也是数据库性能下降的主要原因&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;实例之内存结构&#34;&gt;实例之内存结构&lt;/h2&gt;
+&lt;h3 id=&#34;system-global-areasga&#34;&gt;System global area(SGA)&lt;/h3&gt;
+&lt;p&gt;SGA区包括Oracle实例需要的一系列内存组件，用于存放数据信息和数据控制信息，这些&lt;strong&gt;内存信息被所有进程所共享&lt;/strong&gt;。SGA的各个组成包括：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;组成&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Database buffer cache&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;数据库高速缓冲区，里面存放着从磁盘读取到内存的数据块，这些数据块可以被所有的会话访问，是全局共享的。buffer cache分为三个部分，分别是default pool，keep pool，recycle pool。default pool是正常情况下，数据块存放的内存区域，default pool会根据一个过期算法（LRU，Least Recently Used，近期最少使用）将过期的脏数据（修改过的数据，没有修改的数据可以不写到磁盘上）写到磁盘上。keep pool这个区域用于将一些数据始终固定在内存中。recycle pool存放一些不经常使用的数据块，避免这些数据块在default pool中占据空间。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Shared pool&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;共享池缓存着一些用户可以共用的信息：1、可以重新使用的SQL语句  2、存放一些数据字典的信息，包括用户账户数据，表，索引，权限等等。  3、存储存放在数据库中的可执行代码。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Redo log buffer&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;重做日志缓冲区，存放着数据库操作产生的redo数据，Redo log buffer以循环的方式写入，当redo log已经写到磁盘后，就可以被后续的日志数据覆盖。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Large pool&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;对数据的处理不适用LRU算法，比shared pool更搞笑的内存收取方式。并行执行时会使用large pool。Rman备份时启动并行备份方式时，使用large pool。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Java pool&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;这块内存区域用来存放所有特定会话的JVM（Java Virtual Machine）中的java代码和数据。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Streams pool&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;里面存放着流相关的信息，比如流队列，其中也会流复制中capture进程提供进程内存空间。Streams pool只为流复制提供内存空间，如果没有手工配置，也没有配置流复制，这个空间将设置为0。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Result cache&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;结果缓存，当表的访问方式以读为主前提下，从一张大表中过滤出少量的记录作为结果集，把查询结果集放入result cache，后续相同的查询语句可以直接从result cache里获取想要的结果，省去了CPU、I/O上的开销。这个SGA组件加速了频繁运行的查询语句的执行速度。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

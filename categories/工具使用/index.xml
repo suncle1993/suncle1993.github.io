@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工具使用 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/</link>
+    <description>Recent content in 工具使用 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 01 Feb 2018 18:46:45 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用ab和wrk对腾讯CLS进行benchmark测试</title>
+      <link>https://suncle.me/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/</link>
+      <pubDate>Thu, 01 Feb 2018 18:46:45 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/</guid>
+      <description>&lt;h1 id=&#34;使用ab和wrk对cls进行benchmark测试&#34;&gt;使用ab和wrk对CLS进行benchmark测试&lt;/h1&gt;
+&lt;p&gt;使用ab和wrk对腾讯云日志服务CLS进行压力测试，以此为例对ab和wrk进行说明&lt;/p&gt;
+&lt;h1 id=&#34;ab&#34;&gt;ab&lt;/h1&gt;
+&lt;p&gt;ab，全称是apache benchmark，是apache官方推出的工具。该工具是用来测试Apache服务器的性能的。查看安装的apache的服务器能提供的服务能力，每秒可以处理多少次请求。ab 执行时常用的选项如下表：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;选项&lt;/th&gt;
+&lt;th&gt;作用&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;-c&lt;/td&gt;
+&lt;td&gt;并发数， 一次发送的总请求数，默认是一次发一个请求。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-k&lt;/td&gt;
+&lt;td&gt;打开keep-alive，在一个HTTP Session中请求多次。默认是关闭的。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-n&lt;/td&gt;
+&lt;td&gt;请求数， 整个benchmark测试过程中需要发送的请求次数。默认是一次，默认情况下得到的性能参数没有代表性。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-t&lt;/td&gt;
+&lt;td&gt;最大时间，benchmark测试最长时间，默认没有限制。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-u&lt;/td&gt;
+&lt;td&gt;上传文件，PUT操作时使用，需要设置-T选项&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-T&lt;/td&gt;
+&lt;td&gt;设置上传文件的Content-Type&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-p&lt;/td&gt;
+&lt;td&gt;postfile，指定包含post数据的文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-r&lt;/td&gt;
+&lt;td&gt;当接收到socket错误的时候ab不退出&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description>
+    </item>
+    
+    <item>
+      <title>详解supervisor进程管理</title>
+      <link>https://suncle.me/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Mon, 25 Sep 2017 17:05:22 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;h1 id=&#34;supervisor&#34;&gt;supervisor&lt;/h1&gt;
+&lt;p&gt;使用Python编写的进程管理程序supervisor来管理Python程序那是最合适不过了，supervisor基于CS架构，主要有以下两个组成部分：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;supervisord&lt;/strong&gt;：supervisord是supervisor的服务端程序。负责启动子程序，应答客户端命令，子程序日志记录，对进程变化发送事件通知等&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;supervisorctl：&lt;/strong&gt; 客户端命令行工具，可以连接服务器端，进行进程的启动、关闭、重启、状态查看等。重要的一点是，supervisorctl不仅可以连接到本机上的supervisord，还可以连接到远程的supervisord，当然在本机上面是通过UNIX socket连接的，远程是通过TCP socket连接的。supervisorctl和supervisord之间的通信，是通过xml_rpc完成的。 相应的配置在[supervisorctl]块里面&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>ubuntu16.04配置samba解决linux的svn使用舒适问题</title>
+      <link>https://suncle.me/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Sat, 02 Sep 2017 00:53:01 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;p&gt;个人感觉，svn的命令行使用起来没有git那么舒适，但是windows上的svn GUI客户端TortoiseSVN 使用非常方便。因此对于经常在虚拟机中做服务程序开发但是又不得不用svn的同学来说，结合linux开发环境和TortoiseSVN 来管理代码版本就显得尤其有用。&lt;/p&gt;
+&lt;h1 id=&#34;安装配置samba&#34;&gt;安装配置samba&lt;/h1&gt;
+&lt;p&gt;ubuntu上使用apt-get安装&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;apt-get install samba samba-common
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Sublime Text 3解决中文乱码</title>
+      <link>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</link>
+      <pubDate>Mon, 11 Jan 2016 10:50:22 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</guid>
+      <description>&lt;p&gt;众所周知，Sublime Text 3（下面简称ST3）的默认编码是utf-8，因此需要把GB2312和GBK编码转换成utf-8。在Sublime Text 2中大家解决中文乱码的方法都是先装好Package Control，然后再通过这个安装ConvertToUTF8的Package。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

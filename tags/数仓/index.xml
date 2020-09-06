@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数仓 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E6%95%B0%E4%BB%93/</link>
+    <description>Recent content in 数仓 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 08 May 2019 10:58:43 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E6%95%B0%E4%BB%93/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>数仓工作的简单介绍和对比</title>
+      <link>https://suncle.me/2019/05/08/brief-introduction-and-comparison-of-data-warehouse/</link>
+      <pubDate>Wed, 08 May 2019 10:58:43 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/05/08/brief-introduction-and-comparison-of-data-warehouse/</guid>
+      <description>&lt;p&gt;数仓工作的简单介绍和对比&lt;/p&gt;
+&lt;h2 id=&#34;传统技术栈&#34;&gt;传统技术栈&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;http://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/brief-introduction-and-comparison-of-data-warehouse/21557225799_.pic_hd.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;再惠技术栈&#34;&gt;再惠技术栈&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;http://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/brief-introduction-and-comparison-of-data-warehouse/11557225799_.pic_hd.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

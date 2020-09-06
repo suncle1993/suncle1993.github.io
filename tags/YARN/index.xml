@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>YARN on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/YARN/</link>
+    <description>Recent content in YARN on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    
+	<atom:link href="https://suncle.me/tags/YARN/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>搭建Hadoop3集群</title>
+      <link>https://suncle.me/1/01/01/Building-Hadoop3-Cluster/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://suncle.me/1/01/01/Building-Hadoop3-Cluster/</guid>
+      <description>&lt;p&gt;强烈建议再搭建hadoop集群之前体验一下单机模式和伪分布式模式的搭建过程，可以参考以下链接：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/&#34;&gt;https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;开始之前&#34;&gt;开始之前&lt;/h1&gt;
+&lt;p&gt;本次集群搭建所依赖的软件环境如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例&lt;/li&gt;
+&lt;li&gt;jdk-8u162-linux-x64.tar.gz&lt;/li&gt;
+&lt;li&gt;hadoop 3.1.0&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;先了解一个概念：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Hadoop YARN&lt;/strong&gt;： YARN是一个在所有节点上执行数据处理任务的作业调度框架。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然后执行以下初始步骤：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;创建三台阿里云ECS，也可以在本地创建3台配置较好的Vmware虚拟机。分别作为hadoop集群的node-master，node1和node2（名称可以自取）。 &lt;del&gt;建议将每个主机名设置为节点名&lt;/del&gt; ，一定要修改hostname。&lt;/li&gt;
+&lt;li&gt;为每台机器创建hadoop用户，后续如没有特殊说明，所有命令均在hadoop用户下执行。&lt;/li&gt;
+&lt;li&gt;在三台机器上都安装jdk，统一使用hadoop用户安装在&lt;code&gt;/usr/local/src&lt;/code&gt;目录下（其他目录也可，放在用户目录下会更好，省掉权限问题），更改&lt;code&gt;/usr/local/src&lt;/code&gt;目录的属主和属组为hadoop，可以使用&lt;code&gt;chown hadoop:hadoop /usr/local/src&lt;/code&gt;命令更改。&lt;/li&gt;
+&lt;li&gt;需要在各个节点的/bin目录下增加java可执行文件的软连接，以node2为例&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;hadoop@node2:~$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /bin
+hadoop@node2:/bin$ sudo ln -s /usr/local/src/jdk1.8.0_162/bin/java java
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如果没有添加，在执行MR程序时会报错：&lt;code&gt;/bin/bash: /bin/java: No such file or directory&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;创建hadoop用户和安装jdk的步骤参见文章开头的单机和伪分布式搭建过程。&lt;/p&gt;
+&lt;p&gt;下面是本次集群安装的三台ECS机器的ip情况：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;node-master&lt;/strong&gt;: 120.77.239.67&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;node1&lt;/strong&gt;: 119.23.145.73&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;node2&lt;/strong&gt;: 119.23.141.223&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

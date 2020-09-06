@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>go2school-1 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="我司大佬紫月苏最近在QCon上听了关于Go语言的洗脑报告，回来之后给各位普及了go的一些基本情况和未来发展，感觉大家兴致很浓，于是就在我司内部gitlab上开了一个新的repo，叫做go2school，也就是Go语言学习计划。又因为对Java实在无爱，然后妥妥的就加入了Go的大军。
+下面是我司学习Go的Chapter 1. Grammer。具体就是阅读 Learn Go in Y minutes 学习基本语法。然后练习：
+ 用 Go 语言实现一个计算斐波那契数列的函数，从标准输入读入 n, 从标准输出返回 f(n)。（递归版、循环版都要实现） " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2018/10/31/go2school-1/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="go2school-1" />
+<meta property="og:description" content="我司大佬紫月苏最近在QCon上听了关于Go语言的洗脑报告，回来之后给各位普及了go的一些基本情况和未来发展，感觉大家兴致很浓，于是就在我司内部gitlab上开了一个新的repo，叫做go2school，也就是Go语言学习计划。又因为对Java实在无爱，然后妥妥的就加入了Go的大军。
+下面是我司学习Go的Chapter 1. Grammer。具体就是阅读 Learn Go in Y minutes 学习基本语法。然后练习：
+
+用 Go 语言实现一个计算斐波那契数列的函数，从标准输入读入 n, 从标准输出返回 f(n)。（递归版、循环版都要实现）
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2018/10/31/go2school-1/" />
+<meta property="article:published_time" content="2018-10-31T20:26:54+00:00" />
+<meta property="article:modified_time" content="2018-10-31T20:26:54+00:00" />
+<meta itemprop="name" content="go2school-1">
+<meta itemprop="description" content="我司大佬紫月苏最近在QCon上听了关于Go语言的洗脑报告，回来之后给各位普及了go的一些基本情况和未来发展，感觉大家兴致很浓，于是就在我司内部gitlab上开了一个新的repo，叫做go2school，也就是Go语言学习计划。又因为对Java实在无爱，然后妥妥的就加入了Go的大军。
+下面是我司学习Go的Chapter 1. Grammer。具体就是阅读 Learn Go in Y minutes 学习基本语法。然后练习：
+
+用 Go 语言实现一个计算斐波那契数列的函数，从标准输入读入 n, 从标准输出返回 f(n)。（递归版、循环版都要实现）
+">
+<meta itemprop="datePublished" content="2018-10-31T20:26:54+00:00" />
+<meta itemprop="dateModified" content="2018-10-31T20:26:54+00:00" />
+<meta itemprop="wordCount" content="772">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="go2school-1"/>
+<meta name="twitter:description" content="我司大佬紫月苏最近在QCon上听了关于Go语言的洗脑报告，回来之后给各位普及了go的一些基本情况和未来发展，感觉大家兴致很浓，于是就在我司内部gitlab上开了一个新的repo，叫做go2school，也就是Go语言学习计划。又因为对Java实在无爱，然后妥妥的就加入了Go的大军。
+下面是我司学习Go的Chapter 1. Grammer。具体就是阅读 Learn Go in Y minutes 学习基本语法。然后练习：
+
+用 Go 语言实现一个计算斐波那契数列的函数，从标准输入读入 n, 从标准输出返回 f(n)。（递归版、循环版都要实现）
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">go2school-1</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-10-31 </span>
+        <div class="post-category">
+            <a href="/categories/Go/"> Go </a>
+            </div>
+          <span class="more-meta"> 约 772 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#交作业">交作业</a></li>
+    <li><a href="#感觉不错">感觉不错</a></li>
+    <li><a href="#一些问题">一些问题</a>
+      <ul>
+        <li><a href="#代码格式化">代码格式化</a></li>
+        <li><a href="#goland配置">GoLand配置</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>我司大佬<a href="http://www.liriansu.com/">紫月苏</a>最近在QCon上听了关于Go语言的洗脑报告，回来之后给各位普及了go的一些基本情况和未来发展，感觉大家兴致很浓，于是就在我司内部gitlab上开了一个新的repo，叫做go2school，也就是Go语言学习计划。又因为对Java实在无爱，然后妥妥的就加入了Go的大军。</p>
+<p>下面是我司学习Go的Chapter 1. Grammer。具体就是阅读 <a href="https://learnxinyminutes.com/docs/zh-cn/go-cn/"><strong>Learn Go in Y minutes</strong></a> 学习基本语法。然后练习：</p>
+<ul>
+<li>用 Go 语言实现一个计算斐波那契数列的函数，从标准输入读入 n, 从标准输出返回 f(n)。（递归版、循环版都要实现）</li>
+</ul>
+<h1 id="交作业">交作业</h1>
+<p>斐波那契数列的go语言实现：递归版和循环版</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span> <span class="c1">// it means this package is an executable file, not a repo
+</span><span class="c1"></span>
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span> <span class="c1">// import fmt standard package
+</span><span class="c1"></span>
+<span class="c1">// fib function, by recursive
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">fibRe</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">m</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">1</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nf">fib</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nf">fib</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// fib function,  by loop
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">fib</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">m</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">1</span>
+	<span class="p">}</span>
+	<span class="kd">var</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span> <span class="kt">int</span>
+	<span class="nx">a</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">b</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">c</span> <span class="p">=</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span>
+		<span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="p">=</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">b</span>
+<span class="p">}</span>
+
+<span class="c1">// program entry
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">n</span><span class="p">,</span> <span class="nx">m</span> <span class="kt">int</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Scan</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">n</span><span class="p">)</span> <span class="c1">// read from stdin
+</span><span class="c1"></span>	<span class="nx">m</span> <span class="p">=</span> <span class="nf">fib</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;m: %d\n&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span>
+	<span class="nx">m</span> <span class="p">=</span> <span class="nf">fibRe</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;m: %d\n&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="感觉不错">感觉不错</h1>
+<p>在Learn Go in Y minutes这个网站上学习基本的语法感觉很nice，一个完整的用例中几乎廊括了所有的语法，看完基本语法找到斐波拉契数列开始牛刀小试了，感觉很不错。和之前写C++的感觉很像，一种熟悉的感觉。</p>
+<h1 id="一些问题">一些问题</h1>
+<ul>
+<li>代码格式化</li>
+<li>Goland配置</li>
+</ul>
+<h2 id="代码格式化">代码格式化</h2>
+<p>Go语言的格式化感觉很nice，我就不喜欢每个人都有自己的独特的风格，再次鄙视一下那些喜欢用vim还不格式化代码的人，哈哈。个人还是比较同意有约束整体才更容易前进。</p>
+<p>使用Goland这个IDE写Go时可以在preference中设置使用gofmt这个格式化工具。每次在保存代码的时候都会格式化，感觉很赞，这个体验比写C++好</p>
+<h2 id="goland配置">GoLand配置</h2>
+<p>需要配置如下：</p>
+<ul>
+<li>GoROOT</li>
+<li>GoPATH</li>
+<li>还有一些别的没有配的后续再看</li>
+</ul>
+<p>本次就先水到这里了</p>
+<hr>
+<p>参考：</p>
+<ol>
+<li><a href="https://learnxinyminutes.com/docs/zh-cn/go-cn/">https://learnxinyminutes.com/docs/zh-cn/go-cn/</a></li>
+</ol>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-10-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Go/">Go</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2018/11/15/go2school-2/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">go2school-2</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2018/09/26/Mid-Autumn-Meets-Kuocang-Mountain/">
+            <span class="next-text nav-default">当中秋遇上括苍山</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

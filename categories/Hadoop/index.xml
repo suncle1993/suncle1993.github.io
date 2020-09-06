@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hadoop on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/categories/Hadoop/</link>
+    <description>Recent content in Hadoop on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 May 2018 13:38:03 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/categories/Hadoop/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hadoop项目：从cdn日志统计直播流量</title>
+      <link>https://suncle.me/2018/05/16/Hadoop-Project-Live-Flow-Statistic/</link>
+      <pubDate>Wed, 16 May 2018 13:38:03 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/05/16/Hadoop-Project-Live-Flow-Statistic/</guid>
+      <description>&lt;p&gt;从在用的四家cdn的大量日志中，统计出每场直播的流量数据，包括国内流量和海外流量。&lt;/p&gt;
+&lt;h1 id=&#34;获取日志&#34;&gt;获取日志&lt;/h1&gt;
+&lt;p&gt;目前已有的数据来源：四家cdn服务商。每个服务商都有自己不同的日志接口，不同的日志获取方式，可以把日志类型分为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;网宿日志、帝联日志、阿里日志，腾讯日志&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;直播日志、录播日志&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;hls日志、rtmp日志、rtmpdist日志、hdl日志，不同协议日志的域名都不相同。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;各家厂商cdn日志的收集方法参见各自官网。获取到的日志示例文件名如下：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;cdn_code&lt;/th&gt;
+&lt;th&gt;log_name&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;netcenter&lt;/td&gt;
+&lt;td&gt;2017-12-06-2300-2330_rtmp-wsz.qukanvideo.com.cn.log.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;dnion&lt;/td&gt;
+&lt;td&gt;hls-d.quklive.com_20180509_03_04.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;alicdn&lt;/td&gt;
+&lt;td&gt;play-a.quklive.com_2017_12_07_1100_1200.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;qukan-&amp;gt;alicdn&lt;/td&gt;
+&lt;td&gt;recordcdn-sz.qukanvideo.com_2017_12_06_1800_1900.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tencent&lt;/td&gt;
+&lt;td&gt;2017120607_hangzhouqukan.cdn.log.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;可以从文件名判断属于日志所属的cdn代码和对应的协议。将cdn代码、播放类型代码、协议代码对应的关系直接存在字典中：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;domain_protocol_dict&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;s1&#34;&gt;&amp;#39;recordcdn.quklive.com&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;qukan&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;record&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;hls&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;通过日志名称匹配到域名，并取得对应的cdn代码、播放类型代码、协议代码，然后对具体的日志做不同的正则处理。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Sqoop导入导出</title>
+      <link>https://suncle.me/2018/05/09/Sqoop-Import-Export/</link>
+      <pubDate>Wed, 09 May 2018 15:17:50 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/05/09/Sqoop-Import-Export/</guid>
+      <description>&lt;p&gt;Apache Sqoop是一种用于在Apache Hadoop和结构化数据存储（如关系数据库）之间高效传输批量数据的工具。实质就是将导入导出命令转换成mapreduce程序来实现。&lt;/p&gt;
+&lt;h1 id=&#34;sqoop版本选择&#34;&gt;Sqoop版本选择&lt;/h1&gt;
+&lt;p&gt;根据官网介绍，当前（文档编写时间：2018-05-07）最新的稳定版本是1.4.7。 Sqoop2的最新版本是1.99.7（下载，文档）。 请注意，1.99.7与1.4.7不兼容，且未完成功能，具体信息可以参见Apache Sqoop官网。因此不适用于生产部署。所以我们选择1.4.7版本。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1.4.7版本下载地址：https://www.apache.org/dyn/closer.lua/sqoop/1.4.7&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;可以选择华中科技大学的镜像站进行下载：http://mirrors.hust.edu.cn/apache/sqoop/1.4.7&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;1.4.7版本文档地址：https://sqoop.apache.org/docs/1.4.7/index.html&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>使用Python语言写Hadoop MapReduce程序</title>
+      <link>https://suncle.me/2018/04/17/Writing-An-Hadoop-MapReduce-Program-In-Python/</link>
+      <pubDate>Tue, 17 Apr 2018 15:54:21 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/04/17/Writing-An-Hadoop-MapReduce-Program-In-Python/</guid>
+      <description>&lt;p&gt;在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。&lt;/p&gt;
+&lt;p&gt;本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：&lt;strong&gt;单词计数&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如Python，Ruby，C++等&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;编写完成的MapReduce程序可以直接在你已经搭建好的伪分布式程序中调试运行。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Hadoop3单机和伪分布式模式安装配置</title>
+      <link>https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</link>
+      <pubDate>Mon, 16 Apr 2018 19:08:28 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;搭建hadoop&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;为了体验HDFS和MapReduce框架，以及在HDFS上运行示例程序或简单作业，我们首先需要完成单机上的Hadoop安装。所依赖的软件环境如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例&lt;/li&gt;
+&lt;li&gt;jdk-8u162-linux-x64.tar.gz&lt;/li&gt;
+&lt;li&gt;hadoop 3.1.0&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;本次演示统一将软件放置在&lt;code&gt;/usr/local/src&lt;/code&gt;目录中&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Hadoop、MapReduce、HDFS介绍</title>
+      <link>https://suncle.me/2018/04/16/Hadoop-MapReduce-HDFS-Introduction/</link>
+      <pubDate>Mon, 16 Apr 2018 19:08:21 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/04/16/Hadoop-MapReduce-HDFS-Introduction/</guid>
+      <description>&lt;p&gt;对于入门hadoop的初学者，首先需要了解一下三个部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;hadoop的生态环境&lt;/li&gt;
+&lt;li&gt;MapReduce模型&lt;/li&gt;
+&lt;li&gt;HDFS分布式文件系统&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;依次介绍这三个部分。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>搭建Hadoop3集群</title>
+      <link>https://suncle.me/1/01/01/Building-Hadoop3-Cluster/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://suncle.me/1/01/01/Building-Hadoop3-Cluster/</guid>
+      <description>&lt;p&gt;强烈建议再搭建hadoop集群之前体验一下单机模式和伪分布式模式的搭建过程，可以参考以下链接：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/&#34;&gt;https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;开始之前&#34;&gt;开始之前&lt;/h1&gt;
+&lt;p&gt;本次集群搭建所依赖的软件环境如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例&lt;/li&gt;
+&lt;li&gt;jdk-8u162-linux-x64.tar.gz&lt;/li&gt;
+&lt;li&gt;hadoop 3.1.0&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;先了解一个概念：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Hadoop YARN&lt;/strong&gt;： YARN是一个在所有节点上执行数据处理任务的作业调度框架。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然后执行以下初始步骤：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;创建三台阿里云ECS，也可以在本地创建3台配置较好的Vmware虚拟机。分别作为hadoop集群的node-master，node1和node2（名称可以自取）。 &lt;del&gt;建议将每个主机名设置为节点名&lt;/del&gt; ，一定要修改hostname。&lt;/li&gt;
+&lt;li&gt;为每台机器创建hadoop用户，后续如没有特殊说明，所有命令均在hadoop用户下执行。&lt;/li&gt;
+&lt;li&gt;在三台机器上都安装jdk，统一使用hadoop用户安装在&lt;code&gt;/usr/local/src&lt;/code&gt;目录下（其他目录也可，放在用户目录下会更好，省掉权限问题），更改&lt;code&gt;/usr/local/src&lt;/code&gt;目录的属主和属组为hadoop，可以使用&lt;code&gt;chown hadoop:hadoop /usr/local/src&lt;/code&gt;命令更改。&lt;/li&gt;
+&lt;li&gt;需要在各个节点的/bin目录下增加java可执行文件的软连接，以node2为例&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;hadoop@node2:~$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /bin
+hadoop@node2:/bin$ sudo ln -s /usr/local/src/jdk1.8.0_162/bin/java java
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如果没有添加，在执行MR程序时会报错：&lt;code&gt;/bin/bash: /bin/java: No such file or directory&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;创建hadoop用户和安装jdk的步骤参见文章开头的单机和伪分布式搭建过程。&lt;/p&gt;
+&lt;p&gt;下面是本次集群安装的三台ECS机器的ip情况：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;node-master&lt;/strong&gt;: 120.77.239.67&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;node1&lt;/strong&gt;: 119.23.145.73&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;node2&lt;/strong&gt;: 119.23.141.223&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

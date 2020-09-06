@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>配置 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E9%85%8D%E7%BD%AE/</link>
+    <description>Recent content in 配置 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 16 Apr 2018 19:08:28 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hadoop3单机和伪分布式模式安装配置</title>
+      <link>https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</link>
+      <pubDate>Mon, 16 Apr 2018 19:08:28 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;搭建hadoop&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;为了体验HDFS和MapReduce框架，以及在HDFS上运行示例程序或简单作业，我们首先需要完成单机上的Hadoop安装。所依赖的软件环境如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例&lt;/li&gt;
+&lt;li&gt;jdk-8u162-linux-x64.tar.gz&lt;/li&gt;
+&lt;li&gt;hadoop 3.1.0&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;本次演示统一将软件放置在&lt;code&gt;/usr/local/src&lt;/code&gt;目录中&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Sublime Text 3解决中文乱码</title>
+      <link>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</link>
+      <pubDate>Mon, 11 Jan 2016 10:50:22 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</guid>
+      <description>&lt;p&gt;众所周知，Sublime Text 3（下面简称ST3）的默认编码是utf-8，因此需要把GB2312和GBK编码转换成utf-8。在Sublime Text 2中大家解决中文乱码的方法都是先装好Package Control，然后再通过这个安装ConvertToUTF8的Package。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux vi的使用</title>
+      <link>https://suncle.me/2016/01/10/Linux-vi%E7%9A%84%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Sun, 10 Jan 2016 14:15:34 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/10/Linux-vi%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
+      <description>&lt;h1 id=&#34;linux-vi的使用&#34;&gt;Linux vi的使用&lt;/h1&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;vi模式转换&#34;&gt;vi模式转换&lt;/h2&gt;
+&lt;p&gt;经常使用的三种基本模式：命令模式(Command Mode)，输入模式(Input Mode)，末行模式(Last Line Mode)，其他的9种模式不做介绍，很少会使用。&lt;/p&gt;
+&lt;p&gt;三种基本模式的相互转换如下图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Flowsnowvi%E6%A8%A1%E5%BC%8F%E8%BD%AC%E6%8D%A2.jpg&#34; alt=&#34;vi模式转换&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux用户和组管理</title>
+      <link>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Sat, 09 Jan 2016 00:16:04 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;概述&#34;&gt;概述&lt;/h2&gt;
+&lt;p&gt;只有root用户才能管理用户和组，所以一切命令都是root执行。&lt;/p&gt;
+&lt;h3 id=&#34;用户分类&#34;&gt;用户分类&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;超级用户：root，UID=0&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;普通用户：具有操作系统有限的权限，500&amp;lt;=UID&amp;lt;=65535(2^32-1),有限个&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;伪用户：为了安全,1&amp;lt;=UID&amp;lt;=499&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;伪用户解释：linux中任何一个命令的操作都必须有一个用户的身份。伪用户一般和系统或者程序服务相关，比如bin,daemon,shutdown ,halt等，linux默认都有这些伪用户，伪用户通常不需要或无法登陆系统（nologin），可以没有宿主目录&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>虚拟机的三种网络模式</title>
+      <link>https://suncle.me/2016/01/08/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 08 Jan 2016 17:47:21 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/08/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;虚拟机的三种网络模式&#34;&gt;虚拟机的三种网络模式&lt;/h1&gt;
+&lt;p&gt;首先说下写这篇文章的原因，记得刚开始接触Linux的时候，使用的是ubuntu Kylin 14.04，那时候为了联上互联网使用Vmware的NAT模式。后来开始学习服务器的相关知识，换成了CentOS6.7，这时候为了能远程登录使用的是Bridge模式，但是一直没有让这个服务器连互联网（Bridge模式是可以联网的），连安装软件都是通过本地的yum源，现在放假回家，电脑连的是无线网（没有插网线），突然发现一直ping不同虚拟机，才发现是模式选择的问题，查了资料之后才发现原来是需要使用Host-Only模式，由此我就想写一下三种模式的区别。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

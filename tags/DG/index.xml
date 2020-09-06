@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DG on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/DG/</link>
+    <description>Recent content in DG on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 Mar 2016 10:35:05 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/DG/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>RAC与DG</title>
+      <link>https://suncle.me/2016/03/16/RAC%E4%B8%8EDG/</link>
+      <pubDate>Wed, 16 Mar 2016 10:35:05 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/RAC%E4%B8%8EDG/</guid>
+      <description>&lt;h2 id=&#34;rac&#34;&gt;RAC&lt;/h2&gt;
+&lt;p&gt;RAC: real application clustersrac&lt;/p&gt;
+&lt;p&gt;RAC: real application clustersrac&lt;/p&gt;
+&lt;p&gt;单节点数据库：数据文件和示例文件一一对应&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;实例损坏时数据库就损坏了&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;RAC架构数据库：数据文件和多个实例对应&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;RAC最根本的初衷是实例级的容错，并不是基于数据的&lt;/p&gt;
+&lt;p&gt;实例都是基于数据的。&lt;/p&gt;
+&lt;p&gt;dataguard是基于数据容错的。&lt;/p&gt;
+&lt;p&gt;Oracle数据库支持网格计算环境的核心技术&lt;/p&gt;
+&lt;p&gt;SAN网络存储（Storage Area Network）：集中式管理的高速存储网络
+&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-RAC%E6%9E%B6%E6%9E%84.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;RAC的目的&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提供实例级别的冗余&lt;/li&gt;
+&lt;li&gt;提供更多的系统资源&lt;/li&gt;
+&lt;li&gt;增加更多的并行处理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;RAC的优点和缺点&lt;/p&gt;
+&lt;p&gt;优点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;提供系统冗余&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;更多的系统资源&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;业务分割处理&lt;/p&gt;
+&lt;p&gt;缺点&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;内存共享和资源竞争（cache fusion）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;底层技术复杂，对DBA技术要求高&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;什么时候需要使用RAC？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;实例冗余——第一考虑的目的&lt;/li&gt;
+&lt;li&gt;处理能力和性能的提升&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

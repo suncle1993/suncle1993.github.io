@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>恢复 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E6%81%A2%E5%A4%8D/</link>
+    <description>Recent content in 恢复 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 22 Jan 2018 16:28:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E6%81%A2%E5%A4%8D/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>关于冷热数据备份和恢复的思考</title>
+      <link>https://suncle.me/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/</link>
+      <pubDate>Mon, 22 Jan 2018 16:28:13 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/</guid>
+      <description>&lt;h1 id=&#34;关于冷热数据备份和恢复的思考&#34;&gt;关于冷热数据备份和恢复的思考&lt;/h1&gt;
+&lt;p&gt;数据库：Mysql InnoDB&lt;/p&gt;
+&lt;p&gt;目标：备份指定数据表指定时间段的全字段数据到数据文件，并删除掉数据库中已备份数据&lt;/p&gt;
+&lt;p&gt;说明：这里说的数据备份不是灾备，而且通过备份基本不会使用的数据来缓解数据库压力，要求备份的数据是可以恢复的&lt;/p&gt;
+&lt;p&gt;持久化存储：文本格式的数据文件，存储于oss中&lt;/p&gt;
+&lt;p&gt;思考：不同表中可能含有多个时间字段，可能的组合如下&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;update_time&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;create_time&lt;/code&gt; &amp;amp; &lt;code&gt;update_time&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;create_time&lt;/code&gt; &amp;amp; &lt;code&gt;update_time&lt;/code&gt; &amp;amp; 业务时间（由程序插入，可能是datetime可能是date可能是timestamp）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一般数据表设计时都会带上创建时间和修改时间。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据一般都是快速增长，较少或者几乎不更新，属于记录型的数据&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Rman备份恢复和管理</title>
+      <link>https://suncle.me/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Fri, 18 Mar 2016 15:47:01 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Rman%E7%BB%84%E4%BB%B6.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.cnblogs.com/Ronger/archive/2011/12/29/2306367.html&#34;&gt;Oracle之Rman入门指南&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.5ienet.com/note/html/rman/index.shtml&#34;&gt;一步一步学Rman&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;rman简介&#34;&gt;Rman简介&lt;/h2&gt;
+&lt;p&gt;Rman-Recover manager恢复管理工具。&lt;/p&gt;
+&lt;p&gt;Oracle集成了很多环境的一个数据库备份和恢复的工具。&lt;/p&gt;
+&lt;p&gt;Rman可以做下列事情：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库热备份
+&lt;ul&gt;
+&lt;li&gt;全库备份和恢复
+&lt;ul&gt;
+&lt;li&gt;数据库克隆（DG）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;增量备份和恢复&lt;/li&gt;
+&lt;li&gt;表空间备份和恢复&lt;/li&gt;
+&lt;li&gt;数据文件备份和恢复&lt;/li&gt;
+&lt;li&gt;归档备份和恢复&lt;/li&gt;
+&lt;li&gt;控制文件和参数文件备份和恢复&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;数据库冷备份&lt;/li&gt;
+&lt;li&gt;备份集的管理
+&lt;ul&gt;
+&lt;li&gt;备份策略&lt;/li&gt;
+&lt;li&gt;保留和删除备份数据&lt;/li&gt;
+&lt;li&gt;&amp;hellip;&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>数据库备份和恢复</title>
+      <link>https://suncle.me/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D/</link>
+      <pubDate>Wed, 16 Mar 2016 10:32:18 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D/</guid>
+      <description>&lt;p&gt;commit &amp;ndash;lgwr&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事务相关的操作，保证事务的安全&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;checkpoint &amp;ndash;dbwr&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据相关的操作，保证数据的安全&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;实例的恢复-crash-recovery&#34;&gt;&lt;strong&gt;实例的恢复 crash recovery&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;什么时候发生oracle实例恢复&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;shutdown abort&lt;/li&gt;
+&lt;li&gt;数据库异常down掉（机器死机，掉电）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;###从Redo的什么位置开始恢复？&lt;/p&gt;
+&lt;p&gt;在某一点，在这一点之前的所有数据，Oracle都已经成功的写入到了磁盘上。&lt;/p&gt;
+&lt;p&gt;实例恢复是一个自动的过程，不需要人工干预&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;实例恢复发生在那个阶段？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;–sql&amp;gt;startup nomount（读取spfle) ，没有实例恢复。&lt;/p&gt;
+&lt;p&gt;–sql&amp;gt;alter database mount (读取控制文件），没有实例恢复。&lt;/p&gt;
+&lt;p&gt;–sql&amp;gt;alter database open （检查控制文件，数据文件头），发生实例恢复。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果直接startup命令，会经过启动装载打开三个步骤。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;SQL&amp;gt; shutdown abort;
+ORACLE 例程已经关闭。
+SQL&amp;gt; startup;
+ORACLE 例程已经启动。
+
+Total System Global Area 3307048960 bytes
+Fixed Size                  2180264 bytes
+Variable Size            1828719448 bytes
+Database Buffers         1459617792 bytes
+Redo Buffers               16531456 bytes
+数据库装载完毕。
+数据库已经打开。
+SQL&amp;gt; shutdown abort;
+ORACLE 例程已经关闭。
+SQL&amp;gt; startup nomount;
+ORACLE 例程已经启动。
+
+Total System Global Area 3307048960 bytes
+Fixed Size                  2180264 bytes
+Variable Size            1828719448 bytes
+Database Buffers         1459617792 bytes
+Redo Buffers               16531456 bytes
+SQL&amp;gt; alter database mount;
+
+数据库已更改。
+
+SQL&amp;gt; alter database open;
+
+数据库已更改。
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;oracle在打开数据库时（alter database open），会检查每个文件头上的信息（SCN），并同控制文件中相应的信息（SCN）比较，如果不一致就进行实例恢复。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例恢复的过程&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;前滚rolling forward&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;读取状态为current和active状态的日志（redo log），将发生crash时，没有来得及写磁盘的数据块，使用redo信息来恢复。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;打开数据库alter database open&lt;/li&gt;
+&lt;li&gt;回滚rolling back&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;将没有提交的事务进行回滚&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

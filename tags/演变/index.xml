@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>演变 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E6%BC%94%E5%8F%98/</link>
+    <description>Recent content in 演变 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 27 Dec 2018 16:54:05 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E6%BC%94%E5%8F%98/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>微信点餐的需求和技术演变</title>
+      <link>https://suncle.me/2018/12/27/wechat-order-evolution/</link>
+      <pubDate>Thu, 27 Dec 2018 16:54:05 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/12/27/wechat-order-evolution/</guid>
+      <description>&lt;p&gt;微信点餐的需求和技术演变&lt;/p&gt;
+&lt;h1 id=&#34;背景&#34;&gt;背景&lt;/h1&gt;
+&lt;p&gt;先解释下什么是Hack版本，什么是Saas版本？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hack版本就是指使用侵入的手段破解点菜机的各种信息，使得点菜机看起来就像是我们自己的一样。&lt;/p&gt;
+&lt;p&gt;Saas版本就是指做我们自己的点菜机，还要做成服务的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;为什么要做Saas版本的微信点餐？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因为目前的hack版本面向未来开发导致现实问题很多，多到让微信点餐产品看不到未来，商户静悄悄的越来越少&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

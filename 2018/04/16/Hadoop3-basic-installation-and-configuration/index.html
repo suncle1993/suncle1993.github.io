@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Hadoop3单机和伪分布式模式安装配置 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content=" 搭建hadoop
+ 为了体验HDFS和MapReduce框架，以及在HDFS上运行示例程序或简单作业，我们首先需要完成单机上的Hadoop安装。所依赖的软件环境如下：
+ Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例 jdk-8u162-linux-x64.tar.gz hadoop 3.1.0  本次演示统一将软件放置在/usr/local/src目录中
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Hadoop3单机和伪分布式模式安装配置" />
+<meta property="og:description" content="
+搭建hadoop
+
+为了体验HDFS和MapReduce框架，以及在HDFS上运行示例程序或简单作业，我们首先需要完成单机上的Hadoop安装。所依赖的软件环境如下：
+
+Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例
+jdk-8u162-linux-x64.tar.gz
+hadoop 3.1.0
+
+本次演示统一将软件放置在/usr/local/src目录中" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/" />
+<meta property="article:published_time" content="2018-04-16T19:08:28+00:00" />
+<meta property="article:modified_time" content="2018-04-16T19:08:28+00:00" />
+<meta itemprop="name" content="Hadoop3单机和伪分布式模式安装配置">
+<meta itemprop="description" content="
+搭建hadoop
+
+为了体验HDFS和MapReduce框架，以及在HDFS上运行示例程序或简单作业，我们首先需要完成单机上的Hadoop安装。所依赖的软件环境如下：
+
+Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例
+jdk-8u162-linux-x64.tar.gz
+hadoop 3.1.0
+
+本次演示统一将软件放置在/usr/local/src目录中">
+<meta itemprop="datePublished" content="2018-04-16T19:08:28+00:00" />
+<meta itemprop="dateModified" content="2018-04-16T19:08:28+00:00" />
+<meta itemprop="wordCount" content="3069">
+
+
+
+<meta itemprop="keywords" content="Hadoop,安装,配置," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hadoop3单机和伪分布式模式安装配置"/>
+<meta name="twitter:description" content="
+搭建hadoop
+
+为了体验HDFS和MapReduce框架，以及在HDFS上运行示例程序或简单作业，我们首先需要完成单机上的Hadoop安装。所依赖的软件环境如下：
+
+Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例
+jdk-8u162-linux-x64.tar.gz
+hadoop 3.1.0
+
+本次演示统一将软件放置在/usr/local/src目录中"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Hadoop3单机和伪分布式模式安装配置</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-04-16 </span>
+        <div class="post-category">
+            <a href="/categories/Hadoop/"> Hadoop </a>
+            </div>
+          <span class="more-meta"> 约 3069 字 </span>
+          <span class="more-meta"> 预计阅读 7 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#创建hadoop用户">创建hadoop用户</a></li>
+    <li><a href="#java安装配置">Java安装配置</a></li>
+    <li><a href="#hadoop安装配置">Hadoop安装配置</a>
+      <ul>
+        <li><a href="#单机模式">单机模式</a></li>
+        <li><a href="#伪分布模式">伪分布模式</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>搭建hadoop</p>
+</blockquote>
+<p>为了体验HDFS和MapReduce框架，以及在HDFS上运行示例程序或简单作业，我们首先需要完成单机上的Hadoop安装。所依赖的软件环境如下：</p>
+<ol>
+<li>Linux系统：以运行在阿里云ECS上的Ubuntu 16.04 LTS版本为例</li>
+<li>jdk-8u162-linux-x64.tar.gz</li>
+<li>hadoop 3.1.0</li>
+</ol>
+<p>本次演示统一将软件放置在<code>/usr/local/src</code>目录中</p>
+<h1 id="创建hadoop用户">创建hadoop用户</h1>
+<p>首先需要建立一个hadoop用户，用来启动Hadoop的进程，这样避免使用root用户启动进程，这也是比较规范的服务器用户管理，使用以下命令创建hadoop用户：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">useradd -m hadoop -s /bin/bash
+passwd hadoop  <span class="c1"># 为hadoop用户设置密码，直接设置为hadoop</span>
+adduser hadoop sudo  <span class="c1"># 为 hadoop 用户增加管理员权限，方便部署</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>后续均在hadoop用户中操作。</p>
+<p><strong>免密码ssh设置</strong></p>
+<p>Hadoop中namenode需要启动集群中的所有机器的Hadoop守护进程，而这个过程需要通过SSH登录来实现。而Hadoop并没有提供SSH输入密码的登录形式，因此为了保证可以顺利登录每台机器，需要将所有机器配置为namenode可以无密码登录它们。所以我们需要配置SSH的无密码访问（注意无密码访问是为hadoop用户配置的，故以下操作需要在hadoop用户下完成）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ssh-keygen -t rsa -P <span class="s1">&#39;&#39;</span> -f ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod <span class="m">0600</span> ~/.ssh/authorized_keys
+</code></pre></td></tr></table>
+</div>
+</div><p>此时再用 <code>ssh localhost</code> 命令，无需输入密码就可以直接登陆了（第一次需要先输入一个yes）</p>
+<h1 id="java安装配置">Java安装配置</h1>
+<p>下载地址：<code>https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</code></p>
+<p>执行以下命令解压</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /usr/local/src
+tar -xzvf jdk-8u162-linux-x64.tar.gz
+</code></pre></td></tr></table>
+</div>
+</div><p>然后编辑<code>~/.profile</code>文件，在文件结尾处增加以下内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># java jdk env settings</span>
+<span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/local/src/jdk1.8.0_162
+<span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span>/bin:<span class="nv">$PATH</span>
+<span class="nb">export</span> JAVA_HOME PATH
+</code></pre></td></tr></table>
+</div>
+</div><p>修改完成之后使用source命令使配置生效：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">source</span> ~/.profile
+</code></pre></td></tr></table>
+</div>
+</div><p>若输出JAVA_HOME环境变量有结果则说明修改成功：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="nv">$JAVA_HOME</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此时可以使用验证java环境变量是否配置成功：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">java -version
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="hadoop安装配置">Hadoop安装配置</h1>
+<p>下载地址：<code>https://hadoop.apache.org/releases.html</code></p>
+<p>Hadoop的运行有三种形式：</p>
+<ul>
+<li>单实例运行</li>
+<li>伪分布式</li>
+<li>完全分布式</li>
+</ul>
+<p>本次主要介绍单实例和伪分布式Hadoop的安装以及使用简介。首先需要先配置hadoop的环境变量。</p>
+<p>编辑<code>~/.profile</code>文件，在文件结尾处增加以下内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># hadoop install env settings</span>
+<span class="nv">HADOOP_INSTALL</span><span class="o">=</span>/usr/local/src/hadoop-3.1.0
+<span class="nv">PATH</span><span class="o">=</span><span class="nv">$HADOOP_INSTALL</span>/bin:<span class="nv">$HADOOP_INSTALL</span>/sbin:<span class="nv">$PATH</span>
+<span class="nb">export</span> HADOOP_INSTALL PATH
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="单机模式">单机模式</h2>
+<p>单机模式（<strong>standalone</strong>）是Hadoop的默认模式。当首次解压Hadoop的源码包时，Hadoop无法了解硬件安装环境，便保守地选择了最小配置。在这种默认模式下所有3个XML文件均为空。当配置文件为空时，Hadoop会完全运行在本地。因为不需要与其他节点交互，单机模式就不使用HDFS，也不加载任何Hadoop的守护进程。该模式主要用于开发调试MapReduce程序的应用逻辑。</p>
+<blockquote>
+<p>此程序一般不建议安装，网络上很少这方面资料</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /usr/local/src
+tar -xzvf hadoop-3.1.0.tar.gz
+</code></pre></td></tr></table>
+</div>
+</div><p>解压完成之后测试安装是否正常：执行命令<code>hadoop</code>，正常情况应该显示hadoop的命令使用文档。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hadoop
+hadoop version
+</code></pre></td></tr></table>
+</div>
+</div><p>也可以运行MapReduce任务，执行如下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> hadoop-3.1.0/
+mkdir input
+cp etc/hadoop/*.xml input
+bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.0.jar grep input output <span class="s1">&#39;dfs[a-z.]+&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>执行完成之后可以发现output文件夹中生成了两个文件<code>part-r-00000</code>和<code>_SUCCESS</code>，其中<code>part-r-00000</code>文件中记录着在input目录中的所有xml文件中上述正则表达式匹配成功的单词的数量。可以使用以下命令检查结果是否正确。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">grep -5 --color &#34;dfs&#34; *.xml
+</code></pre></td></tr></table>
+</div>
+</div><p>在hadoop3.1版本中的所有xml文件中只有<code>dfsadmin</code>这个单词出现了一次。</p>
+<h2 id="伪分布模式">伪分布模式</h2>
+<p>伪分布模式（<strong>Pseudo-Distributed Mode</strong>）在“单节点集群”上运行Hadoop，其中所有的守护进程都运行在同一台机器上。该模式在单机模式之上增加了代码调试功能，允许你检查内存使用情况，HDFS输入输出，以及其他的守护进程交互。</p>
+<blockquote>
+<p>namenode，datanode，secondarynamenode，jobtracer，tasktracer这5个进程，都能在集群上看到。</p>
+</blockquote>
+<p>伪分布式模式只需要在单机模式的基础上改两个配置文件并且格式化namenode即可。</p>
+<p>编辑文件<code>etc/hadoop/core-site.xml</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;configuration&gt;</span>
+    <span class="nt">&lt;property&gt;</span>
+        <span class="nt">&lt;name&gt;</span>hadoop.tmp.dir<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>file:/usr/local/src/hadoop-3.1.0/tmp<span class="nt">&lt;/value&gt;</span>
+        <span class="nt">&lt;description&gt;</span>Abase for other temporary directories.<span class="nt">&lt;/description&gt;</span>
+    <span class="nt">&lt;/property&gt;</span>
+    <span class="nt">&lt;property&gt;</span>
+        <span class="nt">&lt;name&gt;</span>fs.defaultFS<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>hdfs://localhost:9000<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>编辑文件<code>etc/hadoop/hdfs-site.xml</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;configuration&gt;</span>
+    <span class="nt">&lt;property&gt;</span>
+        <span class="nt">&lt;name&gt;</span>dfs.replication<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>1<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/property&gt;</span>
+    <span class="nt">&lt;property&gt;</span>
+        <span class="nt">&lt;name&gt;</span>dfs.namenode.name.dir<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>file:/usr/local/src/hadoop-3.1.0/tmp/dfs/name<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/property&gt;</span>
+    <span class="nt">&lt;property&gt;</span>
+        <span class="nt">&lt;name&gt;</span>dfs.datanode.data.dir<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>file:/usr/local/src/hadoop-3.1.0/tmp/dfs/data<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Hadoop配置文件说明：</p>
+<p>Hadoop 的运行方式是由配置文件决定的（运行 Hadoop 时会读取配置文件），因此如果需要从伪分布式模式切换回单机模式，需要删除 core-site.xml 中的配置项。</p>
+<p>此外，伪分布式虽然只需要配置 fs.defaultFS 和 dfs.replication 就可以运行（官方教程如此），不过若没有配置 hadoop.tmp.dir 参数，则默认使用的临时目录为 /tmp/hadoo-hadoop，而这个目录在重启时有可能被系统清理掉，导致必须重新执行 format 才行。所以我们进行了设置，同时也指定 dfs.namenode.name.dir 和 dfs.datanode.data.dir，否则在接下来的步骤中可能会出错。</p>
+</blockquote>
+<p>配置完成后，执行 namenode  的格式化：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hdfs namenode -format
+</code></pre></td></tr></table>
+</div>
+</div><p>然后使用<code>start-dfs.sh</code>命令启动NameNode daemon进程和DataNode daemon进程：</p>
+<p>在启动前需要修改<code>etc/hadoop/hadoop-env.sh</code>文件中的<code>JAVA_HOME</code>变量，改为实际的即可：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># Many of the options here are built from the perspective that users</span>
+<span class="c1"># may want to provide OVERWRITING values on the command line.</span>
+<span class="c1"># For example:</span>
+#
+<span class="c1">#  JAVA_HOME=/usr/java/testing hdfs dfs -ls</span>
+<span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/local/src/jdk1.8.0_162
+#
+<span class="c1"># Therefore, the vast majority (BUT NOT ALL!) of these defaults</span>
+<span class="c1"># are configured for substitution and not append.  If append</span>
+<span class="c1"># is preferable, modify this file accordingly.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>启动完成后，可以通过命令 <code>jps</code> 来判断是否成功启动，若成功启动则会列出如下进程: “NameNode”、”DataNode” 和 “SecondaryNameNode”（如果 SecondaryNameNode 没有启动，请运行 sbin/stop-dfs.sh 关闭进程，然后再次尝试启动尝试）。如果没有 NameNode 或 DataNode ，那就是配置不成功，请仔细检查之前步骤，或通过查看启动日志排查原因。</p>
+<p>启动成功之后，浏览NameNode的web接口，Web界面示例地址如下（hadoop2.x端口默认为50070，hadoop3.x端口默认为9870）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">http://120.77.239.67:9870
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的单机模式，grep 例子读取的是本地数据，伪分布式读取的则是 HDFS 上的数据。要使用 HDFS，首先需要在 HDFS 中创建用户目录：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hdfs dfs -mkdir -p /user/hadoop
+</code></pre></td></tr></table>
+</div>
+</div><p>接着将 <code>etc/hadoop</code> 中的 xml 文件作为输入文件复制到分布式文件系统中，即将 <code>/usr/local/src/hadoop-3.1.0/etc/hadoop</code> 目录下的xml文件复制到分布式文件系统中的 /user/hadoop/input 中。我们使用的是 hadoop 用户，并且已创建相应的用户目录 /user/hadoop ，因此在命令中就可以使用相对路径如 input，其对应的绝对路径就是 /user/hadoop/input：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hdfs dfs -mkdir input
+hdfs dfs -put ./etc/hadoop/*.xml input
+</code></pre></td></tr></table>
+</div>
+</div><p>复制完成后，可以通过如下命令查看文件列表：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">hdfs dfs -ls input
+</code></pre></td></tr></table>
+</div>
+</div><p>伪分布式运行 MapReduce 作业的方式跟单机模式相同，区别在于伪分布式读取的是HDFS中的文件（可以将单机步骤中创建的本地 input 文件夹，输出结果 output 文件夹都删掉来验证这一点）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.0.jar grep input output <span class="s1">&#39;dfs[a-z.]+&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查看运行结果的命令（查看的是位于 HDFS 中的输出结果）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hdfs dfs -cat output/*
+</code></pre></td></tr></table>
+</div>
+</div><p>结果如下，注意到刚才我们已经更改了配置文件，所以运行结果不同。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">hadoop@iZwz9367lkujh8ulgxc2cwZ:/usr/local/src/hadoop-3.1.0$  hdfs dfs -cat output/*
+1	dfsadmin
+1	dfs.replication
+1	dfs.namenode.name.dir
+1	dfs.datanode.data.dir
+</code></pre></td></tr></table>
+</div>
+</div><p>也可以将运行结果取回到本地：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">./bin/hdfs dfs -get output ./output     <span class="c1"># 将 HDFS 上的 output 文件夹取回到本机</span>
+cat ./output/*
+</code></pre></td></tr></table>
+</div>
+</div><p>Hadoop 运行程序时，输出目录不能存在，否则会提示错误org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs://localhost:9000/user/hadoop/output already exists，因此若要再次执行，需要执行如下命令删除 output 文件夹：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hdfs dfs -rm -r output
+</code></pre></td></tr></table>
+</div>
+</div><p>若要关闭 Hadoop，则运行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">stop-dfs.sh
+</code></pre></td></tr></table>
+</div>
+</div><p>下次启动 hadoop 时，无需进行 NameNode 的初始化，只需要运行 <code>start-dfs.sh</code> 就可以！</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a href="https://blog.csdn.net/muyi_amen/article/details/62423649">https://blog.csdn.net/muyi_amen/article/details/62423649</a></li>
+<li><a href="https://hadoop.apache.org/docs/r1.0.4/cn/quickstart.html">https://hadoop.apache.org/docs/r1.0.4/cn/quickstart.html</a></li>
+<li><a href="http://www.aboutyun.com/thread-6839-1-1.html">http://www.aboutyun.com/thread-6839-1-1.html</a></li>
+<li><a href="https://www.jianshu.com/p/e450fe10d003">https://www.jianshu.com/p/e450fe10d003</a></li>
+<li><a href="http://dblab.xmu.edu.cn/blog/install-hadoop/">http://dblab.xmu.edu.cn/blog/install-hadoop/</a></li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-04-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Hadoop/">Hadoop</a>
+          <a href="/tags/%E5%AE%89%E8%A3%85/">安装</a>
+          <a href="/tags/%E9%85%8D%E7%BD%AE/">配置</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2018/04/17/Writing-An-Hadoop-MapReduce-Program-In-Python/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用Python语言写Hadoop MapReduce程序</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2018/04/16/Hadoop-MapReduce-HDFS-Introduction/">
+            <span class="next-text nav-default">Hadoop、MapReduce、HDFS介绍</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

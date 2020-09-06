@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mybatis on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/mybatis/</link>
+    <description>Recent content in mybatis on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 19 Dec 2019 19:42:19 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/mybatis/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>记录一次mybatis缓存和事务传播行为导致ut挂的排查过程</title>
+      <link>https://suncle.me/2019/12/19/record-a-troubleshooting-process-of-ut-hanging-caused-by-mybatis-cache-and-transaction-propagation/</link>
+      <pubDate>Thu, 19 Dec 2019 19:42:19 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/12/19/record-a-troubleshooting-process-of-ut-hanging-caused-by-mybatis-cache-and-transaction-propagation/</guid>
+      <description>&lt;p&gt;记录一次mybatis缓存和事务传播行为导致ut挂的排查过程&lt;/p&gt;
+&lt;h2 id=&#34;起因&#34;&gt;起因&lt;/h2&gt;
+&lt;p&gt;rhea项目有两个ut一直都是挂的，之前也经过几个同事排查过，但是都没有找到解决办法，慢慢的这个问题就搁置了。因为之前负责rhea项目的同事离职，我临时接手了这个项目，刚好最近来了一个新同事在做新的功能开发的时候遇到了这个问题，于是我就接了一个锅，最终证明这个锅很好玩。&lt;/p&gt;
+&lt;p&gt;rhea是一个典型的使用mybatis orm的springboot项目，我们使用h2内存数据库做单元测试，每个单元测试都在一个事务内，都由Transactional进行注解。testGetBGWechatAccountByOpenid这个ut的核心调用链如下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/troubleshoot-a-problem-caused-by-mybatis-cache/call-chain.jpg&#34; alt=&#34;调用链&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

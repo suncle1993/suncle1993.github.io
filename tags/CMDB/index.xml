@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CMDB on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/CMDB/</link>
+    <description>Recent content in CMDB on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 23 May 2017 16:24:48 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/CMDB/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>结合公司现状浅谈CMDB</title>
+      <link>https://suncle.me/2017/05/23/CMDB/</link>
+      <pubDate>Tue, 23 May 2017 16:24:48 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/05/23/CMDB/</guid>
+      <description>&lt;p&gt;本篇文章结合参考资料中的几篇CMDB的文章再加上目前公司的现状谈一谈CMDB。&lt;/p&gt;
+&lt;h1 id=&#34;cmdb概述&#34;&gt;CMDB概述&lt;/h1&gt;
+&lt;p&gt;CMDB：configuration management database，配置管理数据库。CMDB本质上是一个数据库，提供数据的存储、查询、校验等操作，是一个&lt;strong&gt;集中式&lt;/strong&gt;的数据托管中心，托管的内容包含所有的软硬件资产（configuration items）。各个部门各个团队各个系统下属的各种重要的软硬件资产都属于CMDB统一管理的内容。&lt;/p&gt;
+&lt;h1 id=&#34;公司运维现状&#34;&gt;公司运维现状&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;资产现状&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;全国各地区内网不互通。这个就是现状了，因为公司产品是为国家服务，所以全国各地的环境都在各自的内网中，安全性极高，在这种情况下，每个地区都配置了几个运维手工维护当地的环境，内外网完全隔离。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;运维情况现状&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;由于公司资产地域分散且网络不互通，因此公司的自动化运维程度基本为0。整体上来说没有运维开发的岗位，目前的运维仍然停留在人工运维结合shell脚本的时代，这些其实都算不上自动化运维，前段时间，开始搞ansible自动化部署和升级的事情，整个过程都是shell脚本完成。为了控制人力成本，甚至否认一些用新技术。拿Python这门语言来说，本身很适合自动化运维，用于自动化升级那是再适合不过了，虽然底层会依赖shell，但是Python写出来的逻辑必然会更清楚，但是上层考虑到后续维护人员需要掌握Python和shell两种技术，最终还是否定了Python，其实也就是否定了自动化运维。转而几种人员去研究日志中心和nagios监控，自动化运维的事情也自然不了了之。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

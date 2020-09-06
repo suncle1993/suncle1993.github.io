@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Grafana Dashboard 配置导入导出 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="我司最近的一件大事是AWS迁移阿里云，因此之前部署在AWS上的Prometheus监控系统需要迁移到Aliyun机器上，组件之一展示面板Grafana有很多自定义好的配置，而这些配置是存在于grafana.db中的，因此需要导出导入配置到新的db中。Grafana提供了丰富的api供用户使用，我们调用api导出
+导出配置 首先获取Grafana的api_key：menu&amp;ndash;configuration&amp;ndash;api keys &amp;ndash; add API key
+然后安装jq：命令行下处理JSON 数据的工具，可以对json数据进行分片、过滤、映射和转换
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2019/11/15/grafana-dashboard-export-and-import/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Grafana Dashboard 配置导入导出" />
+<meta property="og:description" content="我司最近的一件大事是AWS迁移阿里云，因此之前部署在AWS上的Prometheus监控系统需要迁移到Aliyun机器上，组件之一展示面板Grafana有很多自定义好的配置，而这些配置是存在于grafana.db中的，因此需要导出导入配置到新的db中。Grafana提供了丰富的api供用户使用，我们调用api导出
+导出配置
+首先获取Grafana的api_key：menu&ndash;configuration&ndash;api keys &ndash; add API key
+然后安装jq：命令行下处理JSON 数据的工具，可以对json数据进行分片、过滤、映射和转换" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2019/11/15/grafana-dashboard-export-and-import/" />
+<meta property="article:published_time" content="2019-11-15T16:57:54+00:00" />
+<meta property="article:modified_time" content="2019-11-15T16:57:54+00:00" />
+<meta itemprop="name" content="Grafana Dashboard 配置导入导出">
+<meta itemprop="description" content="我司最近的一件大事是AWS迁移阿里云，因此之前部署在AWS上的Prometheus监控系统需要迁移到Aliyun机器上，组件之一展示面板Grafana有很多自定义好的配置，而这些配置是存在于grafana.db中的，因此需要导出导入配置到新的db中。Grafana提供了丰富的api供用户使用，我们调用api导出
+导出配置
+首先获取Grafana的api_key：menu&ndash;configuration&ndash;api keys &ndash; add API key
+然后安装jq：命令行下处理JSON 数据的工具，可以对json数据进行分片、过滤、映射和转换">
+<meta itemprop="datePublished" content="2019-11-15T16:57:54+00:00" />
+<meta itemprop="dateModified" content="2019-11-15T16:57:54+00:00" />
+<meta itemprop="wordCount" content="2377">
+
+
+
+<meta itemprop="keywords" content="Grafana,Prometheus,监控," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Grafana Dashboard 配置导入导出"/>
+<meta name="twitter:description" content="我司最近的一件大事是AWS迁移阿里云，因此之前部署在AWS上的Prometheus监控系统需要迁移到Aliyun机器上，组件之一展示面板Grafana有很多自定义好的配置，而这些配置是存在于grafana.db中的，因此需要导出导入配置到新的db中。Grafana提供了丰富的api供用户使用，我们调用api导出
+导出配置
+首先获取Grafana的api_key：menu&ndash;configuration&ndash;api keys &ndash; add API key
+然后安装jq：命令行下处理JSON 数据的工具，可以对json数据进行分片、过滤、映射和转换"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Grafana Dashboard 配置导入导出</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-15 </span>
+        <div class="post-category">
+            <a href="/categories/DevOps/"> DevOps </a>
+            </div>
+          <span class="more-meta"> 约 2377 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#导出配置">导出配置</a></li>
+        <li><a href="#导入配置">导入配置</a>
+          <ul>
+            <li><a href="#使用api导入">使用api导入</a></li>
+            <li><a href="#使用grafana-provision">使用grafana provision</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>我司最近的一件大事是AWS迁移阿里云，因此之前部署在AWS上的Prometheus监控系统需要迁移到Aliyun机器上，组件之一展示面板Grafana有很多自定义好的配置，而这些配置是存在于grafana.db中的，因此需要导出导入配置到新的db中。Grafana提供了丰富的api供用户使用，我们调用api导出</p>
+<h2 id="导出配置">导出配置</h2>
+<p>首先获取Grafana的api_key：menu&ndash;configuration&ndash;api keys &ndash; add API key</p>
+<p>然后安装jq：命令行下处理JSON 数据的工具，可以对json数据进行分片、过滤、映射和转换</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt install jq
+</code></pre></td></tr></table>
+</div>
+</div><p>导出脚本grafana-dashboard-exporter.sh参考：https://gist.github.com/crisidev/bd52bdcc7f029be2f295</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
+</span><span class="lnt">94
+</span><span class="lnt">95
+</span><span class="lnt">96
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#/bin/bash</span>
+#
+<span class="c1"># add the &#34;-x&#34; option to the shebang line if you want a more verbose output</span>
+#
+<span class="c1"># set some colors for status OK, FAIL and titles</span>
+<span class="nv">SETCOLOR_SUCCESS</span><span class="o">=</span><span class="s2">&#34;echo -en \\033[0;32m&#34;</span>
+<span class="nv">SETCOLOR_FAILURE</span><span class="o">=</span><span class="s2">&#34;echo -en \\033[1;31m&#34;</span>
+<span class="nv">SETCOLOR_NORMAL</span><span class="o">=</span><span class="s2">&#34;echo -en \\033[0;39m&#34;</span>
+<span class="nv">SETCOLOR_TITLE_PURPLE</span><span class="o">=</span><span class="s2">&#34;echo -en \\033[0;35m&#34;</span> <span class="c1"># purple</span>
+
+<span class="c1"># usage log &#34;string to log&#34; &#34;color option&#34;</span>
+<span class="k">function</span> log_success<span class="o">()</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -lt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+       <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+       <span class="nb">echo</span> <span class="s2">&#34;Not enough arguments for log function! Expecting 1 argument got </span><span class="nv">$#</span><span class="s2">&#34;</span>
+       <span class="nb">exit</span> <span class="m">1</span>
+   <span class="k">fi</span>
+
+   <span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date <span class="s2">&#34;+%Y-%m-%d %H:%M:%S %Z&#34;</span><span class="k">)</span>
+
+   <span class="si">${</span><span class="nv">SETCOLOR_SUCCESS</span><span class="si">}</span>
+   <span class="nb">printf</span> <span class="s2">&#34;[</span><span class="si">${</span><span class="nv">timestamp</span><span class="si">}</span><span class="s2">] </span><span class="nv">$1</span><span class="s2">\n&#34;</span>
+   <span class="si">${</span><span class="nv">SETCOLOR_NORMAL</span><span class="si">}</span>
+<span class="o">}</span>
+
+<span class="k">function</span> log_failure<span class="o">()</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -lt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+       <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+       <span class="nb">echo</span> <span class="s2">&#34;Not enough arguments for log function! Expecting 1 argument got </span><span class="nv">$#</span><span class="s2">&#34;</span>
+       <span class="nb">exit</span> <span class="m">1</span>
+   <span class="k">fi</span>
+
+   <span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date <span class="s2">&#34;+%Y-%m-%d %H:%M:%S %Z&#34;</span><span class="k">)</span>
+
+   <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+   <span class="nb">printf</span> <span class="s2">&#34;[</span><span class="si">${</span><span class="nv">timestamp</span><span class="si">}</span><span class="s2">] </span><span class="nv">$1</span><span class="s2">\n&#34;</span>
+   <span class="si">${</span><span class="nv">SETCOLOR_NORMAL</span><span class="si">}</span>
+<span class="o">}</span>
+
+<span class="k">function</span> log_title<span class="o">()</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -lt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+       <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+       log_failure <span class="s2">&#34;Not enough arguments for log function! Expecting 1 argument got </span><span class="nv">$#</span><span class="s2">&#34;</span>
+       <span class="nb">exit</span> <span class="m">1</span>
+   <span class="k">fi</span>
+
+   <span class="si">${</span><span class="nv">SETCOLOR_TITLE_PURPLE</span><span class="si">}</span>
+   <span class="nb">printf</span> <span class="s2">&#34;|-------------------------------------------------------------------------|\n&#34;</span>
+   <span class="nb">printf</span> <span class="s2">&#34;|</span><span class="nv">$1</span><span class="s2">|\n&#34;</span><span class="p">;</span>
+   <span class="nb">printf</span> <span class="s2">&#34;|-------------------------------------------------------------------------|\n&#34;</span>
+   <span class="si">${</span><span class="nv">SETCOLOR_NORMAL</span><span class="si">}</span>
+<span class="o">}</span>
+
+<span class="k">function</span> init<span class="o">()</span> <span class="o">{</span>
+   <span class="c1"># Check if hostname and key are provided</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="nv">$1</span> -lt <span class="m">2</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+       <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+       log_failure <span class="s2">&#34;Not enough command line arguments! Expecting two: \$HOSTNAME and \$KEY. Recieved only </span><span class="nv">$1</span><span class="s2">.&#34;</span>
+       <span class="nb">exit</span> <span class="m">1</span>
+   <span class="k">fi</span>
+
+   <span class="nv">DASH_DIR</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$HOST</span> <span class="p">|</span> awk -F<span class="o">[</span>/:<span class="o">]</span> <span class="s1">&#39;{print $4}&#39;</span><span class="k">)</span>
+
+   <span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">&#34;</span><span class="si">${</span><span class="nv">DASH_DIR</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+   	 mkdir <span class="s2">&#34;</span><span class="si">${</span><span class="nv">DASH_DIR</span><span class="si">}</span><span class="s2">&#34;</span>
+   <span class="k">else</span>
+   	log_title <span class="s2">&#34;----------------- A </span><span class="nv">$DASH_DIR</span><span class="s2"> directory already exists! -----------------&#34;</span>
+   <span class="k">fi</span>
+<span class="o">}</span>
+
+
+<span class="nv">HOST</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">KEY</span><span class="o">=</span><span class="nv">$2</span>
+init <span class="nv">$#</span> <span class="nv">$HOST</span> <span class="nv">$KEY</span>
+
+<span class="nv">counter</span><span class="o">=</span><span class="m">0</span>
+
+<span class="k">for</span> dashboard_uid in <span class="k">$(</span>curl -sS -H <span class="s2">&#34;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&#34;</span> <span class="nv">$HOST</span>/api/search<span class="se">\?</span>query<span class="se">\=\&amp;</span> <span class="p">|</span> jq -r <span class="s1">&#39;.[] | select( .type | contains(&#34;dash-db&#34;)) | .uid&#39;</span><span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+
+   <span class="nv">counter</span><span class="o">=</span><span class="k">$((</span>counter <span class="o">+</span> <span class="m">1</span><span class="k">))</span>
+   <span class="nv">url</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="nv">$HOST</span>/api/dashboards/uid/<span class="nv">$dashboard_uid</span> <span class="p">|</span> tr -d <span class="s1">&#39;\r&#39;</span><span class="sb">`</span>
+   <span class="nv">dashboard_json</span><span class="o">=</span><span class="k">$(</span>curl -sS -H <span class="s2">&#34;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&#34;</span> <span class="nv">$url</span><span class="k">)</span>
+   <span class="nv">dashboard_title</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$dashboard_json</span> <span class="p">|</span> jq -r <span class="s1">&#39;.dashboard | .title&#39;</span> <span class="p">|</span> sed -r <span class="s1">&#39;s/[ \/]+/_/g&#39;</span> <span class="k">)</span>
+   <span class="nv">dashboard_version</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$dashboard_json</span> <span class="p">|</span> jq -r <span class="s1">&#39;.dashboard | .version&#39;</span><span class="k">)</span>
+   <span class="nv">folder_title</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$dashboard_json</span> <span class="p">|</span> jq -r <span class="s1">&#39;.meta | .folderTitle&#39;</span><span class="k">)</span>
+
+   mkdir -p <span class="s2">&#34;</span><span class="nv">$DASH_DIR</span><span class="s2">/</span><span class="nv">$folder_title</span><span class="s2">&#34;</span>
+   <span class="nb">echo</span> <span class="nv">$dashboard_json</span> &gt; <span class="s2">&#34;</span><span class="nv">$DASH_DIR</span><span class="s2">/</span><span class="nv">$folder_title</span><span class="s2">/</span><span class="si">${</span><span class="nv">dashboard_title</span><span class="si">}</span><span class="s2">_v</span><span class="si">${</span><span class="nv">dashboard_version</span><span class="si">}</span><span class="s2">.json&#34;</span>
+
+   log_success <span class="s2">&#34;Dashboard has been saved\t\t title=\&#34;</span><span class="si">${</span><span class="nv">dashboard_title</span><span class="si">}</span><span class="s2">\&#34;, uid=\&#34;</span><span class="si">${</span><span class="nv">dashboard_uid</span><span class="si">}</span><span class="s2">\&#34;, path=\&#34;</span><span class="si">${</span><span class="nv">DASH_DIR</span><span class="si">}</span><span class="s2">/</span><span class="nv">$folder_title</span><span class="s2">/</span><span class="si">${</span><span class="nv">dashboard_title</span><span class="si">}</span><span class="s2">_v</span><span class="si">${</span><span class="nv">dashboard_version</span><span class="si">}</span><span class="s2">.json\&#34;.&#34;</span>
+<span class="k">done</span>
+
+log_title <span class="s2">&#34;</span><span class="si">${</span><span class="nv">counter</span><span class="si">}</span><span class="s2"> dashboards were saved&#34;</span><span class="p">;</span>
+
+log_title <span class="s2">&#34;------------------------------ FINISHED ---------------------------------&#34;</span><span class="p">;</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>使用方式（已脱敏）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">bash grafana-dashboard-exporter.sh http://localhost:3000 <span class="nv">eyJrIjoiZkhiQUVDczNFT0QyUVE4YkJwb1RBbHasfaefaefdDVXT1dkVlkiLCJuIjoiemFpaHVpX2FXkiLCJpZCI6MX0</span><span class="o">=</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="导入配置">导入配置</h2>
+<ul>
+<li>老版本：使用api_key导入</li>
+<li>新版本（v5.0之后）：使用dockprom的setup.sh启动时导入</li>
+</ul>
+<h3 id="使用api导入">使用api导入</h3>
+<p>如果在目标机器上的Grafana已经启动并且可以访问Dashboard拿到api_key，则可以按照以下方式导入配置</p>
+<p>导入脚本grafana-dashboard-importer.sh参考：https://gist.github.com/thedoc31/628beeee934f9c84648c108d4ad89f05</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span>#
+<span class="c1"># add the &#34;-x&#34; option to the shebang line if you want a more verbose output</span>
+#
+#
+<span class="nv">OPTSPEC</span><span class="o">=</span><span class="s2">&#34;:hp:t:k:&#34;</span>
+
+show_help<span class="o">()</span> <span class="o">{</span>
+cat <span class="s">&lt;&lt; EOF
+</span><span class="s">Usage: $0 [-p PATH] [-t TARGET_HOST] [-k API_KEY]
+</span><span class="s">Script to import dashboards into Grafana
+</span><span class="s">    -p      Required. Root path containing JSON exports of the dashboards you want imported.
+</span><span class="s">    -t      Required. The full URL of the target host
+</span><span class="s">    -k      Required. The API key to use on the target host
+</span><span class="s">
+</span><span class="s">    -h      Display this help and exit.
+</span><span class="s">EOF</span>
+<span class="o">}</span>
+
+<span class="c1">###### Check script invocation options ######</span>
+<span class="k">while</span> <span class="nb">getopts</span> <span class="s2">&#34;</span><span class="nv">$OPTSPEC</span><span class="s2">&#34;</span> optchar<span class="p">;</span> <span class="k">do</span>
+    <span class="k">case</span> <span class="s2">&#34;</span><span class="nv">$optchar</span><span class="s2">&#34;</span> in
+        h<span class="o">)</span>
+            show_help
+            <span class="nb">exit</span>
+            <span class="p">;;</span>
+        p<span class="o">)</span>
+            <span class="nv">DASH_DIR</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$OPTARG</span><span class="s2">&#34;</span><span class="p">;;</span>
+        t<span class="o">)</span>
+            <span class="nv">HOST</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$OPTARG</span><span class="s2">&#34;</span><span class="p">;;</span>
+        k<span class="o">)</span>
+            <span class="nv">KEY</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$OPTARG</span><span class="s2">&#34;</span><span class="p">;;</span>
+        <span class="se">\?</span><span class="o">)</span>
+          <span class="nb">echo</span> <span class="s2">&#34;Invalid option: -</span><span class="nv">$OPTARG</span><span class="s2">&#34;</span> &gt;<span class="p">&amp;</span><span class="m">2</span>
+          <span class="nb">exit</span> <span class="m">1</span>
+          <span class="p">;;</span>
+        :<span class="o">)</span>
+          <span class="nb">echo</span> <span class="s2">&#34;Option -</span><span class="nv">$OPTARG</span><span class="s2"> requires an argument.&#34;</span> &gt;<span class="p">&amp;</span><span class="m">2</span>
+          <span class="nb">exit</span> <span class="m">1</span>
+          <span class="p">;;</span>
+    <span class="k">esac</span>
+<span class="k">done</span>
+
+<span class="k">if</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$DASH_DIR</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$HOST</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$KEY</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    show_help
+    <span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># set some colors for status OK, FAIL and titles</span>
+<span class="nv">SETCOLOR_SUCCESS</span><span class="o">=</span><span class="s2">&#34;echo -en \\033[0;32m&#34;</span>
+<span class="nv">SETCOLOR_FAILURE</span><span class="o">=</span><span class="s2">&#34;echo -en \\033[1;31m&#34;</span>
+<span class="nv">SETCOLOR_NORMAL</span><span class="o">=</span><span class="s2">&#34;echo -en \\033[0;39m&#34;</span>
+<span class="nv">SETCOLOR_TITLE_PURPLE</span><span class="o">=</span><span class="s2">&#34;echo -en \\033[0;35m&#34;</span> <span class="c1"># purple</span>
+
+<span class="c1"># usage log &#34;string to log&#34; &#34;color option&#34;</span>
+<span class="k">function</span> log_success<span class="o">()</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -lt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+       <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+       <span class="nb">echo</span> <span class="s2">&#34;Not enough arguments for log function! Expecting 1 argument got </span><span class="nv">$#</span><span class="s2">&#34;</span>
+       <span class="nb">exit</span> <span class="m">1</span>
+   <span class="k">fi</span>
+
+   <span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date <span class="s2">&#34;+%Y-%m-%d %H:%M:%S %Z&#34;</span><span class="k">)</span>
+
+   <span class="si">${</span><span class="nv">SETCOLOR_SUCCESS</span><span class="si">}</span>
+   <span class="nb">printf</span> <span class="s2">&#34;[%s] </span><span class="nv">$1</span><span class="s2">\n&#34;</span> <span class="s2">&#34;</span><span class="nv">$timestamp</span><span class="s2">&#34;</span>
+   <span class="si">${</span><span class="nv">SETCOLOR_NORMAL</span><span class="si">}</span>
+<span class="o">}</span>
+
+<span class="k">function</span> log_failure<span class="o">()</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -lt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+       <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+       <span class="nb">echo</span> <span class="s2">&#34;Not enough arguments for log function! Expecting 1 argument got </span><span class="nv">$#</span><span class="s2">&#34;</span>
+       <span class="nb">exit</span> <span class="m">1</span>
+   <span class="k">fi</span>
+
+   <span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date <span class="s2">&#34;+%Y-%m-%d %H:%M:%S %Z&#34;</span><span class="k">)</span>
+
+   <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+   <span class="nb">printf</span> <span class="s2">&#34;[%s] </span><span class="nv">$1</span><span class="s2">\n&#34;</span> <span class="s2">&#34;</span><span class="nv">$timestamp</span><span class="s2">&#34;</span>
+   <span class="si">${</span><span class="nv">SETCOLOR_NORMAL</span><span class="si">}</span>
+<span class="o">}</span>
+
+<span class="k">function</span> log_title<span class="o">()</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -lt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+       <span class="si">${</span><span class="nv">SETCOLOR_FAILURE</span><span class="si">}</span>
+       log_failure <span class="s2">&#34;Not enough arguments for log function! Expecting 1 argument got </span><span class="nv">$#</span><span class="s2">&#34;</span>
+       <span class="nb">exit</span> <span class="m">1</span>
+   <span class="k">fi</span>
+
+   <span class="si">${</span><span class="nv">SETCOLOR_TITLE_PURPLE</span><span class="si">}</span>
+   <span class="nb">printf</span> <span class="s2">&#34;|-------------------------------------------------------------------------|\n&#34;</span>
+   <span class="nb">printf</span> <span class="s2">&#34;|%s|\n&#34;</span> <span class="s2">&#34;</span><span class="nv">$1</span><span class="s2">&#34;</span><span class="p">;</span>
+   <span class="nb">printf</span> <span class="s2">&#34;|-------------------------------------------------------------------------|\n&#34;</span>
+   <span class="si">${</span><span class="nv">SETCOLOR_NORMAL</span><span class="si">}</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">[</span> -d <span class="s2">&#34;</span><span class="nv">$DASH_DIR</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nv">DASH_LIST</span><span class="o">=</span><span class="k">$(</span>find <span class="s2">&#34;</span><span class="nv">$DASH_DIR</span><span class="s2">&#34;</span> -mindepth <span class="m">1</span> -name <span class="se">\*</span>.json<span class="k">)</span>
+    <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$DASH_LIST</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        log_title <span class="s2">&#34;----------------- </span><span class="nv">$DASH_DIR</span><span class="s2"> contains no JSON files! -----------------&#34;</span>
+        log_failure <span class="s2">&#34;Directory </span><span class="nv">$DASH_DIR</span><span class="s2"> does not appear to contain any JSON files for import. Check your path and try again.&#34;</span>
+        <span class="nb">exit</span> <span class="m">1</span>
+    <span class="k">else</span>
+        <span class="nv">FILESTOTAL</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$DASH_LIST</span><span class="s2">&#34;</span> <span class="p">|</span> wc -l<span class="k">)</span>
+        log_title <span class="s2">&#34;----------------- Starting import of </span><span class="nv">$FILESTOTAL</span><span class="s2"> dashboards -----------------&#34;</span>
+    <span class="k">fi</span>
+<span class="k">else</span>
+    log_title <span class="s2">&#34;----------------- </span><span class="nv">$DASH_DIR</span><span class="s2"> directory not found! -----------------&#34;</span>
+    log_failure <span class="s2">&#34;Directory </span><span class="nv">$DASH_DIR</span><span class="s2"> does not exist. Check your path and try again.&#34;</span>
+    <span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="nv">NUMSUCCESS</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">NUMFAILURE</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">COUNTER</span><span class="o">=</span><span class="m">0</span>
+
+<span class="k">for</span> DASH_FILE in <span class="nv">$DASH_LIST</span><span class="p">;</span> <span class="k">do</span>
+    <span class="nv">COUNTER</span><span class="o">=</span><span class="k">$((</span>COUNTER <span class="o">+</span> <span class="m">1</span><span class="k">))</span>
+    <span class="nb">echo</span> <span class="s2">&#34;Import </span><span class="nv">$COUNTER</span><span class="s2">/</span><span class="nv">$FILESTOTAL</span><span class="s2">: </span><span class="nv">$DASH_FILE</span><span class="s2">...&#34;</span>
+    <span class="nv">RESULT</span><span class="o">=</span><span class="k">$(</span>cat <span class="s2">&#34;</span><span class="nv">$DASH_FILE</span><span class="s2">&#34;</span> <span class="p">|</span> jq <span class="s1">&#39;. * {overwrite: true, dashboard: {id: null}}&#39;</span> <span class="p">|</span> curl -s -X POST -H <span class="s2">&#34;Content-Type: application/json&#34;</span> -H <span class="s2">&#34;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&#34;</span> <span class="s2">&#34;</span><span class="nv">$HOST</span><span class="s2">&#34;</span>/api/dashboards/db -d @-<span class="k">)</span>
+    <span class="k">if</span> <span class="o">[[</span> <span class="s2">&#34;</span><span class="nv">$RESULT</span><span class="s2">&#34;</span> <span class="o">==</span> *<span class="s2">&#34;success&#34;</span>* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+        log_success <span class="s2">&#34;</span><span class="nv">$RESULT</span><span class="s2">&#34;</span>
+        <span class="nv">NUMSUCCESS</span><span class="o">=</span><span class="k">$((</span>NUMSUCCESS <span class="o">+</span> <span class="m">1</span><span class="k">))</span>
+    <span class="k">else</span>
+        log_failure <span class="s2">&#34;</span><span class="nv">$RESULT</span><span class="s2">&#34;</span>
+        <span class="nv">NUMFAILURE</span><span class="o">=</span><span class="k">$((</span>NUMFAILURE <span class="o">+</span> <span class="m">1</span><span class="k">))</span>
+    <span class="k">fi</span>
+<span class="k">done</span>
+
+log_title <span class="s2">&#34;Import complete. </span><span class="nv">$NUMSUCCESS</span><span class="s2"> dashboards were successfully imported. </span><span class="nv">$NUMFAILURE</span><span class="s2"> dashboard imports failed.&#34;</span><span class="p">;</span>
+log_title <span class="s2">&#34;------------------------------ FINISHED ---------------------------------&#34;</span><span class="p">;</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>使用方式:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">bash grafana-dashboard-importer.sh -t http:localhost:3000 -k <span class="nv">eyJrIjoiZkhiQUVDczNFT0QyUaouefohaoeihoaefhaoiefiomFpaHVpX2FwaV9rZXkiLCJpZCI6MX0</span><span class="o">=</span> -p ~/grafana-dashboard
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="使用grafana-provision">使用grafana provision</h3>
+<p>新版Grafana支持使用provision的方式通过yaml配置导入 <code>dashboards | datasources | notifiers</code> 这三种资源到Grafana db中。</p>
+<p><code>/etc/grafana/grafana.ini</code>文件中需要配置provisioning的目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[paths]</span>
+<span class="na">data</span> <span class="o">=</span> <span class="s">/var/lib/grafana/data</span>
+<span class="na">logs</span> <span class="o">=</span> <span class="s">/var/log/grafana</span>
+<span class="na">plugins</span> <span class="o">=</span> <span class="s">/var/lib/grafana/plugins</span>
+<span class="na">provisioning</span> <span class="o">=</span> <span class="s">/etc/grafana/provisioning</span>
+<span class="k">[smtp]</span>
+<span class="na">enabled</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">host</span> <span class="o">=</span> <span class="s">smtp.exmail.qq.com:25</span>
+<span class="na">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>/etc/grafana/provisioning</code>目录中新建<code>dashboards | datasources | notifiers</code> 这三个文件夹。</p>
+<p>在dashboards目录下<code>provisioning/dashboards/dashboard-provider.yaml</code>需要配置好需要导入的dashboard的配置文件的path：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w"></span><span class="k">providers</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;default&#39;</span><span class="w">
+</span><span class="w">  </span><span class="k">orgId</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span><span class="k">folder</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w">
+</span><span class="w">  </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>file<span class="w">
+</span><span class="w">  </span><span class="k">disableDeletion</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">  </span><span class="k">options</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">path</span><span class="p">:</span><span class="w"> </span>/var/lib/grafana/dashboards/General<span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;k8s&#39;</span><span class="w">
+</span><span class="w">  </span><span class="k">orgId</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span><span class="k">folder</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;k8s&#39;</span><span class="w">
+</span><span class="w">  </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>file<span class="w">
+</span><span class="w">  </span><span class="k">disableDeletion</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">  </span><span class="k">options</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">path</span><span class="p">:</span><span class="w"> </span>/var/lib/grafana/dashboards/k8s<span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;celery&#39;</span><span class="w">
+</span><span class="w">  </span><span class="k">orgId</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span><span class="k">folder</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;celery&#39;</span><span class="w">
+</span><span class="w">  </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>file<span class="w">
+</span><span class="w">  </span><span class="k">disableDeletion</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">  </span><span class="k">options</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">path</span><span class="p">:</span><span class="w"> </span>/var/lib/grafana/dashboards/celery<span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;pulsar&#39;</span><span class="w">
+</span><span class="w">  </span><span class="k">orgId</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span><span class="k">folder</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;pulsar&#39;</span><span class="w">
+</span><span class="w">  </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>file<span class="w">
+</span><span class="w">  </span><span class="k">disableDeletion</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">  </span><span class="k">options</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">path</span><span class="p">:</span><span class="w"> </span>/var/lib/grafana/dashboards/pulsar<span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>在datasources目录<code>provisioning/datasources/datasource.yaml</code>下需要配置好需要导入的datasources的配置文件的path：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w"></span><span class="k">datasources</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>Prometheus<span class="w">
+</span><span class="w">  </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>prometheus<span class="w">
+</span><span class="w">  </span><span class="k">url</span><span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//prometheus<span class="p">:</span><span class="m">9090</span>/<span class="w">
+</span><span class="w">  </span><span class="k">access</span><span class="p">:</span><span class="w"> </span>proxy<span class="w">
+</span><span class="w">  </span><span class="k">isDefault</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>notifiers配置暂时没有用到，保留一个空目录即可</p>
+<p>注意事项：</p>
+<ol>
+<li><code>/var/lib/grafana/dashboards/General</code>目录grafana默认的目录，因此export之后的General需要导入到default中</li>
+<li>通过export导出的json配置文件需要做处理：
+<ol>
+<li>只需要json中的dashboard信息，不需要meta信息</li>
+<li>json配置需要保持字典序</li>
+</ol>
+</li>
+</ol>
+<p>grafana-dashboard-exporter.sh导出的代码可以通过一下python代码进行转换得到provision的配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&#34;/home/suncle/dockprom/grafana/dashboards/celery&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;/home/suncle/dockprom/grafana/dashboards/General&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;/home/suncle/dockprom/grafana/dashboards/k8s&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;/home/suncle/dockprom/grafana/dashboards/pulsar&#34;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&#34;{}/{}&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&#34;.json&#34;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&#34;r+&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                    <span class="n">json_data</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+                    <span class="n">fp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&#34;dashboard&#34;</span><span class="p">],</span> <span class="n">sort_keys</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>  <span class="c1"># 字母序</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;{}: success&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&#34;{}: {}&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><hr>
+<p>参考：</p>
+<ul>
+<li>
+<p>Dockprom: <a href="https://github.com/stefanprodan/dockprom">https://github.com/stefanprodan/dockprom</a></p>
+</li>
+<li>
+<p>Grafana-dashboard-exporter: <a href="https://gist.github.com/crisidev/bd52bdcc7f029be2f295">https://gist.github.com/crisidev/bd52bdcc7f029be2f295</a></p>
+</li>
+<li>
+<p>Grafana-dashboard-import: <a href="https://gist.github.com/thedoc31/628beeee934f9c84648c108d4ad89f05">https://gist.github.com/thedoc31/628beeee934f9c84648c108d4ad89f05</a></p>
+</li>
+<li>
+<p>Provisioning Grafana: <a href="https://grafana.com/docs/administration/provisioning/">https://grafana.com/docs/administration/provisioning/</a></p>
+</li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Grafana/">Grafana</a>
+          <a href="/tags/Prometheus/">Prometheus</a>
+          <a href="/tags/%E7%9B%91%E6%8E%A7/">监控</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2019/11/26/Huffman-encode-the-principle-and-the-reality/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">从哈夫曼编码再出发：原理和现实</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2019/11/13/Lu-Rong-behavioral-finance/">
+            <span class="next-text nav-default">陆蓉的行为金融学</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

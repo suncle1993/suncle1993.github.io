@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Aliyun on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/Aliyun/</link>
+    <description>Recent content in Aliyun on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 02 Aug 2019 17:05:54 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/Aliyun/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>大数据OLAP系统比较</title>
+      <link>https://suncle.me/2019/08/02/Comparison-of-the-Open-Source-OLAP-Systems-for-BigData/</link>
+      <pubDate>Fri, 02 Aug 2019 17:05:54 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/08/02/Comparison-of-the-Open-Source-OLAP-Systems-for-BigData/</guid>
+      <description>&lt;p&gt;大数据OLAP系统比较&lt;/p&gt;
+&lt;h1 id=&#34;结论&#34;&gt;结论&lt;/h1&gt;
+&lt;p&gt;选择presto和clickhouse配合使用&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;对实时性要求不严格的数据用presto查询&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对于实时性有要求的数据查询clickhouse&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;理由：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;核心原因：clickhouse相对于Apache Kylin等预计算方案非常省机器，成本最关键(比较穷，没办法)&lt;/li&gt;
+&lt;li&gt;clickhouse的单表查询非常非常快&lt;/li&gt;
+&lt;li&gt;目前再惠的数据仍然处于并将长期处于小规模阶段(集群内存少于1T，Cpu少于200vCore)，clickhouse在小规模集群上表现优于Druid和Pinot&lt;/li&gt;
+&lt;li&gt;presto的综合性能好，在join操作时表现较好，保持目前数仓的这一套不变&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>阿里云大数据基础组件调研</title>
+      <link>https://suncle.me/2019/07/30/Aliyun-big-data-infrastructure-components-research/</link>
+      <pubDate>Tue, 30 Jul 2019 14:34:32 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/07/30/Aliyun-big-data-infrastructure-components-research/</guid>
+      <description>&lt;p&gt;阿里云大数据基础组件调研&lt;/p&gt;
+&lt;h1 id=&#34;emr&#34;&gt;EMR&lt;/h1&gt;
+&lt;p&gt;阿里云 Elastic MapReduce（E-MapReduce）是运行在阿里云平台上的一种大数据处理的系统解决方案。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.aliyun.com/product/emapreduce?spm=5176.12825654.eofdhaal5.146.e9392c4aO4b222&#34;&gt;E-MapReduce_大数据处理平台解决方案_集群管理解决方案 – 阿里云&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://help.aliyun.com/product/28066.html?spm=a2c4g.750001.list.183.6c137b13gTnbYq&#34;&gt;E-MapReduce-阿里云&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://amazonaws-china.com/cn/emr/pricing/?nc=sn&amp;amp;loc=4&#34;&gt;AWS | Amazon EMR | 定价&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://help.aliyun.com/document_detail/34946.html?spm=a2c4g.11186623.6.548.70a440ac4LBjI0&#34;&gt;费用组成_产品定价_E-MapReduce-阿里云&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

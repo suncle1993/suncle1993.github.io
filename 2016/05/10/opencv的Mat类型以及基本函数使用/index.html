@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>OpenCV的Mat类型以及基本函数使用 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="OpenCV的Mat类型以及基本函数使用 Mat和IplImage的区别 Mat和IplImage的主要区别 在OpenCV中IplImage是表示一个图像的结构体，也是从OpenCV1.0到目前最为重要的一个结构；在之前的图像表示用IplImage，而且之前的OpenCV是用C语言编写的，提供的接口也是C语言接口。
+Mat是后来OpenCV封装的一个C&#43;&#43;类，用来表示一个图像，和IplImage表示基本一致，但是Mat还添加了一些图像函数。
+IplImage IplImage数据结构的定义在opencv\build\include\opencv2\core\types_c.h文件中。
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34  typedef struct _IplImage { int nSize; /* sizeof(IplImage) */ int ID; /* version (=0)*/ int nChannels; /* Most of OpenCV functions support 1,2,3 or 4 channels */ int alphaChannel; /* Ignored by OpenCV */ int depth; /* Pixel depth in bits: IPL_DEPTH_8U, IPL_DEPTH_8S, IPL_DEPTH_16S, IPL_DEPTH_32S, IPL_DEPTH_32F and IPL_DEPTH_64F are supported. */ char colorModel[4]; /* Ignored by OpenCV */ char channelSeq[4]; /* ditto */ int dataOrder; /* 0 - interleaved color channels, 1 - separate color channels. cvCreateImage can only create interleaved images */ int origin; /* 0 - top-left origin, 1 - bottom-left origin (Windows bitmaps style). */ int align; /* Alignment of image rows (4 or 8). OpenCV ignores it and uses widthStep instead. */ int width; /* Image width in pixels. */ int height; /* Image height in pixels. */ struct _IplROI *roi; /* Image ROI. If NULL, the whole image is selected. */ struct _IplImage *maskROI; /* Must be NULL. */ void *imageId; /* &amp;#34; &amp;#34; */ struct _IplTileInfo *tileInfo; /* &amp;#34; &amp;#34; */ int imageSize; /* Image data size in bytes (==image-&amp;gt;height*image-&amp;gt;widthStep in case of interleaved data)*/ char *imageData; /* Pointer to aligned image data. */ int widthStep; /* Size of aligned image row in bytes. */ int BorderMode[4]; /* Ignored by OpenCV. */ int BorderConst[4]; /* Ditto. */ char *imageDataOrigin; /* Pointer to very origin of image data (not necessarily aligned) - needed for correct deallocation */ } IplImage;   可见，IplImage是一个表示图像的结构体：C语言操作OpenCV的数据结构。地位等同于Mat，可以说是历史版本了。
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2016/05/10/opencv%E7%9A%84Mat%E7%B1%BB%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0%E4%BD%BF%E7%94%A8/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="OpenCV的Mat类型以及基本函数使用" />
+<meta property="og:description" content="OpenCV的Mat类型以及基本函数使用
+Mat和IplImage的区别
+Mat和IplImage的主要区别
+在OpenCV中IplImage是表示一个图像的结构体，也是从OpenCV1.0到目前最为重要的一个结构；在之前的图像表示用IplImage，而且之前的OpenCV是用C语言编写的，提供的接口也是C语言接口。
+Mat是后来OpenCV封装的一个C&#43;&#43;类，用来表示一个图像，和IplImage表示基本一致，但是Mat还添加了一些图像函数。
+IplImage
+IplImage数据结构的定义在opencv\build\include\opencv2\core\types_c.h文件中。
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+
+
+typedef struct _IplImage
+{
+    int  nSize;             /* sizeof(IplImage) */
+    int  ID;                /* version (=0)*/
+    int  nChannels;         /* Most of OpenCV functions support 1,2,3 or 4 channels */
+    int  alphaChannel;      /* Ignored by OpenCV */
+    int  depth;             /* Pixel depth in bits: IPL_DEPTH_8U, IPL_DEPTH_8S, IPL_DEPTH_16S,
+                               IPL_DEPTH_32S, IPL_DEPTH_32F and IPL_DEPTH_64F are supported.  */
+    char colorModel[4];     /* Ignored by OpenCV */
+    char channelSeq[4];     /* ditto */
+    int  dataOrder;         /* 0 - interleaved color channels, 1 - separate color channels.
+                               cvCreateImage can only create interleaved images */
+    int  origin;            /* 0 - top-left origin,
+                               1 - bottom-left origin (Windows bitmaps style).  */
+    int  align;             /* Alignment of image rows (4 or 8).
+                               OpenCV ignores it and uses widthStep instead.    */
+    int  width;             /* Image width in pixels.                           */
+    int  height;            /* Image height in pixels.                          */
+    struct _IplROI *roi;    /* Image ROI. If NULL, the whole image is selected. */
+    struct _IplImage *maskROI;      /* Must be NULL. */
+    void  *imageId;                 /* &#34;           &#34; */
+    struct _IplTileInfo *tileInfo;  /* &#34;           &#34; */
+    int  imageSize;         /* Image data size in bytes
+                               (==image-&gt;height*image-&gt;widthStep
+                               in case of interleaved data)*/
+    char *imageData;        /* Pointer to aligned image data.         */
+    int  widthStep;         /* Size of aligned image row in bytes.    */
+    int  BorderMode[4];     /* Ignored by OpenCV.                     */
+    int  BorderConst[4];    /* Ditto.                                 */
+    char *imageDataOrigin;  /* Pointer to very origin of image data
+                               (not necessarily aligned) -
+                               needed for correct deallocation */
+}
+IplImage;
+
+
+可见，IplImage是一个表示图像的结构体：C语言操作OpenCV的数据结构。地位等同于Mat，可以说是历史版本了。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2016/05/10/opencv%E7%9A%84Mat%E7%B1%BB%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0%E4%BD%BF%E7%94%A8/" />
+<meta property="article:published_time" content="2016-05-10T22:01:34+00:00" />
+<meta property="article:modified_time" content="2016-05-10T22:01:34+00:00" />
+<meta itemprop="name" content="OpenCV的Mat类型以及基本函数使用">
+<meta itemprop="description" content="OpenCV的Mat类型以及基本函数使用
+Mat和IplImage的区别
+Mat和IplImage的主要区别
+在OpenCV中IplImage是表示一个图像的结构体，也是从OpenCV1.0到目前最为重要的一个结构；在之前的图像表示用IplImage，而且之前的OpenCV是用C语言编写的，提供的接口也是C语言接口。
+Mat是后来OpenCV封装的一个C&#43;&#43;类，用来表示一个图像，和IplImage表示基本一致，但是Mat还添加了一些图像函数。
+IplImage
+IplImage数据结构的定义在opencv\build\include\opencv2\core\types_c.h文件中。
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+
+
+typedef struct _IplImage
+{
+    int  nSize;             /* sizeof(IplImage) */
+    int  ID;                /* version (=0)*/
+    int  nChannels;         /* Most of OpenCV functions support 1,2,3 or 4 channels */
+    int  alphaChannel;      /* Ignored by OpenCV */
+    int  depth;             /* Pixel depth in bits: IPL_DEPTH_8U, IPL_DEPTH_8S, IPL_DEPTH_16S,
+                               IPL_DEPTH_32S, IPL_DEPTH_32F and IPL_DEPTH_64F are supported.  */
+    char colorModel[4];     /* Ignored by OpenCV */
+    char channelSeq[4];     /* ditto */
+    int  dataOrder;         /* 0 - interleaved color channels, 1 - separate color channels.
+                               cvCreateImage can only create interleaved images */
+    int  origin;            /* 0 - top-left origin,
+                               1 - bottom-left origin (Windows bitmaps style).  */
+    int  align;             /* Alignment of image rows (4 or 8).
+                               OpenCV ignores it and uses widthStep instead.    */
+    int  width;             /* Image width in pixels.                           */
+    int  height;            /* Image height in pixels.                          */
+    struct _IplROI *roi;    /* Image ROI. If NULL, the whole image is selected. */
+    struct _IplImage *maskROI;      /* Must be NULL. */
+    void  *imageId;                 /* &#34;           &#34; */
+    struct _IplTileInfo *tileInfo;  /* &#34;           &#34; */
+    int  imageSize;         /* Image data size in bytes
+                               (==image-&gt;height*image-&gt;widthStep
+                               in case of interleaved data)*/
+    char *imageData;        /* Pointer to aligned image data.         */
+    int  widthStep;         /* Size of aligned image row in bytes.    */
+    int  BorderMode[4];     /* Ignored by OpenCV.                     */
+    int  BorderConst[4];    /* Ditto.                                 */
+    char *imageDataOrigin;  /* Pointer to very origin of image data
+                               (not necessarily aligned) -
+                               needed for correct deallocation */
+}
+IplImage;
+
+
+可见，IplImage是一个表示图像的结构体：C语言操作OpenCV的数据结构。地位等同于Mat，可以说是历史版本了。">
+<meta itemprop="datePublished" content="2016-05-10T22:01:34+00:00" />
+<meta itemprop="dateModified" content="2016-05-10T22:01:34+00:00" />
+<meta itemprop="wordCount" content="4052">
+
+
+
+<meta itemprop="keywords" content="OpenCV,Mat,imread,imshow,imwrite,cvtcolor," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="OpenCV的Mat类型以及基本函数使用"/>
+<meta name="twitter:description" content="OpenCV的Mat类型以及基本函数使用
+Mat和IplImage的区别
+Mat和IplImage的主要区别
+在OpenCV中IplImage是表示一个图像的结构体，也是从OpenCV1.0到目前最为重要的一个结构；在之前的图像表示用IplImage，而且之前的OpenCV是用C语言编写的，提供的接口也是C语言接口。
+Mat是后来OpenCV封装的一个C&#43;&#43;类，用来表示一个图像，和IplImage表示基本一致，但是Mat还添加了一些图像函数。
+IplImage
+IplImage数据结构的定义在opencv\build\include\opencv2\core\types_c.h文件中。
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+
+
+typedef struct _IplImage
+{
+    int  nSize;             /* sizeof(IplImage) */
+    int  ID;                /* version (=0)*/
+    int  nChannels;         /* Most of OpenCV functions support 1,2,3 or 4 channels */
+    int  alphaChannel;      /* Ignored by OpenCV */
+    int  depth;             /* Pixel depth in bits: IPL_DEPTH_8U, IPL_DEPTH_8S, IPL_DEPTH_16S,
+                               IPL_DEPTH_32S, IPL_DEPTH_32F and IPL_DEPTH_64F are supported.  */
+    char colorModel[4];     /* Ignored by OpenCV */
+    char channelSeq[4];     /* ditto */
+    int  dataOrder;         /* 0 - interleaved color channels, 1 - separate color channels.
+                               cvCreateImage can only create interleaved images */
+    int  origin;            /* 0 - top-left origin,
+                               1 - bottom-left origin (Windows bitmaps style).  */
+    int  align;             /* Alignment of image rows (4 or 8).
+                               OpenCV ignores it and uses widthStep instead.    */
+    int  width;             /* Image width in pixels.                           */
+    int  height;            /* Image height in pixels.                          */
+    struct _IplROI *roi;    /* Image ROI. If NULL, the whole image is selected. */
+    struct _IplImage *maskROI;      /* Must be NULL. */
+    void  *imageId;                 /* &#34;           &#34; */
+    struct _IplTileInfo *tileInfo;  /* &#34;           &#34; */
+    int  imageSize;         /* Image data size in bytes
+                               (==image-&gt;height*image-&gt;widthStep
+                               in case of interleaved data)*/
+    char *imageData;        /* Pointer to aligned image data.         */
+    int  widthStep;         /* Size of aligned image row in bytes.    */
+    int  BorderMode[4];     /* Ignored by OpenCV.                     */
+    int  BorderConst[4];    /* Ditto.                                 */
+    char *imageDataOrigin;  /* Pointer to very origin of image data
+                               (not necessarily aligned) -
+                               needed for correct deallocation */
+}
+IplImage;
+
+
+可见，IplImage是一个表示图像的结构体：C语言操作OpenCV的数据结构。地位等同于Mat，可以说是历史版本了。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">OpenCV的Mat类型以及基本函数使用</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-10 </span>
+        <div class="post-category">
+            <a href="/categories/OpenCV/"> OpenCV </a>
+            </div>
+          <span class="more-meta"> 约 4052 字 </span>
+          <span class="more-meta"> 预计阅读 9 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#opencv的mat类型以及基本函数使用">OpenCV的Mat类型以及基本函数使用</a>
+      <ul>
+        <li><a href="#mat和iplimage的区别">Mat和IplImage的区别</a>
+          <ul>
+            <li><a href="#mat和iplimage的主要区别">Mat和IplImage的主要区别</a></li>
+            <li><a href="#iplimage">IplImage</a></li>
+            <li><a href="#mat">Mat</a></li>
+          </ul>
+        </li>
+        <li><a href="#基本函数使用">基本函数使用</a>
+          <ul>
+            <li><a href="#imread">imread</a></li>
+            <li><a href="#imshow">imshow</a></li>
+            <li><a href="#imwrite">imwrite</a></li>
+            <li><a href="#cvtcolor">cvtcolor</a></li>
+          </ul>
+        </li>
+        <li><a href="#综合示例">综合示例</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="opencv的mat类型以及基本函数使用">OpenCV的Mat类型以及基本函数使用</h1>
+<h2 id="mat和iplimage的区别">Mat和IplImage的区别</h2>
+<h3 id="mat和iplimage的主要区别">Mat和IplImage的主要区别</h3>
+<p>在OpenCV中IplImage是表示一个图像的结构体，也是从OpenCV1.0到目前最为重要的一个结构；在之前的图像表示用IplImage，而且之前的OpenCV是用C语言编写的，提供的接口也是C语言接口。</p>
+<p>Mat是后来OpenCV封装的一个C++类，用来表示一个图像，和IplImage表示基本一致，但是Mat还添加了一些图像函数。</p>
+<h3 id="iplimage">IplImage</h3>
+<p>IplImage数据结构的定义在opencv\build\include\opencv2\core\types_c.h文件中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">typedef</span> <span class="k">struct</span> <span class="nc">_IplImage</span>
+<span class="p">{</span>
+    <span class="kt">int</span>  <span class="n">nSize</span><span class="p">;</span>             <span class="cm">/* sizeof(IplImage) */</span>
+    <span class="kt">int</span>  <span class="n">ID</span><span class="p">;</span>                <span class="cm">/* version (=0)*/</span>
+    <span class="kt">int</span>  <span class="n">nChannels</span><span class="p">;</span>         <span class="cm">/* Most of OpenCV functions support 1,2,3 or 4 channels */</span>
+    <span class="kt">int</span>  <span class="n">alphaChannel</span><span class="p">;</span>      <span class="cm">/* Ignored by OpenCV */</span>
+    <span class="kt">int</span>  <span class="n">depth</span><span class="p">;</span>             <span class="cm">/* Pixel depth in bits: IPL_DEPTH_8U, IPL_DEPTH_8S, IPL_DEPTH_16S,
+</span><span class="cm">                               IPL_DEPTH_32S, IPL_DEPTH_32F and IPL_DEPTH_64F are supported.  */</span>
+    <span class="kt">char</span> <span class="n">colorModel</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>     <span class="cm">/* Ignored by OpenCV */</span>
+    <span class="kt">char</span> <span class="n">channelSeq</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>     <span class="cm">/* ditto */</span>
+    <span class="kt">int</span>  <span class="n">dataOrder</span><span class="p">;</span>         <span class="cm">/* 0 - interleaved color channels, 1 - separate color channels.
+</span><span class="cm">                               cvCreateImage can only create interleaved images */</span>
+    <span class="kt">int</span>  <span class="n">origin</span><span class="p">;</span>            <span class="cm">/* 0 - top-left origin,
+</span><span class="cm">                               1 - bottom-left origin (Windows bitmaps style).  */</span>
+    <span class="kt">int</span>  <span class="n">align</span><span class="p">;</span>             <span class="cm">/* Alignment of image rows (4 or 8).
+</span><span class="cm">                               OpenCV ignores it and uses widthStep instead.    */</span>
+    <span class="kt">int</span>  <span class="n">width</span><span class="p">;</span>             <span class="cm">/* Image width in pixels.                           */</span>
+    <span class="kt">int</span>  <span class="n">height</span><span class="p">;</span>            <span class="cm">/* Image height in pixels.                          */</span>
+    <span class="k">struct</span> <span class="nc">_IplROI</span> <span class="o">*</span><span class="n">roi</span><span class="p">;</span>    <span class="cm">/* Image ROI. If NULL, the whole image is selected. */</span>
+    <span class="k">struct</span> <span class="nc">_IplImage</span> <span class="o">*</span><span class="n">maskROI</span><span class="p">;</span>      <span class="cm">/* Must be NULL. */</span>
+    <span class="kt">void</span>  <span class="o">*</span><span class="n">imageId</span><span class="p">;</span>                 <span class="cm">/* &#34;           &#34; */</span>
+    <span class="k">struct</span> <span class="nc">_IplTileInfo</span> <span class="o">*</span><span class="n">tileInfo</span><span class="p">;</span>  <span class="cm">/* &#34;           &#34; */</span>
+    <span class="kt">int</span>  <span class="n">imageSize</span><span class="p">;</span>         <span class="cm">/* Image data size in bytes
+</span><span class="cm">                               (==image-&gt;height*image-&gt;widthStep
+</span><span class="cm">                               in case of interleaved data)*/</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">imageData</span><span class="p">;</span>        <span class="cm">/* Pointer to aligned image data.         */</span>
+    <span class="kt">int</span>  <span class="n">widthStep</span><span class="p">;</span>         <span class="cm">/* Size of aligned image row in bytes.    */</span>
+    <span class="kt">int</span>  <span class="n">BorderMode</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>     <span class="cm">/* Ignored by OpenCV.                     */</span>
+    <span class="kt">int</span>  <span class="n">BorderConst</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>    <span class="cm">/* Ditto.                                 */</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">imageDataOrigin</span><span class="p">;</span>  <span class="cm">/* Pointer to very origin of image data
+</span><span class="cm">                               (not necessarily aligned) -
+</span><span class="cm">                               needed for correct deallocation */</span>
+<span class="p">}</span>
+<span class="n">IplImage</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可见，IplImage是一个表示图像的结构体：C语言操作OpenCV的数据结构。地位等同于Mat，可以说是历史版本了。</p>
+<h3 id="mat">Mat</h3>
+<p>Mat这个数据结构定义在opencv\build\include\opencv2\core\core.hpp这个文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Mat</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! default constructor
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">();</span>
+    <span class="c1">//! constructs 2D matrix of the specified size and type
+</span><span class="c1"></span>    <span class="c1">// (_type is CV_8UC1, CV_64FC3, CV_32SC(12) etc.)
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+    <span class="n">Mat</span><span class="p">(</span><span class="n">Size</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+    <span class="c1">//! constucts 2D matrix and fills it with the specified value _s.
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="k">const</span> <span class="n">Scalar</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
+    <span class="n">Mat</span><span class="p">(</span><span class="n">Size</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="k">const</span> <span class="n">Scalar</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
+
+    <span class="c1">//! constructs n-dimensional matrix
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="kt">int</span> <span class="n">ndims</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">*</span> <span class="n">sizes</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+    <span class="n">Mat</span><span class="p">(</span><span class="kt">int</span> <span class="n">ndims</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">*</span> <span class="n">sizes</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="k">const</span> <span class="n">Scalar</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
+
+    <span class="c1">//! copy constructor
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">);</span>
+    <span class="c1">//! constructor for matrix headers pointing to user-allocated data
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">step</span><span class="o">=</span><span class="n">AUTO_STEP</span><span class="p">);</span>
+    <span class="n">Mat</span><span class="p">(</span><span class="n">Size</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">step</span><span class="o">=</span><span class="n">AUTO_STEP</span><span class="p">);</span>
+    <span class="n">Mat</span><span class="p">(</span><span class="kt">int</span> <span class="n">ndims</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">*</span> <span class="n">sizes</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span><span class="o">*</span> <span class="n">steps</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+
+    <span class="c1">//! creates a matrix header for a part of the bigger matrix
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="k">const</span> <span class="n">Range</span><span class="o">&amp;</span> <span class="n">rowRange</span><span class="p">,</span> <span class="k">const</span> <span class="n">Range</span><span class="o">&amp;</span> <span class="n">colRange</span><span class="o">=</span><span class="n">Range</span><span class="o">::</span><span class="n">all</span><span class="p">());</span>
+    <span class="n">Mat</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rect</span><span class="o">&amp;</span> <span class="n">roi</span><span class="p">);</span>
+    <span class="n">Mat</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="k">const</span> <span class="n">Range</span><span class="o">*</span> <span class="n">ranges</span><span class="p">);</span>
+    <span class="c1">//! converts old-style CvMat to the new matrix; the data is not copied by default
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="k">const</span> <span class="n">CvMat</span><span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">copyData</span><span class="o">=</span><span class="nb">false</span><span class="p">);</span>
+    <span class="c1">//! converts old-style CvMatND to the new matrix; the data is not copied by default
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="k">const</span> <span class="n">CvMatND</span><span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">copyData</span><span class="o">=</span><span class="nb">false</span><span class="p">);</span>
+    <span class="c1">//! converts old-style IplImage to the new matrix; the data is not copied by default
+</span><span class="c1"></span>    <span class="n">Mat</span><span class="p">(</span><span class="k">const</span> <span class="n">IplImage</span><span class="o">*</span> <span class="n">img</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">copyData</span><span class="o">=</span><span class="nb">false</span><span class="p">);</span>
+    <span class="c1">//! builds matrix from std::vector with or without copying the data
+</span><span class="c1"></span>
+   <span class="p">......</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">initEmpty</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Mat是OpenCV最基本的数据结构，Mat即矩阵（Matrix）的缩写我们在读取图片的时候就是将图片定义为Mat类型，其重载的构造函数一大堆。</p>
+<p>其中有一个构造函数可以很方便的直接将IplImage转化为Mat</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">Mat</span><span class="p">(</span><span class="k">const</span> <span class="n">IplImage</span><span class="o">*</span> <span class="n">img</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">copyData</span><span class="o">=</span><span class="nb">false</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="基本函数使用">基本函数使用</h2>
+<h3 id="imread">imread</h3>
+<p>功能：从一个文件中载入图片</p>
+<p>定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">Mat</span> <span class="nf">imread</span><span class="p">(</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="o">=</span><span class="mi">1</span> <span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>■第一个参数，const string&amp;类型的filename，这是我们需要载入的图片路径名。</p>
+<p>在Windows操作系统下，OpenCV的imread函数支持常用的图片类型，比如bmp,jpg,jpeg,png等等。</p>
+<p>■第二个参数，int类型的flags，为载入标识，它指定一个加载图像的颜色类型。可以看到它自带缺省值1.所以有时候这个参数在调用时我们可以忽略。如果在调用时忽略这个参数，就表示载入三通道的彩色图像。具体原因看下面的解释。</p>
+<p>flags是int型的变量，我们可以按如下方式取值：</p>
+<ul>
+<li>flags &gt;0返回一个3通道的彩色图像。</li>
+<li>flags =0返回灰度图像。</li>
+<li>flags &lt;0返回包含Alpha通道的加载的图像。</li>
+</ul>
+<p>需要注意的点：输出的图像默认情况下是不载入Alpha通道进来的。如果我们需要载入Alpha通道的话呢，这里就需要取负值。</p>
+<p>所以默认值flags=1表示载入三通道的彩色图像。</p>
+<h3 id="imshow">imshow</h3>
+<p>功能：显示一个图像</p>
+<p>定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">void</span> <span class="nf">imshow</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">winname</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">mat</span><span class="p">);</span>  
+</code></pre></td></tr></table>
+</div>
+</div><p>■ 第一个参数，const string&amp;类型的winname，填需要显示的窗口标识名称。</p>
+<p>■ 第二个参数，InputArray 类型的mat，填需要显示的图像。</p>
+<p><strong>InputArray 类型是什么类型？</strong></p>
+<p>通过转到定义，我们可以在opencv\build\include\opencv2\highgui\highgui.hpp文件中找到imshow的原型：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">CV_EXPORTS_W</span> <span class="kt">void</span> <span class="nf">imshow</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">winname</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">mat</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>进一步对InputArray转到定义，在opencv\build\include\opencv2\core\core.hpp文件中查到一个typedef声明：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">typedef</span> <span class="k">const</span> <span class="n">_InputArray</span><span class="o">&amp;</span> <span class="n">InputArray</span><span class="p">;</span>  
+</code></pre></td></tr></table>
+</div>
+</div><p>这其实一个类型声明引用，就是说<code>_InputArray</code>和<code>InputArray</code>是一个意思，然后再次对_InputArray进行转到定义，终于，在opencv\build\include\opencv2\core\core.hpp文件中发现了InputArray的真身：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">class CV_EXPORTS _InputArray
+{
+public:
+    enum {
+        KIND_SHIFT = 16,
+        FIXED_TYPE = 0x8000 &lt;&lt; KIND_SHIFT,
+        FIXED_SIZE = 0x4000 &lt;&lt; KIND_SHIFT,
+        KIND_MASK = ~(FIXED_TYPE|FIXED_SIZE) - (1 &lt;&lt; KIND_SHIFT) + 1,
+
+        NONE              = 0 &lt;&lt; KIND_SHIFT,
+        MAT               = 1 &lt;&lt; KIND_SHIFT,
+        MATX              = 2 &lt;&lt; KIND_SHIFT,
+        STD_VECTOR        = 3 &lt;&lt; KIND_SHIFT,
+        STD_VECTOR_VECTOR = 4 &lt;&lt; KIND_SHIFT,
+        STD_VECTOR_MAT    = 5 &lt;&lt; KIND_SHIFT,
+        EXPR              = 6 &lt;&lt; KIND_SHIFT,
+        OPENGL_BUFFER     = 7 &lt;&lt; KIND_SHIFT,
+        OPENGL_TEXTURE    = 8 &lt;&lt; KIND_SHIFT,
+        GPU_MAT           = 9 &lt;&lt; KIND_SHIFT,
+        OCL_MAT           =10 &lt;&lt; KIND_SHIFT
+    };
+    _InputArray();
+
+    _InputArray(const Mat&amp; m);
+    _InputArray(const MatExpr&amp; expr);
+    template&lt;typename _Tp&gt; _InputArray(const _Tp* vec, int n);
+    template&lt;typename _Tp&gt; _InputArray(const vector&lt;_Tp&gt;&amp; vec);
+    template&lt;typename _Tp&gt; _InputArray(const vector&lt;vector&lt;_Tp&gt; &gt;&amp; vec);
+    _InputArray(const vector&lt;Mat&gt;&amp; vec);
+    template&lt;typename _Tp&gt; _InputArray(const vector&lt;Mat_&lt;_Tp&gt; &gt;&amp; vec);
+    template&lt;typename _Tp&gt; _InputArray(const Mat_&lt;_Tp&gt;&amp; m);
+    template&lt;typename _Tp, int m, int n&gt; _InputArray(const Matx&lt;_Tp, m, n&gt;&amp; matx);
+    _InputArray(const Scalar&amp; s);
+    _InputArray(const double&amp; val);
+    // &lt; Deprecated
+    _InputArray(const GlBuffer&amp; buf);
+    _InputArray(const GlTexture&amp; tex);
+    // &gt;
+    _InputArray(const gpu::GpuMat&amp; d_mat);
+    _InputArray(const ogl::Buffer&amp; buf);
+    _InputArray(const ogl::Texture2D&amp; tex);
+
+    virtual Mat getMat(int i=-1) const;
+    virtual void getMatVector(vector&lt;Mat&gt;&amp; mv) const;
+    // &lt; Deprecated
+    virtual GlBuffer getGlBuffer() const;
+    virtual GlTexture getGlTexture() const;
+    // &gt;
+    virtual gpu::GpuMat getGpuMat() const;
+    /*virtual*/ ogl::Buffer getOGlBuffer() const;
+    /*virtual*/ ogl::Texture2D getOGlTexture2D() const;
+
+    virtual int kind() const;
+    virtual Size size(int i=-1) const;
+    virtual size_t total(int i=-1) const;
+    virtual int type(int i=-1) const;
+    virtual int depth(int i=-1) const;
+    virtual int channels(int i=-1) const;
+    virtual bool empty() const;
+
+#ifdef OPENCV_CAN_BREAK_BINARY_COMPATIBILITY
+    virtual ~_InputArray();
+#endif
+
+    int flags;
+    void* obj;
+    Size sz;
+};
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，_InputArray类的里面首先定义了一个枚举，然后定了各个构造函数和虚函数。很多时候，遇到函数原型中的InputArray类型，我们把它简单地当做Mat类型就行了。</p>
+<p>imshow 函数用于在指定的窗口中显示图像。如果窗口是用CV_WINDOW_AUTOSIZE（默认值）标志创建的，那么显示图像原始大小。否则，将图像进行缩放以适合窗口。而imshow 函数缩放图像，取决于图像的深度：</p>
+<ul>
+<li>如果载入的图像是8位无符号类型（8-bit unsigned），就显示图像本来的样子。</li>
+<li>如果图像是16位无符号类型（16-bit unsigned）或32位整型（32-bit integer），便用像素值除以256。也就是说，值的范围是[0,255 x 256]映射到[0,255]。</li>
+<li>如果图像是32位浮点型（32-bit floating-point），像素值便要乘以255。也就是说，该值的范围是[0,1]映射到[0,255]。</li>
+</ul>
+<h3 id="imwrite">imwrite</h3>
+<p>功能：输出图像到文件</p>
+<p>定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">bool</span> <span class="nf">imwrite</span><span class="p">(</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">img</span><span class="p">,</span>
+              <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">params</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">());</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>■ 第一个参数，const string&amp;类型的filename，填需要写入的文件名就行了，带上后缀，比如，“123.jpg”这样。</p>
+<p>■ 第二个参数，InputArray类型的img，一般填一个Mat类型的图像数据就行了。</p>
+<p>■ 第三个参数，<code>const vector&lt;int&gt;</code>&amp;类型的params，表示为特定格式保存的参数编码，它有默认值<code>vector&lt;int&gt;()</code>，所以一般情况下不需要填写。</p>
+<h3 id="cvtcolor">cvtcolor</h3>
+<p>功能：将一个图像的颜色空间转换到另一种（Converts an image from one color space to another.）</p>
+<p>参考：<a href="http://www.opencv.org.cn/opencvdoc/2.3.2/html/modules/imgproc/doc/miscellaneous_transformations.html?highlight=cvtcolor#cvtcolor">cvtcolor</a></p>
+<p>定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">void</span> <span class="nf">cvtColor</span><span class="p">(</span> <span class="n">InputArray</span> <span class="n">src</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">dst</span><span class="p">,</span> <span class="kt">int</span> <span class="n">code</span><span class="p">,</span> <span class="kt">int</span> <span class="n">dstCn</span><span class="o">=</span><span class="mi">0</span> <span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>■ 第一个参数，InputArray类型的src ,&ndash; Source image</p>
+<p>■ 第二个参数，OutputArray类型的dst，Destination image of the same size and depth as src</p>
+<p>■ 第三个参数，int类型的code，颜色空间变换代码Color space conversion code。</p>
+<p>具体的变换代码参见：opencv\build\include\opencv2\imgproc\types_c.h文件中的第87行，枚举类型。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cm">/* Constants for color conversion */</span>
+<span class="k">enum</span>
+<span class="p">{</span>
+    <span class="n">CV_BGR2BGRA</span>    <span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">CV_RGB2RGBA</span>    <span class="o">=</span><span class="n">CV_BGR2BGRA</span><span class="p">,</span>
+
+    <span class="n">CV_BGRA2BGR</span>    <span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">CV_RGBA2RGB</span>    <span class="o">=</span><span class="n">CV_BGRA2BGR</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2RGBA</span>    <span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">CV_RGB2BGRA</span>    <span class="o">=</span><span class="n">CV_BGR2RGBA</span><span class="p">,</span>
+
+    <span class="n">CV_RGBA2BGR</span>    <span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">CV_BGRA2RGB</span>    <span class="o">=</span><span class="n">CV_RGBA2BGR</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2RGB</span>     <span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">CV_RGB2BGR</span>     <span class="o">=</span><span class="n">CV_BGR2RGB</span><span class="p">,</span>
+
+    <span class="n">CV_BGRA2RGBA</span>   <span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">CV_RGBA2BGRA</span>   <span class="o">=</span><span class="n">CV_BGRA2RGBA</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2GRAY</span>    <span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">CV_RGB2GRAY</span>    <span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+    <span class="n">CV_GRAY2BGR</span>    <span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">CV_GRAY2RGB</span>    <span class="o">=</span><span class="n">CV_GRAY2BGR</span><span class="p">,</span>
+    <span class="n">CV_GRAY2BGRA</span>   <span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+    <span class="n">CV_GRAY2RGBA</span>   <span class="o">=</span><span class="n">CV_GRAY2BGRA</span><span class="p">,</span>
+    <span class="n">CV_BGRA2GRAY</span>   <span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">CV_RGBA2GRAY</span>   <span class="o">=</span><span class="mi">11</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2BGR565</span>  <span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+    <span class="n">CV_RGB2BGR565</span>  <span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+    <span class="n">CV_BGR5652BGR</span>  <span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="n">CV_BGR5652RGB</span>  <span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">CV_BGRA2BGR565</span> <span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+    <span class="n">CV_RGBA2BGR565</span> <span class="o">=</span><span class="mi">17</span><span class="p">,</span>
+    <span class="n">CV_BGR5652BGRA</span> <span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+    <span class="n">CV_BGR5652RGBA</span> <span class="o">=</span><span class="mi">19</span><span class="p">,</span>
+
+    <span class="n">CV_GRAY2BGR565</span> <span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">CV_BGR5652GRAY</span> <span class="o">=</span><span class="mi">21</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2BGR555</span>  <span class="o">=</span><span class="mi">22</span><span class="p">,</span>
+    <span class="n">CV_RGB2BGR555</span>  <span class="o">=</span><span class="mi">23</span><span class="p">,</span>
+    <span class="n">CV_BGR5552BGR</span>  <span class="o">=</span><span class="mi">24</span><span class="p">,</span>
+    <span class="n">CV_BGR5552RGB</span>  <span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    <span class="n">CV_BGRA2BGR555</span> <span class="o">=</span><span class="mi">26</span><span class="p">,</span>
+    <span class="n">CV_RGBA2BGR555</span> <span class="o">=</span><span class="mi">27</span><span class="p">,</span>
+    <span class="n">CV_BGR5552BGRA</span> <span class="o">=</span><span class="mi">28</span><span class="p">,</span>
+    <span class="n">CV_BGR5552RGBA</span> <span class="o">=</span><span class="mi">29</span><span class="p">,</span>
+
+    <span class="n">CV_GRAY2BGR555</span> <span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">CV_BGR5552GRAY</span> <span class="o">=</span><span class="mi">31</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2XYZ</span>     <span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">CV_RGB2XYZ</span>     <span class="o">=</span><span class="mi">33</span><span class="p">,</span>
+    <span class="n">CV_XYZ2BGR</span>     <span class="o">=</span><span class="mi">34</span><span class="p">,</span>
+    <span class="n">CV_XYZ2RGB</span>     <span class="o">=</span><span class="mi">35</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2YCrCb</span>   <span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+    <span class="n">CV_RGB2YCrCb</span>   <span class="o">=</span><span class="mi">37</span><span class="p">,</span>
+    <span class="n">CV_YCrCb2BGR</span>   <span class="o">=</span><span class="mi">38</span><span class="p">,</span>
+    <span class="n">CV_YCrCb2RGB</span>   <span class="o">=</span><span class="mi">39</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2HSV</span>     <span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">CV_RGB2HSV</span>     <span class="o">=</span><span class="mi">41</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2Lab</span>     <span class="o">=</span><span class="mi">44</span><span class="p">,</span>
+    <span class="n">CV_RGB2Lab</span>     <span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+
+    <span class="n">CV_BayerBG2BGR</span> <span class="o">=</span><span class="mi">46</span><span class="p">,</span>
+    <span class="n">CV_BayerGB2BGR</span> <span class="o">=</span><span class="mi">47</span><span class="p">,</span>
+    <span class="n">CV_BayerRG2BGR</span> <span class="o">=</span><span class="mi">48</span><span class="p">,</span>
+    <span class="n">CV_BayerGR2BGR</span> <span class="o">=</span><span class="mi">49</span><span class="p">,</span>
+
+    <span class="n">CV_BayerBG2RGB</span> <span class="o">=</span><span class="n">CV_BayerRG2BGR</span><span class="p">,</span>
+    <span class="n">CV_BayerGB2RGB</span> <span class="o">=</span><span class="n">CV_BayerGR2BGR</span><span class="p">,</span>
+    <span class="n">CV_BayerRG2RGB</span> <span class="o">=</span><span class="n">CV_BayerBG2BGR</span><span class="p">,</span>
+    <span class="n">CV_BayerGR2RGB</span> <span class="o">=</span><span class="n">CV_BayerGB2BGR</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2Luv</span>     <span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">CV_RGB2Luv</span>     <span class="o">=</span><span class="mi">51</span><span class="p">,</span>
+    <span class="n">CV_BGR2HLS</span>     <span class="o">=</span><span class="mi">52</span><span class="p">,</span>
+    <span class="n">CV_RGB2HLS</span>     <span class="o">=</span><span class="mi">53</span><span class="p">,</span>
+
+    <span class="n">CV_HSV2BGR</span>     <span class="o">=</span><span class="mi">54</span><span class="p">,</span>
+    <span class="n">CV_HSV2RGB</span>     <span class="o">=</span><span class="mi">55</span><span class="p">,</span>
+
+    <span class="n">CV_Lab2BGR</span>     <span class="o">=</span><span class="mi">56</span><span class="p">,</span>
+    <span class="n">CV_Lab2RGB</span>     <span class="o">=</span><span class="mi">57</span><span class="p">,</span>
+    <span class="n">CV_Luv2BGR</span>     <span class="o">=</span><span class="mi">58</span><span class="p">,</span>
+    <span class="n">CV_Luv2RGB</span>     <span class="o">=</span><span class="mi">59</span><span class="p">,</span>
+    <span class="n">CV_HLS2BGR</span>     <span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="n">CV_HLS2RGB</span>     <span class="o">=</span><span class="mi">61</span><span class="p">,</span>
+
+    <span class="n">CV_BayerBG2BGR_VNG</span> <span class="o">=</span><span class="mi">62</span><span class="p">,</span>
+    <span class="n">CV_BayerGB2BGR_VNG</span> <span class="o">=</span><span class="mi">63</span><span class="p">,</span>
+    <span class="n">CV_BayerRG2BGR_VNG</span> <span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">CV_BayerGR2BGR_VNG</span> <span class="o">=</span><span class="mi">65</span><span class="p">,</span>
+
+    <span class="n">CV_BayerBG2RGB_VNG</span> <span class="o">=</span><span class="n">CV_BayerRG2BGR_VNG</span><span class="p">,</span>
+    <span class="n">CV_BayerGB2RGB_VNG</span> <span class="o">=</span><span class="n">CV_BayerGR2BGR_VNG</span><span class="p">,</span>
+    <span class="n">CV_BayerRG2RGB_VNG</span> <span class="o">=</span><span class="n">CV_BayerBG2BGR_VNG</span><span class="p">,</span>
+    <span class="n">CV_BayerGR2RGB_VNG</span> <span class="o">=</span><span class="n">CV_BayerGB2BGR_VNG</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2HSV_FULL</span> <span class="o">=</span> <span class="mi">66</span><span class="p">,</span>
+    <span class="n">CV_RGB2HSV_FULL</span> <span class="o">=</span> <span class="mi">67</span><span class="p">,</span>
+    <span class="n">CV_BGR2HLS_FULL</span> <span class="o">=</span> <span class="mi">68</span><span class="p">,</span>
+    <span class="n">CV_RGB2HLS_FULL</span> <span class="o">=</span> <span class="mi">69</span><span class="p">,</span>
+
+    <span class="n">CV_HSV2BGR_FULL</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span>
+    <span class="n">CV_HSV2RGB_FULL</span> <span class="o">=</span> <span class="mi">71</span><span class="p">,</span>
+    <span class="n">CV_HLS2BGR_FULL</span> <span class="o">=</span> <span class="mi">72</span><span class="p">,</span>
+    <span class="n">CV_HLS2RGB_FULL</span> <span class="o">=</span> <span class="mi">73</span><span class="p">,</span>
+
+    <span class="n">CV_LBGR2Lab</span>     <span class="o">=</span> <span class="mi">74</span><span class="p">,</span>
+    <span class="n">CV_LRGB2Lab</span>     <span class="o">=</span> <span class="mi">75</span><span class="p">,</span>
+    <span class="n">CV_LBGR2Luv</span>     <span class="o">=</span> <span class="mi">76</span><span class="p">,</span>
+    <span class="n">CV_LRGB2Luv</span>     <span class="o">=</span> <span class="mi">77</span><span class="p">,</span>
+
+    <span class="n">CV_Lab2LBGR</span>     <span class="o">=</span> <span class="mi">78</span><span class="p">,</span>
+    <span class="n">CV_Lab2LRGB</span>     <span class="o">=</span> <span class="mi">79</span><span class="p">,</span>
+    <span class="n">CV_Luv2LBGR</span>     <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
+    <span class="n">CV_Luv2LRGB</span>     <span class="o">=</span> <span class="mi">81</span><span class="p">,</span>
+
+    <span class="n">CV_BGR2YUV</span>      <span class="o">=</span> <span class="mi">82</span><span class="p">,</span>
+    <span class="n">CV_RGB2YUV</span>      <span class="o">=</span> <span class="mi">83</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR</span>      <span class="o">=</span> <span class="mi">84</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGB</span>      <span class="o">=</span> <span class="mi">85</span><span class="p">,</span>
+
+    <span class="n">CV_BayerBG2GRAY</span> <span class="o">=</span> <span class="mi">86</span><span class="p">,</span>
+    <span class="n">CV_BayerGB2GRAY</span> <span class="o">=</span> <span class="mi">87</span><span class="p">,</span>
+    <span class="n">CV_BayerRG2GRAY</span> <span class="o">=</span> <span class="mi">88</span><span class="p">,</span>
+    <span class="n">CV_BayerGR2GRAY</span> <span class="o">=</span> <span class="mi">89</span><span class="p">,</span>
+
+    <span class="c1">//YUV 4:2:0 formats family
+</span><span class="c1"></span>    <span class="n">CV_YUV2RGB_NV12</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_NV12</span> <span class="o">=</span> <span class="mi">91</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGB_NV21</span> <span class="o">=</span> <span class="mi">92</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_NV21</span> <span class="o">=</span> <span class="mi">93</span><span class="p">,</span>
+    <span class="n">CV_YUV420sp2RGB</span> <span class="o">=</span> <span class="n">CV_YUV2RGB_NV21</span><span class="p">,</span>
+    <span class="n">CV_YUV420sp2BGR</span> <span class="o">=</span> <span class="n">CV_YUV2BGR_NV21</span><span class="p">,</span>
+
+    <span class="n">CV_YUV2RGBA_NV12</span> <span class="o">=</span> <span class="mi">94</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_NV12</span> <span class="o">=</span> <span class="mi">95</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGBA_NV21</span> <span class="o">=</span> <span class="mi">96</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_NV21</span> <span class="o">=</span> <span class="mi">97</span><span class="p">,</span>
+    <span class="n">CV_YUV420sp2RGBA</span> <span class="o">=</span> <span class="n">CV_YUV2RGBA_NV21</span><span class="p">,</span>
+    <span class="n">CV_YUV420sp2BGRA</span> <span class="o">=</span> <span class="n">CV_YUV2BGRA_NV21</span><span class="p">,</span>
+
+    <span class="n">CV_YUV2RGB_YV12</span> <span class="o">=</span> <span class="mi">98</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_YV12</span> <span class="o">=</span> <span class="mi">99</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGB_IYUV</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_IYUV</span> <span class="o">=</span> <span class="mi">101</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGB_I420</span> <span class="o">=</span> <span class="n">CV_YUV2RGB_IYUV</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_I420</span> <span class="o">=</span> <span class="n">CV_YUV2BGR_IYUV</span><span class="p">,</span>
+    <span class="n">CV_YUV420p2RGB</span> <span class="o">=</span> <span class="n">CV_YUV2RGB_YV12</span><span class="p">,</span>
+    <span class="n">CV_YUV420p2BGR</span> <span class="o">=</span> <span class="n">CV_YUV2BGR_YV12</span><span class="p">,</span>
+
+    <span class="n">CV_YUV2RGBA_YV12</span> <span class="o">=</span> <span class="mi">102</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_YV12</span> <span class="o">=</span> <span class="mi">103</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGBA_IYUV</span> <span class="o">=</span> <span class="mi">104</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_IYUV</span> <span class="o">=</span> <span class="mi">105</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGBA_I420</span> <span class="o">=</span> <span class="n">CV_YUV2RGBA_IYUV</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_I420</span> <span class="o">=</span> <span class="n">CV_YUV2BGRA_IYUV</span><span class="p">,</span>
+    <span class="n">CV_YUV420p2RGBA</span> <span class="o">=</span> <span class="n">CV_YUV2RGBA_YV12</span><span class="p">,</span>
+    <span class="n">CV_YUV420p2BGRA</span> <span class="o">=</span> <span class="n">CV_YUV2BGRA_YV12</span><span class="p">,</span>
+
+    <span class="n">CV_YUV2GRAY_420</span> <span class="o">=</span> <span class="mi">106</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_NV21</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_420</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_NV12</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_420</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_YV12</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_420</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_IYUV</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_420</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_I420</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_420</span><span class="p">,</span>
+    <span class="n">CV_YUV420sp2GRAY</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_420</span><span class="p">,</span>
+    <span class="n">CV_YUV420p2GRAY</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_420</span><span class="p">,</span>
+
+    <span class="c1">//YUV 4:2:2 formats family
+</span><span class="c1"></span>    <span class="n">CV_YUV2RGB_UYVY</span> <span class="o">=</span> <span class="mi">107</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_UYVY</span> <span class="o">=</span> <span class="mi">108</span><span class="p">,</span>
+    <span class="c1">//CV_YUV2RGB_VYUY = 109,
+</span><span class="c1"></span>    <span class="c1">//CV_YUV2BGR_VYUY = 110,
+</span><span class="c1"></span>    <span class="n">CV_YUV2RGB_Y422</span> <span class="o">=</span> <span class="n">CV_YUV2RGB_UYVY</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_Y422</span> <span class="o">=</span> <span class="n">CV_YUV2BGR_UYVY</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGB_UYNV</span> <span class="o">=</span> <span class="n">CV_YUV2RGB_UYVY</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_UYNV</span> <span class="o">=</span> <span class="n">CV_YUV2BGR_UYVY</span><span class="p">,</span>
+
+    <span class="n">CV_YUV2RGBA_UYVY</span> <span class="o">=</span> <span class="mi">111</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_UYVY</span> <span class="o">=</span> <span class="mi">112</span><span class="p">,</span>
+    <span class="c1">//CV_YUV2RGBA_VYUY = 113,
+</span><span class="c1"></span>    <span class="c1">//CV_YUV2BGRA_VYUY = 114,
+</span><span class="c1"></span>    <span class="n">CV_YUV2RGBA_Y422</span> <span class="o">=</span> <span class="n">CV_YUV2RGBA_UYVY</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_Y422</span> <span class="o">=</span> <span class="n">CV_YUV2BGRA_UYVY</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGBA_UYNV</span> <span class="o">=</span> <span class="n">CV_YUV2RGBA_UYVY</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_UYNV</span> <span class="o">=</span> <span class="n">CV_YUV2BGRA_UYVY</span><span class="p">,</span>
+
+    <span class="n">CV_YUV2RGB_YUY2</span> <span class="o">=</span> <span class="mi">115</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_YUY2</span> <span class="o">=</span> <span class="mi">116</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGB_YVYU</span> <span class="o">=</span> <span class="mi">117</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_YVYU</span> <span class="o">=</span> <span class="mi">118</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGB_YUYV</span> <span class="o">=</span> <span class="n">CV_YUV2RGB_YUY2</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_YUYV</span> <span class="o">=</span> <span class="n">CV_YUV2BGR_YUY2</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGB_YUNV</span> <span class="o">=</span> <span class="n">CV_YUV2RGB_YUY2</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGR_YUNV</span> <span class="o">=</span> <span class="n">CV_YUV2BGR_YUY2</span><span class="p">,</span>
+
+    <span class="n">CV_YUV2RGBA_YUY2</span> <span class="o">=</span> <span class="mi">119</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_YUY2</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGBA_YVYU</span> <span class="o">=</span> <span class="mi">121</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_YVYU</span> <span class="o">=</span> <span class="mi">122</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGBA_YUYV</span> <span class="o">=</span> <span class="n">CV_YUV2RGBA_YUY2</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_YUYV</span> <span class="o">=</span> <span class="n">CV_YUV2BGRA_YUY2</span><span class="p">,</span>
+    <span class="n">CV_YUV2RGBA_YUNV</span> <span class="o">=</span> <span class="n">CV_YUV2RGBA_YUY2</span><span class="p">,</span>
+    <span class="n">CV_YUV2BGRA_YUNV</span> <span class="o">=</span> <span class="n">CV_YUV2BGRA_YUY2</span><span class="p">,</span>
+
+    <span class="n">CV_YUV2GRAY_UYVY</span> <span class="o">=</span> <span class="mi">123</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_YUY2</span> <span class="o">=</span> <span class="mi">124</span><span class="p">,</span>
+    <span class="c1">//CV_YUV2GRAY_VYUY = CV_YUV2GRAY_UYVY,
+</span><span class="c1"></span>    <span class="n">CV_YUV2GRAY_Y422</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_UYVY</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_UYNV</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_UYVY</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_YVYU</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_YUY2</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_YUYV</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_YUY2</span><span class="p">,</span>
+    <span class="n">CV_YUV2GRAY_YUNV</span> <span class="o">=</span> <span class="n">CV_YUV2GRAY_YUY2</span><span class="p">,</span>
+
+    <span class="c1">// alpha premultiplication
+</span><span class="c1"></span>    <span class="n">CV_RGBA2mRGBA</span> <span class="o">=</span> <span class="mi">125</span><span class="p">,</span>
+    <span class="n">CV_mRGBA2RGBA</span> <span class="o">=</span> <span class="mi">126</span><span class="p">,</span>
+
+    <span class="n">CV_RGB2YUV_I420</span> <span class="o">=</span> <span class="mi">127</span><span class="p">,</span>
+    <span class="n">CV_BGR2YUV_I420</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
+    <span class="n">CV_RGB2YUV_IYUV</span> <span class="o">=</span> <span class="n">CV_RGB2YUV_I420</span><span class="p">,</span>
+    <span class="n">CV_BGR2YUV_IYUV</span> <span class="o">=</span> <span class="n">CV_BGR2YUV_I420</span><span class="p">,</span>
+
+    <span class="n">CV_RGBA2YUV_I420</span> <span class="o">=</span> <span class="mi">129</span><span class="p">,</span>
+    <span class="n">CV_BGRA2YUV_I420</span> <span class="o">=</span> <span class="mi">130</span><span class="p">,</span>
+    <span class="n">CV_RGBA2YUV_IYUV</span> <span class="o">=</span> <span class="n">CV_RGBA2YUV_I420</span><span class="p">,</span>
+    <span class="n">CV_BGRA2YUV_IYUV</span> <span class="o">=</span> <span class="n">CV_BGRA2YUV_I420</span><span class="p">,</span>
+    <span class="n">CV_RGB2YUV_YV12</span>  <span class="o">=</span> <span class="mi">131</span><span class="p">,</span>
+    <span class="n">CV_BGR2YUV_YV12</span>  <span class="o">=</span> <span class="mi">132</span><span class="p">,</span>
+    <span class="n">CV_RGBA2YUV_YV12</span> <span class="o">=</span> <span class="mi">133</span><span class="p">,</span>
+    <span class="n">CV_BGRA2YUV_YV12</span> <span class="o">=</span> <span class="mi">134</span><span class="p">,</span>
+
+    <span class="n">CV_COLORCVT_MAX</span>  <span class="o">=</span> <span class="mi">135</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>■ 第四个参数，int类型的dstCn，dst中的通道数（channel number ），dstCn默认为0，表示 dst中通道数自动从src和code中获取。</p>
+<p>示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">//将彩色图像image1变换为灰度图像gray_image1
+</span><span class="c1"></span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image1</span><span class="p">,</span><span class="n">gray_image1</span><span class="p">,</span><span class="n">CV_RGB2GRAY</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="综合示例">综合示例</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// VS2010 + OpenCV2.4.9
+
+#include&lt;opencv2/core/core.hpp&gt;
+#include&lt;opencv2/highgui/highgui.hpp&gt;
+
+using namespace cv;
+
+
+int main( )
+{
+	Mat girl=imread(&#34;girl.jpg&#34;); //载入图像到Mat
+	namedWindow(&#34;girl.jpg&#34;); 
+	imshow(&#34;girl.jpg&#34;,girl);
+
+	//载入图片
+	Mat image= imread(&#34;11.jpg&#34;,199);
+
+	//载入后先显示
+	namedWindow(&#34;11.jpg&#34;);
+	imshow(&#34;11.jpg&#34;,image);
+
+	//输出一张jpg图片到工程目录下
+	imwrite(&#34;10.jpg&#34;,image);
+	 
+	waitKey();
+
+	return 0;
+}
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-05-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/OpenCV/">OpenCV</a>
+          <a href="/tags/Mat/">Mat</a>
+          <a href="/tags/imread/">imread</a>
+          <a href="/tags/imshow/">imshow</a>
+          <a href="/tags/imwrite/">imwrite</a>
+          <a href="/tags/cvtcolor/">cvtcolor</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2016/07/08/sql%E8%AF%AD%E5%8F%A5%E4%B8%AD%E5%8A%A0%E5%8F%B7%E7%9A%84%E4%BD%9C%E7%94%A8/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">sql语句中(&#43;)的作用</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/03/28/%E8%BF%90%E7%BB%B4%E4%BA%BA%E5%91%98%E5%B8%B8%E7%94%A8%E7%9A%84Linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/">
+            <span class="next-text nav-default">运维人员常用的Linux命令总结</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

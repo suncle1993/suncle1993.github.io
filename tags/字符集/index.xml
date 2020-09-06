@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>字符集 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%AD%97%E7%AC%A6%E9%9B%86/</link>
+    <description>Recent content in 字符集 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 01 Dec 2016 22:53:09 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%AD%97%E7%AC%A6%E9%9B%86/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>oracle的userenv和nls_lang详解</title>
+      <link>https://suncle.me/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 01 Dec 2016 22:53:09 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/</guid>
+      <description>&lt;h1 id=&#34;oracle的userenv和nls_lang详解&#34;&gt;oracle的userenv和nls_lang详解&lt;/h1&gt;
+&lt;h2 id=&#34;1userenv最常见的使用&#34;&gt;1、userenv最常见的使用&lt;/h2&gt;
+&lt;p&gt;userenv函数返回当前会话（session）的相关信息。以下sql语句可以查询当前会话连接的数据库字符集&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userenv&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;有关&lt;code&gt;userenv(&#39;parameter&#39;)&lt;/code&gt;返回值的官网介绍如下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/oracle/2016-11-29_194757.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;意思就是：返回的是当前会话使用的language和territory。characterset是数据库的字符集。&lt;/p&gt;
+&lt;p&gt;下面我们就去验证这种情况&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Oracle字符集检查和修改</title>
+      <link>https://suncle.me/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/</link>
+      <pubDate>Thu, 01 Dec 2016 22:51:15 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/</guid>
+      <description>&lt;h1 id=&#34;oracle字符集检查和修改&#34;&gt;Oracle字符集检查和修改&lt;/h1&gt;
+&lt;p&gt;在部署重构版测试环境时，需要创建Oracle数据库，使用dbca创建数据库之后没有注意数据库本身的字符集，导致后续所有的数据库脚本执行后中文乱码。最后的解决办法是清掉全库数据，再修改字符集，重启数据库。&lt;/p&gt;
+&lt;h2 id=&#34;1oracle字符集概述&#34;&gt;1、Oracle字符集概述&lt;/h2&gt;
+&lt;p&gt;系统或者程序运行的环境就是一个我们常见的locale。而设置数据库locale最简单的方法就是设置NLS_LANG这个环境参数。在linux中NLS_LANG是一个环境变量，在windows中NLS_LANG是写在注册表中的。NLS_LANG这个参数由三个组成部分，分别是语言（language）, 区域（territory）和字符集（character set），格式如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;nv&#34;&gt;NLS_LANG&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; language_territory.charset
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;我们平时最常见的就是：&lt;code&gt;AMERICAN_AMERICA.ZHS16GBK&lt;/code&gt;和&lt;code&gt;SIMPLIFIED CHINESE_CHINA.ZHS16GBK&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;NLS_LANG的作用官网是这样说的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It sets the language and territory used by the client application and the database server. It also sets the client&amp;rsquo;s character set, which is the character set for data entered or displayed by a client program&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

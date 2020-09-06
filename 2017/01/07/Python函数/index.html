@@ -1,0 +1,2344 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Python函数 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="Python函数 函数是Python里组织代码的最小单元，Python函数包含以下几个部分：
+ 定义函数 调用函数 参数 函数的返回值 函数的嵌套 作用域 函数执行流程 递归函数 匿名函数 生成器 高阶函数 " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/01/07/Python%E5%87%BD%E6%95%B0/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Python函数" />
+<meta property="og:description" content="Python函数
+函数是Python里组织代码的最小单元，Python函数包含以下几个部分：
+
+定义函数
+调用函数
+参数
+函数的返回值
+函数的嵌套
+作用域
+函数执行流程
+递归函数
+匿名函数
+生成器
+高阶函数
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/01/07/Python%E5%87%BD%E6%95%B0/" />
+<meta property="article:published_time" content="2017-01-07T22:08:51+00:00" />
+<meta property="article:modified_time" content="2017-01-07T22:08:51+00:00" />
+<meta itemprop="name" content="Python函数">
+<meta itemprop="description" content="Python函数
+函数是Python里组织代码的最小单元，Python函数包含以下几个部分：
+
+定义函数
+调用函数
+参数
+函数的返回值
+函数的嵌套
+作用域
+函数执行流程
+递归函数
+匿名函数
+生成器
+高阶函数
+">
+<meta itemprop="datePublished" content="2017-01-07T22:08:51+00:00" />
+<meta itemprop="dateModified" content="2017-01-07T22:08:51+00:00" />
+<meta itemprop="wordCount" content="8010">
+
+
+
+<meta itemprop="keywords" content="Python,函数," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python函数"/>
+<meta name="twitter:description" content="Python函数
+函数是Python里组织代码的最小单元，Python函数包含以下几个部分：
+
+定义函数
+调用函数
+参数
+函数的返回值
+函数的嵌套
+作用域
+函数执行流程
+递归函数
+匿名函数
+生成器
+高阶函数
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Python函数</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-01-07 </span>
+        <div class="post-category">
+            <a href="/categories/Python/"> Python </a>
+            </div>
+          <span class="more-meta"> 约 8010 字 </span>
+          <span class="more-meta"> 预计阅读 16 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#python函数">Python函数</a>
+      <ul>
+        <li><a href="#定义函数">定义函数</a></li>
+        <li><a href="#调用函数">调用函数</a></li>
+        <li><a href="#参数">参数</a>
+          <ul>
+            <li><a href="#传参方式">传参方式</a></li>
+            <li><a href="#参数默认值">参数默认值</a></li>
+            <li><a href="#可变参数">可变参数</a></li>
+            <li><a href="#参数解构">参数解构</a></li>
+            <li><a href="#keyword-only-参数">keyword-only 参数</a></li>
+          </ul>
+        </li>
+        <li><a href="#函数的返回值">函数的返回值</a></li>
+        <li><a href="#函数的嵌套">函数的嵌套</a></li>
+        <li><a href="#作用域">作用域</a>
+          <ul>
+            <li><a href="#变量的作用域为定义此变量的作用域">变量的作用域为定义此变量的作用域</a></li>
+            <li><a href="#上级作用域对下级作用域只读可见">上级作用域对下级作用域只读可见</a></li>
+            <li><a href="#不要使用全局变量global">不要使用全局变量global</a></li>
+            <li><a href="#闭包函数">闭包函数</a></li>
+            <li><a href="#nonlocal关键字">nonlocal关键字</a></li>
+            <li><a href="#函数的__defaults__属性">函数的<code>__defaults__</code>属性</a></li>
+            <li><a href="#可变参数时none的使用">可变参数时None的使用</a></li>
+            <li><a href="#python作用域闭包装饰器资料">Python作用域、闭包、装饰器资料</a></li>
+          </ul>
+        </li>
+        <li><a href="#函数执行流程">函数执行流程</a></li>
+        <li><a href="#递归函数">递归函数</a></li>
+        <li><a href="#匿名函数">匿名函数</a></li>
+        <li><a href="#高阶函数">高阶函数</a>
+          <ul>
+            <li><a href="#高阶函数的定义">高阶函数的定义</a></li>
+            <li><a href="#高阶函数插入排序">高阶函数:插入排序</a></li>
+            <li><a href="#map">map</a></li>
+            <li><a href="#reduce">reduce</a></li>
+            <li><a href="#filter">filter</a></li>
+          </ul>
+        </li>
+        <li><a href="#生成器">生成器</a>
+          <ul>
+            <li><a href="#生成器的基本形式">生成器的基本形式</a></li>
+            <li><a href="#生成器的执行顺序">生成器的执行顺序</a></li>
+            <li><a href="#生成器的应用">生成器的应用</a></li>
+            <li><a href="#生成器参考资料">生成器参考资料</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="python函数">Python函数</h1>
+<p>函数是Python里组织代码的最小单元，Python函数包含以下几个部分：</p>
+<ul>
+<li>定义函数</li>
+<li>调用函数</li>
+<li>参数</li>
+<li>函数的返回值</li>
+<li>函数的嵌套</li>
+<li>作用域</li>
+<li>函数执行流程</li>
+<li>递归函数</li>
+<li>匿名函数</li>
+<li>生成器</li>
+<li>高阶函数</li>
+</ul>
+<h2 id="定义函数">定义函数</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>     <span class="c1"># 函数定义 def 表示定义一个函数， 紧接着是函数名 函数名后面用一对小括号列出参数列表，参数列表后面使用一个冒号开始函数体</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>   <span class="c1"># 函数体是正常的Python语句，可以包含任意结构</span>
+    <span class="k">return</span>  <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>  <span class="c1"># return 语句表示函数的返回值</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>函数是有输入(参数)和输出(返回值)的代码单元， 把输入转化为输出</p>
+<h2 id="调用函数">调用函数</h2>
+<p>定义函数的时候,并不会执行函数体，　当调用函数的时候，才会执行其中的语句块</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>     <span class="c1"># 函数定义 def 表示定义一个函数， 紧接着是函数名 函数名后面用一对小括号</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>   <span class="c1"># 函数体是正常的Python语句，可以包含任意结构</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">return</span>  <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>  <span class="c1"># return 语句表示函数的返回值</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># 函数使用函数名来调用，函数名后紧跟一对小括号，小括号里传入函数定义时的参数</span>
+<span class="mi">8</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="mi">8</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># 传入参数必须和函数定义时的参数相匹配，如果不匹配，会抛出TypeError</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">a11d83d1db7e</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">add</span><span class="p">()</span> <span class="n">takes</span> <span class="mi">2</span> <span class="n">positional</span> <span class="n">arguments</span> <span class="n">but</span> <span class="mi">3</span> <span class="n">were</span> <span class="n">given</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="参数">参数</h2>
+<h3 id="传参方式">传参方式</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">ret</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{} + {} = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">))</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">ret</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1">#参数按照定义的顺序传入，这样的传参方法叫做位置参数</span>
+<span class="mi">3</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="mi">8</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1">#参数按照定义时的变量名传递，这样的传参方法叫做关键字参数，关键字参数和顺序无关</span>
+<span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="mi">8</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 位置参数和关键字参数可以混用</span>
+<span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="mi">8</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>	<span class="c1"># 位置参数不能放在关键字参数的后面</span>
+  <span class="n">File</span> <span class="s2">&#34;&lt;ipython-input-9-165b39de39ac&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span>
+    <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="o">^</span>
+<span class="ne">SyntaxError</span><span class="p">:</span> <span class="n">positional</span> <span class="n">argument</span> <span class="n">follows</span> <span class="n">keyword</span> <span class="n">argument</span>
+
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">)</span>	<span class="c1"># python是动态语言，传入的参数类型可以不固定</span>
+<span class="mi">3</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="s1">&#39;35&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">)</span> <span class="c1"># python是强类型语言，传入的参数需要满足强类型要求，否则会抛出TypeError</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">335767</span><span class="n">c130e1</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">)</span>
+
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">5</span><span class="o">-</span><span class="n">e720706d1634</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+      <span class="mi">1</span> <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="o">----&gt;</span> <span class="mi">2</span>     <span class="n">ret</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+      <span class="mi">3</span>     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{} + {} = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">))</span>
+      <span class="mi">4</span>     <span class="k">return</span> <span class="n">ret</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">unsupported</span> <span class="n">operand</span> <span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="o">+</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span> <span class="ow">and</span> <span class="s1">&#39;str&#39;</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="参数默认值">参数默认值</h3>
+<p>参数可以有默认值，当一个参数有默认值时， 调用时如果不传递此参数，会使用默认值</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">inc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>	<span class="c1"># 参数y默认为1</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">x</span> <span class="o">+=</span> <span class="n">y</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">x</span>
+    <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">inc</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>	<span class="c1"># 传参时只需要传入x即可</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="mi">4</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="n">inc</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="mi">5</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">inc</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>	<span class="c1"># 默认参数不能再非默认参数之前</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+  <span class="n">File</span> <span class="s2">&#34;&lt;ipython-input-15-993be842d592&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">inc</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+           <span class="o">^</span>
+<span class="ne">SyntaxError</span><span class="p">:</span> <span class="n">non</span><span class="o">-</span><span class="n">default</span> <span class="n">argument</span> <span class="n">follows</span> <span class="n">default</span> <span class="n">argument</span>
+
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dbname</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">pass</span>
+    <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="n">connect</span><span class="p">(</span><span class="s1">&#39;192.168.110.13&#39;</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>参数默认值和关键字参数一起使用，会让代码非常简洁</p>
+<h3 id="可变参数">可变参数</h3>
+<p>可变参数两种形式：</p>
+<ul>
+<li>位置可变参数 ： 参数名前加<strong>一个</strong>星号， 构成<strong>元组</strong>， 传参只能以<strong>位置参数</strong>的形式</li>
+<li>关键字可变参数： 参数名前加<strong>两个</strong>信号， 构成<strong>字典</strong>， 传参只能以<strong>关键字参数</strong>的形式</li>
+</ul>
+<p><strong>位置可变参数</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">18</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="o">*</span><span class="n">lst</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">lst</span><span class="p">))</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="n">ret</span> <span class="o">+=</span> <span class="n">x</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">ret</span>
+    <span class="o">...</span><span class="p">:</span> 
+<span class="c1"># 参数前加一个星号， 表示这个参数是可变的， 也就是可以接受任意多个参数, 这些参数将构成一个元组， 此时只能通过位置参数传参</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">19</span><span class="p">]:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">tuple</span><span class="s1">&#39;&gt;</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">19</span><span class="p">]:</span> <span class="mi">6</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>关键字可变参数</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">20</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{} =&gt; {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+    <span class="o">...</span><span class="p">:</span>         
+<span class="c1"># 参数前加两个星号， 表示这个参数是可变的，可以接受任意多个参数， 这些参数构成一个字典，此时只能通过关键字参数传参</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">dict</span><span class="s1">&#39;&gt;</span>
+<span class="n">host</span> <span class="o">=&gt;</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span>
+<span class="n">port</span> <span class="o">=&gt;</span> <span class="mi">3306</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>位置可变参数和关键字可变参数混合使用</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">22</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">23</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+<span class="c1"># 以上说明位置可变参数和关键字可变参数可以混合使用</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">24</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span> 
+  <span class="n">File</span> <span class="s2">&#34;&lt;ipython-input-24-e42478d184b2&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+                   <span class="o">^</span>
+<span class="ne">SyntaxError</span><span class="p">:</span> <span class="n">invalid</span> <span class="n">syntax</span>
+<span class="c1"># 以上说明当位置可变参数和关键字可变参数一起使用时， 位置可变参数必须在前面</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>可变参数和普通参数混合使用</strong></p>
+<p>普通参数可以和可变参数一起使用，但是传参的时候必须匹配，演示如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">25</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">26</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="mi">2</span>
+<span class="mi">3</span>
+<span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">27</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="mi">2</span>
+<span class="mi">3</span>
+<span class="p">()</span>
+<span class="p">{}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">28</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>	<span class="c1"># x有两个值，一个2，一个1，所以抛出TypeError</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">28</span><span class="o">-</span><span class="mi">0</span><span class="n">f8d856dee50</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">fn</span><span class="p">()</span> <span class="n">got</span> <span class="n">multiple</span> <span class="n">values</span> <span class="k">for</span> <span class="n">argument</span> <span class="s1">&#39;x&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">29</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="mi">2</span>
+<span class="mi">3</span>
+<span class="p">()</span>
+<span class="p">{}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>位置可变参数可以在普通参数之前， 但是在位置可变参数之后的普通参数变成了<strong>keyword-only</strong>参数:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">30</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">31</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="n">fab2f7df0315</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">fn</span><span class="p">()</span> <span class="n">missing</span> <span class="mi">1</span> <span class="n">required</span> <span class="n">keyword</span><span class="o">-</span><span class="n">only</span> <span class="n">argument</span><span class="p">:</span> <span class="s1">&#39;x&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">32</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>	<span class="c1"># 必须将位置可变参数之后的普通参数变成keyword-only，否则TypeError</span>
+<span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="mi">4</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>关键字可变参数不允许在普通参数之前,演示如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">33</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&#34;&lt;ipython-input-33-889f99c1c889&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+                   <span class="o">^</span>
+<span class="ne">SyntaxError</span><span class="p">:</span> <span class="n">invalid</span> <span class="n">syntax</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>关于默认参数和可变参数的总结：</p>
+<p><strong>通常</strong>来说：</p>
+<ul>
+<li>默认参数靠后</li>
+<li>可变参数靠后</li>
+<li>默认参数和可变参数一般不同时出现</li>
+<li>当默认参数和可变参数一起出现的时候， 默认参数相当于普通参数</li>
+</ul>
+<h3 id="参数解构">参数解构</h3>
+<p>参数解构有两种形式</p>
+<ul>
+<li><strong>一个星号</strong> 解构的对象：可迭代对象 ，解构的结果：位置参数</li>
+<li><strong>两个星号</strong> 解构的对象：字典 ，解构的结果：关键字参数</li>
+</ul>
+<p><strong>一个星号的情况</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">34</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="n">ret</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{} + {} = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ret</span><span class="p">))</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="n">ret</span>
+    <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">35</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">35</span><span class="p">]:</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">36</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">36</span><span class="p">]:</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">37</span><span class="p">]:</span> <span class="n">t</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">38</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>	<span class="c1"># 如果列表中的元素很多的时候，一个一个解开很不方便简洁</span>
+<span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">38</span><span class="p">]:</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">39</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>	<span class="c1"># 位置参数解构  加一个星号， 可以把可迭代对象解构成位置参数</span>
+<span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">39</span><span class="p">]:</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">40</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="mi">0</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">40</span><span class="p">]:</span> <span class="mi">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>二个星号</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">42</span><span class="p">]:</span> <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">43</span><span class="p">]:</span> <span class="n">add</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span>
+<span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">43</span><span class="p">]:</span> <span class="mi">3</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>参数解构发生在函数调用时， 可变参数发生函数定义时，所以两者并不冲突</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">46</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>	<span class="c1"># 可变参数发生在函数定义时</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="n">ret</span> <span class="o">+=</span> <span class="n">x</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">ret</span>
+    <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">47</span><span class="p">]:</span> <span class="nb">sum</span><span class="p">(</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>	<span class="c1"># 参数解构发生在函数调用时</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">47</span><span class="p">]:</span> <span class="mi">45</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">48</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">49</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;a-b&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+<span class="p">{</span><span class="s1">&#39;a-b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">50</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="mi">123</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>	<span class="c1"># 关键字参数解构， key必须是str</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">50</span><span class="o">-</span><span class="mi">3</span><span class="n">c8b8b3fdf0b</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">fn</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="mi">123</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">fn</span><span class="p">()</span> <span class="n">keywords</span> <span class="n">must</span> <span class="n">be</span> <span class="n">strings</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="keyword-only-参数">keyword-only 参数</h3>
+<p>使用方法参见：<a href="https://www.polarxiong.com/archives/Python-%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%E4%B8%AD%E5%8D%95%E4%B8%AA%E6%98%9F%E5%8F%B7%E7%9A%84%E6%84%8F%E6%80%9D-Keyword-Only-Arguments.html">Python: 函数参数列表中单个星号的意思，Keyword-Only Arguments</a></p>
+<p>星号可以以一个参数的形式出现在函数声明中的参数列表中，但星号之后的所有参数都必须有关键字（keyword），这样在函数调用时，星号*之后的所有参数都必须以<code>keyword=value</code>的形式调用，而不能以位置顺序调用。</p>
+<p>使用示例如下：也可参考上面链接中的示例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">54</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">55</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">55</span><span class="o">-</span><span class="n">f005f2a6106f</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">fn</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">fn</span><span class="p">()</span> <span class="n">takes</span> <span class="mi">0</span> <span class="n">positional</span> <span class="n">arguments</span> <span class="n">but</span> <span class="mi">1</span> <span class="n">was</span> <span class="n">given</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">56</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">57</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">58</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="mi">1</span>
+<span class="mi">2</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">59</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">59</span><span class="o">-</span><span class="n">c159019d3516</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">fn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">fn</span><span class="p">()</span> <span class="n">takes</span> <span class="mi">1</span> <span class="n">positional</span> <span class="n">argument</span> <span class="n">but</span> <span class="mi">2</span> <span class="n">were</span> <span class="n">given</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="函数的返回值">函数的返回值</h2>
+<ul>
+<li>return 语句除了返回值之外，还会结束函数， return之后的语句将不会被执行</li>
+<li>一个函数可以有多个return语句， 执行到哪个return由哪个return返回结果并结束函数</li>
+<li>函数中 return可以提前结束循环</li>
+<li>当函数没有return语句的时候，返回None</li>
+<li>当函数需要返回多个值时， 可以用封装把返回值封装成一个元组</li>
+<li>可以通过解构获取到多返回值</li>
+<li>return None 可以简写为 return， 通常用于结束函数</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">63</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="o">...</span><span class="p">:</span>             <span class="k">return</span> <span class="n">i</span>	<span class="c1"># return可以提前退出循环</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">else</span><span class="p">:</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="s1">&#39;not bigger than 3&#39;</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>         
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">64</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="ow">not</span> <span class="n">bigger</span> <span class="n">than</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">65</span><span class="p">]:</span> <span class="n">fn</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>	
+<span class="n">Out</span><span class="p">[</span><span class="mi">65</span><span class="p">]:</span> <span class="mi">4</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">66</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">pass</span>	<span class="c1"># 没有return时返回的是None</span>
+    <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">67</span><span class="p">]:</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">fn</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">68</span><span class="p">]:</span> <span class="n">ret</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">69</span><span class="p">]:</span> <span class="nb">type</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">69</span><span class="p">]:</span> <span class="n">NoneType</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">70</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span>	<span class="c1"># 当函数需要返回多个值时， 会把返回值封装成一个元组</span>
+    <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">71</span><span class="p">]:</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">fn</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">72</span><span class="p">]:</span> <span class="nb">type</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">72</span><span class="p">]:</span> <span class="nb">tuple</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">73</span><span class="p">]:</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">fn</span><span class="p">()</span>	<span class="c1"># 可以通过解构获取多个返回值</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="函数的嵌套">函数的嵌套</h2>
+<p>函数可以嵌套使用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">75</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">outter</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;outter&#39;</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">inner</span><span class="p">()</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">76</span><span class="p">]:</span> <span class="n">outter</span><span class="p">()</span>
+<span class="n">outter</span>
+<span class="n">inner</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="作用域">作用域</h2>
+<h3 id="变量的作用域为定义此变量的作用域">变量的作用域为定义此变量的作用域</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">():</span> <span class="c1"># 变量的作用域为定义此变量的作用域</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">xx</span> <span class="o">=</span> <span class="mi">1</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+<span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">xx</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="mi">102</span><span class="n">f5037fe64</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">xx</span>
+
+<span class="ne">NameError</span><span class="p">:</span> <span class="n">name</span> <span class="s1">&#39;xx&#39;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>表明变量的作用域就在fn函数之中</p>
+<h3 id="上级作用域对下级作用域只读可见">上级作用域对下级作用域只读可见</h3>
+<p>不同作用域变量不可见， 但是下级作用域可以对上级作用域的变量只读可见</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">():</span>	<span class="c1"># 上级作用域对下级作用域可见</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">xx</span> <span class="o">=</span> <span class="mi">1</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">inner</span><span class="p">()</span>
+   <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+<span class="mi">1</span>
+<span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">():</span>	<span class="c1"># 上级作用域对下级作用域只读可见</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">xx</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="n">xx</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">inner</span><span class="p">()</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+<span class="mi">1</span>
+<span class="mi">1</span>	<span class="c1"># 可以发现xx并没有被下级作用域修改</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="不要使用全局变量global">不要使用全局变量global</h3>
+<p><strong>除非你清楚的知道global会带来什么，并且明确的知道，非global不行， 否则不要使用global</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">xx</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">global</span> <span class="n">xx</span>	<span class="c1"># global 可以提升变量作用域为全局变量</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">xx</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="n">xx</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="mi">2</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="闭包函数">闭包函数</h3>
+<p><strong>闭包定义（Wikipedia）</strong>：在一些语言中，在函数中可以（嵌套）定义另一个函数时，如果内部的函数引用了外部的函数的变量，则可能产生闭包。闭包可以用来在一个函数与一组“私有”变量之间创建关联关系。在给定函数被多次调用的过程中，这些私有变量能够保持其持久性</p>
+<p><strong>通俗理解</strong>：当某个函数被当成对象返回时，<strong>夹带了外部变量</strong>，就形成了一个闭包。</p>
+<p>如果我们想实现一个无限增长的计数器，可以写一个counter函数，函数内部进行自增就行。假定我们按照以下写法：就会报错</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">counter</span><span class="p">():</span> 
+    <span class="o">...</span><span class="p">:</span>     <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">inc</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># c[0] = c[0] + 1</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="n">c</span>
+    <span class="o">...</span><span class="p">:</span> <span class="k">return</span> <span class="n">inc</span>
+    <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">18</span><span class="p">]:</span> <span class="n">f</span> <span class="o">=</span> <span class="n">counter</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">19</span><span class="p">]:</span> <span class="n">f</span><span class="p">()</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">UnboundLocalError</span>                         <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">0</span><span class="n">ec059b9bfe1</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">f</span><span class="p">()</span>
+
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">17</span><span class="o">-</span><span class="mi">9</span><span class="n">dd4cd4942f6</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">inc</span><span class="p">()</span>
+      <span class="mi">2</span>     <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="mi">3</span>     <span class="k">def</span> <span class="nf">inc</span><span class="p">():</span>
+<span class="o">----&gt;</span> <span class="mi">4</span>         <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># c[0] = c[0] + 1</span>
+      <span class="mi">5</span>         <span class="k">return</span> <span class="n">c</span>
+      <span class="mi">6</span>     <span class="k">return</span> <span class="n">inc</span>
+
+<span class="ne">UnboundLocalError</span><span class="p">:</span> <span class="n">local</span> <span class="n">variable</span> <span class="s1">&#39;c&#39;</span> <span class="n">referenced</span> <span class="n">before</span> <span class="n">assignment</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在 python 的函数内，可以直接引用外部变量，但不能改写外部变量，因此如果在闭包中直接改写父函数的变量，就会发生错误。比如上述程序直接改写父函数中的变量<code>c</code></p>
+<p>python的闭包中如果想改写父函数的变量可以用可变容器实现，这也是python2实现的唯一方式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">counter</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">inc</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">inc</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">f</span> <span class="o">=</span> <span class="n">counter</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">f</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">__main__</span><span class="o">.</span><span class="n">counter</span><span class="o">.&lt;</span><span class="nb">locals</span><span class="o">&gt;.</span><span class="n">inc</span><span class="o">&gt;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">f</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">f</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="mi">2</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">f</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="mi">3</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="nonlocal关键字">nonlocal关键字</h3>
+<p>在python3中改写父变量还有一种方就是使用<strong><code>nonlocal</code>关键字</strong></p>
+<p>nonlocal 关键字用于标记一个变量由他的上级作用域定义， 通过nonlocal标记的变量， 可读可写</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">counter</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">inc</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">nonlocal</span> <span class="n">c</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="n">c</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">inc</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">f</span> <span class="o">=</span> <span class="n">counter</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">f</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">__main__</span><span class="o">.</span><span class="n">counter</span><span class="o">.&lt;</span><span class="nb">locals</span><span class="o">&gt;.</span><span class="n">inc</span><span class="o">&gt;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">f</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">f</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="mi">2</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果上级没有定义nonlocal的变量，使用nonlocal时会抛出语法错误</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">nonlocal</span> <span class="n">xxx</span>
+  <span class="n">File</span> <span class="s2">&#34;&lt;ipython-input-12-2d2b8104e945&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span>
+    <span class="n">nonlocal</span> <span class="n">xxx</span>
+<span class="ne">SyntaxError</span><span class="p">:</span> <span class="n">no</span> <span class="n">binding</span> <span class="k">for</span> <span class="n">nonlocal</span> <span class="s1">&#39;xxx&#39;</span> <span class="n">found</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="函数的__defaults__属性">函数的<code>__defaults__</code>属性</h3>
+<p>可变参数和不可变参数的<code>__defaults__</code>属性不一样</p>
+<p><strong>参数可变时</strong></p>
+<p>当使用可变类型作为默认值参数默认值时，需要特别注意，会改变函数的<code>__default__</code>属性</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">xxyy</span><span class="o">=</span><span class="p">[]):</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">xxyy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">xxyy</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__defaults__</span>		<span class="c1"># 参数是函数对象的属性</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__defaults__</span> 	<span class="c1"># 所有的函数参数封装成一个元组，第一个函数参数时列表在动态变化</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>参数不可变时</strong></p>
+<p>使用不可变类型作为默认值，函数体内不改变默认值</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>   <span class="c1"># 赋值即定义</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">y</span> <span class="o">=</span> <span class="mi">3</span>   <span class="c1"># 赋值即定义</span>
+   <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__defaults__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__defaults__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="可变参数时none的使用">可变参数时None的使用</h3>
+<p>通常如果使用一个可变类型作为默认参数时， 会使用None来代替</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">lst</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>	<span class="c1"># 向一个列表中插入元素3，列表默认为None</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">if</span> <span class="n">lst</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__defaults__</span>		<span class="c1"># 函数的__defaults__属性就是可变参数对应的None</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="p">(</span><span class="bp">None</span><span class="p">,)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">fn</span><span class="p">()</span>				<span class="c1"># 如果不传入值，函数执行的时候会先创建一个空列表，然后append</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__defaults__</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="p">(</span><span class="bp">None</span><span class="p">,)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">fn</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__defaults__</span>		<span class="c1"># 传入值之后，也不会改变函数的__default__属性</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="p">(</span><span class="bp">None</span><span class="p">,)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="python作用域闭包装饰器资料">Python作用域、闭包、装饰器资料</h3>
+<ul>
+<li>
+<p><a href="https://segmentfault.com/a/1190000004461404">Python 的闭包和装饰器</a></p>
+</li>
+<li>
+<p><a href="https://segmentfault.com/a/1190000007321972">说说Python中的闭包 - Closure</a></p>
+</li>
+<li>
+<p><a href="https://segmentfault.com/a/1190000006236947">Python Enclosing作用域、闭包、装饰器话聊上篇</a></p>
+</li>
+<li>
+<p><a href="https://segmentfault.com/a/1190000006659077">Python Enclosing作用域、闭包、装饰器话聊下篇</a></p>
+</li>
+</ul>
+<h2 id="函数执行流程">函数执行流程</h2>
+<p>函数的执行过程就是压栈和出栈的过程。具体如下</p>
+<p>当调用函数的时候， 解释器会把当前现场压栈，然后开始执行被调函数， 被调函数执行完成，解释器弹出当前栈顶，恢复现场</p>
+<h2 id="递归函数">递归函数</h2>
+<p>递归函数的定义就是函数调用函数自身。</p>
+<ul>
+<li>递归函数必须要有退出条件</li>
+<li>为了保护解释器， Python对最大递归深度有限制</li>
+<li>绝大多数递归都可以转化为循环使用</li>
+<li>尽量避免使用递归</li>
+<li>sys模块中的getrecursionlimit和setrecursionlimit可以获取和设置最大递归深度</li>
+</ul>
+<h2 id="匿名函数">匿名函数</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">__main__</span><span class="o">.&lt;</span><span class="k">lambda</span><span class="o">&gt;&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>匿名函数有以下特点</p>
+<ul>
+<li>lambda来定义</li>
+<li>参数列表不需要用小括号</li>
+<li>冒号不是用来开启新语句块</li>
+<li>没有return，最后一个表达式的值即返回值</li>
+<li>匿名函数（lambda表达式）只能写在一行上，所以也叫单行函数</li>
+</ul>
+<p>匿名函数的好处是</p>
+<ul>
+<li>函数没有名字，不必担心函数名冲突</li>
+<li>匿名函数也是一个函数对象，可以把匿名函数返回给一个变量，再利用变量调用函数</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">__main__</span><span class="o">.&lt;</span><span class="k">lambda</span><span class="o">&gt;&gt;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>		<span class="c1"># 直接把lambda函数返回给变量f</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>					<span class="c1"># 由变量f调用函数</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="mi">4</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">f</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="mi">6</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">)</span>	<span class="c1"># 第一对括号用来改变优先级 第二对括号表示函数调用</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="mi">6</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">:</span> <span class="mi">1</span><span class="p">)()</span>			<span class="c1"># lambda表示式参数可以为空</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>	<span class="c1"># lambda表达式的位置参数</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="mi">8</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">args</span><span class="p">)(</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>	<span class="c1"># lambda表达式的位置可变参数</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))(</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="o">**</span><span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)})</span>	<span class="c1"># lambda表达式的位置可变参数和关键字可变参数</span>
+<span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">)(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>	<span class="c1"># *号后面的位置参数必须使用关键字参数</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="mi">3</span>
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>普通函数所支持的参数的变化，匿名函数都支持</p>
+</blockquote>
+<p>匿名函数的常见用法：通常用于高阶函数的参数， 当此函数非常短小的时候，就适合使用匿名函数</p>
+<p>比如匿名函数可以作为<code>sorted</code>函数的自定义键函数（custom key function）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">help</span><span class="p">(</span><span class="nb">sorted</span><span class="p">)</span>
+    <span class="n">Help</span> <span class="n">on</span> <span class="n">built</span><span class="o">-</span><span class="ow">in</span> <span class="n">function</span> <span class="nb">sorted</span> <span class="ow">in</span> <span class="n">module</span> <span class="n">builtins</span><span class="p">:</span>
+
+	<span class="nb">sorted</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    	<span class="n">Return</span> <span class="n">a</span> <span class="n">new</span> <span class="nb">list</span> <span class="n">containing</span> <span class="nb">all</span> <span class="n">items</span> <span class="kn">from</span> <span class="nn">the</span> <span class="nn">iterable</span> <span class="nn">in</span> <span class="nn">ascending</span> <span class="nn">order.</span>
+
+    	<span class="n">A</span> <span class="n">custom</span> <span class="n">key</span> <span class="n">function</span> <span class="n">can</span> <span class="n">be</span> <span class="n">supplied</span> <span class="n">to</span> <span class="n">customise</span> <span class="n">the</span> <span class="n">sort</span> <span class="n">order</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span>
+    	<span class="n">reverse</span> <span class="n">flag</span> <span class="n">can</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">request</span> <span class="n">the</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">descending</span> <span class="n">order</span><span class="o">.</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">point</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">])</span>	<span class="c1"># 定义命名元组point</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">point</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">point</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">)]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">getY</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span>
+    <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">getY</span><span class="p">)</span>	<span class="c1"># 简短的函数可以作为自定义键函数</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="p">[</span><span class="n">point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">9</span><span class="p">)]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>	<span class="c1"># lambda表示也可以作为自定义键函数</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="p">[</span><span class="n">point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">9</span><span class="p">)]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="高阶函数">高阶函数</h2>
+<h3 id="高阶函数的定义">高阶函数的定义</h3>
+<p>高阶函数英文叫Higher-order function。</p>
+<p>在数学和计算机科学中，<strong>高阶函数</strong>是至少满足下列一个条件的函数：</p>
+<ul>
+<li>接受一个或多个函数作为输入：通常用于大多数逻辑固定，少部分逻辑不固定的场景</li>
+<li>输出一个函数：函数作为返回值： 通常是用于闭包的场景， 需要封装一些变量</li>
+</ul>
+<p>常见的高阶函数有map,reduce,filter</p>
+<h3 id="高阶函数插入排序">高阶函数:插入排序</h3>
+<p>插入排序时，排序顺序分为升序和降序，我们可以使用一个函数作为插入排序函数的参数来控制是升序还是降序。</p>
+<p>首先看一下按照升序插入排序，然后再改进成升序降序可控的插入排序</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">insertSort</span><span class="p">(</span><span class="nb">iter</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ret</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">:</span>				<span class="c1"># 修改处</span>
+                <span class="n">ret</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果想让这个函数降序排序，则只需要修改代码中的注释处，改成<code>x &gt; y</code>即可</p>
+<p>如果传入一个函数来控制if后面的bool值，则就实现了通过参数控制升降了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">insertSort</span><span class="p">(</span><span class="nb">iter</span><span class="p">,</span> <span class="nb">cmp</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ret</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">cmp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+                <span class="n">ret</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这个函数就默认为升序排序了，但是可以传入一个比较函数变成降序，如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">lst</span> <span class="o">=</span> <span class="n">insertSort</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="map">map</h3>
+<p><code>map()</code>函数原型：<strong><code>map(func, *iterables) --&gt; map object</code></strong></p>
+<p><code>map()</code>函数接收两个参数，一个是函数<code>func</code>，一个是可迭代对象<code>Iterable</code>，<code>map</code>将传入的函数依次作用到可迭代对象的每个元素，并把结果放入<strong><code>map对象</code></strong>这个迭代器中。所以<code>map</code>函数是高阶函数。</p>
+<p><code>map</code>类中存在<code>__iter__</code>和<code>__next__</code>函数</p>
+<p><strong>map使用示例</strong></p>
+<p>把list中的所有数字的平方</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>								<span class="c1"># 定义平方函数f</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">ret</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>		<span class="c1"># 函数f和列表作为map的参数</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">ret</span>										<span class="c1"># map的返回值只是一个返回值</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="o">&lt;</span><span class="nb">map</span> <span class="n">at</span> <span class="mh">0x7f2d539a7470</span><span class="o">&gt;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>								<span class="c1"># 可以用next方法输出map的结果</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="mi">4</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">lst</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>							<span class="c1"># 也可以用list函数计算出所有的值</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">lst</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">49</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="reduce">reduce</h3>
+<p><code>map</code>函数是<code>map</code>类的函数，但是reduce函数属于<code>functools</code>包的<code>reduce</code>模块中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="nb">reduce</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后可以使用<code>help</code>方法查看<code>reduce</code>函数的使用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">help</span><span class="p">(</span><span class="nb">reduce</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Help on built-in function reduce in module _functools:
+
+reduce(...)
+    reduce(function, sequence[, initial]) -&gt; value
+
+    Apply a function of two arguments cumulatively to the items of a sequence,
+    from left to right, so as to reduce the sequence to a single value.
+    For example, reduce(lambda x, y: x+y, [1, 2, 3, 4, 5]) calculates
+    ((((1+2)+3)+4)+5).  If initial is present, it is placed before the items
+    of the sequence in the calculation, and serves as a default when the
+    sequence is empty.
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>reduce使用示例</strong></p>
+<ul>
+<li>输出1到10的和</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span> 
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">reduce</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果为55</p>
+<ul>
+<li>把字符串转化为<code>int</code>，不适用<code>int()</code>函数</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">str2int</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">char2num</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">}[</span><span class="n">c</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> 
+    <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">char2num</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>str2int(&lsquo;1234321&rsquo;)  =&gt; 1234321</p>
+</blockquote>
+<h3 id="filter">filter</h3>
+<p><code>help(filter)</code>之后可以发现<code>filter</code>是一个类，其中有一个<code>filter</code>函数，原型如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nb">filter</span><span class="p">(</span><span class="n">function</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span> <span class="n">iterable</span><span class="p">)</span> <span class="o">--&gt;</span> <span class="nb">filter</span> <span class="nb">object</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>和<code>map()</code>类似，<code>filter()</code>也接收一个函数和一个序列。和<code>map()</code>不同的是，<code>filter()</code>把传入的函数依次作用于每个元素，然后根据返回值是<code>True</code>还是<code>False</code>决定保留还是丢弃该元素。返回值也是一个迭代器。</p>
+<p><strong>filter使用示例</strong></p>
+<p>使用filter筛选出list中的回文数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">is_palindrome</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">m</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+<span class="n">lst</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">is_palindrome</span><span class="p">,</span> <span class="p">[</span><span class="mi">12321</span><span class="p">,</span> <span class="mi">194</span><span class="p">,</span> <span class="mi">13431</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+<span class="c1"># 结果: [12321, 13431]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>所以<code>filter()</code>函数用于过滤序列，重点在于选择一个正确的筛选函数。</p>
+<h2 id="生成器">生成器</h2>
+<p>带yield语句的函数称之为生成器函数， 生成器函数的返回值是生成器</p>
+<ul>
+<li>生成器函数执行的时候，不会执行函数体</li>
+<li>当next生成器的时候， 当前代码执行到之后的第一个yield，会弹出值，并且暂停函数</li>
+<li>当再次next生成器的时候，从上次暂停处开始往下执行</li>
+<li>当没有多余的yield的时候，会抛出StopIteration异常，异常的value是函数的返回值</li>
+</ul>
+<h3 id="生成器的基本形式">生成器的基本形式</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">g</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">yield</span> <span class="n">x</span>	<span class="c1"># 弹出x</span>
+    <span class="o">...</span><span class="p">:</span>         
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">g</span><span class="p">()</span>		<span class="c1"># 函数调用完成之后函数现场并没有被销毁</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">r</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">generator</span> <span class="nb">object</span> <span class="n">g</span> <span class="n">at</span> <span class="mh">0x7f0e18543990</span><span class="o">&gt;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="mi">0</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span><span class="p">:</span>     
+<span class="mi">2</span>
+<span class="mi">3</span>
+<span class="mi">4</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="生成器的执行顺序">生成器的执行顺序</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">g</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">yield</span> <span class="mi">1</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">yield</span> <span class="mi">2</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="mi">3</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">g</span><span class="p">()</span>	<span class="c1"># 执行生成器函数的时候函数并没有被执行 </span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>	<span class="c1"># 执行到第一个yield就停止执行</span>
+<span class="n">a</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>	<span class="c1"># 执行到第二个yield就停止执行</span>
+<span class="n">b</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="mi">2</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>	<span class="c1"># 从第二个yield开始，当没有更多yield的时候，抛出StopIteration异常，异常的值正好是return的返回值</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">StopIteration</span>                             <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">5</span><span class="o">-</span><span class="mi">0</span><span class="n">b5056469c9c</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="nb">next</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="ne">StopIteration</span><span class="p">:</span> <span class="mi">3</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="生成器的应用">生成器的应用</h3>
+<p><strong>计数器第一种形式</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">counter</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">yield</span> <span class="n">x</span>	<span class="c1"># 每次将+1之后的x弹出</span>
+   <span class="o">...</span><span class="p">:</span>         
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">inc</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">c</span> <span class="o">=</span> <span class="n">counter</span><span class="p">()</span>	<span class="c1"># counter函数执行的结果就是一个生成器，所以c就是生成器</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">inc</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">inc</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="mi">2</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>计数器第二种形式</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">make_inc</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">counter</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+   <span class="o">...</span><span class="p">:</span>             <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="o">...</span><span class="p">:</span>             <span class="k">yield</span> <span class="n">x</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">c</span> <span class="o">=</span> <span class="n">counter</span><span class="p">()</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">return</span> <span class="k">lambda</span> <span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>	<span class="c1"># 使用lambda表达式将next(c)作为函数返回，而不是只返回一个next(c)</span>
+   <span class="o">...</span><span class="p">:</span> 
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">make_inc</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">__main__</span><span class="o">.</span><span class="n">make_inc</span><span class="o">.&lt;</span><span class="nb">locals</span><span class="o">&gt;.&lt;</span><span class="k">lambda</span><span class="o">&gt;&gt;</span>	<span class="c1"># make_inc本质是一个匿名函数</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">inc</span> <span class="o">=</span> <span class="n">make_inc</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">inc</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">inc</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="mi">2</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>斐波拉契数列</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">fib</span><span class="p">():</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="k">yield</span> <span class="n">a</span>
+    <span class="o">...</span><span class="p">:</span>         <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="o">...</span><span class="p">:</span>         
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">fib</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">generator</span> <span class="nb">object</span> <span class="n">fib</span> <span class="n">at</span> <span class="mh">0x7f9ff2746830</span><span class="o">&gt;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">f</span> <span class="o">=</span> <span class="n">fib</span><span class="p">()</span>	<span class="c1"># 生成器f</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="mi">1</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="mi">2</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">18</span><span class="p">]:</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">18</span><span class="p">]:</span> <span class="mi">3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">19</span><span class="p">]:</span> <span class="n">g</span> <span class="o">=</span> <span class="n">fib</span><span class="p">()</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">20</span><span class="p">]:</span> <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>	<span class="c1"># 将yield的值都保存在ret中</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>	<span class="c1"># 遍历生成器</span>
+    <span class="o">...</span><span class="p">:</span>     <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
+    <span class="o">...</span><span class="p">:</span>     
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">22</span><span class="p">]:</span> <span class="n">ret</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>	<span class="c1"># 取ret列表的最后一个元素值，速度很快</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">22</span><span class="p">]:</span> <span class="mi">43466557686937456435688527675040625802564660517371780402481729089536555417949051890403879840079255169295922593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>生成器的高级用法</strong></p>
+<p>生成器的高级用法是<strong>协程</strong></p>
+<ul>
+<li>协程：协程运行在一个线程之内， 在用户态调度</li>
+</ul>
+<h3 id="生成器参考资料">生成器参考资料</h3>
+<ul>
+<li>
+<p><a href="https://www.zhihu.com/question/24807364">python生成器到底有什么优点？</a></p>
+</li>
+<li>
+<p><a href="http://stackoverflow.com/questions/1756096/understanding-generators-in-python">Understanding Generators in Python</a></p>
+</li>
+<li>
+<p><a href="http://intermediatepythonista.com/python-generators">Introduction to Python Generators</a></p>
+</li>
+<li>
+<p><a href="http://fullstackpython.atjiang.com/generators.html">生成器资料汇总</a></p>
+</li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-01-07
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Python/">Python</a>
+          <a href="/tags/%E5%87%BD%E6%95%B0/">函数</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/01/11/Python%E8%A7%A3%E6%9E%90%E5%BC%8F/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Python解析式</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/12/29/linux%E9%85%8D%E7%BD%AEc-11%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/">
+            <span class="next-text nav-default">linux配置c&#43;&#43;11编译环境</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

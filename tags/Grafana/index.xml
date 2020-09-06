@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Grafana on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/Grafana/</link>
+    <description>Recent content in Grafana on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 15 Nov 2019 16:57:54 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/Grafana/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Grafana Dashboard 配置导入导出</title>
+      <link>https://suncle.me/2019/11/15/grafana-dashboard-export-and-import/</link>
+      <pubDate>Fri, 15 Nov 2019 16:57:54 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/11/15/grafana-dashboard-export-and-import/</guid>
+      <description>&lt;p&gt;我司最近的一件大事是AWS迁移阿里云，因此之前部署在AWS上的Prometheus监控系统需要迁移到Aliyun机器上，组件之一展示面板Grafana有很多自定义好的配置，而这些配置是存在于grafana.db中的，因此需要导出导入配置到新的db中。Grafana提供了丰富的api供用户使用，我们调用api导出&lt;/p&gt;
+&lt;h2 id=&#34;导出配置&#34;&gt;导出配置&lt;/h2&gt;
+&lt;p&gt;首先获取Grafana的api_key：menu&amp;ndash;configuration&amp;ndash;api keys &amp;ndash; add API key&lt;/p&gt;
+&lt;p&gt;然后安装jq：命令行下处理JSON 数据的工具，可以对json数据进行分片、过滤、映射和转换&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

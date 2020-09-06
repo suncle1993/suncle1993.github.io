@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Erlang入门路线 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。
+主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/12/14/Erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Erlang入门路线" />
+<meta property="og:description" content="间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。
+主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/12/14/Erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/" />
+<meta property="article:published_time" content="2017-12-14T14:33:30+00:00" />
+<meta property="article:modified_time" content="2017-12-14T14:33:30+00:00" />
+<meta itemprop="name" content="Erlang入门路线">
+<meta itemprop="description" content="间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。
+主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。">
+<meta itemprop="datePublished" content="2017-12-14T14:33:30+00:00" />
+<meta itemprop="dateModified" content="2017-12-14T14:33:30+00:00" />
+<meta itemprop="wordCount" content="1930">
+
+
+
+<meta itemprop="keywords" content="Erlang,总结,入门," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Erlang入门路线"/>
+<meta name="twitter:description" content="间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。
+主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Erlang入门路线</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-12-14 </span>
+        <div class="post-category">
+            <a href="/categories/Erlang/"> Erlang </a>
+            </div>
+          <span class="more-meta"> 约 1930 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#erlang环境">Erlang环境</a>
+      <ul>
+        <li><a href="#环境搭建">环境搭建</a></li>
+        <li><a href="#erlang-shell">Erlang shell</a></li>
+      </ul>
+    </li>
+    <li><a href="#基本语法">基本语法</a>
+      <ul>
+        <li><a href="#学习语法">学习语法</a></li>
+        <li><a href="#练习题">练习题</a></li>
+      </ul>
+    </li>
+    <li><a href="#otp">OTP</a></li>
+    <li><a href="#集成开发环境">集成开发环境</a>
+      <ul>
+        <li><a href="#使用rebar从零构建erlang项目">使用rebar从零构建Erlang项目</a></li>
+        <li><a href="#调试打包">调试打包</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。</p>
+<p>主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。</p>
+<h1 id="erlang环境">Erlang环境</h1>
+<p>主要是Erlang环境搭建和Erlang shell的使用</p>
+<h2 id="环境搭建">环境搭建</h2>
+<p>在<a href="https://www.erlang.org/downloads">Erlang官网下载</a>Erlang源码包或者二进制包进行安装，因项目需要选择OTP18/erl7.3。</p>
+<p>从源码安装Erlang/OTP的方法参见<a href="https://github.com/erlang/otp/blob/maint/HOWTO/INSTALL.md">github仓库</a></p>
+<blockquote>
+<p>windows安装完成之后需要配置环境变量，最终以在命令行输入erl能进入erlang shell为准</p>
+</blockquote>
+<h2 id="erlang-shell">Erlang shell</h2>
+<p>开始第一个程序：Erlang程序的编写，编译，执行。</p>
+<p>输入下面的程序，把它存成一个叫做 hello.erl 的文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-erlang" data-lang="erlang"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">hello</span><span class="p">).</span>
+<span class="p">-</span><span class="ni">compile</span><span class="p">(</span><span class="n">export_all</span><span class="p">).</span>
+<span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span>
+  <span class="s">&#34;hello world&#34;</span><span class="p">.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>启动 erlang shell，输入以下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-erlang" data-lang="erlang"><span class="n">root</span><span class="p">@</span><span class="nn">ubuntu</span><span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="err">#</span> <span class="n">erl</span>
+<span class="nv">Erlang</span><span class="o">/</span><span class="nv">OTP</span> <span class="mi">18</span> <span class="p">[</span><span class="n">erts</span><span class="o">-</span><span class="mi">7</span><span class="p">.</span><span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="n">source</span><span class="p">]</span> <span class="p">[</span><span class="mi">64</span><span class="o">-</span><span class="n">bit</span><span class="p">]</span> <span class="p">[</span><span class="n">async</span><span class="o">-</span><span class="nn">threads</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span> <span class="p">[</span><span class="n">kernel</span><span class="o">-</span><span class="nn">poll</span><span class="p">:</span><span class="n">false</span><span class="p">]</span>
+
+<span class="nv">Eshell</span> <span class="nv">V7</span><span class="p">.</span><span class="mi">3</span>  <span class="p">(</span><span class="n">abort</span> <span class="n">with</span> <span class="err">^</span><span class="nv">G</span><span class="p">)</span>
+<span class="mi">1</span><span class="o">&gt;</span> <span class="n">c</span><span class="p">(</span><span class="n">hello</span><span class="p">).</span>
+<span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="n">hello</span><span class="p">}</span>
+<span class="mi">2</span><span class="o">&gt;</span> <span class="nn">hello</span><span class="p">:</span><span class="nf">start</span><span class="p">().</span>
+<span class="s">&#34;hello world&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>第一句是编译这个程序。第二句是执行命令，这就是所有要做的。</p>
+<h1 id="基本语法">基本语法</h1>
+<h2 id="学习语法">学习语法</h2>
+<p>推荐阅读Erlang之父Joe Armstrong编写的<strong>Erlang程序设计</strong>这本书，网上有pdf版本。也可参见<a href="https://suncle.me/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)/">Erlang学习笔记1</a>。</p>
+<p>需要重点掌握Erlang内置数据结构如tuple，list，record，function，case/if等知识点的使用。</p>
+<p>此外需要学习以下几项：</p>
+<ol>
+<li>ets</li>
+<li>dets</li>
+<li>gen_tcp</li>
+<li>database</li>
+</ol>
+<h2 id="练习题">练习题</h2>
+<p>学习基础语法之后需要做一些练习题，练习题来源有</p>
+<ol>
+<li><strong>Erlang程序设计</strong>书后练习题</li>
+<li><a href="https://www.erlang.org/course/exercises.html">Erlang 官方练习题</a></li>
+<li>常用oj上的简单算法题使用Erlang实现</li>
+</ol>
+<p>后续更新一些习题（<strong>挖坑</strong>）</p>
+<h1 id="otp">OTP</h1>
+<p>什么是OTP？和Erlang的区别是什么？</p>
+<blockquote>
+<p>OTP即Open Telecom Platform（开放电信平台），不用理会OTP的名称，OTP的本质是一个应用程序操作系统，还包含大量库和程序用来构建大规模的分布式容错系统（这就是OTP的目的）。使用OTP写程序关键在于OTP中的行为（即behavior）。一个行为封装了某种常见的行为模糊。可以把这些行为理解为常见的编程套件，或者程序框架，只是使用这些框架方式是通过回调模块。</p>
+<p>直接使用Erlang原语而不使用OTP编写Erlang程序是完全可行的，只是需要自己考虑容错、扩容和动态代码升级等等非功能性特性。也就是使用OTP编写Erlang程序，OTP的行为解决问题的非功能性部分，功能性的部分留给程序猿根据业务自己写回调模块来实现——因为对于所有的系统来说，非功能性的部分都是一样的。</p>
+</blockquote>
+<p>需要掌握的OTP常见的行为有：</p>
+<ol>
+<li>gen_server：服务器/客户端模型</li>
+<li>supervisor：监控树</li>
+<li>application：应用</li>
+<li>gen_fsm：有限状态机</li>
+<li>gen_event：事件处理器</li>
+</ol>
+<p>掌握前三项就可以写普通的服务，包括tcp，http服务，amqp消息处理的服务等等。</p>
+<h1 id="集成开发环境">集成开发环境</h1>
+<p>分为使用rebar从零构建Erlang项目和调试打包发布这2块。</p>
+<h2 id="使用rebar从零构建erlang项目">使用rebar从零构建Erlang项目</h2>
+<p>开发环境推荐使用IDEA + Erlang + rebar:</p>
+<ul>
+<li>Erlang/OTP语言</li>
+<li>rebar工具构建Erlang项目</li>
+<li>IDE选择IDEA</li>
+</ul>
+<p>OTP的application构建时需要遵循一定的约定来组织项目，具体的约定参考：<a href="https://www.erlang.org/doc/design_principles/applications.html">OTP应用设计原则</a>。rebar遵循OTP设计原则，因此rebar构建的项目目录需要下列子文件夹：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">─ ${application}
+      ├── doc
+      ├── include
+      ├── priv
+      ├── src
+      │   └── ${application}.app.src
+      └── test
+</code></pre></td></tr></table>
+</div>
+</div><p>rebar具体的构建方法参见：<a href="https://www.cnblogs.com/panfeng412/archive/2011/08/14/compile-erlang-with-rebar.html"><strong>Rebar：Erlang构建工具</strong></a></p>
+<p>构建完成之后，加上自己编写的模块，一个完整的Erlang示例项目目录结构如下（有省略）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">cdn_gateway
+├── app.config
+├── build
+├── cdn_gateway.cmd
+├── cdn_gateway.iml
+├── deps
+│   ├── amqp_client
+│   ├── erldis
+│   ├── goldrush
+│   ├── lager
+│   ├── meck
+│   ├── rabbit_common
+│   └── rfc4627_jsonrpc
+├── ebin
+├── include
+├── Makefile
+├── priv
+├── rebar.config
+├── rel
+├── reltool.config
+├── run.bat
+├── src
+│   ├── cdn_gateway_app.erl
+│   ├── cdn_gateway.app.src
+│   ├── cdn_gateway.erl
+│   ├── cdn_gateway.hrl
+│   ├── cdn_gateway_sup.erl
+│   ├── cdn_gw_amqp_agent.erl
+│   ├── cdn_gw_cluster.erl
+│   ├── cdn_gw_http_acceptor.erl
+│   ├── cdn_gw_live_operator.erl
+│   ├── cdn_gw_live_plan_auth_mgr.erl
+│   ├── cdn_gw_live_plan_online_mgr.erl
+│   ├── cdn_gw_notice_http_handler.erl
+│   └── cdn_gw_notice_http_handler_sup.erl
+└── vm.args
+
+211 directories, 1799 files
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="调试打包">调试打包</h2>
+<p>调试脚本run.bat的功能主要是编译源代码，开启Erlang shell</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">call rebar compile <span class="nv">skip_deps</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">cd</span> ..
+start werl -name cdn_gateway@127.0.0.1 -setcookie cdn_gateway -pa cdn_gateway<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\a</span>mqp_client<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\q</span>k_ipdb<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\e</span>rldis<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\g</span>en_server3<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\g</span>oldrush<span class="se">\e</span>bin deps<span class="se">\m</span>ysql_agent<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\l</span>ager<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\m</span>ysql<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\p</span>b<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\p</span>rotobuffs<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\q</span>ukan_lib<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\r</span>abbit_common<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\r</span>fc4627_jsonrpc<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\q</span>k_odbc_pool<span class="se">\e</span>bin cdn_gateway<span class="se">\d</span>eps<span class="se">\q</span>k_json<span class="se">\e</span>bin -s cdn_gateway
+<span class="nb">cd</span> cdn_gateway
+</code></pre></td></tr></table>
+</div>
+</div><p>打包的makefile文件如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">node_name</span> <span class="o">:=</span> cdn_gateway
+
+<span class="nf">release</span><span class="o">:</span>
+	rm -rf deps
+	rm -rf test/logs
+	rm -rf build
+	rm -f test/*.beam
+	rebar clean
+	rebar get-deps compile ct
+	mkdir -p ./build/<span class="k">$(</span>node_name<span class="k">)</span><span class="p">;</span>cp -rf ./ebin ./build/<span class="k">$(</span>node_name<span class="k">)</span>/<span class="p">;</span>cp -rf ./priv ./build/<span class="k">$(</span>node_name<span class="k">)</span>/<span class="p">;</span>cp -rf ./include ./build/<span class="k">$(</span>node_name<span class="k">)</span>/
+	mkdir -p ./rel<span class="p">;</span><span class="nb">cd</span> ./rel<span class="p">;</span>rm -rf *<span class="p">;</span>rebar create-node <span class="nv">nodeid</span><span class="o">=</span><span class="k">$(</span>node_name<span class="k">)</span><span class="p">;</span>cp ../reltool.config ./<span class="p">;</span>rebar generate<span class="p">;</span>tar -cjf <span class="k">$(</span>node_name<span class="k">)</span>.tar.bz2 <span class="k">$(</span>node_name<span class="k">)</span>
+	mkdir -p ../build_linux
+	mv rel/<span class="k">$(</span>node_name<span class="k">)</span>.tar.bz2 ../build_linux
+</code></pre></td></tr></table>
+</div>
+</div><p>windows上调试，打包最好再对应的生产环境系统（比如ubuntu16.04）中打包，避免有坑。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a href="https://www.yuanmas.com/info/nmaW66VBz3.html">erlang工作前新手学习指引路线</a></li>
+<li><a href="https://blog.csdn.net/wwh578867817/article/details/49774169">Erlang 中的并发 &ndash; Actor 模型</a></li>
+<li><a href="https://yq.aliyun.com/articles/83126">云栖社区-Erlang入门（二）—并发编程</a></li>
+<li><a href="https://yq.aliyun.com/articles/229322?spm=5176.8067842.tagmain.121.dwjreE">为什么我们放弃了Erlang技术栈</a></li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-12-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Erlang/">Erlang</a>
+          <a href="/tags/%E6%80%BB%E7%BB%93/">总结</a>
+          <a href="/tags/%E5%85%A5%E9%97%A8/">入门</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/12/18/%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">基于消息传递的并发模型</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/12/11/unix-domain-socket/">
+            <span class="next-text nav-default">unix domain socket</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

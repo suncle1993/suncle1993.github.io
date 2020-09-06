@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>命令 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%91%BD%E4%BB%A4/</link>
+    <description>Recent content in 命令 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 28 Mar 2016 10:35:56 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%91%BD%E4%BB%A4/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>运维人员常用的Linux命令总结</title>
+      <link>https://suncle.me/2016/03/28/%E8%BF%90%E7%BB%B4%E4%BA%BA%E5%91%98%E5%B8%B8%E7%94%A8%E7%9A%84Linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Mon, 28 Mar 2016 10:35:56 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/28/%E8%BF%90%E7%BB%B4%E4%BA%BA%E5%91%98%E5%B8%B8%E7%94%A8%E7%9A%84Linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;目录结构&#34;&gt;目录结构&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;目录&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;/bin&lt;/td&gt;
+&lt;td&gt;存放可执行文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/boot&lt;/td&gt;
+&lt;td&gt;核心与启动相关文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/dev&lt;/td&gt;
+&lt;td&gt;设备有关的文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc&lt;/td&gt;
+&lt;td&gt;相关的配置信息&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc/rc.d&lt;/td&gt;
+&lt;td&gt;存放开关机过程中用到的脚本文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc/rc.d/init.d&lt;/td&gt;
+&lt;td&gt;所以服务默认的启动脚本都放在这里&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc/xinetd.d&lt;/td&gt;
+&lt;td&gt;启动服务可在此找到&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/etc/X11&lt;/td&gt;
+&lt;td&gt;与X windows有关的配置文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/lib&lt;/td&gt;
+&lt;td&gt;执行或编译某些程序时用到的函数库&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/proc&lt;/td&gt;
+&lt;td&gt;系统核心与执行程序所需要的一些信息。都是内存中的数据&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/root&lt;/td&gt;
+&lt;td&gt;系统管理员根目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/sbin&lt;/td&gt;
+&lt;td&gt;系统管理常用的程序&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/tmp&lt;/td&gt;
+&lt;td&gt;存放临时文件的地方&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/usr&lt;/td&gt;
+&lt;td&gt;存放系统信息，用来存放程序与指令。类似windows下的program  flies&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;其中重点需要掌握的是/etc目录和/proc目录。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux用户和组管理</title>
+      <link>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Sat, 09 Jan 2016 00:16:04 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;概述&#34;&gt;概述&lt;/h2&gt;
+&lt;p&gt;只有root用户才能管理用户和组，所以一切命令都是root执行。&lt;/p&gt;
+&lt;h3 id=&#34;用户分类&#34;&gt;用户分类&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;超级用户：root，UID=0&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;普通用户：具有操作系统有限的权限，500&amp;lt;=UID&amp;lt;=65535(2^32-1),有限个&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;伪用户：为了安全,1&amp;lt;=UID&amp;lt;=499&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;伪用户解释：linux中任何一个命令的操作都必须有一个用户的身份。伪用户一般和系统或者程序服务相关，比如bin,daemon,shutdown ,halt等，linux默认都有这些伪用户，伪用户通常不需要或无法登陆系统（nologin），可以没有宿主目录&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

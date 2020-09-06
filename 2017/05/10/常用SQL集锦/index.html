@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>常用Oracle SQL集锦 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="常用dml和query开并行 1 2 3 4 5 6  --开并行 ALTER SESSION FORCE PARALLEL DML PARALLEL 16; ALTER SESSION FORCE PARALLEL QUERY PARALLEL 16; --关并行 ALTER SESSION DISABLE PARALLEL DML ; ALTER SESSION DISABLE PARALLEL QUERY;   索引开并行 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  drop index IDX_SB_SBZT_LRRQ; create index IDX_SB_SBZT_LRRQ on SB_SBZT (LRRQ, CWLX_DM, SWJG_DM) tablespace TS_GS_SB_IDX pctfree 20 initrans 2 maxtrans 255 storage ( initial 64K next 1M minextents 1 maxextents unlimited ) parallel 6; alter index IDX_SB_SBZT_LRRQ noparallel;   查看ASM 1 2 3 4 5 6  -- 查看asm的各个disk group是否超过80% -- name：name of the disk group -- total_mb：total capacity of the disk group(in megabytes) -- free_mb：unused capacity of the disk group(in megabytes) select t.name,t.TOTAL_MB /1024, round(100 * (t.TOTAL_MB - t.FREE_MB) / t.TOTAL_MB, 2)||&amp;#39;%&amp;#39; from v$asm_diskgroup t;   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="常用Oracle SQL集锦" />
+<meta property="og:description" content="常用dml和query开并行
+
+
+1
+2
+3
+4
+5
+6
+
+
+--开并行
+ALTER SESSION FORCE PARALLEL DML PARALLEL 16;
+ALTER SESSION FORCE PARALLEL QUERY PARALLEL 16;
+--关并行
+ALTER SESSION DISABLE PARALLEL DML ;
+ALTER SESSION DISABLE PARALLEL QUERY;
+
+
+索引开并行
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+
+
+drop index IDX_SB_SBZT_LRRQ;
+create index IDX_SB_SBZT_LRRQ on SB_SBZT (LRRQ, CWLX_DM, SWJG_DM)
+  tablespace TS_GS_SB_IDX
+  pctfree 20
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  ) parallel 6;
+
+alter index IDX_SB_SBZT_LRRQ noparallel;
+
+
+查看ASM
+
+
+1
+2
+3
+4
+5
+6
+
+
+-- 查看asm的各个disk group是否超过80%
+-- name：name of the disk group
+-- total_mb：total capacity of the disk group(in megabytes)
+-- free_mb：unused capacity of the disk group(in megabytes)
+select t.name,t.TOTAL_MB /1024, round(100 * (t.TOTAL_MB - t.FREE_MB) / t.TOTAL_MB, 2)||&#39;%&#39;
+  from v$asm_diskgroup t;
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/" />
+<meta property="article:published_time" content="2017-05-10T00:57:17+00:00" />
+<meta property="article:modified_time" content="2017-05-10T00:57:17+00:00" />
+<meta itemprop="name" content="常用Oracle SQL集锦">
+<meta itemprop="description" content="常用dml和query开并行
+
+
+1
+2
+3
+4
+5
+6
+
+
+--开并行
+ALTER SESSION FORCE PARALLEL DML PARALLEL 16;
+ALTER SESSION FORCE PARALLEL QUERY PARALLEL 16;
+--关并行
+ALTER SESSION DISABLE PARALLEL DML ;
+ALTER SESSION DISABLE PARALLEL QUERY;
+
+
+索引开并行
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+
+
+drop index IDX_SB_SBZT_LRRQ;
+create index IDX_SB_SBZT_LRRQ on SB_SBZT (LRRQ, CWLX_DM, SWJG_DM)
+  tablespace TS_GS_SB_IDX
+  pctfree 20
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  ) parallel 6;
+
+alter index IDX_SB_SBZT_LRRQ noparallel;
+
+
+查看ASM
+
+
+1
+2
+3
+4
+5
+6
+
+
+-- 查看asm的各个disk group是否超过80%
+-- name：name of the disk group
+-- total_mb：total capacity of the disk group(in megabytes)
+-- free_mb：unused capacity of the disk group(in megabytes)
+select t.name,t.TOTAL_MB /1024, round(100 * (t.TOTAL_MB - t.FREE_MB) / t.TOTAL_MB, 2)||&#39;%&#39;
+  from v$asm_diskgroup t;
+
+
+">
+<meta itemprop="datePublished" content="2017-05-10T00:57:17+00:00" />
+<meta itemprop="dateModified" content="2017-05-10T00:57:17+00:00" />
+<meta itemprop="wordCount" content="2167">
+
+
+
+<meta itemprop="keywords" content="SQL,Oracle数据库," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="常用Oracle SQL集锦"/>
+<meta name="twitter:description" content="常用dml和query开并行
+
+
+1
+2
+3
+4
+5
+6
+
+
+--开并行
+ALTER SESSION FORCE PARALLEL DML PARALLEL 16;
+ALTER SESSION FORCE PARALLEL QUERY PARALLEL 16;
+--关并行
+ALTER SESSION DISABLE PARALLEL DML ;
+ALTER SESSION DISABLE PARALLEL QUERY;
+
+
+索引开并行
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+
+
+drop index IDX_SB_SBZT_LRRQ;
+create index IDX_SB_SBZT_LRRQ on SB_SBZT (LRRQ, CWLX_DM, SWJG_DM)
+  tablespace TS_GS_SB_IDX
+  pctfree 20
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  ) parallel 6;
+
+alter index IDX_SB_SBZT_LRRQ noparallel;
+
+
+查看ASM
+
+
+1
+2
+3
+4
+5
+6
+
+
+-- 查看asm的各个disk group是否超过80%
+-- name：name of the disk group
+-- total_mb：total capacity of the disk group(in megabytes)
+-- free_mb：unused capacity of the disk group(in megabytes)
+select t.name,t.TOTAL_MB /1024, round(100 * (t.TOTAL_MB - t.FREE_MB) / t.TOTAL_MB, 2)||&#39;%&#39;
+  from v$asm_diskgroup t;
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">常用Oracle SQL集锦</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-05-10 </span>
+        <div class="post-category">
+            <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+            </div>
+          <span class="more-meta"> 约 2167 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h4 id="常用dml和query开并行">常用dml和query开并行</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--开并行
+</span><span class="c1"></span><span class="k">ALTER</span> <span class="k">SESSION</span> <span class="k">FORCE</span> <span class="n">PARALLEL</span> <span class="n">DML</span> <span class="n">PARALLEL</span> <span class="mi">16</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">SESSION</span> <span class="k">FORCE</span> <span class="n">PARALLEL</span> <span class="n">QUERY</span> <span class="n">PARALLEL</span> <span class="mi">16</span><span class="p">;</span>
+<span class="c1">--关并行
+</span><span class="c1"></span><span class="k">ALTER</span> <span class="k">SESSION</span> <span class="n">DISABLE</span> <span class="n">PARALLEL</span> <span class="n">DML</span> <span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">SESSION</span> <span class="n">DISABLE</span> <span class="n">PARALLEL</span> <span class="n">QUERY</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="索引开并行">索引开并行</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">drop</span> <span class="k">index</span> <span class="n">IDX_SB_SBZT_LRRQ</span><span class="p">;</span>
+<span class="k">create</span> <span class="k">index</span> <span class="n">IDX_SB_SBZT_LRRQ</span> <span class="k">on</span> <span class="n">SB_SBZT</span> <span class="p">(</span><span class="n">LRRQ</span><span class="p">,</span> <span class="n">CWLX_DM</span><span class="p">,</span> <span class="n">SWJG_DM</span><span class="p">)</span>
+  <span class="n">tablespace</span> <span class="n">TS_GS_SB_IDX</span>
+  <span class="n">pctfree</span> <span class="mi">20</span>
+  <span class="n">initrans</span> <span class="mi">2</span>
+  <span class="n">maxtrans</span> <span class="mi">255</span>
+  <span class="k">storage</span>
+  <span class="p">(</span>
+    <span class="n">initial</span> <span class="mi">64</span><span class="n">K</span>
+    <span class="k">next</span> <span class="mi">1</span><span class="n">M</span>
+    <span class="n">minextents</span> <span class="mi">1</span>
+    <span class="n">maxextents</span> <span class="n">unlimited</span>
+  <span class="p">)</span> <span class="n">parallel</span> <span class="mi">6</span><span class="p">;</span>
+
+<span class="k">alter</span> <span class="k">index</span> <span class="n">IDX_SB_SBZT_LRRQ</span> <span class="n">noparallel</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="查看asm">查看ASM</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">-- 查看asm的各个disk group是否超过80%
+</span><span class="c1">-- name：name of the disk group
+</span><span class="c1">-- total_mb：total capacity of the disk group(in megabytes)
+</span><span class="c1">-- free_mb：unused capacity of the disk group(in megabytes)
+</span><span class="c1"></span><span class="k">select</span> <span class="n">t</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="n">t</span><span class="p">.</span><span class="n">TOTAL_MB</span> <span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">TOTAL_MB</span> <span class="o">-</span> <span class="n">t</span><span class="p">.</span><span class="n">FREE_MB</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span><span class="p">.</span><span class="n">TOTAL_MB</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">||</span><span class="s1">&#39;%&#39;</span>
+  <span class="k">from</span> <span class="n">v$asm_diskgroup</span> <span class="n">t</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="查看数据库表空间">查看数据库表空间</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--查询数据表空间情况
+</span><span class="c1"></span><span class="k">SELECT</span> <span class="n">d</span><span class="p">.</span><span class="n">status</span> <span class="s2">&#34;Status&#34;</span><span class="p">,</span>
+<span class="n">d</span><span class="p">.</span><span class="n">tablespace_name</span> <span class="s2">&#34;Name&#34;</span><span class="p">,</span>
+<span class="n">d</span><span class="p">.</span><span class="n">contents</span> <span class="s2">&#34;Type&#34;</span><span class="p">,</span>
+<span class="n">d</span><span class="p">.</span><span class="n">extent_management</span> <span class="s2">&#34;Extent Management&#34;</span><span class="p">,</span>
+       <span class="n">TO_CHAR</span><span class="p">(</span><span class="n">NVL</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">bytes</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;99,999,990.900&#39;</span><span class="p">)</span> <span class="s2">&#34;Size (M)&#34;</span><span class="p">,</span>
+       <span class="n">TO_CHAR</span><span class="p">(</span><span class="n">NVL</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">bytes</span> <span class="o">-</span> <span class="n">NVL</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">,</span>
+               <span class="s1">&#39;99999999.999&#39;</span><span class="p">)</span> <span class="s2">&#34;Used (M)&#34;</span><span class="p">,</span>
+       <span class="n">TO_CHAR</span><span class="p">(</span><span class="n">NVL</span><span class="p">((</span><span class="n">a</span><span class="p">.</span><span class="n">bytes</span> <span class="o">-</span> <span class="n">NVL</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">a</span><span class="p">.</span><span class="n">bytes</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+               <span class="s1">&#39;990.00&#39;</span><span class="p">)</span> <span class="s2">&#34;Used %&#34;</span>
+  <span class="k">FROM</span> <span class="n">sys</span><span class="p">.</span><span class="n">dba_tablespaces</span> <span class="n">d</span><span class="p">,</span>
+       <span class="p">(</span><span class="k">select</span> <span class="n">tablespace_name</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="n">bytes</span>
+          <span class="k">from</span> <span class="n">dba_data_files</span>
+         <span class="k">group</span> <span class="k">by</span> <span class="n">tablespace_name</span><span class="p">)</span> <span class="n">a</span><span class="p">,</span>
+       <span class="p">(</span><span class="k">select</span> <span class="n">tablespace_name</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="n">bytes</span>
+          <span class="k">from</span> <span class="n">dba_free_space</span>
+         <span class="k">group</span> <span class="k">by</span> <span class="n">tablespace_name</span><span class="p">)</span> <span class="n">f</span>
+ <span class="k">WHERE</span> <span class="n">d</span><span class="p">.</span><span class="n">tablespace_name</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">tablespace_name</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+   <span class="k">AND</span> <span class="n">d</span><span class="p">.</span><span class="n">tablespace_name</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">tablespace_name</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+   <span class="k">AND</span> <span class="k">NOT</span>
+        <span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">extent_management</span> <span class="k">like</span> <span class="s1">&#39;LOCAL&#39;</span> <span class="k">AND</span> <span class="n">d</span><span class="p">.</span><span class="n">contents</span> <span class="k">like</span> <span class="s1">&#39;TEMPORARY&#39;</span><span class="p">)</span>
+<span class="k">UNION</span> <span class="k">ALL</span>
+<span class="k">SELECT</span> <span class="n">d</span><span class="p">.</span><span class="n">status</span> <span class="s2">&#34;Status&#34;</span><span class="p">,</span>
+<span class="n">d</span><span class="p">.</span><span class="n">tablespace_name</span> <span class="s2">&#34;Name&#34;</span><span class="p">,</span>
+<span class="n">d</span><span class="p">.</span><span class="n">contents</span> <span class="s2">&#34;Type&#34;</span><span class="p">,</span>
+<span class="n">d</span><span class="p">.</span><span class="n">extent_management</span> <span class="s2">&#34;Extent Management&#34;</span><span class="p">,</span>
+       <span class="n">TO_CHAR</span><span class="p">(</span><span class="n">NVL</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">bytes</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;99,999,990.900&#39;</span><span class="p">)</span> <span class="s2">&#34;Size (M)&#34;</span><span class="p">,</span>
+       <span class="n">TO_CHAR</span><span class="p">(</span><span class="n">NVL</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">,</span> <span class="s1">&#39;99999999.999&#39;</span><span class="p">)</span> <span class="s2">&#34;Used (M)&#34;</span><span class="p">,</span>
+       <span class="n">TO_CHAR</span><span class="p">(</span><span class="n">NVL</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">bytes</span> <span class="o">/</span> <span class="n">a</span><span class="p">.</span><span class="n">bytes</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;990.00&#39;</span><span class="p">)</span> <span class="s2">&#34;Used %&#34;</span>
+  <span class="k">FROM</span> <span class="n">sys</span><span class="p">.</span><span class="n">dba_tablespaces</span> <span class="n">d</span><span class="p">,</span>
+       <span class="p">(</span><span class="k">select</span> <span class="n">tablespace_name</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span> <span class="n">bytes</span>
+          <span class="k">from</span> <span class="n">dba_temp_files</span>
+         <span class="k">group</span> <span class="k">by</span> <span class="n">tablespace_name</span><span class="p">)</span> <span class="n">a</span><span class="p">,</span>
+       <span class="p">(</span><span class="k">select</span> <span class="n">tablespace_name</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">bytes_cached</span><span class="p">)</span> <span class="n">bytes</span>
+          <span class="k">from</span> <span class="n">v$temp_extent_pool</span>
+         <span class="k">group</span> <span class="k">by</span> <span class="n">tablespace_name</span><span class="p">)</span> <span class="n">t</span>
+ <span class="k">WHERE</span> <span class="n">d</span><span class="p">.</span><span class="n">tablespace_name</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">tablespace_name</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+   <span class="k">AND</span> <span class="n">d</span><span class="p">.</span><span class="n">tablespace_name</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">tablespace_name</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+   <span class="k">AND</span> <span class="n">d</span><span class="p">.</span><span class="n">extent_management</span> <span class="k">like</span> <span class="s1">&#39;LOCAL&#39;</span>
+   <span class="k">AND</span> <span class="n">d</span><span class="p">.</span><span class="n">contents</span> <span class="k">like</span> <span class="s1">&#39;TEMPORARY&#39;</span>
+   <span class="k">order</span> <span class="k">by</span> <span class="s2">&#34;Used %&#34;</span> <span class="k">desc</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="判断字段中是否包含小写字母">判断字段中是否包含小写字母</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--gs_cx查询纳税人识别号这个字段中包含小写字母的并且做过工资薪金税费种认定的户数：upper函数
+</span><span class="c1"></span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">hx_dj</span><span class="p">.</span><span class="n">dj_nsrxx</span> <span class="n">a</span><span class="p">,</span><span class="n">hx_dj</span><span class="p">.</span><span class="n">dj_nsrxx</span> <span class="n">b</span><span class="p">,</span><span class="n">hx_rd</span><span class="p">.</span><span class="n">rd_sfzrdxxb</span> <span class="n">r</span>
+<span class="k">where</span> <span class="n">a</span><span class="p">.</span><span class="n">djxh</span><span class="o">=</span><span class="n">b</span><span class="p">.</span><span class="n">djxh</span>
+<span class="k">and</span> <span class="n">a</span><span class="p">.</span><span class="n">djxh</span><span class="o">=</span><span class="n">r</span><span class="p">.</span><span class="n">djxh</span>
+<span class="k">and</span> <span class="n">r</span><span class="p">.</span><span class="n">zspm_dm</span><span class="o">=</span><span class="s1">&#39;101060100&#39;</span>
+<span class="k">and</span> <span class="k">upper</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">nsrsbh</span><span class="p">)</span> <span class="o">&lt;&gt;</span> <span class="n">a</span><span class="p">.</span><span class="n">nsrsbh</span>
+<span class="k">and</span> <span class="n">a</span><span class="p">.</span><span class="n">nsrsbh</span> <span class="k">like</span> <span class="s1">&#39;3%&#39;</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="判断字段中是否包含大写字母">判断字段中是否包含大写字母</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--gs_cx查询纳税人识别号这个字段中包含大写字母的并且做过工资薪金税费种认定的企业户数：lower函数
+</span><span class="c1"></span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">hx_dj</span><span class="p">.</span><span class="n">dj_nsrxx</span> <span class="n">a</span><span class="p">,</span><span class="n">hx_dj</span><span class="p">.</span><span class="n">dj_nsrxx</span> <span class="n">b</span><span class="p">,</span><span class="n">hx_rd</span><span class="p">.</span><span class="n">rd_sfzrdxxb</span> <span class="n">r</span>
+<span class="k">where</span> <span class="n">a</span><span class="p">.</span><span class="n">djxh</span><span class="o">=</span><span class="n">b</span><span class="p">.</span><span class="n">djxh</span>
+<span class="k">and</span> <span class="n">a</span><span class="p">.</span><span class="n">djxh</span><span class="o">=</span><span class="n">r</span><span class="p">.</span><span class="n">djxh</span>
+<span class="k">and</span> <span class="n">r</span><span class="p">.</span><span class="n">zspm_dm</span><span class="o">=</span><span class="s1">&#39;101060100&#39;</span>
+<span class="k">and</span> <span class="k">lower</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">nsrsbh</span><span class="p">)</span> <span class="o">&lt;&gt;</span> <span class="n">a</span><span class="p">.</span><span class="n">nsrsbh</span>
+<span class="k">and</span> <span class="n">a</span><span class="p">.</span><span class="n">nsrsbh</span> <span class="k">like</span> <span class="s1">&#39;3%&#39;</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="lengthb和length">Lengthb和length</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">select</span> <span class="k">length</span><span class="p">(</span><span class="s1">&#39;新奥投资基金管理（北京）有限公司&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">dual</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">lengthb</span><span class="p">(</span><span class="s1">&#39;新奥投资基金管理（北京）有限公司&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">dual</span><span class="p">;</span>
+<span class="c1">--utf-8：一个中文对三个字节
+</span></code></pre></td></tr></table>
+</div>
+</div><h4 id="按时间段统计数据量">按时间段统计数据量</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--sb_kjgrsdsbgb 按五分钟统计数量
+</span><span class="c1"></span><span class="k">select</span> <span class="n">tmp</span><span class="p">.</span><span class="n">newTime</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="n">tmp</span><span class="p">.</span><span class="n">newTime</span><span class="p">)</span>
+  <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">a</span><span class="p">.</span><span class="n">jylsh</span><span class="p">,</span>
+               <span class="n">to_char</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">lrrq</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm-dd hh24:mi&#39;</span><span class="p">)</span> <span class="n">oldTime</span><span class="p">,</span>
+               <span class="k">case</span>
+                 <span class="k">when</span> <span class="n">substr</span><span class="p">(</span><span class="n">to_char</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">lrrq</span><span class="p">,</span> <span class="s1">&#39;mi&#39;</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="k">then</span>
+                  <span class="n">to_char</span><span class="p">(</span><span class="n">lrrq</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm-dd HH24&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;:&#39;</span> <span class="o">||</span>
+                  <span class="n">substr</span><span class="p">(</span><span class="n">to_char</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">lrrq</span><span class="p">,</span> <span class="s1">&#39;mi&#39;</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">||</span> <span class="mi">0</span>
+                 <span class="k">else</span>
+                  <span class="n">to_char</span><span class="p">(</span><span class="n">lrrq</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm-dd HH24&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;:&#39;</span> <span class="o">||</span>
+                  <span class="n">substr</span><span class="p">(</span><span class="n">to_char</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">lrrq</span><span class="p">,</span> <span class="s1">&#39;mi&#39;</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">||</span> <span class="mi">5</span>
+               <span class="k">end</span> <span class="k">as</span> <span class="n">newTime</span>
+          <span class="k">from</span> <span class="n">gs_cxtj</span><span class="p">.</span><span class="n">sb_kjgrsdsbgb</span> <span class="n">a</span>
+         <span class="k">where</span> <span class="n">a</span><span class="p">.</span><span class="n">lrrq</span> <span class="o">&gt;</span> <span class="nb">date</span> <span class="s1">&#39;2016-11-16&#39;</span>
+         <span class="k">order</span> <span class="k">by</span> <span class="n">newTime</span> <span class="k">desc</span><span class="p">)</span> <span class="n">tmp</span>
+ <span class="k">group</span> <span class="k">by</span> <span class="n">tmp</span><span class="p">.</span><span class="n">newtime</span>
+ <span class="k">order</span> <span class="k">by</span> <span class="n">tmp</span><span class="p">.</span><span class="n">newtime</span> <span class="k">desc</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="cursor大数据量批量插入">Cursor大数据量批量插入</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">declare</span>
+  <span class="n">cnt</span> <span class="nb">integer</span> <span class="p">:</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">cursor</span> <span class="n">cur_1</span> <span class="k">is</span>
+    <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">gs_cl</span><span class="p">.</span><span class="n">py_dj_nsrxx</span><span class="p">;</span>
+<span class="k">begin</span>
+  <span class="k">for</span> <span class="n">icur_1</span> <span class="k">in</span> <span class="n">cur_1</span> <span class="n">loop</span>
+    <span class="k">insert</span> <span class="k">into</span> <span class="n">xtxj_zdgsxx</span> <span class="k">values</span> <span class="p">(</span><span class="n">icur_1</span><span class="p">.</span><span class="n">DJXH</span><span class="p">,</span><span class="n">icur_1</span><span class="p">.</span><span class="n">ZGSWJ_DM</span><span class="p">,</span><span class="n">icur_1</span><span class="p">.</span><span class="n">SWJGMC</span><span class="p">,</span><span class="n">icur_1</span><span class="p">.</span><span class="n">SJTB_SJ</span><span class="p">,</span><span class="n">icur_1</span><span class="p">.</span><span class="n">YXBZ</span><span class="p">,</span><span class="n">icur_1</span><span class="p">.</span><span class="n">XGSJ</span><span class="p">);</span>
+    <span class="n">cnt</span> <span class="p">:</span><span class="o">=</span> <span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="n">cnt</span> <span class="o">&gt;=</span> <span class="mi">5000</span> <span class="k">then</span>
+      <span class="k">commit</span><span class="p">;</span>
+      <span class="n">cnt</span> <span class="p">:</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">end</span> <span class="k">if</span><span class="p">;</span>
+  <span class="k">end</span> <span class="n">loop</span><span class="p">;</span>
+  <span class="k">commit</span><span class="p">;</span>
+<span class="k">exception</span>
+  <span class="k">when</span> <span class="n">others</span> <span class="k">then</span>
+    <span class="k">rollback</span><span class="p">;</span>
+<span class="k">end</span><span class="p">;</span>
+<span class="o">/</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="decode的使用">decode的使用</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--不同渠道扣款数量
+</span><span class="c1"></span><span class="k">select</span> <span class="n">decode</span><span class="p">(</span><span class="n">substr</span><span class="p">(</span><span class="n">jywysbh</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+              <span class="s1">&#39;JSDS.N&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;网厅&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;SB0603&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;客户端&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;大厅&#39;</span><span class="p">)</span> <span class="s2">&#34;渠道来源&#34;</span><span class="p">,</span>
+ <span class="k">count</span><span class="p">(</span><span class="k">case</span> <span class="k">when</span> <span class="n">a</span><span class="p">.</span><span class="n">lrrq</span><span class="o">&gt;</span><span class="n">to_date</span><span class="p">(</span><span class="n">to_char</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">),</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">)</span>  <span class="k">then</span>   <span class="n">djxh</span>  <span class="k">end</span><span class="p">)</span><span class="s2">&#34;非0申报当天扣款量&#34;</span><span class="p">,</span>
+       <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="s2">&#34;非0申报扣款数量&#34;</span>
+  <span class="k">from</span> <span class="n">sb_sbzt</span> <span class="n">a</span>
+ <span class="k">where</span> <span class="n">a</span><span class="p">.</span><span class="n">lrrq</span> <span class="o">&gt;</span> <span class="nb">date</span> <span class="s1">&#39;2016-10-01&#39;</span>
+   <span class="k">and</span> <span class="n">a</span><span class="p">.</span><span class="n">yrkse_1</span> <span class="o">&gt;</span> <span class="mi">0</span>
+   <span class="k">and</span> <span class="n">cwlx_dm</span> <span class="o">=</span> <span class="s1">&#39;Y&#39;</span>
+   <span class="k">and</span> <span class="n">se</span> <span class="o">=</span> <span class="n">yrkse_1</span>
+ <span class="k">group</span> <span class="k">by</span> <span class="n">substr</span><span class="p">(</span><span class="n">jywysbh</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="分组数据中每组取前几条数据">分组数据中每组取前几条数据</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--先得到已分组结果集
+</span><span class="c1"></span><span class="k">select</span> <span class="n">t</span><span class="p">.</span><span class="n">nsrsbh</span><span class="p">,</span> <span class="n">t</span><span class="p">.</span><span class="n">nsrmc</span><span class="p">,</span> <span class="n">t</span><span class="p">.</span><span class="n">zgswj_dm</span><span class="p">,</span> <span class="n">swjg</span><span class="p">.</span><span class="n">swjgmc</span>
+  <span class="k">from</span> <span class="n">dj_nsrxx</span> <span class="n">t</span><span class="p">,</span> <span class="n">rd_sfzrdxxb</span> <span class="n">sfz</span><span class="p">,</span> <span class="n">dm_gy_swjg</span> <span class="n">swjg</span>
+ <span class="k">where</span> <span class="n">t</span><span class="p">.</span><span class="n">djxh</span> <span class="o">=</span> <span class="n">sfz</span><span class="p">.</span><span class="n">djxh</span>
+   <span class="k">and</span> <span class="n">t</span><span class="p">.</span><span class="n">zgswj_dm</span> <span class="o">=</span> <span class="n">swjg</span><span class="p">.</span><span class="n">swjg_dm</span>
+   <span class="k">and</span> <span class="n">t</span><span class="p">.</span><span class="n">shxydm</span> <span class="k">is</span> <span class="k">null</span>
+   <span class="k">and</span> <span class="n">t</span><span class="p">.</span><span class="n">nsrzt_dm</span> <span class="o">=</span> <span class="s1">&#39;03&#39;</span>
+   <span class="k">and</span> <span class="n">sfz</span><span class="p">.</span><span class="n">zspm_dm</span> <span class="o">=</span> <span class="s1">&#39;101060100&#39;</span>
+   <span class="k">and</span> <span class="n">sfz</span><span class="p">.</span><span class="n">rdyxqz</span> <span class="o">&gt;</span> <span class="nb">date</span><span class="s1">&#39;2016-08-31&#39;</span>
+   <span class="k">and</span> <span class="n">substr</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">zgswj_dm</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;000000&#39;</span> <span class="k">in</span>
+       <span class="p">(</span><span class="k">select</span> <span class="n">b</span><span class="p">.</span><span class="n">swjg_dm</span>
+          <span class="k">from</span> <span class="n">dm_gy_swjg</span> <span class="n">a</span><span class="p">,</span> <span class="n">dm_gy_swjg</span> <span class="n">b</span>
+         <span class="k">where</span> <span class="n">substr</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">swjg_dm</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;000000&#39;</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">swjg_dm</span>
+           <span class="k">and</span> <span class="n">b</span><span class="p">.</span><span class="n">swjg_dm</span> <span class="k">not</span> <span class="k">in</span>
+               <span class="p">(</span><span class="s1">&#39;23200000000&#39;</span><span class="p">,</span> <span class="s1">&#39;23299000000&#39;</span><span class="p">,</span> <span class="s1">&#39;00000000000&#39;</span><span class="p">)</span>
+         <span class="k">group</span> <span class="k">by</span> <span class="n">b</span><span class="p">.</span><span class="n">swjg_dm</span><span class="p">)</span>
+
+<span class="c1">--按税务机关分类查询两条记录
+</span><span class="c1"></span><span class="k">select</span> <span class="n">f</span><span class="p">.</span><span class="n">ROWN</span> <span class="err">行号</span><span class="p">,</span>
+       <span class="n">f</span><span class="p">.</span><span class="n">djxh</span> <span class="err">登记序号</span><span class="p">,</span>
+       <span class="n">f</span><span class="p">.</span><span class="n">nsrsbh</span> <span class="err">纳税人识别号</span><span class="p">,</span>
+       <span class="n">f</span><span class="p">.</span><span class="n">nsrmc</span> <span class="err">纳税人名称</span><span class="p">,</span>
+       <span class="n">f</span><span class="p">.</span><span class="n">zgswj_dm</span> <span class="err">主管税务机关代码</span><span class="p">,</span>
+       <span class="n">f</span><span class="p">.</span><span class="n">swjgmc</span> <span class="err">主管税务机关名称</span><span class="p">,</span>
+       <span class="n">substr</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">zgswj_dm</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;000000&#39;</span> <span class="err">地市税务局名称</span>
+  <span class="k">from</span> <span class="p">(</span><span class="k">SELECT</span> <span class="n">ROW_NUMBER</span><span class="p">()</span> <span class="n">OVER</span><span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">substr</span><span class="p">(</span><span class="n">res</span><span class="p">.</span><span class="n">zgswj_dm</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;000000&#39;</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">res</span><span class="p">.</span><span class="n">zgswj_dm</span><span class="p">)</span> <span class="k">as</span> <span class="n">ROWN</span><span class="p">,</span>
+               <span class="n">res</span><span class="p">.</span><span class="o">*</span>
+          <span class="k">FROM</span> <span class="err">（</span><span class="k">select</span> <span class="n">t</span><span class="p">.</span><span class="n">djxh</span><span class="p">,</span> <span class="n">t</span><span class="p">.</span><span class="n">nsrsbh</span><span class="p">,</span> <span class="n">t</span><span class="p">.</span><span class="n">nsrmc</span><span class="p">,</span> <span class="n">t</span><span class="p">.</span><span class="n">zgswj_dm</span><span class="p">,</span> <span class="n">swjg</span><span class="p">.</span><span class="n">swjgmc</span>
+          <span class="k">from</span> <span class="n">dj_nsrxx</span> <span class="n">t</span><span class="p">,</span> <span class="n">rd_sfzrdxxb</span> <span class="n">sfz</span><span class="p">,</span> <span class="n">dm_gy_swjg</span> <span class="n">swjg</span>
+         <span class="k">where</span> <span class="n">t</span><span class="p">.</span><span class="n">djxh</span> <span class="o">=</span> <span class="n">sfz</span><span class="p">.</span><span class="n">djxh</span>
+           <span class="k">and</span> <span class="n">t</span><span class="p">.</span><span class="n">zgswj_dm</span> <span class="o">=</span> <span class="n">swjg</span><span class="p">.</span><span class="n">swjg_dm</span>
+           <span class="k">and</span> <span class="n">t</span><span class="p">.</span><span class="n">shxydm</span> <span class="k">is</span> <span class="k">null</span>
+           <span class="k">and</span> <span class="n">t</span><span class="p">.</span><span class="n">nsrzt_dm</span> <span class="o">=</span> <span class="s1">&#39;03&#39;</span>
+           <span class="k">and</span> <span class="n">t</span><span class="p">.</span><span class="n">nsrmc</span> <span class="k">like</span> <span class="s1">&#39;%公司&#39;</span>
+           <span class="k">and</span> <span class="k">length</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">nsrsbh</span><span class="p">)</span> <span class="o">=</span> <span class="mi">15</span>
+           <span class="k">and</span> <span class="n">sfz</span><span class="p">.</span><span class="n">zspm_dm</span> <span class="o">=</span> <span class="s1">&#39;101060100&#39;</span>
+           <span class="k">and</span> <span class="n">sfz</span><span class="p">.</span><span class="n">rdyxqz</span> <span class="o">&gt;</span> <span class="nb">date</span> <span class="s1">&#39;2016-08-31&#39;</span> <span class="err">）</span> <span class="n">res</span><span class="p">)</span> <span class="n">f</span>
+ <span class="k">WHERE</span> <span class="n">f</span><span class="p">.</span><span class="n">ROWN</span> <span class="o">&lt;=</span> <span class="mi">20</span>
+ <span class="k">order</span> <span class="k">by</span> <span class="n">f</span><span class="p">.</span><span class="n">zgswj_dm</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="case和when的使用">case和when的使用</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">decode</span><span class="p">(</span><span class="n">substr</span><span class="p">(</span><span class="n">jywysbh</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                      <span class="s1">&#39;JSDS&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;网厅&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;大厅&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;客户端&#39;</span><span class="p">)</span> <span class="s2">&#34;渠道来源&#34;</span><span class="p">,</span>
+               <span class="k">count</span><span class="p">(</span><span class="k">case</span>
+                       <span class="k">when</span> <span class="n">a</span><span class="p">.</span><span class="n">lrrq</span> <span class="o">&gt;</span>
+                            <span class="n">to_date</span><span class="p">(</span><span class="n">to_char</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">),</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">)</span> <span class="k">and</span>
+                            <span class="n">a</span><span class="p">.</span><span class="n">yrkse_1</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">and</span> <span class="n">se</span> <span class="o">=</span> <span class="n">yrkse_1</span> <span class="k">then</span>
+                        <span class="n">yzpzxh</span>
+                     <span class="k">end</span><span class="p">)</span> <span class="s2">&#34;非0申报当天扣款量&#34;</span><span class="p">,</span>
+               <span class="k">count</span><span class="p">(</span><span class="k">case</span>
+                       <span class="k">when</span> <span class="n">a</span><span class="p">.</span><span class="n">lrrq</span> <span class="o">&gt;</span>
+                            <span class="n">to_date</span><span class="p">(</span><span class="n">to_char</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">),</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">)</span> <span class="k">and</span>
+                            <span class="n">se</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">then</span>
+                        <span class="n">yzpzxh</span>
+                     <span class="k">end</span><span class="p">)</span> <span class="s2">&#34; 当天非0申报量&#34;</span><span class="p">,</span>
+               <span class="k">count</span><span class="p">(</span><span class="k">case</span>
+                       <span class="k">when</span> <span class="n">a</span><span class="p">.</span><span class="n">lrrq</span> <span class="o">&gt;</span>
+                            <span class="n">to_date</span><span class="p">(</span><span class="n">to_char</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">),</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">)</span> <span class="k">then</span>
+                        <span class="n">yzpzxh</span>
+                     <span class="k">end</span><span class="p">)</span> <span class="s2">&#34; 当天申报量&#34;</span><span class="p">,</span>
+               <span class="k">count</span><span class="p">(</span><span class="k">case</span>
+                       <span class="k">when</span> <span class="n">a</span><span class="p">.</span><span class="n">yrkse_1</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">and</span> <span class="n">se</span> <span class="o">=</span> <span class="n">yrkse_1</span> <span class="k">then</span>
+                        <span class="n">yzpzxh</span>
+                     <span class="k">end</span><span class="p">)</span> <span class="s2">&#34;非0申报本月扣款量&#34;</span><span class="p">,</span>
+               <span class="k">count</span><span class="p">(</span><span class="k">case</span>
+                       <span class="k">when</span> <span class="n">se</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">then</span>
+                        <span class="n">yzpzxh</span>
+                     <span class="k">end</span><span class="p">)</span> <span class="s2">&#34;本月非0申报量&#34;</span><span class="p">,</span>
+               <span class="k">count</span><span class="p">(</span><span class="k">case</span>
+                       <span class="k">when</span> <span class="mi">1</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">then</span>
+                        <span class="n">yzpzxh</span>
+                     <span class="k">end</span><span class="p">)</span> <span class="s2">&#34;本月总申报量&#34;</span>
+          <span class="k">from</span> <span class="n">sb_sbzt</span> <span class="n">a</span>
+         <span class="k">where</span> <span class="n">a</span><span class="p">.</span><span class="n">lrrq</span> <span class="o">&gt;</span>
+               <span class="n">to_date</span><span class="p">(</span><span class="n">to_char</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;01&#39;</span><span class="p">,</span> <span class="s1">&#39;yyyy-mm-dd&#39;</span><span class="p">)</span>
+           <span class="k">and</span> <span class="n">cwlx_dm</span> <span class="o">=</span> <span class="s1">&#39;Y&#39;</span>
+         <span class="k">group</span> <span class="k">by</span> <span class="n">substr</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">jywysbh</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="查询性能最差和最耗时的sql">查询性能最差和最耗时的SQL</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--性能最差的SQL
+</span><span class="c1"></span><span class="k">select</span> <span class="o">*</span>
+  <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">sql_text</span><span class="p">,</span> <span class="n">disk_reads</span><span class="p">,</span> <span class="n">buffer_gets</span><span class="p">,</span> <span class="n">rows_processed</span>
+          <span class="k">from</span> <span class="n">v$sqlarea</span> <span class="n">b</span>
+         <span class="k">order</span> <span class="k">by</span> <span class="n">disk_reads</span> <span class="k">desc</span><span class="p">)</span>
+ <span class="k">where</span> <span class="n">rownum</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="c1">--最耗时的SQL
+</span><span class="c1"></span><span class="k">select</span> <span class="o">*</span>
+  <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">a</span><span class="p">.</span><span class="n">SQL_TEXT</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">CPU_TIME</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">PARSING_SCHEMA_NAME</span>
+          <span class="k">from</span> <span class="n">v$sql</span> <span class="n">a</span>
+         <span class="k">order</span> <span class="k">by</span> <span class="n">cpu_time</span> <span class="k">desc</span><span class="p">)</span>
+ <span class="k">where</span> <span class="n">rownum</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="创建数据库表空间">创建数据库表空间</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">create</span> <span class="n">tablespace</span> <span class="n">TS_GS_ZM_SSWSZMJLMX_2016_DATA</span>
+<span class="n">datafile</span> <span class="s1">&#39;D:\APP\CLG\ORADATA\ORCL\TS_GS_ZM_SSWSZMJLMX_2016_DATA.dbf&#39;</span>
+<span class="k">size</span> <span class="mi">50</span><span class="n">M</span>
+<span class="n">AUTOEXTEND</span> <span class="k">ON</span> <span class="k">NEXT</span> <span class="mi">50</span><span class="n">M</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="数据库锁表查询及处理">数据库锁表查询及处理</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">--以下SQL适用于single instance
+</span><span class="c1">----Oracle数据库操作中，会用到锁表查询以及解锁和kill进程等操作
+</span><span class="c1">--(1)锁表查询的代码有以下的形式：
+</span><span class="c1"></span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">v$locked_object</span><span class="p">;</span>
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">v$locked_object</span><span class="p">;</span>
+<span class="c1">--(2)查看哪个表被锁
+</span><span class="c1"></span><span class="k">select</span> <span class="n">b</span><span class="p">.</span><span class="k">owner</span><span class="p">,</span><span class="n">b</span><span class="p">.</span><span class="n">object_name</span><span class="p">,</span><span class="n">a</span><span class="p">.</span><span class="n">session_id</span><span class="p">,</span><span class="n">a</span><span class="p">.</span><span class="n">locked_mode</span> <span class="k">from</span> <span class="n">v$locked_object</span> <span class="n">a</span><span class="p">,</span><span class="n">dba_objects</span> <span class="n">b</span> <span class="k">where</span> <span class="n">b</span><span class="p">.</span><span class="n">object_id</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">object_id</span><span class="p">;</span>
+<span class="c1">--(3)查看是哪个session引起的
+</span><span class="c1"></span><span class="k">select</span> <span class="n">b</span><span class="p">.</span><span class="n">username</span><span class="p">,</span><span class="n">b</span><span class="p">.</span><span class="n">sid</span><span class="p">,</span><span class="n">b</span><span class="p">.</span><span class="nb">serial</span><span class="o">#</span><span class="p">,</span><span class="n">logon_time</span> <span class="k">from</span> <span class="n">v$locked_object</span> <span class="n">a</span><span class="p">,</span><span class="n">v$session</span> <span class="n">b</span> <span class="k">where</span> <span class="n">a</span><span class="p">.</span><span class="n">session_id</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">sid</span> <span class="k">order</span> <span class="k">by</span> <span class="n">b</span><span class="p">.</span><span class="n">logon_time</span><span class="p">;</span> 
+<span class="c1">--(4)杀掉对应进程
+</span><span class="c1"></span><span class="k">alter</span> <span class="k">system</span> <span class="n">kill</span> <span class="k">session</span><span class="s1">&#39;587,295&#39;</span><span class="p">;</span><span class="c1">--command下执行，其中587为sid,295为serial#.
+</span><span class="c1"></span>
+
+<span class="c1">--以下SQL适用于RAC和Single instance，查询完成之后即可kill会话或者直接在服务器上kill进程
+</span><span class="c1"></span><span class="k">select</span> <span class="n">o</span><span class="p">.</span><span class="k">owner</span><span class="p">,</span>
+       <span class="n">o</span><span class="p">.</span><span class="n">object_name</span><span class="p">,</span>
+       <span class="n">l</span><span class="p">.</span><span class="n">locked_mode</span><span class="p">,</span>
+       <span class="n">s</span><span class="p">.</span><span class="n">username</span><span class="p">,</span>
+       <span class="n">s</span><span class="p">.</span><span class="n">sid</span><span class="p">,</span>
+       <span class="n">s</span><span class="p">.</span><span class="nb">serial</span><span class="o">#</span><span class="p">,</span>
+       <span class="n">s</span><span class="p">.</span><span class="n">logon_time</span><span class="p">,</span>
+       <span class="n">p</span><span class="p">.</span><span class="n">spid</span><span class="p">,</span>
+       <span class="n">s</span><span class="p">.</span><span class="n">inst_id</span>
+  <span class="k">from</span> <span class="n">gv$locked_object</span> <span class="n">l</span><span class="p">,</span> <span class="n">dba_objects</span> <span class="n">o</span><span class="p">,</span> <span class="n">gv$session</span> <span class="n">s</span><span class="p">,</span> <span class="n">gv$process</span> <span class="n">p</span>
+ <span class="k">where</span> <span class="n">l</span><span class="p">.</span><span class="n">object_id</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">object_id</span>
+   <span class="k">and</span> <span class="n">l</span><span class="p">.</span><span class="n">session_id</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">sid</span>
+   <span class="k">and</span> <span class="n">s</span><span class="p">.</span><span class="n">paddr</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">addr</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="修改数据库密码为永不失效">修改数据库密码为永不失效</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">dba_profiles</span> <span class="n">t</span> <span class="k">where</span> <span class="n">t</span><span class="p">.</span><span class="n">PROFILE</span><span class="o">=</span><span class="s1">&#39;DEFAULT&#39;</span> <span class="k">and</span> <span class="n">t</span><span class="p">.</span><span class="n">RESOURCE_NAME</span> <span class="o">=</span> <span class="s1">&#39;PASSWORD_LIFE_TIME&#39;</span><span class="p">;</span>
+
+<span class="k">alter</span> <span class="n">profile</span> <span class="k">default</span> <span class="k">limit</span> <span class="n">password_life_time</span> <span class="n">unlimited</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-05-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/SQL/">SQL</a>
+          <a href="/tags/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/">Oracle数据库</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Python实现通用web框架</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2017/05/10/SQLAlchemy%E4%BD%BF%E7%94%A8/">
+            <span class="next-text nav-default">SQLAlchemy使用</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BFS on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/BFS/</link>
+    <description>Recent content in BFS on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 24 Mar 2018 19:46:25 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/BFS/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>BFS&#43;剪枝查找目标转推流节点</title>
+      <link>https://suncle.me/2018/03/24/BFS-And-Prune-To-Search-Target-Deliver-Node/</link>
+      <pubDate>Sat, 24 Mar 2018 19:46:25 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/03/24/BFS-And-Prune-To-Search-Target-Deliver-Node/</guid>
+      <description>&lt;p&gt;需求：在各个国家都有可能部署转推流节点，因此需要高效快捷的查找到离推理地点最近的一个目标转推流节点。&lt;/p&gt;
+&lt;p&gt;现状：国内以省为单位，国外以国家为单位，虽然当前节点较少，但是为了保障业务拓展之后的效果，因此需要及时进行图优化。&lt;/p&gt;
+&lt;p&gt;分析：建立中国地图和世界地图，根据ip地址在ip数据库中查找，得到ip所属的国家名称，国家代码，省份名称，省份代码。用国家代码在世界地图中查找最近的国家节点，用省份代码在中国地图中查找最近的省份节点。&lt;/p&gt;
+&lt;p&gt;搜索：搜索方式为广度优先搜索BFS，用于寻找最近的目标点。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

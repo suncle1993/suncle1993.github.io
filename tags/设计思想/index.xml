@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>设计思想 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/</link>
+    <description>Recent content in 设计思想 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 22 Jan 2018 16:28:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>关于冷热数据备份和恢复的思考</title>
+      <link>https://suncle.me/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/</link>
+      <pubDate>Mon, 22 Jan 2018 16:28:13 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/</guid>
+      <description>&lt;h1 id=&#34;关于冷热数据备份和恢复的思考&#34;&gt;关于冷热数据备份和恢复的思考&lt;/h1&gt;
+&lt;p&gt;数据库：Mysql InnoDB&lt;/p&gt;
+&lt;p&gt;目标：备份指定数据表指定时间段的全字段数据到数据文件，并删除掉数据库中已备份数据&lt;/p&gt;
+&lt;p&gt;说明：这里说的数据备份不是灾备，而且通过备份基本不会使用的数据来缓解数据库压力，要求备份的数据是可以恢复的&lt;/p&gt;
+&lt;p&gt;持久化存储：文本格式的数据文件，存储于oss中&lt;/p&gt;
+&lt;p&gt;思考：不同表中可能含有多个时间字段，可能的组合如下&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;update_time&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;create_time&lt;/code&gt; &amp;amp; &lt;code&gt;update_time&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;create_time&lt;/code&gt; &amp;amp; &lt;code&gt;update_time&lt;/code&gt; &amp;amp; 业务时间（由程序插入，可能是datetime可能是date可能是timestamp）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一般数据表设计时都会带上创建时间和修改时间。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据一般都是快速增长，较少或者几乎不更新，属于记录型的数据&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

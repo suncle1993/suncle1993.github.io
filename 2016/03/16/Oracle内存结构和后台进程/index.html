@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Oracle内存结构和后台进程 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="Oracle实例=内存&#43;后台进程
+Oracle数据库=实例&#43;物理存储结构
+由上图可知Oracle实例（一个Instance）由内存结构和程序结构组成，内存结构主要是SGA，程序结构主要是后台进程。
+物理存储结构主要是数据库文件。
+这次仔细学习了Oracle实例的具体内容。
+为什么Oracle数据库做的这么复杂？ 内存
+ 数据查询的速度 更好的提升数据处理的速度  后台进程
+ 为了完成特定的任务的服务进程  数据文件
+ 数据的永久性保存 也是数据库性能下降的主要原因  实例之内存结构 System global area(SGA) SGA区包括Oracle实例需要的一系列内存组件，用于存放数据信息和数据控制信息，这些内存信息被所有进程所共享。SGA的各个组成包括：
+   组成 描述     Database buffer cache 数据库高速缓冲区，里面存放着从磁盘读取到内存的数据块，这些数据块可以被所有的会话访问，是全局共享的。buffer cache分为三个部分，分别是default pool，keep pool，recycle pool。default pool是正常情况下，数据块存放的内存区域，default pool会根据一个过期算法（LRU，Least Recently Used，近期最少使用）将过期的脏数据（修改过的数据，没有修改的数据可以不写到磁盘上）写到磁盘上。keep pool这个区域用于将一些数据始终固定在内存中。recycle pool存放一些不经常使用的数据块，避免这些数据块在default pool中占据空间。   Shared pool 共享池缓存着一些用户可以共用的信息：1、可以重新使用的SQL语句 2、存放一些数据字典的信息，包括用户账户数据，表，索引，权限等等。 3、存储存放在数据库中的可执行代码。   Redo log buffer 重做日志缓冲区，存放着数据库操作产生的redo数据，Redo log buffer以循环的方式写入，当redo log已经写到磁盘后，就可以被后续的日志数据覆盖。   Large pool 对数据的处理不适用LRU算法，比shared pool更搞笑的内存收取方式。并行执行时会使用large pool。Rman备份时启动并行备份方式时，使用large pool。   Java pool 这块内存区域用来存放所有特定会话的JVM（Java Virtual Machine）中的java代码和数据。   Streams pool 里面存放着流相关的信息，比如流队列，其中也会流复制中capture进程提供进程内存空间。Streams pool只为流复制提供内存空间，如果没有手工配置，也没有配置流复制，这个空间将设置为0。   Result cache 结果缓存，当表的访问方式以读为主前提下，从一张大表中过滤出少量的记录作为结果集，把查询结果集放入result cache，后续相同的查询语句可以直接从result cache里获取想要的结果，省去了CPU、I/O上的开销。这个SGA组件加速了频繁运行的查询语句的执行速度。   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2016/03/16/Oracle%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Oracle内存结构和后台进程" />
+<meta property="og:description" content="
+Oracle实例=内存&#43;后台进程
+Oracle数据库=实例&#43;物理存储结构
+由上图可知Oracle实例（一个Instance）由内存结构和程序结构组成，内存结构主要是SGA，程序结构主要是后台进程。
+物理存储结构主要是数据库文件。
+这次仔细学习了Oracle实例的具体内容。
+为什么Oracle数据库做的这么复杂？
+内存
+
+数据查询的速度
+更好的提升数据处理的速度
+
+后台进程
+
+为了完成特定的任务的服务进程
+
+数据文件
+
+数据的永久性保存
+也是数据库性能下降的主要原因
+
+实例之内存结构
+System global area(SGA)
+SGA区包括Oracle实例需要的一系列内存组件，用于存放数据信息和数据控制信息，这些内存信息被所有进程所共享。SGA的各个组成包括：
+
+
+
+组成
+描述
+
+
+
+
+Database buffer cache
+数据库高速缓冲区，里面存放着从磁盘读取到内存的数据块，这些数据块可以被所有的会话访问，是全局共享的。buffer cache分为三个部分，分别是default pool，keep pool，recycle pool。default pool是正常情况下，数据块存放的内存区域，default pool会根据一个过期算法（LRU，Least Recently Used，近期最少使用）将过期的脏数据（修改过的数据，没有修改的数据可以不写到磁盘上）写到磁盘上。keep pool这个区域用于将一些数据始终固定在内存中。recycle pool存放一些不经常使用的数据块，避免这些数据块在default pool中占据空间。
+
+
+Shared pool
+共享池缓存着一些用户可以共用的信息：1、可以重新使用的SQL语句  2、存放一些数据字典的信息，包括用户账户数据，表，索引，权限等等。  3、存储存放在数据库中的可执行代码。
+
+
+Redo log buffer
+重做日志缓冲区，存放着数据库操作产生的redo数据，Redo log buffer以循环的方式写入，当redo log已经写到磁盘后，就可以被后续的日志数据覆盖。
+
+
+Large pool
+对数据的处理不适用LRU算法，比shared pool更搞笑的内存收取方式。并行执行时会使用large pool。Rman备份时启动并行备份方式时，使用large pool。
+
+
+Java pool
+这块内存区域用来存放所有特定会话的JVM（Java Virtual Machine）中的java代码和数据。
+
+
+Streams pool
+里面存放着流相关的信息，比如流队列，其中也会流复制中capture进程提供进程内存空间。Streams pool只为流复制提供内存空间，如果没有手工配置，也没有配置流复制，这个空间将设置为0。
+
+
+Result cache
+结果缓存，当表的访问方式以读为主前提下，从一张大表中过滤出少量的记录作为结果集，把查询结果集放入result cache，后续相同的查询语句可以直接从result cache里获取想要的结果，省去了CPU、I/O上的开销。这个SGA组件加速了频繁运行的查询语句的执行速度。
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2016/03/16/Oracle%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/" />
+<meta property="article:published_time" content="2016-03-16T11:22:28+00:00" />
+<meta property="article:modified_time" content="2016-03-16T11:22:28+00:00" />
+<meta itemprop="name" content="Oracle内存结构和后台进程">
+<meta itemprop="description" content="
+Oracle实例=内存&#43;后台进程
+Oracle数据库=实例&#43;物理存储结构
+由上图可知Oracle实例（一个Instance）由内存结构和程序结构组成，内存结构主要是SGA，程序结构主要是后台进程。
+物理存储结构主要是数据库文件。
+这次仔细学习了Oracle实例的具体内容。
+为什么Oracle数据库做的这么复杂？
+内存
+
+数据查询的速度
+更好的提升数据处理的速度
+
+后台进程
+
+为了完成特定的任务的服务进程
+
+数据文件
+
+数据的永久性保存
+也是数据库性能下降的主要原因
+
+实例之内存结构
+System global area(SGA)
+SGA区包括Oracle实例需要的一系列内存组件，用于存放数据信息和数据控制信息，这些内存信息被所有进程所共享。SGA的各个组成包括：
+
+
+
+组成
+描述
+
+
+
+
+Database buffer cache
+数据库高速缓冲区，里面存放着从磁盘读取到内存的数据块，这些数据块可以被所有的会话访问，是全局共享的。buffer cache分为三个部分，分别是default pool，keep pool，recycle pool。default pool是正常情况下，数据块存放的内存区域，default pool会根据一个过期算法（LRU，Least Recently Used，近期最少使用）将过期的脏数据（修改过的数据，没有修改的数据可以不写到磁盘上）写到磁盘上。keep pool这个区域用于将一些数据始终固定在内存中。recycle pool存放一些不经常使用的数据块，避免这些数据块在default pool中占据空间。
+
+
+Shared pool
+共享池缓存着一些用户可以共用的信息：1、可以重新使用的SQL语句  2、存放一些数据字典的信息，包括用户账户数据，表，索引，权限等等。  3、存储存放在数据库中的可执行代码。
+
+
+Redo log buffer
+重做日志缓冲区，存放着数据库操作产生的redo数据，Redo log buffer以循环的方式写入，当redo log已经写到磁盘后，就可以被后续的日志数据覆盖。
+
+
+Large pool
+对数据的处理不适用LRU算法，比shared pool更搞笑的内存收取方式。并行执行时会使用large pool。Rman备份时启动并行备份方式时，使用large pool。
+
+
+Java pool
+这块内存区域用来存放所有特定会话的JVM（Java Virtual Machine）中的java代码和数据。
+
+
+Streams pool
+里面存放着流相关的信息，比如流队列，其中也会流复制中capture进程提供进程内存空间。Streams pool只为流复制提供内存空间，如果没有手工配置，也没有配置流复制，这个空间将设置为0。
+
+
+Result cache
+结果缓存，当表的访问方式以读为主前提下，从一张大表中过滤出少量的记录作为结果集，把查询结果集放入result cache，后续相同的查询语句可以直接从result cache里获取想要的结果，省去了CPU、I/O上的开销。这个SGA组件加速了频繁运行的查询语句的执行速度。
+
+
+">
+<meta itemprop="datePublished" content="2016-03-16T11:22:28+00:00" />
+<meta itemprop="dateModified" content="2016-03-16T11:22:28+00:00" />
+<meta itemprop="wordCount" content="2847">
+
+
+
+<meta itemprop="keywords" content="Oracle,内存结构,后台进程," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Oracle内存结构和后台进程"/>
+<meta name="twitter:description" content="
+Oracle实例=内存&#43;后台进程
+Oracle数据库=实例&#43;物理存储结构
+由上图可知Oracle实例（一个Instance）由内存结构和程序结构组成，内存结构主要是SGA，程序结构主要是后台进程。
+物理存储结构主要是数据库文件。
+这次仔细学习了Oracle实例的具体内容。
+为什么Oracle数据库做的这么复杂？
+内存
+
+数据查询的速度
+更好的提升数据处理的速度
+
+后台进程
+
+为了完成特定的任务的服务进程
+
+数据文件
+
+数据的永久性保存
+也是数据库性能下降的主要原因
+
+实例之内存结构
+System global area(SGA)
+SGA区包括Oracle实例需要的一系列内存组件，用于存放数据信息和数据控制信息，这些内存信息被所有进程所共享。SGA的各个组成包括：
+
+
+
+组成
+描述
+
+
+
+
+Database buffer cache
+数据库高速缓冲区，里面存放着从磁盘读取到内存的数据块，这些数据块可以被所有的会话访问，是全局共享的。buffer cache分为三个部分，分别是default pool，keep pool，recycle pool。default pool是正常情况下，数据块存放的内存区域，default pool会根据一个过期算法（LRU，Least Recently Used，近期最少使用）将过期的脏数据（修改过的数据，没有修改的数据可以不写到磁盘上）写到磁盘上。keep pool这个区域用于将一些数据始终固定在内存中。recycle pool存放一些不经常使用的数据块，避免这些数据块在default pool中占据空间。
+
+
+Shared pool
+共享池缓存着一些用户可以共用的信息：1、可以重新使用的SQL语句  2、存放一些数据字典的信息，包括用户账户数据，表，索引，权限等等。  3、存储存放在数据库中的可执行代码。
+
+
+Redo log buffer
+重做日志缓冲区，存放着数据库操作产生的redo数据，Redo log buffer以循环的方式写入，当redo log已经写到磁盘后，就可以被后续的日志数据覆盖。
+
+
+Large pool
+对数据的处理不适用LRU算法，比shared pool更搞笑的内存收取方式。并行执行时会使用large pool。Rman备份时启动并行备份方式时，使用large pool。
+
+
+Java pool
+这块内存区域用来存放所有特定会话的JVM（Java Virtual Machine）中的java代码和数据。
+
+
+Streams pool
+里面存放着流相关的信息，比如流队列，其中也会流复制中capture进程提供进程内存空间。Streams pool只为流复制提供内存空间，如果没有手工配置，也没有配置流复制，这个空间将设置为0。
+
+
+Result cache
+结果缓存，当表的访问方式以读为主前提下，从一张大表中过滤出少量的记录作为结果集，把查询结果集放入result cache，后续相同的查询语句可以直接从result cache里获取想要的结果，省去了CPU、I/O上的开销。这个SGA组件加速了频繁运行的查询语句的执行速度。
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Oracle内存结构和后台进程</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-03-16 </span>
+        <div class="post-category">
+            <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+            </div>
+          <span class="more-meta"> 约 2847 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#为什么oracle数据库做的这么复杂">为什么Oracle数据库做的这么复杂？</a></li>
+        <li><a href="#实例之内存结构">实例之内存结构</a>
+          <ul>
+            <li><a href="#system-global-areasga">System global area(SGA)</a></li>
+            <li><a href="#program-global-areapga">Program global area(PGA)</a></li>
+            <li><a href="#user-global-areauga">User global Area(UGA)</a></li>
+            <li><a href="#software-code-areas">Software code areas</a></li>
+          </ul>
+        </li>
+        <li><a href="#后台进程">后台进程</a>
+          <ul>
+            <li><a href="#系统监控进程smon">系统监控进程SMON</a></li>
+            <li><a href="#进程监控进程pmon">进程监控进程PMON</a></li>
+            <li><a href="#数据库写进程dbwn">数据库写进程DBWn</a></li>
+            <li><a href="#日志写进程lgwr">日志写进程LGWR</a></li>
+            <li><a href="#检查点进程ckpt">检查点进程CKPT</a></li>
+            <li><a href="#归档进程arcn">归档进程ARCn</a></li>
+            <li><a href="#checkpoint和commit的区别">checkpoint和commit的区别</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Oracle%E5%86%85%E5%AD%98%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B.png" alt=""></p>
+<p><strong>Oracle实例=内存+后台进程</strong></p>
+<p><strong>Oracle数据库=实例+物理存储结构</strong></p>
+<p>由上图可知Oracle实例（一个Instance）由内存结构和程序结构组成，内存结构主要是SGA，程序结构主要是后台进程。</p>
+<p>物理存储结构主要是数据库文件。</p>
+<p>这次仔细学习了Oracle实例的具体内容。</p>
+<h2 id="为什么oracle数据库做的这么复杂">为什么Oracle数据库做的这么复杂？</h2>
+<p><strong>内存</strong></p>
+<ul>
+<li>数据查询的速度</li>
+<li>更好的提升数据处理的速度</li>
+</ul>
+<p><strong>后台进程</strong></p>
+<ul>
+<li>为了完成特定的任务的服务进程</li>
+</ul>
+<p><strong>数据文件</strong></p>
+<ul>
+<li>数据的永久性保存</li>
+<li>也是数据库性能下降的主要原因</li>
+</ul>
+<h2 id="实例之内存结构">实例之内存结构</h2>
+<h3 id="system-global-areasga">System global area(SGA)</h3>
+<p>SGA区包括Oracle实例需要的一系列内存组件，用于存放数据信息和数据控制信息，这些<strong>内存信息被所有进程所共享</strong>。SGA的各个组成包括：</p>
+<table>
+<thead>
+<tr>
+<th align="left">组成</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><strong>Database buffer cache</strong></td>
+<td align="left">数据库高速缓冲区，里面存放着从磁盘读取到内存的数据块，这些数据块可以被所有的会话访问，是全局共享的。buffer cache分为三个部分，分别是default pool，keep pool，recycle pool。default pool是正常情况下，数据块存放的内存区域，default pool会根据一个过期算法（LRU，Least Recently Used，近期最少使用）将过期的脏数据（修改过的数据，没有修改的数据可以不写到磁盘上）写到磁盘上。keep pool这个区域用于将一些数据始终固定在内存中。recycle pool存放一些不经常使用的数据块，避免这些数据块在default pool中占据空间。</td>
+</tr>
+<tr>
+<td align="left"><strong>Shared pool</strong></td>
+<td align="left">共享池缓存着一些用户可以共用的信息：1、可以重新使用的SQL语句  2、存放一些数据字典的信息，包括用户账户数据，表，索引，权限等等。  3、存储存放在数据库中的可执行代码。</td>
+</tr>
+<tr>
+<td align="left"><strong>Redo log buffer</strong></td>
+<td align="left">重做日志缓冲区，存放着数据库操作产生的redo数据，Redo log buffer以循环的方式写入，当redo log已经写到磁盘后，就可以被后续的日志数据覆盖。</td>
+</tr>
+<tr>
+<td align="left"><strong>Large pool</strong></td>
+<td align="left">对数据的处理不适用LRU算法，比shared pool更搞笑的内存收取方式。并行执行时会使用large pool。Rman备份时启动并行备份方式时，使用large pool。</td>
+</tr>
+<tr>
+<td align="left"><strong>Java pool</strong></td>
+<td align="left">这块内存区域用来存放所有特定会话的JVM（Java Virtual Machine）中的java代码和数据。</td>
+</tr>
+<tr>
+<td align="left"><strong>Streams pool</strong></td>
+<td align="left">里面存放着流相关的信息，比如流队列，其中也会流复制中capture进程提供进程内存空间。Streams pool只为流复制提供内存空间，如果没有手工配置，也没有配置流复制，这个空间将设置为0。</td>
+</tr>
+<tr>
+<td align="left"><strong>Result cache</strong></td>
+<td align="left">结果缓存，当表的访问方式以读为主前提下，从一张大表中过滤出少量的记录作为结果集，把查询结果集放入result cache，后续相同的查询语句可以直接从result cache里获取想要的结果，省去了CPU、I/O上的开销。这个SGA组件加速了频繁运行的查询语句的执行速度。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="program-global-areapga">Program global area(PGA)</h3>
+<p>不同于SGA，PGA属于独占式内存区，它的数据和控制信息为某个会话所独有，当一个会话产生时，Oracle会为这个会话分配一个PGA内存区域。可以理解为操作系统在一个进程启动时，为他分配的内存空间，是一个操作系统含义上的内存区。</p>
+<h3 id="user-global-areauga">User global Area(UGA)</h3>
+<p>UGA中保存和当前会话相关的信息，比如会话登录的信息，pl/sql的变量，绑定变量的值等等。UGA随着连接方式不一样可以在SGA中也可以在PGA中。</p>
+<h3 id="software-code-areas">Software code areas</h3>
+<p>Oracle存放自身软件代码的一部分内存区，不允许其他会话访问</p>
+<h2 id="后台进程">后台进程</h2>
+<p><strong>Oracle的进程</strong></p>
+<p>用户进程	user process</p>
+<p>服务器进程 server process</p>
+<p>实例后台进程 background process</p>
+<p><strong>windows查看Oracle有哪些后台进程</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SQL&gt; select program from v$session where program like &#39;ORACLE.EXE%&#39;;
+
+PROGRAM
+----------------------------------------------------------------
+ORACLE.EXE (GEN0)
+ORACLE.EXE (DIA0)
+ORACLE.EXE (CKPT)
+ORACLE.EXE (MMNL)
+ORACLE.EXE (RVWR)
+ORACLE.EXE (ARC0)
+ORACLE.EXE (QMNC)
+ORACLE.EXE (ARC1)
+ORACLE.EXE (DIAG)
+ORACLE.EXE (MMAN)
+ORACLE.EXE (SMON)
+
+PROGRAM
+----------------------------------------------------------------
+ORACLE.EXE (Q001)
+ORACLE.EXE (SMCO)
+ORACLE.EXE (PMON)
+ORACLE.EXE (DBRM)
+ORACLE.EXE (DBW0)
+ORACLE.EXE (RECO)
+ORACLE.EXE (ARC2)
+ORACLE.EXE (Q002)
+ORACLE.EXE (CJQ0)
+ORACLE.EXE (W000)
+ORACLE.EXE (VKTM)
+
+PROGRAM
+----------------------------------------------------------------
+ORACLE.EXE (PSP0)
+ORACLE.EXE (LGWR)
+ORACLE.EXE (MMON)
+ORACLE.EXE (ARC3)
+
+已选择26行。
+</code></pre></td></tr></table>
+</div>
+</div><p>下面重点看一些Oracle后台进程（链接内存和磁盘的桥梁）</p>
+<h3 id="系统监控进程smon">系统监控进程SMON</h3>
+<p>Oracle数据库至关重要的一个后台进程，SMON 是System Monitor 的缩写，意即：系统监控。</p>
+<p><strong>SMON的主要工作：</strong></p>
+<ul>
+<li>
+<p>数据库启动时的实例恢复，在RAC环境下，一个节点的SMON可以对另外一个节点做实例恢复</p>
+</li>
+<li>
+<p>清理和释放临时段上的数据（排序、临时表…）</p>
+</li>
+<li>
+<p>对于DMT（字典管理表空间），SMON可以合并连续空闲的extent</p>
+</li>
+<li>
+<p>维护回滚段的online，offline以及空间的回收</p>
+</li>
+</ul>
+<h3 id="进程监控进程pmon">进程监控进程PMON</h3>
+<p>PMON是Process Monitor的缩写，PMON主要有下面的用途：</p>
+<ul>
+<li>
+<p>在进程非正常中断后，做清理工作</p>
+</li>
+<li>
+<p>在进程abort后，PMON进行清理工作。</p>
+</li>
+<li>
+<p>PMON的第三个用途是，向Oracle TNS listener注册实例信息。</p>
+</li>
+</ul>
+<h3 id="数据库写进程dbwn">数据库写进程DBWn</h3>
+<p>DBWn是Database writer的缩写，n代表可以设置多个写进程。</p>
+<p>DBWn负责把缓冲区的脏数据写到磁盘上，DBW进程是分散地把数据写到磁盘上的。而LGWR是连续写redo log。分散写要比连续写耗时的多。</p>
+<p><strong>DBWn触发条件：</strong></p>
+<ul>
+<li>
+<p>当buffer cache空间不足时触发。</p>
+</li>
+<li>
+<p>DBWn接到checkpoint的指令时触发。</p>
+</li>
+</ul>
+<h3 id="日志写进程lgwr">日志写进程LGWR</h3>
+<p>LGWR是把SGA中redo log buffer的信息写到redo log file的进程。LGWR是顺序写入到redo log file中，因此速度很快。LGWR会在下面情况发生：</p>
+<p>1，每隔3秒钟，进行一次LGWR</p>
+<p>2，任何事务进行了commit操作</p>
+<p>3，当redo log buffer是1/3满，或者里面有1MB的数据</p>
+<p>基于以上的原因，<strong>把redo log buffer设置的很大就没必要的</strong>。</p>
+<h3 id="检查点进程ckpt">检查点进程CKPT</h3>
+<p>CKPT是checkpoint的缩写，根据checkpoint信息和DBW向磁盘写数据块的信号，CKPT更新控制文件和数据文件头。 Checkpoint information includes the checkpoint position, SCN, location in online redo log to begin recovery, and so on. CKPT 既不向数据文件中写数据块，也不向online redo log files写redo块。</p>
+<h3 id="归档进程arcn">归档进程ARCn</h3>
+<p>ARCn，Archive归档进程。ARCn的工作是在LGWR把onlone redo log填满后，ARCn把redo log file的内容copy到其他的地方。（也就是说是把联机重做日志变成归档日志）。online redo log 是被用来为实例失败的时候，恢复数据文件。而归档日志是被用来在media recovery的时候，恢复数据文件。</p>
+<h3 id="checkpoint和commit的区别">checkpoint和commit的区别</h3>
+<p><strong>commit</strong>的作用是提交那些事务修改的数据产生的日志，即触发LGWR将redo log buffer中的内容写到redo log files，此时并没有把真正的数据写到磁盘上。<strong>commit的目的就是为了写到redo log files中去保护数据。</strong></p>
+<p><strong>checkpoint</strong>会触发DBWn进程，将脏数据块写到数据文件中。如果DBWR进程要将事务的结果写入数据文件，但发现要写入的脏数据块相关的重做信息仍然处于重做日志缓存中，它将通知oracle启动LGWR进程，先将这些重做信息写入重做日志文件，直到重做信息全部被写入后，DBWR进程才开始将脏缓存写入数据文件。所以<strong>checkpoint的目的是保证数据一致性。</strong></p>
+<p>参考：</p>
+<p><a href="https://docs.oracle.com/cd/E25054_01/server.1111/e10897/instance.htm">Oracle官网-Managing the Oracle Instance</a></p>
+<p><a href="https://docs.oracle.com/cd/E29597_01/server.1111/e25789/process.htm">Oracle官网-Process Architecture</a></p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-03-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Oracle/">Oracle</a>
+          <a href="/tags/%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/">内存结构</a>
+          <a href="/tags/%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/">后台进程</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2016/03/16/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E5%92%8C%E6%97%A5%E5%BF%97%E6%8C%96%E6%8E%98/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">重做日志和日志挖掘</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/03/16/DBA%E6%97%A5%E5%B8%B8%E5%B7%A5%E4%BD%9C%E5%92%8C%E8%81%8C%E8%B4%A3/">
+            <span class="next-text nav-default">DBA日常工作和职责</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

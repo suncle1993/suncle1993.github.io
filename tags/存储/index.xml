@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>存储 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%AD%98%E5%82%A8/</link>
+    <description>Recent content in 存储 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 Mar 2016 15:08:49 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%AD%98%E5%82%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Oracle数据结构</title>
+      <link>https://suncle.me/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
+      <pubDate>Wed, 16 Mar 2016 15:08:49 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
+      <description>&lt;h2 id=&#34;oracle的数据存储结构&#34;&gt;Oracle的数据存储结构&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Oracle%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;表空间（tablespace）&amp;ndash;Oracle中最大的逻辑存储单位&lt;/li&gt;
+&lt;li&gt;数据文件（data file）&amp;ndash;表空间物理存储载体&lt;/li&gt;
+&lt;li&gt;段（segment）&amp;ndash;Oracle中所有占用空间的对象的总称&lt;/li&gt;
+&lt;li&gt;extend&amp;ndash;段的组成单位&lt;/li&gt;
+&lt;li&gt;数据块（data block）&amp;ndash;extend的组成单位，是Oracle存储和数据操作的最小单位。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;数据块&#34;&gt;数据块&lt;/h2&gt;
+&lt;p&gt;数据块是Oracle存储和数据操作的最小单位，但不一定和操作系统的os块相同，一个数据块可能有多个os块构成。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-%E6%95%B0%E6%8D%AE%E5%9D%97%E5%92%8Cos%E5%9D%97.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

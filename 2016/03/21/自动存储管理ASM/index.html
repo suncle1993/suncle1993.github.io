@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>自动存储管理ASM - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="参考资料：
+https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036
+什么是ASM？ ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。
+In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.
+为什么使用ASM？  提供高效率的存储管理 提供完整的集群文件系统和卷管理能力  ASM的优点：
+Mirroring and Striping（镜像化和条带化）
+条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。
+ASM镜像化选项:
+   Mirroring Option Description     2-way mirroring Each extent has 1 mirrored copy.   3-way mirroring Each extent has 2 mirrored copies.   Unprotected ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="自动存储管理ASM" />
+<meta property="og:description" content="参考资料：
+https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036
+什么是ASM？
+ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。
+In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.
+为什么使用ASM？
+
+提供高效率的存储管理
+提供完整的集群文件系统和卷管理能力
+
+ASM的优点：
+Mirroring and Striping（镜像化和条带化）
+条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。
+ASM镜像化选项:
+
+
+
+Mirroring Option
+Description
+
+
+
+
+2-way mirroring
+Each extent has 1 mirrored copy.
+
+
+3-way mirroring
+Each extent has 2 mirrored copies.
+
+
+Unprotected
+ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/" />
+<meta property="article:published_time" content="2016-03-21T10:08:50+00:00" />
+<meta property="article:modified_time" content="2016-03-21T10:08:50+00:00" />
+<meta itemprop="name" content="自动存储管理ASM">
+<meta itemprop="description" content="参考资料：
+https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036
+什么是ASM？
+ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。
+In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.
+为什么使用ASM？
+
+提供高效率的存储管理
+提供完整的集群文件系统和卷管理能力
+
+ASM的优点：
+Mirroring and Striping（镜像化和条带化）
+条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。
+ASM镜像化选项:
+
+
+
+Mirroring Option
+Description
+
+
+
+
+2-way mirroring
+Each extent has 1 mirrored copy.
+
+
+3-way mirroring
+Each extent has 2 mirrored copies.
+
+
+Unprotected
+ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.
+
+
+">
+<meta itemprop="datePublished" content="2016-03-21T10:08:50+00:00" />
+<meta itemprop="dateModified" content="2016-03-21T10:08:50+00:00" />
+<meta itemprop="wordCount" content="1567">
+
+
+
+<meta itemprop="keywords" content="ASM,管理,Oracle," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="自动存储管理ASM"/>
+<meta name="twitter:description" content="参考资料：
+https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036
+什么是ASM？
+ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。
+In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.
+为什么使用ASM？
+
+提供高效率的存储管理
+提供完整的集群文件系统和卷管理能力
+
+ASM的优点：
+Mirroring and Striping（镜像化和条带化）
+条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。
+ASM镜像化选项:
+
+
+
+Mirroring Option
+Description
+
+
+
+
+2-way mirroring
+Each extent has 1 mirrored copy.
+
+
+3-way mirroring
+Each extent has 2 mirrored copies.
+
+
+Unprotected
+ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">自动存储管理ASM</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-03-21 </span>
+        <div class="post-category">
+            <a href="/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/"> Oracle数据库 </a>
+            </div>
+          <span class="more-meta"> 约 1567 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#什么是asm">什么是ASM？</a></li>
+        <li><a href="#为什么使用asm">为什么使用ASM？</a></li>
+        <li><a href="#asm的components">ASM的Components</a>
+          <ul>
+            <li><a href="#disk-groups">disk groups</a></li>
+            <li><a href="#disks">disks</a></li>
+            <li><a href="#failure-groups">failure groups</a></li>
+            <li><a href="#files">files</a></li>
+            <li><a href="#templates">templates</a></li>
+          </ul>
+        </li>
+        <li><a href="#asm架构">ASM架构</a></li>
+        <li><a href="#rebalance">Rebalance</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>参考资料：</p>
+<p><a href="https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036">https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036</a></p>
+<h2 id="什么是asm">什么是ASM？</h2>
+<p>ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。</p>
+<p>In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.</p>
+<h2 id="为什么使用asm">为什么使用ASM？</h2>
+<ul>
+<li>提供高效率的存储管理</li>
+<li>提供完整的集群文件系统和卷管理能力</li>
+</ul>
+<p><strong>ASM的优点：</strong></p>
+<p><strong>Mirroring and Striping</strong>（镜像化和条带化）</p>
+<p>条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。</p>
+<p>ASM镜像化选项:</p>
+<table>
+<thead>
+<tr>
+<th>Mirroring Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2-way mirroring</td>
+<td>Each extent has 1 mirrored copy.</td>
+</tr>
+<tr>
+<td>3-way mirroring</td>
+<td>Each extent has 2 mirrored copies.</td>
+</tr>
+<tr>
+<td>Unprotected</td>
+<td>ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dynamic Storage Configuration</strong>（动态存储配置）</p>
+<p>可以在数据库运行时更改数据库的配置，ASM会自动Rebalance。</p>
+<p><strong>ASM Instance</strong>（Oracle实例）</p>
+<p>ASM实例是一种Oracle实例，它为磁盘组、ADVM(ASM动态卷)和ACFS(ASM集群文件系统)管理元数据。所有元数据修改都是由ASM实例完成的，以隔离故障。数据库实例连接到一个ASM实例，以创建、删除、打开、关闭文件或者改变其大小，数据库实例直接读写由ASM实例管理的磁盘。Oracle在内部使用自动内存管理，很少需要对一个Oracle ASM实例进行调优。</p>
+<p><strong>Interoperability with Existing Databases</strong></p>
+<p>已存在数据库的互操作性。ASM并不会消除已存在系统的功能。</p>
+<p><strong>Single Instance and Clustered Environments</strong></p>
+<p>ASM支持单实例和集群环境。</p>
+<h2 id="asm的components">ASM的Components</h2>
+<p>ASM的五项组成：disk groups, disks, failure groups, files, and templates。</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-ASM%E7%BB%84%E4%BB%B6%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt=""></p>
+<h3 id="disk-groups">disk groups</h3>
+<p>ASM的首要组成就是disk groups，一组disk作为一个单元构成disk groups。</p>
+<p>三种disk group类型对应的镜像选择：</p>
+<table>
+<thead>
+<tr>
+<th>Disk Group Type</th>
+<th>Supported Mirroring Levels</th>
+<th>Default Mirroring Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal redundancy</td>
+<td>2-way3-wayUnprotected (none)</td>
+<td>2-way</td>
+</tr>
+<tr>
+<td>High redundancy</td>
+<td>3-way</td>
+<td>3-way</td>
+</tr>
+<tr>
+<td>External redundancy</td>
+<td>Unprotected (none)</td>
+<td>Unprotected</td>
+</tr>
+</tbody>
+</table>
+<h3 id="disks">disks</h3>
+<p>在windows操作系统上，disk可能是一个分区（partition），在其他的平台上可能是：</p>
+<ul>
+<li>A partition of a logical unit number (LUN)</li>
+<li>A network-attached file</li>
+</ul>
+<h3 id="failure-groups">failure groups</h3>
+<p>故障组定义了一些ASM磁盘，它们可能共用一种潜在的故障装置。故障组是磁盘组中的一个磁盘子集，这个子集内的磁盘依赖于一个必须容忍其故障的公共硬件资源。只有对于普通冗余（Normal redundancy）或高冗余（High redundancy）配置，它才非常重要。相同数据的冗余副本被放置在不同的故障组中。</p>
+<h3 id="files">files</h3>
+<p>写到ASM磁盘中的文件称为ASM文件。每个ASM文件都完全包含在单个磁盘组中，平均分布在这个组中的所有ASM磁盘上。一个ASM文件就是一个数据盘区集，每个数据盘区是分配单元的一个集合。由于在ASM文件变大时Oracle会自动增大数据盘区的大小，因此我们不能改变数据盘区的大小。</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-%E6%95%B0%E6%8D%AE%E5%9C%A8%E7%A3%81%E7%9B%98%E4%B8%AD%E7%9A%84%E5%88%86%E5%B8%83%E7%AE%A1%E7%90%86.png" alt=""></p>
+<h3 id="templates">templates</h3>
+<p>Templates是文件属性值的集合。用来给每一种类型的数据库文件设置镜像化和条带化的属性的。</p>
+<p>关于templates：</p>
+<p><a href="https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#i1019485">Managing Disk Group Templates</a></p>
+<h2 id="asm架构">ASM架构</h2>
+<p>ASM支持单实例架构和集群架构。</p>
+<p>在一个数据库服务器中，可以存在多个数据库实例，一个数据库实例可以对应一个ASM实例，也可以多个数据库实例对应一个ASM实例。单实例架构如下图：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-ASM%E5%8D%95%E5%AE%9E%E4%BE%8B%E6%9E%B6%E6%9E%84.png" alt=""></p>
+<p>ASM集群架构如下：多个ASM实例共同管理数据文件。数据库实例和ASM实例最常常见的还是一对一。</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-ASM%E7%9A%84RAC%E6%9E%B6%E6%9E%84.png" alt=""></p>
+<h2 id="rebalance">Rebalance</h2>
+<ul>
+<li>ASM rebalance 操作不会影响数据库的正常使用
+<ul>
+<li>会影响I/O效率</li>
+</ul>
+</li>
+<li>能通过数据的重新分布，使得系统的I/O得到最大的提升</li>
+<li>从Oracle 10R2之后，如果关闭数据库实例，Rebalance操作会更快。</li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-03-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/ASM/">ASM</a>
+          <a href="/tags/%E7%AE%A1%E7%90%86/">管理</a>
+          <a href="/tags/Oracle/">Oracle</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">闪回flashback</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/">
+            <span class="next-text nav-default">Rman备份恢复和管理</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

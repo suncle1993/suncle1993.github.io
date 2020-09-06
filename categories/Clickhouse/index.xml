@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Clickhouse on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/categories/Clickhouse/</link>
+    <description>Recent content in Clickhouse on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 27 Jul 2019 17:23:31 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/categories/Clickhouse/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Clickhouse创建分布式表以及表引擎介绍</title>
+      <link>https://suncle.me/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/</link>
+      <pubDate>Sat, 27 Jul 2019 17:23:31 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/</guid>
+      <description>&lt;h1 id=&#34;表引擎&#34;&gt;表引擎&lt;/h1&gt;
+&lt;p&gt;表引擎（即表的类型）决定了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据的存储方式和位置，写到哪里以及从哪里读取数据&lt;/li&gt;
+&lt;li&gt;支持哪些查询以及如何支持。&lt;/li&gt;
+&lt;li&gt;并发数据访问。&lt;/li&gt;
+&lt;li&gt;索引的使用（如果存在）。&lt;/li&gt;
+&lt;li&gt;是否可以执行多线程请求。&lt;/li&gt;
+&lt;li&gt;数据复制参数。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在读取时，引擎只需要输出所请求的列，但在某些情况下，引擎可以在响应请求时部分处理数据。&lt;/p&gt;
+&lt;p&gt;对于大多数正式的任务，应该使用MergeTree族中的引擎。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;MergeTree&lt;/code&gt; 引擎系列的基本理念如下。当你有巨量数据要插入到表中，你要高效地一批批写入数据片段，并希望这些数据片段在后台按照一定规则合并。相比在插入时不断修改（重写）数据进存储，这种策略会高效很多。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Clickhouse分布式集群搭建</title>
+      <link>https://suncle.me/2019/07/27/clickhouse-build-distributed-cluster/</link>
+      <pubDate>Sat, 27 Jul 2019 17:13:16 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/07/27/clickhouse-build-distributed-cluster/</guid>
+      <description>&lt;h1 id=&#34;目标1分片2副本的集群&#34;&gt;目标：1分片2副本的集群&lt;/h1&gt;
+&lt;p&gt;所以需要两台机器，分别是：172.31.59.118|172.31.40.79&lt;/p&gt;
+&lt;p&gt;安装参考dockerfile:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://hub.docker.com/r/yandex/clickhouse-client/dockerfile&#34;&gt;https://hub.docker.com/r/yandex/clickhouse-client/dockerfile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://hub.docker.com/r/yandex/clickhouse-server/dockerfile&#34;&gt;https://hub.docker.com/r/yandex/clickhouse-server/dockerfile&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Clickhouse简介和性能对比</title>
+      <link>https://suncle.me/2019/07/27/clickhouse-introduction-and-comparison-of-performance/</link>
+      <pubDate>Sat, 27 Jul 2019 14:13:26 +0000</pubDate>
+      
+      <guid>https://suncle.me/2019/07/27/clickhouse-introduction-and-comparison-of-performance/</guid>
+      <description>&lt;h1 id=&#34;clickhouse简介和性能对比&#34;&gt;Clickhouse简介和性能对比&lt;/h1&gt;
+&lt;p&gt;ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)。&lt;/p&gt;
+&lt;p&gt;常见的列式数据库有： Vertica、 Paraccel (Actian Matrix，Amazon Redshift)、 Sybase IQ、 Exasol、 Infobright、 InfiniDB、 MonetDB (VectorWise， Actian Vector)、 LucidDB、 SAP HANA、 Google Dremel、 Google PowerDrill、 Druid、 kdb+。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

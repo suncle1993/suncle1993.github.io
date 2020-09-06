@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>【填坑系列】Python习题集 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="求100万以内的所有素数个数 第一种方法
+思路：当前数为i，则遍历比int(sqrt(i))&#43;1小的所有数是是否都不可以整除，是，则是素数
+理论：如果遍历所有比i小的除数j并且当除数j&amp;gt;int(sqrt(i))时，如果j能整出i，那么必定存在一个小于int(sqrt(i))的数能整出i，因此我们只需只需遍历int(sqrt(i))&#43;1以内的数即可
+代码
+1 2 3 4 5 6 7 8  cnt = 0 for i in range(2,1000000): for j in range(2, int(i ** 0.5) &#43; 1): if i % j == 0: break else: cnt &#43;= 1 print(cnt)   输出结果如下
+1  78498   第二种方法
+理论
+ 假如一个整数是合数，则一定存在一个小于它的素数作为其因数。比如9是一个合数，而素数3就是它的一个因数。 假如我们知道了小于一个数的所有素数，则只需确定该数能不能被这些素数整除即可。如果不能被整除，则这个数一定是个素数。反之，则不是。 也就是说当我们获得一个素数时，可以将它所有的倍数都标记为非素数，这样当我们遍历到一个数时，他没有被任何小于它的素数标记为非素数，则可以确定该数是个素数。 比如：从2开始，在初始化时2就是素数。3是类似。遍历到4时，4已经被素数2给标记了，直接跳过  思路
+ 初始化一个大范围内的列表，初始时所有数都为素数，遍历时按照以上理论将所有的非素数标记出来即可  代码
+1 2 3 4 5 6 7 8 9 10 11 12 13  cnt = 0 is_prime = [True]*1000000 is_prime[0] = False is_prime[1] = False for i in range(2, 1000000): if is_prime[i] is False: continue cnt &#43;= 1 k = i while k * i &amp;lt; 1000000: is_prime[k * i] = False k &#43;= 1 print(cnt)   输出结果
+1  78498   " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2016/12/13/%E5%A1%AB%E5%9D%91%E7%B3%BB%E5%88%97Python%E4%B9%A0%E9%A2%98%E9%9B%86/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="【填坑系列】Python习题集" />
+<meta property="og:description" content="求100万以内的所有素数个数
+第一种方法
+思路：当前数为i，则遍历比int(sqrt(i))&#43;1小的所有数是是否都不可以整除，是，则是素数
+理论：如果遍历所有比i小的除数j并且当除数j&gt;int(sqrt(i))时，如果j能整出i，那么必定存在一个小于int(sqrt(i))的数能整出i，因此我们只需只需遍历int(sqrt(i))&#43;1以内的数即可
+代码
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+cnt = 0
+for i in range(2,1000000):
+    for j in range(2, int(i ** 0.5) &#43; 1):
+        if i % j == 0:
+            break
+    else:
+       cnt &#43;= 1 
+print(cnt)
+
+
+输出结果如下
+
+
+1
+
+
+78498
+
+
+第二种方法
+理论
+
+假如一个整数是合数，则一定存在一个小于它的素数作为其因数。比如9是一个合数，而素数3就是它的一个因数。
+假如我们知道了小于一个数的所有素数，则只需确定该数能不能被这些素数整除即可。如果不能被整除，则这个数一定是个素数。反之，则不是。
+也就是说当我们获得一个素数时，可以将它所有的倍数都标记为非素数，这样当我们遍历到一个数时，他没有被任何小于它的素数标记为非素数，则可以确定该数是个素数。
+比如：从2开始，在初始化时2就是素数。3是类似。遍历到4时，4已经被素数2给标记了，直接跳过
+
+思路
+
+初始化一个大范围内的列表，初始时所有数都为素数，遍历时按照以上理论将所有的非素数标记出来即可
+
+代码
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+
+
+cnt = 0
+is_prime = [True]*1000000
+is_prime[0] = False
+is_prime[1] = False
+for i in range(2, 1000000):
+    if is_prime[i] is False:
+        continue
+    cnt &#43;= 1
+    k = i
+    while k * i &lt; 1000000:
+        is_prime[k * i] = False
+        k &#43;= 1
+print(cnt)
+
+
+输出结果
+
+
+1
+
+
+78498
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2016/12/13/%E5%A1%AB%E5%9D%91%E7%B3%BB%E5%88%97Python%E4%B9%A0%E9%A2%98%E9%9B%86/" />
+<meta property="article:published_time" content="2016-12-13T22:01:08+00:00" />
+<meta property="article:modified_time" content="2016-12-13T22:01:08+00:00" />
+<meta itemprop="name" content="【填坑系列】Python习题集">
+<meta itemprop="description" content="求100万以内的所有素数个数
+第一种方法
+思路：当前数为i，则遍历比int(sqrt(i))&#43;1小的所有数是是否都不可以整除，是，则是素数
+理论：如果遍历所有比i小的除数j并且当除数j&gt;int(sqrt(i))时，如果j能整出i，那么必定存在一个小于int(sqrt(i))的数能整出i，因此我们只需只需遍历int(sqrt(i))&#43;1以内的数即可
+代码
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+cnt = 0
+for i in range(2,1000000):
+    for j in range(2, int(i ** 0.5) &#43; 1):
+        if i % j == 0:
+            break
+    else:
+       cnt &#43;= 1 
+print(cnt)
+
+
+输出结果如下
+
+
+1
+
+
+78498
+
+
+第二种方法
+理论
+
+假如一个整数是合数，则一定存在一个小于它的素数作为其因数。比如9是一个合数，而素数3就是它的一个因数。
+假如我们知道了小于一个数的所有素数，则只需确定该数能不能被这些素数整除即可。如果不能被整除，则这个数一定是个素数。反之，则不是。
+也就是说当我们获得一个素数时，可以将它所有的倍数都标记为非素数，这样当我们遍历到一个数时，他没有被任何小于它的素数标记为非素数，则可以确定该数是个素数。
+比如：从2开始，在初始化时2就是素数。3是类似。遍历到4时，4已经被素数2给标记了，直接跳过
+
+思路
+
+初始化一个大范围内的列表，初始时所有数都为素数，遍历时按照以上理论将所有的非素数标记出来即可
+
+代码
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+
+
+cnt = 0
+is_prime = [True]*1000000
+is_prime[0] = False
+is_prime[1] = False
+for i in range(2, 1000000):
+    if is_prime[i] is False:
+        continue
+    cnt &#43;= 1
+    k = i
+    while k * i &lt; 1000000:
+        is_prime[k * i] = False
+        k &#43;= 1
+print(cnt)
+
+
+输出结果
+
+
+1
+
+
+78498
+
+
+">
+<meta itemprop="datePublished" content="2016-12-13T22:01:08+00:00" />
+<meta itemprop="dateModified" content="2016-12-13T22:01:08+00:00" />
+<meta itemprop="wordCount" content="4082">
+
+
+
+<meta itemprop="keywords" content="practice,习题,Python," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="【填坑系列】Python习题集"/>
+<meta name="twitter:description" content="求100万以内的所有素数个数
+第一种方法
+思路：当前数为i，则遍历比int(sqrt(i))&#43;1小的所有数是是否都不可以整除，是，则是素数
+理论：如果遍历所有比i小的除数j并且当除数j&gt;int(sqrt(i))时，如果j能整出i，那么必定存在一个小于int(sqrt(i))的数能整出i，因此我们只需只需遍历int(sqrt(i))&#43;1以内的数即可
+代码
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+cnt = 0
+for i in range(2,1000000):
+    for j in range(2, int(i ** 0.5) &#43; 1):
+        if i % j == 0:
+            break
+    else:
+       cnt &#43;= 1 
+print(cnt)
+
+
+输出结果如下
+
+
+1
+
+
+78498
+
+
+第二种方法
+理论
+
+假如一个整数是合数，则一定存在一个小于它的素数作为其因数。比如9是一个合数，而素数3就是它的一个因数。
+假如我们知道了小于一个数的所有素数，则只需确定该数能不能被这些素数整除即可。如果不能被整除，则这个数一定是个素数。反之，则不是。
+也就是说当我们获得一个素数时，可以将它所有的倍数都标记为非素数，这样当我们遍历到一个数时，他没有被任何小于它的素数标记为非素数，则可以确定该数是个素数。
+比如：从2开始，在初始化时2就是素数。3是类似。遍历到4时，4已经被素数2给标记了，直接跳过
+
+思路
+
+初始化一个大范围内的列表，初始时所有数都为素数，遍历时按照以上理论将所有的非素数标记出来即可
+
+代码
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+
+
+cnt = 0
+is_prime = [True]*1000000
+is_prime[0] = False
+is_prime[1] = False
+for i in range(2, 1000000):
+    if is_prime[i] is False:
+        continue
+    cnt &#43;= 1
+    k = i
+    while k * i &lt; 1000000:
+        is_prime[k * i] = False
+        k &#43;= 1
+print(cnt)
+
+
+输出结果
+
+
+1
+
+
+78498
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">【填坑系列】Python习题集</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-12-13 </span>
+        <div class="post-category">
+            <a href="/categories/Python/"> Python </a>
+            </div>
+          <span class="more-meta"> 约 4082 字 </span>
+          <span class="more-meta"> 预计阅读 9 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#求100万以内的所有素数个数">求100万以内的所有素数个数</a></li>
+        <li><a href="#打印九九乘法表">打印九九乘法表</a></li>
+        <li><a href="#求几何级数的第n项">求几何级数的第N项</a></li>
+        <li><a href="#求菲波那切数列的第101位">求菲波那切数列的第101位</a></li>
+        <li><a href="#求杨辉三角第n行第k列的值">求杨辉三角第n行第k列的值</a></li>
+        <li><a href="#字符串转化为数值">字符串转化为数值</a></li>
+        <li><a href="#移除一个列表中的重复元素并保持列表原来的顺序">移除一个列表中的重复元素，并保持列表原来的顺序</a></li>
+        <li><a href="#扁平化字典">扁平化字典</a></li>
+        <li><a href="#实现base64编码解码算法">实现base64编码解码算法</a></li>
+        <li><a href="#实现计数器可以指定基数和步长">实现计数器，可以指定基数和步长</a></li>
+        <li><a href="#查找两个字符串的最长公共子串">查找两个字符串的最长公共子串</a></li>
+        <li><a href="#实现命令分发器">实现命令分发器</a></li>
+        <li><a href="#实现ls命令">实现ls命令</a></li>
+        <li><a href="#实现find命令">实现find命令</a></li>
+        <li><a href="#实现cp命令">实现cp命令</a></li>
+        <li><a href="#实现linkedlist">实现LinkedList</a></li>
+        <li><a href="#实现优先队列">实现优先队列</a></li>
+        <li><a href="#实现字典">实现字典</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="求100万以内的所有素数个数">求100万以内的所有素数个数</h2>
+<p><strong>第一种方法</strong></p>
+<p><strong>思路</strong>：当前数为i，则遍历比int(sqrt(i))+1小的所有数是是否都不可以整除，是，则是素数</p>
+<p><strong>理论</strong>：如果遍历所有比i小的除数j并且当除数j&gt;int(sqrt(i))时，如果j能整出i，那么必定存在一个小于int(sqrt(i))的数能整出i，因此我们只需只需遍历int(sqrt(i))+1以内的数即可</p>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1000000</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+       <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span> 
+<span class="k">print</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">78498
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>第二种方法</strong></p>
+<p><strong>理论</strong></p>
+<ul>
+<li>假如一个整数是合数，则一定存在一个小于它的素数作为其因数。比如9是一个合数，而素数3就是它的一个因数。</li>
+<li>假如我们知道了小于一个数的所有素数，则只需确定该数能不能被这些素数整除即可。如果不能被整除，则这个数一定是个素数。反之，则不是。</li>
+<li>也就是说当我们获得一个素数时，可以将它所有的倍数都标记为非素数，这样当我们遍历到一个数时，他没有被任何小于它的素数标记为非素数，则可以确定该数是个素数。</li>
+<li>比如：从2开始，在初始化时2就是素数。3是类似。遍历到4时，4已经被素数2给标记了，直接跳过</li>
+</ul>
+<p><strong>思路</strong></p>
+<ul>
+<li>初始化一个大范围内的列表，初始时所有数都为素数，遍历时按照以上理论将所有的非素数标记出来即可</li>
+</ul>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">is_prime</span> <span class="o">=</span> <span class="p">[</span><span class="bp">True</span><span class="p">]</span><span class="o">*</span><span class="mi">1000000</span>
+<span class="n">is_prime</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">is_prime</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">is_prime</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">while</span> <span class="n">k</span> <span class="o">*</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000000</span><span class="p">:</span>
+        <span class="n">is_prime</span><span class="p">[</span><span class="n">k</span> <span class="o">*</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">78498
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="打印九九乘法表">打印九九乘法表</h2>
+<p><strong>思路</strong>：每一次内层循环j只要循环到外层循环i即可</p>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python </span>
+<span class="c1">#coding=utf-8</span>
+
+<span class="k">def</span> <span class="nf">multiplicationTable</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">r</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="n">j</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">%d</span><span class="s2">*</span><span class="si">%d</span><span class="s2">=</span><span class="si">%-3d</span><span class="s2">&#34;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">r</span><span class="p">),</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">multiplicationTable</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">1*1=1   
+
+2*1=2   2*2=4   
+
+3*1=3   3*2=6   3*3=9   
+
+4*1=4   4*2=8   4*3=12  4*4=16  
+
+5*1=5   5*2=10  5*3=15  5*4=20  5*5=25  
+
+6*1=6   6*2=12  6*3=18  6*4=24  6*5=30  6*6=36  
+
+7*1=7   7*2=14  7*3=21  7*4=28  7*5=35  7*6=42  7*7=49  
+
+8*1=8   8*2=16  8*3=24  8*4=32  8*5=40  8*6=48  8*7=56  8*8=64  
+
+9*1=9   9*2=18  9*3=27  9*4=36  9*5=45  9*6=54  9*7=63  9*8=72  9*9=81  
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="求几何级数的第n项">求几何级数的第N项</h2>
+<p><strong>思路</strong></p>
+<ul>
+<li>几何级数的形式是：<code>a+a*q+a*q^2+a*q^3+...+a*q^n</code></li>
+<li>需要输入的项是：a,q,n</li>
+</ul>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># !/user/bin/env python</span>
+<span class="c1"># coding = utf-8</span>
+
+<span class="n">a</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;请输入几何级数的a: &#39;</span><span class="p">))</span>
+<span class="n">q</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;请输入几何级数的q: &#39;</span><span class="p">))</span>
+<span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;请输入几何级数的n: &#39;</span><span class="p">))</span>
+<span class="nb">sum</span><span class="o">=</span><span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">q</span>  <span class="o">**</span> <span class="n">i</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输入输出结果如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">请输入几何级数的a: 3
+请输入几何级数的q: 2
+请输入几何级数的n: 4
+93
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="求菲波那切数列的第101位">求菲波那切数列的第101位</h2>
+<p>先写出递推公式再来写实现，递推公式如下</p>
+<p><strong>思路</strong></p>
+<ul>
+<li>fib[0]=1    当i=0</li>
+<li>fib[1]=1    当i=1</li>
+<li>fib[i]=fib[i-1]+fib[i-2]    当i&gt;1</li>
+<li>fib的第101位也就是fib[100]=fib[99]+fib[98]</li>
+</ul>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">101</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">c</span>
+<span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">573147844013817084101
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="求杨辉三角第n行第k列的值">求杨辉三角第n行第k列的值</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python  </span>
+<span class="c1"># encoding: utf-8  </span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 2/26/17 5:03 PM
+</span><span class="s2">@author: Flowsnow
+</span><span class="s2">@file: YangHuiTriangle.py
+</span><span class="s2">@function: 求杨辉三角第n行第k列的值
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+
+<span class="k">def</span> <span class="nf">yang_hui_triangle</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">lst</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">yang_hui_triangle</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="字符串转化为数值">字符串转化为数值</h2>
+<p>描述：把字符串形式的整数或浮点数转化为int或float， 不使用int和float函数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python  </span>
+<span class="c1"># encoding: utf-8  </span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 2/26/17 5:52 PM
+</span><span class="s2">@author: Flowsnow
+</span><span class="s2">@file: str2num.py 
+</span><span class="s2">@function: 把字符串形式的整数或浮点数转化为int或float， 不使用int和float函数
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+
+<span class="k">def</span> <span class="nf">str2num</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)}</span>
+    <span class="n">i</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="c1"># print(i, f)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="n">f</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">idx</span>
+    <span class="k">return</span> <span class="n">ret</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">**</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;1230.0541640&#39;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">str2num</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="移除一个列表中的重复元素并保持列表原来的顺序">移除一个列表中的重复元素，并保持列表原来的顺序</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">#!/usr/bin/env python  
+# encoding: utf-8  
+
+&#34;&#34;&#34;
+Created on 2/26/17 6:30 PM
+@author: Flowsnow
+@file: rm_elements.py 
+@function: 移除一个列表中的重复元素，并保持列表原来的顺序
+&#34;&#34;&#34;
+
+def remove_elements(lst: str):
+    ret = []
+    for x in lst:
+        if x not in ret:
+            ret.append(x)
+    return ret
+
+if __name__ == &#39;__main__&#39;:
+    lst = [1, 2, 4, 5, 2, 3, 1, 2, 6, 7, 8, 3, 2, 3, 4]
+    print(remove_elements(lst))
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="扁平化字典">扁平化字典</h2>
+<p><strong>例如：</strong></p>
+<ul>
+<li>{&lsquo;a&rsquo;: {&lsquo;b&rsquo;: 1}} 扁平化之后是 {&lsquo;a.b&rsquo;: 1}</li>
+<li>{&lsquo;a&rsquo;: {&lsquo;b&rsquo;: {&lsquo;c&rsquo;: 1, &rsquo;d&rsquo;: 2}, &lsquo;x&rsquo;: 2}}扁平化之后是{&lsquo;a.x&rsquo;: 2, &lsquo;a.b.c&rsquo;: 1, &lsquo;a.b.d&rsquo;: 2}</li>
+</ul>
+<p><strong>初始字典的特点</strong>：</p>
+<ul>
+<li>字典的每个key都是可hash的，因此不会是字典</li>
+<li>初始字典不为空字典</li>
+<li>字典的value深度可以无限嵌套</li>
+</ul>
+<p><strong>思路</strong>：使用递归，每次递归深度都会变化，也就是说路径会变化，可以使用一个path变量记录路径</p>
+<ol>
+<li>如果嵌套的v不是字典时，直接加入新元素: desDict['{}.{}'.format(path, k).lstrip(&rsquo;.')] = v</li>
+<li>如果嵌套的v为空字典时，直接用空字符串代替: desDict['{}.{}'.format(path, k).lstrip(&rsquo;.')] = '&rsquo;</li>
+<li>如果嵌套的v不为空字典时，直接增长path，并将v进行下一次递归: flatten_dict(v, desDict, path)</li>
+<li>每一次递归返回时，就说明当前深度的字典已经遍历完毕，需要减短path</li>
+<li>rstrip函数都不是原地修改，返回的都是副本</li>
+</ol>
+<p><strong>判断变量是否是字典</strong></p>
+<ul>
+<li>type()</li>
+<li>isInstance()</li>
+</ul>
+<p><strong>代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python  </span>
+<span class="c1"># encoding: utf-8  </span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 2/26/17 8:26 PM
+</span><span class="s2">@author: Flowsnow
+</span><span class="s2">@file: flatten_dict.py 
+</span><span class="s2">@function: 扁平化字典
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+
+<span class="k">def</span> <span class="nf">flatten_dict</span><span class="p">(</span><span class="n">srcDict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">desDict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>  <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">srcDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">desDict</span><span class="p">[</span><span class="s1">&#39;{}.{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="p">{}:</span>
+                <span class="n">desDict</span><span class="p">[</span><span class="s1">&#39;{}.{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;{}.{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="n">flatten_dict</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">desDict</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">srcDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}}</span>
+    <span class="c1"># srcDict = {&#39;a&#39;: {&#39;b&#39;: 1}}</span>
+    <span class="n">desDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">flatten_dict</span><span class="p">(</span><span class="n">srcDict</span><span class="p">,</span> <span class="n">desDict</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">desDict</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="实现base64编码解码算法">实现base64编码解码算法</h2>
+<p><strong>Base64编码的思想</strong></p>
+<ul>
+<li>采用64个基本的ASCII码字符对数据进行重新编码。它将需要编码的数据拆分成字节数组。以3个字节为一组。按顺序排列24 位数据，再把这24位数据分成4组，即每组6位。再在每组的的最高位前补两个0凑足一个字节。这样就把一个3字节为一组的数据重新编码成了4个字节。当所要编码的数据的字节数不是3的整倍数，也就是说在分组时最后一组不够3个字节。这时在最后一组填充1到2个0字节。并在最后编码完成后在结尾添加1到2个 “=”。</li>
+</ul>
+<p><strong>base64编码示例</strong>： 将对ABC进行BASE64编码</p>
+<ol>
+<li>首先取ABC对应的ASCII码值。A（65）B（66）C（67）；</li>
+<li>再取二进制值A（01000001）B（01000010）C（01000011）；</li>
+<li>然后把这三个字节的二进制码接起来（010000010100001001000011）；</li>
+<li>再以6位为单位分成4个数据块,并在最高位填充两个0后形成4个字节的编码后的值，（00010000）（00010100）（00001001）（00000011）</li>
+<li>再把这四个字节数据转化成10进制数得（16）（20）（9）（3）；</li>
+<li>最后根据BASE64给出的64个基本字符表，查出对应的ASCII码字符（Q）（U）（J）（D），这里的值实际就是数据在字符表中的索引。</li>
+</ol>
+<p><strong>base64字符表</strong>： 最多六个字节，因此最范围是0~63，所以总共64个字符</p>
+<ul>
+<li>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/</li>
+</ul>
+<p><strong>字符和ascii码之间的转换</strong>：单个字符</p>
+<ul>
+<li>ord 字符转换成ascii</li>
+<li>chr ascii转换成字符</li>
+</ul>
+<p><strong>字符串和ascii码之间的转换</strong>：字符串</p>
+<ul>
+<li>map(ord, &ldquo;a test String: 123456&rdquo;)</li>
+</ul>
+<p><strong>加密示例</strong></p>
+<ul>
+<li><strong>CBdaF3FV</strong>的编码结果是<strong>Q0JkYUYzRlY=</strong></li>
+<li><strong>CBdaF34FV</strong>的编码结果是<strong>Q0JkYUYzNEZW</strong></li>
+<li><strong>CdaF3FV</strong>的编码结果是<strong>Q2RhRjNGVg==</strong></li>
+<li><strong>ABC</strong>的编码结果是<strong>QUJD</strong></li>
+</ul>
+<p><strong>作用</strong></p>
+<ul>
+<li>主要用做把二进制转换成字符串</li>
+</ul>
+<p><strong>代码1：作为字符串处理</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># base64编码</span>
+<span class="k">def</span> <span class="nf">base64Encode</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">base64StrList</span> <span class="o">=</span> <span class="s1">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#39;</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">bList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">ord</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+    <span class="n">bStr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="c1">#print(bList)</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bList</span><span class="p">:</span>
+        <span class="n">tmpS</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">bStr</span> <span class="o">+=</span> <span class="s1">&#39;0&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmpS</span><span class="p">))</span> <span class="o">+</span> <span class="n">tmpS</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;0b&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">bStr</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bStr</span><span class="p">):</span>
+        <span class="n">tmpX</span> <span class="o">=</span> <span class="n">bStr</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="o">+</span><span class="mi">6</span><span class="p">]</span>
+        <span class="c1">#print(tmpX)</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="n">base64StrList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tmpX</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">6</span>
+    <span class="n">rest</span> <span class="o">=</span> <span class="n">bStr</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rest</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="n">base64StrList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">rest</span> <span class="o">+</span> <span class="s1">&#39;0000&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;==&#39;</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">rest</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="n">base64StrList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">rest</span> <span class="o">+</span> <span class="s1">&#39;00&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;=&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="n">base64StrList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span> <span class="c1"># 在while部分处理之后剩下一个完整的6位</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+
+
+<span class="c1"># base64解码</span>
+<span class="k">def</span> <span class="nf">base64Decode</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">base64StrList</span> <span class="o">=</span> <span class="s1">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#39;</span>
+    <span class="n">bStr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;=&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">base64StrList</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">bStr</span> <span class="o">+=</span> <span class="s1">&#39;0&#39;</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">s1</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;0b&#39;</span><span class="p">)</span>
+
+    <span class="n">cnt</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span>
+    <span class="n">bStr</span> <span class="o">=</span> <span class="n">bStr</span><span class="p">[:</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">cnt</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">bStr</span><span class="p">)]</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bStr</span><span class="p">):</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">bStr</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">]</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">bStr</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">8</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>代码2：作为字节数组处理</strong></p>
+<p>优点：字节数组+位运算，提高处理速度，减少内存占用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python  </span>
+<span class="c1"># encoding: utf-8  </span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 2/26/17 9:11 PM
+</span><span class="s2">@author: Flowsnow
+</span><span class="s2">@file: base64.py 
+</span><span class="s2">@function: 实现base64编码解码算法:字节数组+位运算
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+
+<span class="c1"># base64编码</span>
+<span class="k">def</span> <span class="nf">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#39;</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">:</span> <span class="n">x</span><span class="p">],</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span>   <span class="c1"># bytes to int</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="n">encoded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">24</span> <span class="o">-</span> <span class="n">j</span><span class="o">*</span><span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x3f</span><span class="p">])</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="mi">3</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">c</span>
+    <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">:],</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="o">-</span><span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="o">-</span><span class="p">(</span><span class="mi">3</span><span class="o">-</span><span class="n">r</span><span class="p">)):</span>
+            <span class="n">encoded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">24</span> <span class="o">-</span> <span class="n">j</span><span class="o">*</span><span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x3f</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="o">-</span><span class="n">r</span><span class="p">):</span>
+            <span class="n">encoded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;big&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">encoded</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+
+<span class="c1"># base64解码</span>
+<span class="k">def</span> <span class="nf">b64decode</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="s1">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#39;</span>
+    <span class="n">decoded</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">s</span><span class="p">:</span><span class="n">e</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s1">&#39;=&#39;</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">+=</span> <span class="n">table</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">+=</span> <span class="mi">0</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span>
+        <span class="n">decoded</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;big&#39;</span><span class="p">))</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="mi">4</span>
+    <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;abc&#39;</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">b64decode</span><span class="p">(</span><span class="s1">&#39;YWJj&#39;</span><span class="p">))</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="实现计数器可以指定基数和步长">实现计数器，可以指定基数和步长</h2>
+<p>生成器和匿名函数的使用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python  </span>
+<span class="c1"># encoding: utf-8  </span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 2/27/17 9:30 AM
+</span><span class="s2">@author: Flowsnow
+</span><span class="s2">@file: make_inc.py 
+</span><span class="s2">@function: 实现计数器，可以指定基数和步长
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+
+<span class="k">def</span> <span class="nf">make_inc</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">counter</span><span class="p">():</span>
+        <span class="n">nonlocal</span> <span class="n">base</span>
+        <span class="n">nonlocal</span> <span class="n">step</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="n">step</span>
+            <span class="k">yield</span> <span class="n">x</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">counter</span><span class="p">()</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># inc这个函数封装了一个生成器c，并且每次调用inc的时候都是在执行next(c)</span>
+    <span class="n">inc</span> <span class="o">=</span> <span class="n">make_inc</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">inc</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">inc</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">inc</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">inc</span><span class="p">())</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="查找两个字符串的最长公共子串">查找两个字符串的最长公共子串</h2>
+<ul>
+<li>暴力法： 找出两个字符串各自所有的子串，然后一一比较，更新最长的值</li>
+<li>动态规划：
+<ol>
+<li>两个字符串分别为s1和s2</li>
+<li>s1[i]和s2[j]分别表示其第i和第j个字符(字符顺序从0开始)</li>
+<li>令L[i, j]表示以s1[i]和s2[j]为结尾的相同子串的最大长度。</li>
+<li>L[i, j] = L[i-1, j-1] + 1 如果s1[i] == s2[j]</li>
+<li>L[i, j] = 0 如果s1[i] != s2[j]</li>
+</ol>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python  </span>
+<span class="c1"># encoding: utf-8  </span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 2/27/17 9:48 AM
+</span><span class="s2">@author: Flowsnow
+</span><span class="s2">@file: longest_common_substring.py 
+</span><span class="s2">@function: 
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+
+<span class="k">def</span> <span class="nf">longest_common_substring</span><span class="p">(</span><span class="n">s1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span><span class="n">s2</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">dp</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">maxL</span> <span class="o">=</span> <span class="mi">0</span>    <span class="c1"># 记录子串的最长长度</span>
+    <span class="n">maxI</span> <span class="o">=</span> <span class="mi">0</span>    <span class="c1"># 记录子串最长的下标</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">s1</span><span class="p">):</span>
+        <span class="n">dp</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">s2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxL</span><span class="p">:</span>
+                    <span class="n">maxI</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="n">maxL</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s1</span><span class="p">[</span><span class="n">maxI</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">maxL</span><span class="p">:</span> <span class="n">maxI</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>    <span class="c1"># maxI是下标</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dp</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="s1">&#39;I-love-Python&#39;</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="s1">&#39;snow-love-other&#39;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">longest_common_substring</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="s1">&#39;-love-&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="实现命令分发器">实现命令分发器</h2>
+<p>实现函数可带任意参数(可变参数除外)，解析参数并要求用户输入</p>
+<h2 id="实现ls命令">实现ls命令</h2>
+<p>实现 -l -a -h 选项</p>
+<h2 id="实现find命令">实现find命令</h2>
+<p>实现 -name -type -ctime -mtime -cnewer -executable -newer -gid -uid 测试</p>
+<h2 id="实现cp命令">实现cp命令</h2>
+<p>实现 -r -p选项</p>
+<h2 id="实现linkedlist">实现LinkedList</h2>
+<p>函数实现</p>
+<p>类实现</p>
+<h2 id="实现优先队列">实现优先队列</h2>
+<p>函数实现</p>
+<p>类实现</p>
+<h2 id="实现字典">实现字典</h2>
+<p>函数实现</p>
+<p>类实现</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-12-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/practice/">practice</a>
+          <a href="/tags/%E4%B9%A0%E9%A2%98/">习题</a>
+          <a href="/tags/Python/">Python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2016/12/23/Python%E8%A7%A3%E6%9E%84%E4%B8%8E%E5%B0%81%E8%A3%85/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Python解构与封装</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/12/04/Python%E7%AD%94%E7%96%91%E8%A7%A3%E6%83%91/">
+            <span class="next-text nav-default">Python答疑解惑</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

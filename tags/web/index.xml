@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>web on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/web/</link>
+    <description>Recent content in web on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 22 May 2017 00:52:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python实现通用web框架</title>
+      <link>https://suncle.me/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/</link>
+      <pubDate>Mon, 22 May 2017 00:52:13 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/</guid>
+      <description>概述 Python WSGI规定了Web服务器和Python Web应用程序或Web框架之间的标准接口，主要是为了促进Web应用程序在各种Web服务器上的可</description>
+    </item>
+    
+    <item>
+      <title>Python-WSGI接口</title>
+      <link>https://suncle.me/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/</link>
+      <pubDate>Fri, 07 Apr 2017 21:41:08 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/</guid>
+      <description>&lt;p&gt;Python WSGI规定了Web服务器和Python Web应用程序或Web框架之间的标准接口，主要是为了促进Web应用程序在各种Web服务器上的可移植性。&lt;/p&gt;
+&lt;p&gt;上述这句话翻译自Python官方的PEP333标准：&lt;a href=&#34;https://www.python.org/dev/peps/pep-0333/&#34;&gt;PEP 333 &amp;ndash; Python Web Server Gateway Interface v1.0&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;wsgi接口概述&#34;&gt;WSGI接口概述&lt;/h1&gt;
+&lt;p&gt;WSGI的含义：Web Server Gateway Interface（Web服务器网管接口）。&lt;/p&gt;
+&lt;p&gt;WSGI接口包含两方面：server/gateway端 及 application/framework端。后面直接使用server和application来说明，不再使用gateway和framework。server端直接调用application端提供的&lt;strong&gt;可调用对象&lt;/strong&gt;。另外在server和application之间还可以有一种称作middleware的中间件。中间件对于server来说就是一个application，但是对于application来说中间件却是一个server。&lt;/p&gt;
+&lt;p&gt;上述可调用对象是指：函数、方法、类或者带有&lt;code&gt;__call__&lt;/code&gt;方法的实例。&lt;/p&gt;
+&lt;p&gt;以下分别介绍application端，Server端和middleware三个部分&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

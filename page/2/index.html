@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="关注Python、Goalng的web后端、DevOps等领域" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/" />
+  <link href="https://suncle.me/index.xml" rel="alternate" type="application/rss+xml" title="Suncle&#39;s Blog" />
+  <link href="https://suncle.me/index.xml" rel="feed" type="application/rss+xml" title="Suncle&#39;s Blog" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Suncle&#39;s Blog" />
+<meta property="og:description" content="关注Python、Goalng的web后端、DevOps等领域" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://suncle.me/" />
+<meta property="og:updated_time" content="2019-12-31T23:59:59+00:00" />
+<meta itemprop="name" content="Suncle&#39;s Blog">
+<meta itemprop="description" content="关注Python、Goalng的web后端、DevOps等领域">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Suncle&#39;s Blog"/>
+<meta name="twitter:description" content="关注Python、Goalng的web后端、DevOps等领域"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/07/27/clickhouse-build-distributed-cluster/">Clickhouse分布式集群搭建</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-07-27 </span>
+      <div class="post-category">
+          <a href="/categories/Clickhouse/"> Clickhouse </a>
+          </div>
+        <span class="more-meta"> 约 3539 字 </span>
+        <span class="more-meta"> 预计阅读 8 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="目标1分片2副本的集群">目标：1分片2副本的集群</h1>
+<p>所以需要两台机器，分别是：172.31.59.118|172.31.40.79</p>
+<p>安装参考dockerfile:</p>
+<ul>
+<li><a href="https://hub.docker.com/r/yandex/clickhouse-client/dockerfile">https://hub.docker.com/r/yandex/clickhouse-client/dockerfile</a></li>
+<li><a href="https://hub.docker.com/r/yandex/clickhouse-server/dockerfile">https://hub.docker.com/r/yandex/clickhouse-server/dockerfile</a></li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2019/07/27/clickhouse-build-distributed-cluster/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/07/27/clickhouse-introduction-and-comparison-of-performance/">Clickhouse简介和性能对比</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-07-27 </span>
+      <div class="post-category">
+          <a href="/categories/Clickhouse/"> Clickhouse </a>
+          </div>
+        <span class="more-meta"> 约 1589 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="clickhouse简介和性能对比">Clickhouse简介和性能对比</h1>
+<p>ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)。</p>
+<p>常见的列式数据库有： Vertica、 Paraccel (Actian Matrix，Amazon Redshift)、 Sybase IQ、 Exasol、 Infobright、 InfiniDB、 MonetDB (VectorWise， Actian Vector)、 LucidDB、 SAP HANA、 Google Dremel、 Google PowerDrill、 Druid、 kdb+。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2019/07/27/clickhouse-introduction-and-comparison-of-performance/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/06/16/How-to-make-a-good-photo/">怎样拍出一张好照片</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-06-16 </span>
+      <div class="post-category">
+          <a href="/categories/%E6%91%84%E5%BD%B1/"> 摄影 </a>
+          </div>
+        <span class="more-meta"> 约 3082 字 </span>
+        <span class="more-meta"> 预计阅读 7 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>怎样拍出一张好照片？</p>
+<blockquote>
+<p>到达合适的位置，选择好合适的角度，安排好想要突出主题的构图，调好曝光和色彩，按下快门，适当的加一点后期处理和美化，一张好照片就诞生了。</p>
+</blockquote>
+<p>所以一张好照片的基本要求也就和照片诞生过程的每一个环节息息相关了。</p>
+<h1 id="好照片的基本要求">好照片的基本要求</h1>
+<p>什么是好照片？这个问题本身就是非常主观的。不同人有不同的看法。不过，对于一张好照片，有一些客观的基本要求。做不到这些基本要求，运气再好也拍不出好照片。</p>
+<p>下面有5个基本要求：</p>
+<ul>
+<li>
+<p><strong>要求1：把相机端平</strong></p>
+</li>
+<li>
+<p><strong>要求2：把相片拍清楚</strong></p>
+</li>
+<li>
+<p><strong>要求3：曝光不要过度</strong></p>
+</li>
+<li>
+<p><strong>要求4：构图好</strong></p>
+</li>
+<li>
+<p><strong>要求5：有主题</strong></p>
+</li>
+</ul>
+<p>下面分别来介绍如何才能做到这5点基本要求。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2019/06/16/How-to-make-a-good-photo/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/05/13/northwest-circle/">飞奔在路上--西北大环线</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-05-13 </span>
+      <div class="post-category">
+          <a href="/categories/%E7%81%B5%E9%AD%82%E7%8B%AC%E6%97%85/"> 灵魂独旅 </a>
+          </div>
+        <span class="more-meta"> 约 2908 字 </span>
+        <span class="more-meta"> 预计阅读 6 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <blockquote>
+<p>写在前面，在整个游记的撰写过程中，图片较多，由于typora编辑器的懒加载机制，导致一直在loading图片，撰写体验极差，改成vim之后又无法预览，整体而言就是糟糕透了。</p>
+<p>本来打算写一个一本正经的非常正规的充满文艺气息的游记，结果不知道为啥又写成了全程哈哈哈的游记，可能是路上太高兴了？估计是被人传染了吧，凉了。</p>
+</blockquote>
+<p>出发前的一段时间迷上了vlog，于是在youtube上利用空余时间狂刷各路大神的作品，主要是CaseyNeistat和Travellight这两个vlogger的。刷完之后就决定大干一番。带上Gopro准备趁着这次旅行也拍摄一个牛逼的vlog。嗯，计划是很美好的，从家里打包行李开始，到去地铁站的路上，到虹桥火车站，到宁波机场等等各种人流繁杂的地方，背着重装包用支架举着Gopro像个傻逼一样的各种拍摄，同时自言自语。一直拍到塔尔寺，但是寺庙不让拍照，只能拍一些在路上走的。再到后来被队友发现拍照技能之后，整个旅途就是各种：看这里，咔。是的，整个行程都是这样了，一直到结束我都没想起来我不是来拍照的呀，我是来尝试拍vlog的哎。不过也还好，被人需要也是一种幸福的感觉。so，第一次vlog流产，不过后续可以在上海和vlog爱好者约拍。</p>
+    </div>
+    <div class="read-more">
+      <a href="/2019/05/13/northwest-circle/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/05/08/brief-introduction-and-comparison-of-data-warehouse/">数仓工作的简单介绍和对比</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-05-08 </span>
+      <div class="post-category">
+          <a href="/categories/BigData/"> BigData </a>
+          </div>
+        <span class="more-meta"> 约 1302 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>数仓工作的简单介绍和对比</p>
+<h2 id="传统技术栈">传统技术栈</h2>
+<p><img src="http://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/brief-introduction-and-comparison-of-data-warehouse/21557225799_.pic_hd.jpg" alt=""></p>
+<h2 id="再惠技术栈">再惠技术栈</h2>
+<p><img src="http://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/brief-introduction-and-comparison-of-data-warehouse/11557225799_.pic_hd.jpg" alt=""></p>
+    </div>
+    <div class="read-more">
+      <a href="/2019/05/08/brief-introduction-and-comparison-of-data-warehouse/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/04/15/10-tang-poems/">精选唐诗十首</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-04-15 </span>
+      <div class="post-category">
+          <a href="/categories/%E6%80%BB%E7%BB%93%E6%84%9F%E6%82%9F/"> 总结感悟 </a>
+          </div>
+        <span class="more-meta"> 约 1051 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>平衡思维方式的唐诗</p>
+<h1 id="登高">登高</h1>
+<p>杜甫《望岳》</p>
+<blockquote>
+<p>岱宗夫如何，齐鲁青未了。</p>
+<p>造化钟神秀，阴阳割昏晓。</p>
+<p>荡胸生层云，决眦入归鸟。</p>
+<p>会当凌绝顶，一览众山小。</p>
+</blockquote>
+<p>李白《登金陵凤凰台》</p>
+<blockquote>
+<p>凤凰台上凤凰游，凤去台空江自流。</p>
+<p>吴宫花草埋幽径，晋代衣冠成古丘。</p>
+<p>三山半落青天外，二水中分白鹭洲。</p>
+<p>总为浮云能蔽日，长安不见使人愁。</p>
+</blockquote>
+    </div>
+    <div class="read-more">
+      <a href="/2019/04/15/10-tang-poems/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/03/31/migrate-blog-domain/">博客域名迁移</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-03-31 </span>
+      <div class="post-category">
+          <a href="/categories/Hexo%E5%8D%9A%E5%AE%A2/"> Hexo博客 </a>
+          </div>
+        <span class="more-meta"> 约 1534 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>突然就想给本站换个域名了，那么就动手了</p>
+<p>目标：</p>
+<ol>
+<li>网站使用Git Hooks自动部署到VPS，</li>
+<li>nginx解析域名到VPS，并开启https和http2</li>
+<li>老域名 <code>flowsnow.net</code> 301永久重定向到新域名 <code>suncle.me</code></li>
+<li>更改Google收录和Baidu收录索引，尽可能少的影响权重</li>
+<li>使用valine评论系统，迁移disqus评论数据到valine</li>
+</ol>
+    </div>
+    <div class="read-more">
+      <a href="/2019/03/31/migrate-blog-domain/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/03/30/useful-linux-scripts/">常用Linux脚本集锦</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-03-30 </span>
+      <div class="post-category">
+          <a href="/categories/Linux/"> Linux </a>
+          </div>
+        <span class="more-meta"> 约 5824 字 </span>
+        <span class="more-meta"> 预计阅读 12 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>常用linux脚本：</p>
+<ul>
+<li>Linux系统bash脚本获取系统硬件资源</li>
+<li>Aix系统ksh脚本获取系统硬件资源</li>
+<li>服务器打开session时显示帮助信息</li>
+<li>curl post中带有变量的脚本</li>
+<li>金三系统基线包安装部署脚本</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2019/03/30/useful-linux-scripts/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/03/30/useful-linux-commands/">常用Linux命令集锦</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-03-30 </span>
+      <div class="post-category">
+          <a href="/categories/Linux/"> Linux </a>
+          </div>
+        <span class="more-meta"> 约 2199 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>常用linux命令:</p>
+<ul>
+<li>随机数</li>
+<li>时间</li>
+<li>ip</li>
+<li>日志分析</li>
+<li>硬件信息</li>
+<li>进程端口</li>
+<li>调整分区大小</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/2019/03/30/useful-linux-commands/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2019/03/10/haidilao-management-philosophy/">海底捞的经营哲学</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-03-10 </span>
+      <div class="post-category">
+          <a href="/categories/%E6%80%BB%E7%BB%93%E6%84%9F%E6%82%9F/"> 总结感悟 </a>
+          </div>
+        <span class="more-meta"> 约 1538 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>在京东选书为了满减凑单入了这本《海底捞的经营哲学》，和《飘》不同，这本书比较薄，全书只有200页，很快就看完了，但是内容涉及到了海底捞的方方面面，，当然这也就导致这本书不可能对每个方面都说得很细致。下面是这本书的大致提纲：</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/normal/Haidilao-management-philosophy-outline.png" alt="海底捞的经营哲学提纲"></p>
+    </div>
+    <div class="read-more">
+      <a href="/2019/03/10/haidilao-management-philosophy/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    </section>
+  
+  <nav class="pagination">
+    <a class="prev" href="/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    <a class="next" href="/page/3/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

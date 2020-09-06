@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用Github管理Hexo博客的源文件 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="使用Github管理Hexo博客的源文件
+1.创建github仓库 Create a New Repository，用https://github.com/repositories/new来创建新仓库，填好名称后Create，之后会出现一些仓库的配置信息。这时候就表示配置好了。不需要用README来初始化仓库。我创建的仓库名称是BlogSourceFile。
+" /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2016/03/16/%E4%BD%BF%E7%94%A8github%E7%AE%A1%E7%90%86hexo%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%BA%90%E6%96%87%E4%BB%B6/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用Github管理Hexo博客的源文件" />
+<meta property="og:description" content="使用Github管理Hexo博客的源文件
+1.创建github仓库
+Create a New Repository，用https://github.com/repositories/new来创建新仓库，填好名称后Create，之后会出现一些仓库的配置信息。这时候就表示配置好了。不需要用README来初始化仓库。我创建的仓库名称是BlogSourceFile。
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2016/03/16/%E4%BD%BF%E7%94%A8github%E7%AE%A1%E7%90%86hexo%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%BA%90%E6%96%87%E4%BB%B6/" />
+<meta property="article:published_time" content="2016-03-16T17:59:12+00:00" />
+<meta property="article:modified_time" content="2016-03-16T17:59:12+00:00" />
+<meta itemprop="name" content="使用Github管理Hexo博客的源文件">
+<meta itemprop="description" content="使用Github管理Hexo博客的源文件
+1.创建github仓库
+Create a New Repository，用https://github.com/repositories/new来创建新仓库，填好名称后Create，之后会出现一些仓库的配置信息。这时候就表示配置好了。不需要用README来初始化仓库。我创建的仓库名称是BlogSourceFile。
+">
+<meta itemprop="datePublished" content="2016-03-16T17:59:12+00:00" />
+<meta itemprop="dateModified" content="2016-03-16T17:59:12+00:00" />
+<meta itemprop="wordCount" content="1085">
+
+
+
+<meta itemprop="keywords" content="Github,Hexo," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用Github管理Hexo博客的源文件"/>
+<meta name="twitter:description" content="使用Github管理Hexo博客的源文件
+1.创建github仓库
+Create a New Repository，用https://github.com/repositories/new来创建新仓库，填好名称后Create，之后会出现一些仓库的配置信息。这时候就表示配置好了。不需要用README来初始化仓库。我创建的仓库名称是BlogSourceFile。
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用Github管理Hexo博客的源文件</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-03-16 </span>
+        <div class="post-category">
+            <a href="/categories/Hexo%E5%8D%9A%E5%AE%A2/"> Hexo博客 </a>
+            </div>
+          <span class="more-meta"> 约 1085 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1创建github仓库">1.创建github仓库</a></li>
+        <li><a href="#2本地git操作">2.本地git操作</a></li>
+        <li><a href="#3配置ssh">3.配置ssh</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>使用Github管理Hexo博客的源文件</p>
+<h2 id="1创建github仓库">1.创建github仓库</h2>
+<p>Create a New Repository，用<a href="https://github.com/repositories/new">https://github.com/repositories/new</a>来创建新仓库，填好名称后Create，之后会出现一些仓库的配置信息。这时候就表示配置好了。不需要用README来初始化仓库。我创建的仓库名称是BlogSourceFile。</p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/github%E5%88%9B%E5%BB%BA%E4%BB%93%E5%BA%93.png" alt=""></p>
+<h2 id="2本地git操作">2.本地git操作</h2>
+<p>需要安装git for windows，可以从百度的软件中心<a href="http://dlsw.baidu.com/sw-search-sp/soft/4e/30195/Git-2.7.2-32-bit_setup.1457942412.exe">http://dlsw.baidu.com/sw-search-sp/soft/4e/30195/Git-2.7.2-32-bit_setup.1457942412.exe</a>下载，也可以从github官网下载。</p>
+<p>我自己的Hexo博客源文件的目录是d/Hexo/source/_posts。进入该目录之后，右键打开Git Bash。进行初始化init操作，在当前项目工程下履行这个号令相当于把当前项目git化</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">clg@020121345-NB MINGW32 /d/Hexo/source/_posts
+$ git init
+Initialized empty Git repository in D:/Hexo/source/_posts/.git/
+</code></pre></td></tr></table>
+</div>
+</div><p>此时会在当前目录下产生.git文件夹，这个文件夹默认是隐藏的。</p>
+<p>add操作把当前目录下的全部文件（代码）加入git的跟踪中，意思就是交给git经管。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">clg@020121345-NB MINGW32 /d/Hexo/source/_posts (master)
+$ git add .
+</code></pre></td></tr></table>
+</div>
+</div><p>使用commit操作将暂存库中的改动提交到本地库，可以写一点提交信息，比如&quot;first commit&quot;或者&quot;update&quot;等等。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ git commit -m &#34;first commit&#34;
+</code></pre></td></tr></table>
+</div>
+</div><p>现在需要把改动写入到github网站中。由于是第一次提交文件到远程仓库（github服务器上的仓库在本地就成为remote，其中给这个项目的远程仓库取的名字是origin，也可以取别的名字比如blog等等），需要先执行下面的命令，相当于指定本地库与github上的哪个项目相连，只有用git@这种形式才表示使用ssh，而不是使用https。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ git remote add origin git@github.com:Flowsnow/BlogSourceFile.git
+</code></pre></td></tr></table>
+</div>
+</div><p>有时候可能出现错误fatal: remote origin already exists.这个错误的意思是远程已存在。</p>
+<p>解决办法：先删除，再添加</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ git remote rm origin
+$ git remote add origin https://github.com/Flowsnow/BlogSourceFile.git
+</code></pre></td></tr></table>
+</div>
+</div><p>接着就可以将本地库提交到github上的该远程仓库的master分支上。如果没有配置ssh，则需要输入github的用户名和密码。提交之后可以在网站上看到提交的内容。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">git push -u origin master
+</code></pre></td></tr></table>
+</div>
+</div><p>如果下次需要写blog，需要先把master分支同步到本地库中。可以用下列命令,相当于获取远程更新，并且和本地库融合。也就是说每次写blog之前都需要更新本地库。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">git pull origin master
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="3配置ssh">3.配置ssh</h2>
+<p>Generating an SSH key:</p>
+<p><a href="https://help.github.com/articles/generating-an-ssh-key/">https://help.github.com/articles/generating-an-ssh-key/</a></p>
+<p><strong>附：</strong></p>
+<p>参考：<a href="https://blog.csdn.net/binyao02123202/article/details/20130891">https://blog.csdn.net/binyao02123202/article/details/20130891</a></p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-03-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/Github/">Github</a>
+          <a href="/tags/Hexo/">Hexo</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2016/03/16/Hexo%E5%8D%9A%E5%AE%A2%E6%8D%A2%E7%94%B5%E8%84%91%E6%AD%A5%E9%AA%A4/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Hexo博客换电脑步骤</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+            <span class="next-text nav-default">Oracle数据结构</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

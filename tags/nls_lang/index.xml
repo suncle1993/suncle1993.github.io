@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nls_lang on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/nls_lang/</link>
+    <description>Recent content in nls_lang on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 01 Dec 2016 22:53:09 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/nls_lang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>oracle的userenv和nls_lang详解</title>
+      <link>https://suncle.me/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 01 Dec 2016 22:53:09 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/</guid>
+      <description>&lt;h1 id=&#34;oracle的userenv和nls_lang详解&#34;&gt;oracle的userenv和nls_lang详解&lt;/h1&gt;
+&lt;h2 id=&#34;1userenv最常见的使用&#34;&gt;1、userenv最常见的使用&lt;/h2&gt;
+&lt;p&gt;userenv函数返回当前会话（session）的相关信息。以下sql语句可以查询当前会话连接的数据库字符集&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userenv&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;有关&lt;code&gt;userenv(&#39;parameter&#39;)&lt;/code&gt;返回值的官网介绍如下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/oracle/2016-11-29_194757.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;意思就是：返回的是当前会话使用的language和territory。characterset是数据库的字符集。&lt;/p&gt;
+&lt;p&gt;下面我们就去验证这种情况&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

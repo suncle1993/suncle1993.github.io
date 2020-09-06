@@ -1,0 +1,1701 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Oracle数据库 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+    <description>Recent content in Oracle数据库 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 10 May 2017 00:57:17 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/categories/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>常用Oracle SQL集锦</title>
+      <link>https://suncle.me/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/</link>
+      <pubDate>Wed, 10 May 2017 00:57:17 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/</guid>
+      <description>&lt;h4 id=&#34;常用dml和query开并行&#34;&gt;常用dml和query开并行&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;c1&#34;&gt;--开并行
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ALTER&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;SESSION&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;FORCE&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PARALLEL&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DML&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PARALLEL&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;ALTER&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;SESSION&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;FORCE&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PARALLEL&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QUERY&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PARALLEL&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;--关并行
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ALTER&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;SESSION&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DISABLE&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PARALLEL&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DML&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;ALTER&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;SESSION&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DISABLE&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PARALLEL&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QUERY&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;索引开并行&#34;&gt;索引开并行&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;drop&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;index&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IDX_SB_SBZT_LRRQ&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;index&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IDX_SB_SBZT_LRRQ&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;on&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SB_SBZT&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LRRQ&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CWLX_DM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SWJG_DM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;tablespace&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TS_GS_SB_IDX&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;pctfree&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;20&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;initrans&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;maxtrans&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;storage&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;initial&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;64&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;K&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;next&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;M&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;minextents&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;maxextents&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;unlimited&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;parallel&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;alter&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;index&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IDX_SB_SBZT_LRRQ&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;noparallel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;查看asm&#34;&gt;查看ASM&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;c1&#34;&gt;-- 查看asm的各个disk group是否超过80%
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;-- name：name of the disk group
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;-- total_mb：total capacity of the disk group(in megabytes)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;-- free_mb：unused capacity of the disk group(in megabytes)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TOTAL_MB&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1024&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;round&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TOTAL_MB&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FREE_MB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TOTAL_MB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;||&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%&amp;#39;&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v$asm_diskgroup&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>oracle的userenv和nls_lang详解</title>
+      <link>https://suncle.me/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 01 Dec 2016 22:53:09 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/</guid>
+      <description>&lt;h1 id=&#34;oracle的userenv和nls_lang详解&#34;&gt;oracle的userenv和nls_lang详解&lt;/h1&gt;
+&lt;h2 id=&#34;1userenv最常见的使用&#34;&gt;1、userenv最常见的使用&lt;/h2&gt;
+&lt;p&gt;userenv函数返回当前会话（session）的相关信息。以下sql语句可以查询当前会话连接的数据库字符集&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userenv&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;有关&lt;code&gt;userenv(&#39;parameter&#39;)&lt;/code&gt;返回值的官网介绍如下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/oracle/2016-11-29_194757.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;意思就是：返回的是当前会话使用的language和territory。characterset是数据库的字符集。&lt;/p&gt;
+&lt;p&gt;下面我们就去验证这种情况&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Oracle字符集检查和修改</title>
+      <link>https://suncle.me/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/</link>
+      <pubDate>Thu, 01 Dec 2016 22:51:15 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/</guid>
+      <description>&lt;h1 id=&#34;oracle字符集检查和修改&#34;&gt;Oracle字符集检查和修改&lt;/h1&gt;
+&lt;p&gt;在部署重构版测试环境时，需要创建Oracle数据库，使用dbca创建数据库之后没有注意数据库本身的字符集，导致后续所有的数据库脚本执行后中文乱码。最后的解决办法是清掉全库数据，再修改字符集，重启数据库。&lt;/p&gt;
+&lt;h2 id=&#34;1oracle字符集概述&#34;&gt;1、Oracle字符集概述&lt;/h2&gt;
+&lt;p&gt;系统或者程序运行的环境就是一个我们常见的locale。而设置数据库locale最简单的方法就是设置NLS_LANG这个环境参数。在linux中NLS_LANG是一个环境变量，在windows中NLS_LANG是写在注册表中的。NLS_LANG这个参数由三个组成部分，分别是语言（language）, 区域（territory）和字符集（character set），格式如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;nv&#34;&gt;NLS_LANG&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; language_territory.charset
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;我们平时最常见的就是：&lt;code&gt;AMERICAN_AMERICA.ZHS16GBK&lt;/code&gt;和&lt;code&gt;SIMPLIFIED CHINESE_CHINA.ZHS16GBK&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;NLS_LANG的作用官网是这样说的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It sets the language and territory used by the client application and the database server. It also sets the client&amp;rsquo;s character set, which is the character set for data entered or displayed by a client program&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>sql语句中(&#43;)的作用</title>
+      <link>https://suncle.me/2016/07/08/sql%E8%AF%AD%E5%8F%A5%E4%B8%AD%E5%8A%A0%E5%8F%B7%E7%9A%84%E4%BD%9C%E7%94%A8/</link>
+      <pubDate>Fri, 08 Jul 2016 01:20:23 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/07/08/sql%E8%AF%AD%E5%8F%A5%E4%B8%AD%E5%8A%A0%E5%8F%B7%E7%9A%84%E4%BD%9C%E7%94%A8/</guid>
+      <description>&lt;h2 id=&#34;演示示例&#34;&gt;演示示例&lt;/h2&gt;
+&lt;p&gt;说明：以下示例中，表a是员工表，有a,b,c,d四个员工，性别都是男性m。表b是工资表，有a,b,d四个员工，工资对应的是1000，2000，4000。然后分别演示带(+)符号的和不带(+)符号的，结果如下。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;SQL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;NAME&lt;/span&gt;                 &lt;span class=&#34;n&#34;&gt;SEX&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;-------------------- -----
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;                    &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;                    &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;c&lt;/span&gt;                    &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;                    &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;SQL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;NAME&lt;/span&gt;                      &lt;span class=&#34;n&#34;&gt;MONEY&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;-------------------- ----------
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;1000&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;2000&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;4000&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;SQL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;money&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;where&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;NAME&lt;/span&gt;                      &lt;span class=&#34;n&#34;&gt;MONEY&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;-------------------- ----------
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;1000&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;2000&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;4000&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;c&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;SQL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;money&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;where&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;NAME&lt;/span&gt;                      &lt;span class=&#34;n&#34;&gt;MONEY&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;-------------------- ----------
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;1000&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;2000&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;                          &lt;span class=&#34;mi&#34;&gt;4000&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可见，带(+)号时，a表中的所有人都在，即使工资为空。不带(+)时，a表中的没有出现工资为空的员工c。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>事务Transaction</title>
+      <link>https://suncle.me/2016/03/23/%E4%BA%8B%E5%8A%A1Transaction/</link>
+      <pubDate>Wed, 23 Mar 2016 11:00:22 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/23/%E4%BA%8B%E5%8A%A1Transaction/</guid>
+      <description>&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/cd/E11882_01/server.112/e40540/transact.htmhttps://docs.oracle.com/cd/E11882_01/server.112/e40540/transact.htm&#34; rel=&#34;nofollow&#34;&gt;Transactions&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/junmail/article/details/5556561&#34;&gt;关于Oracle事务的总结&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;什么是事务&#34;&gt;什么是事务？&lt;/h2&gt;
+&lt;p&gt;事务(Transaction)是访问并可能更新数据库中各种&lt;a href=&#34;http://baike.baidu.com/view/178581.htm&#34;&gt;数据项&lt;/a&gt;的一个程序执行单元(unit)。事务由事务开始(&lt;strong&gt;begin transaction&lt;/strong&gt;)和事务结束(&lt;strong&gt;end transaction&lt;/strong&gt;)之间执行的全体操作组成。&lt;/p&gt;
+&lt;h2 id=&#34;事务的属性-acid&#34;&gt;事务的属性-ACID&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;原子性（Atomicity）&lt;/strong&gt;-事务的原子性强调了一个事物是一个逻辑工作单元，是一个整体，是不可分割的。一个事务所包含的操作要么全部做，要不全部不做。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;一致性（Consistency）&lt;/strong&gt;-一个事务执行一项数据库操作，事务使数据库从一种一致性的状态变换成另一种一致性状态。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;隔离性（Isolation）&lt;/strong&gt;-在事务未提交前，它操作的数据，对其他用户不可见。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;持久性（Durability）&lt;/strong&gt;-一旦事务成功完成，该事务对数据库所施加的所有更新都是永久的。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;redo日志&amp;ndash;提交的事务被永久的记录到redo日志中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>PL/SQL Developer连接本地Oracle 11g 64位数据库</title>
+      <link>https://suncle.me/2016/03/22/PL-SQL-Developer%E8%BF%9E%E6%8E%A5%E6%9C%AC%E5%9C%B0Oracle-11g-64%E4%BD%8D%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+      <pubDate>Tue, 22 Mar 2016 11:02:40 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/22/PL-SQL-Developer%E8%BF%9E%E6%8E%A5%E6%9C%AC%E5%9C%B0Oracle-11g-64%E4%BD%8D%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+      <description>&lt;h2 id=&#34;登陆plsql&#34;&gt;登陆PL/SQL&lt;/h2&gt;
+&lt;p&gt;假定本地电脑中已经安装了Oracle 11gR2数据库和PL/SQL developer。&lt;/p&gt;
+&lt;p&gt;如果没有安装可以在一下地址下载安装：&lt;/p&gt;
+&lt;p&gt;Oracle 11gR2数据库：&lt;a href=&#34;https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-win64soft-094461.html&#34;&gt;https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-win64soft-094461.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;PL/SQL developer(含注册机)：&lt;a href=&#34;https://pan.baidu.com/s/1kUfY8GB&#34;&gt;https://pan.baidu.com/s/1kUfY8GB&lt;/a&gt; 密码: 1ky8&lt;/p&gt;
+&lt;p&gt;首先打开PL/SQL，会发现没有database可以选择，我们可以以非登录方式登陆PL/SQL（直接点cancel即可）。&lt;/p&gt;
+&lt;p&gt;开始设置：Tools-&amp;gt;Preferences，进入后点击Oracle下面的connection，设置Oracle home和oci library。&lt;/p&gt;
+&lt;p&gt;由于我已经设置过了，如下图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-PLSQL%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AE.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;图中路径可能不一样，具体的看你的Oracle Home目录，如果不知道自己的Oracle Home目录的，可以去自己的环境变量中看一下。&lt;/p&gt;
+&lt;p&gt;点击Apply-&amp;gt;OK，退出PL/SQL Developer，再次登录。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>闪回flashback</title>
+      <link>https://suncle.me/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/</link>
+      <pubDate>Mon, 21 Mar 2016 17:32:01 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-flashback_pic.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;参考资料：&lt;/strong&gt;&lt;a href=&#34;https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm&#34;&gt;Using Oracle Flashback Technology&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Oracle 11g的新特性闪回操作&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;闪回查询
+&lt;ul&gt;
+&lt;li&gt;闪回查询&lt;/li&gt;
+&lt;li&gt;闪回版本查询&lt;/li&gt;
+&lt;li&gt;闪回事务查询&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;闪回数据
+&lt;ul&gt;
+&lt;li&gt;闪回表&lt;/li&gt;
+&lt;li&gt;闪回删除&lt;/li&gt;
+&lt;li&gt;闪回数据&lt;/li&gt;
+&lt;li&gt;闪回归档&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面会分别介绍这些操作。在介绍这些操作之前先看下闪回特性是否开启。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>自动存储管理ASM</title>
+      <link>https://suncle.me/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/</link>
+      <pubDate>Mon, 21 Mar 2016 10:08:50 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/</guid>
+      <description>&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036&#34;&gt;https://docs.oracle.com/cd/B19306_01/server.102/b14231/storeman.htm#ADMIN036&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;什么是asm&#34;&gt;什么是ASM？&lt;/h2&gt;
+&lt;p&gt;ASM是Automatic Storage Management（自动存储管理）的缩写。ASM是一个集成的高性能的文件系统和卷管理器。Oracle将所有的存储分为disk groups，我们只需要管理这些disk groups，而不用去管具体的数据文件。&lt;/p&gt;
+&lt;p&gt;In the SQL statements that you use for creating database structures such as tablespaces, control files, and redo and archive log files, you specify file location in terms of disk groups. ASM then creates and manages the associated underlying files（底层文件） for you.&lt;/p&gt;
+&lt;h2 id=&#34;为什么使用asm&#34;&gt;为什么使用ASM？&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;提供高效率的存储管理&lt;/li&gt;
+&lt;li&gt;提供完整的集群文件系统和卷管理能力&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;ASM的优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mirroring and Striping&lt;/strong&gt;（镜像化和条带化）&lt;/p&gt;
+&lt;p&gt;条带化是一种用于在多个磁盘驱动器之间分散数据的技术。一个大的数据段被分为较小的单元，这些单元分布在可用设备之间。分隔数据的单元称为“数据单元大小”或“条带大小”，是指向每个磁盘写入这些条带的大小。可以同时读写的并行条带数量称为“条带宽度”。分条可以加快从磁盘存储中获取数据的操作，这是因为它扩展了总I/O带宽的能力。这样就优化了性能和磁盘利用率，从而不再需要手动I/O 性能调优。&lt;/p&gt;
+&lt;p&gt;ASM镜像化选项:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Mirroring Option&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2-way mirroring&lt;/td&gt;
+&lt;td&gt;Each extent has 1 mirrored copy.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3-way mirroring&lt;/td&gt;
+&lt;td&gt;Each extent has 2 mirrored copies.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Unprotected&lt;/td&gt;
+&lt;td&gt;ASM provides no mirroring. Used when mirroring is provided by the disk subsystem itself.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description>
+    </item>
+    
+    <item>
+      <title>Rman备份恢复和管理</title>
+      <link>https://suncle.me/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Fri, 18 Mar 2016 15:47:01 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Rman%E7%BB%84%E4%BB%B6.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.cnblogs.com/Ronger/archive/2011/12/29/2306367.html&#34;&gt;Oracle之Rman入门指南&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.5ienet.com/note/html/rman/index.shtml&#34;&gt;一步一步学Rman&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;rman简介&#34;&gt;Rman简介&lt;/h2&gt;
+&lt;p&gt;Rman-Recover manager恢复管理工具。&lt;/p&gt;
+&lt;p&gt;Oracle集成了很多环境的一个数据库备份和恢复的工具。&lt;/p&gt;
+&lt;p&gt;Rman可以做下列事情：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库热备份
+&lt;ul&gt;
+&lt;li&gt;全库备份和恢复
+&lt;ul&gt;
+&lt;li&gt;数据库克隆（DG）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;增量备份和恢复&lt;/li&gt;
+&lt;li&gt;表空间备份和恢复&lt;/li&gt;
+&lt;li&gt;数据文件备份和恢复&lt;/li&gt;
+&lt;li&gt;归档备份和恢复&lt;/li&gt;
+&lt;li&gt;控制文件和参数文件备份和恢复&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;数据库冷备份&lt;/li&gt;
+&lt;li&gt;备份集的管理
+&lt;ul&gt;
+&lt;li&gt;备份策略&lt;/li&gt;
+&lt;li&gt;保留和删除备份数据&lt;/li&gt;
+&lt;li&gt;&amp;hellip;&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Oracle数据结构</title>
+      <link>https://suncle.me/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
+      <pubDate>Wed, 16 Mar 2016 15:08:49 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
+      <description>&lt;h2 id=&#34;oracle的数据存储结构&#34;&gt;Oracle的数据存储结构&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Oracle%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;表空间（tablespace）&amp;ndash;Oracle中最大的逻辑存储单位&lt;/li&gt;
+&lt;li&gt;数据文件（data file）&amp;ndash;表空间物理存储载体&lt;/li&gt;
+&lt;li&gt;段（segment）&amp;ndash;Oracle中所有占用空间的对象的总称&lt;/li&gt;
+&lt;li&gt;extend&amp;ndash;段的组成单位&lt;/li&gt;
+&lt;li&gt;数据块（data block）&amp;ndash;extend的组成单位，是Oracle存储和数据操作的最小单位。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;数据块&#34;&gt;数据块&lt;/h2&gt;
+&lt;p&gt;数据块是Oracle存储和数据操作的最小单位，但不一定和操作系统的os块相同，一个数据块可能有多个os块构成。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-%E6%95%B0%E6%8D%AE%E5%9D%97%E5%92%8Cos%E5%9D%97.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>回滚段undo</title>
+      <link>https://suncle.me/2016/03/16/%E5%9B%9E%E6%BB%9A%E6%AE%B5undo/</link>
+      <pubDate>Wed, 16 Mar 2016 14:42:45 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/%E5%9B%9E%E6%BB%9A%E6%AE%B5undo/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;undo的作用&#34;&gt;Undo的作用&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;数据的回滚&lt;/li&gt;
+&lt;li&gt;一致性读&lt;/li&gt;
+&lt;li&gt;表的闪回（事务，查询的闪回..）&lt;/li&gt;
+&lt;li&gt;失败会话的恢复&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;回滚rollback操作&#34;&gt;回滚rollback操作&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;  1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 74
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 75
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 76
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 77
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 78
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 79
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 80
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 81
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 82
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 83
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 84
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 85
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 86
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 87
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 88
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 89
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 90
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 91
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 92
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 93
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 94
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 95
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 96
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 97
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 98
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 99
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;100
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;101
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;102
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;103
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;104
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;105
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;106
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;107
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;108
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;109
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;110
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;111
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;112
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;113
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;114
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;115
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;116
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;117
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;118
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;119
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;120
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;121
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;122
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;123
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;124
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;125
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;126
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;127
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;128
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;129
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;130
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;131
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;132
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;133
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;134
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;135
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;136
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;137
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;138
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;139
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;140
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;141
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;142
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;143
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;144
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;145
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;146
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;147
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;148
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;149
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;150
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;151
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;152
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;153
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;154
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;155
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;156
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;157
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;158
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;159
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;160
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;161
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;162
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;163
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;SQL&amp;gt; archive log list;
+ORA-01031: 权限不足
+SQL&amp;gt; conn /as sysdba
+已连接。
+SQL&amp;gt; archive log list;
+数据库日志模式            存档模式
+自动存档             启用
+存档终点            USE_DB_RECOVERY_FILE_DEST
+最早的联机日志序列     45
+下一个存档日志序列   47
+当前日志序列           47
+SQL&amp;gt; create table t1(id int);
+
+表已创建。
+
+SQL&amp;gt; select * from t1;
+
+未选定行
+
+SQL&amp;gt; insert into t1 values(&amp;#39;1&amp;#39;);
+
+已创建 1 行。
+
+SQL&amp;gt; insert into t1 values(&amp;#39;2&amp;#39;);
+
+已创建 1 行。
+
+SQL&amp;gt; rollback;
+
+回退已完成。
+
+SQL&amp;gt; select * from t1;
+
+未选定行
+
+SQL&amp;gt; desc t1;
+ 名称                                      是否为空? 类型
+ ----------------------------------------- -------- ----------------------------
+
+ ID                                                 NUMBER(38)
+
+SQL&amp;gt; select * from t1;
+
+未选定行
+
+SQL&amp;gt; insert into t1 values(1);
+
+已创建 1 行。
+
+SQL&amp;gt; insert into t1 values(2);
+
+已创建 1 行。
+
+SQL&amp;gt; select * from t1;
+
+        ID
+----------
+         1
+         2
+
+SQL&amp;gt; rollback;
+
+回退已完成。
+
+SQL&amp;gt; select * from t1;
+
+未选定行
+
+SQL&amp;gt; archive log list;
+数据库日志模式            存档模式
+自动存档             启用
+存档终点            USE_DB_RECOVERY_FILE_DEST
+最早的联机日志序列     45
+下一个存档日志序列   47
+当前日志序列           47
+SQL&amp;gt; shutdown immediate;
+数据库已经关闭。
+已经卸载数据库。
+ORACLE 例程已经关闭。
+SQL&amp;gt; startup mount;
+ORACLE 例程已经启动。
+
+Total System Global Area 3307048960 bytes
+Fixed Size                  2180264 bytes
+Variable Size            1828719448 bytes
+Database Buffers         1459617792 bytes
+Redo Buffers               16531456 bytes
+数据库装载完毕。
+SQL&amp;gt; alter database noarchivelog;
+alter database noarchivelog
+*
+第 1 行出现错误:
+ORA-38774: 无法禁用介质恢复 - 闪回数据库已启用
+
+
+SQL&amp;gt; alter database flashback off;
+
+数据库已更改。
+
+SQL&amp;gt;
+SQL&amp;gt; alter database noarchivelog;
+
+数据库已更改。
+
+SQL&amp;gt; alter database open;
+
+数据库已更改。
+
+SQL&amp;gt; archive log list;
+数据库日志模式             非存档模式
+自动存档             禁用
+存档终点            USE_DB_RECOVERY_FILE_DEST
+最早的联机日志序列     45
+当前日志序列           47
+SQL&amp;gt; select * from t1;
+
+未选定行
+
+SQL&amp;gt; insert into t1 values(1);
+
+已创建 1 行。
+
+SQL&amp;gt; insert into t1 values(2);
+
+已创建 1 行。
+
+SQL&amp;gt; select * from t1;
+
+        ID
+----------
+         1
+         2
+
+SQL&amp;gt; rollback;
+
+回退已完成。
+
+SQL&amp;gt; select * from t1;
+
+未选定行
+
+SQL&amp;gt; insert into t1 values(1);
+
+已创建 1 行。
+
+SQL&amp;gt; insert into t1 values(2);
+
+已创建 1 行。
+
+SQL&amp;gt; commit;
+
+提交完成。
+
+SQL&amp;gt; rollback;
+
+回退已完成。
+
+SQL&amp;gt; select * from t1;
+
+        ID
+----------
+         1
+         2
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可见rollback操作和当前数据库 归档模式并没有关系，只和commit操作有关，一旦commit就无法回滚。&lt;/p&gt;
+&lt;p&gt;如果没有指定 rollback 到哪一个保存点savepoint上，就意味着全部Rollback，而不是只是rollback一条操作。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>重做日志和日志挖掘</title>
+      <link>https://suncle.me/2016/03/16/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E5%92%8C%E6%97%A5%E5%BF%97%E6%8C%96%E6%8E%98/</link>
+      <pubDate>Wed, 16 Mar 2016 11:24:34 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E5%92%8C%E6%97%A5%E5%BF%97%E6%8C%96%E6%8E%98/</guid>
+      <description>&lt;h2 id=&#34;重做日志-redo-log&#34;&gt;重做日志-Redo log&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;首先给出参考资料：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/database/121/ADMIN/onlineredo.htm#ADMIN007&#34;&gt;1、Oracle官网-Managing the Redo Log&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;为什么需要redo-log&#34;&gt;为什么需要redo log&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;内存中数据修改后，不必立即更新到磁盘&amp;mdash;效率&lt;/li&gt;
+&lt;li&gt;由日志完成数据的保护目的&amp;mdash;效率&lt;/li&gt;
+&lt;li&gt;其他副产品
+&lt;ul&gt;
+&lt;li&gt;数据恢复（备份集+归档日志）&lt;/li&gt;
+&lt;li&gt;数据同步（DG，streams，goldengate）&lt;/li&gt;
+&lt;li&gt;日志挖掘&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;什么是redo-log&#34;&gt;什么是Redo log&lt;/h3&gt;
+&lt;p&gt;重做日志包含所有数据产生的历史改变记录。&lt;/p&gt;
+&lt;p&gt;重做日志文件通常用于&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;恢复&lt;/li&gt;
+&lt;li&gt;日志挖掘&lt;/li&gt;
+&lt;li&gt;流&lt;/li&gt;
+&lt;li&gt;数据库产生的每个改动
+&lt;ul&gt;
+&lt;li&gt;写入数据块缓冲之前，先写入redo log buffer &amp;ndash;内存&lt;/li&gt;
+&lt;li&gt;写入数据文件之前先写入日志文件 &amp;ndash;数据文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;当提交后，redo log buffer被刷入redo log files&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;关于vlog视图&#34;&gt;关于v$log视图&lt;/h3&gt;
+&lt;p&gt;v$log从控制文件中显示日志文件的信息。可参考官网资料&lt;a href=&#34;https://docs.oracle.com/database/121/REFRN/GUID-FCD3B70B-7B98-40D8-98AB-9F6A85E69F57.htm#REFRN30127&#34;&gt;v$log&lt;/a&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Column&lt;/th&gt;
+&lt;th&gt;Datatype&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;GROUP#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Log group number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;THREAD#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Log thread number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SEQUENCE#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Log sequence number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;BYTES&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Size of the log (in bytes)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;BLOCKSIZE&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Block size of the logfile (512 or 4096)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MEMBERS&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Number of members in the log group&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ARCHIVED&lt;/td&gt;
+&lt;td&gt;VARCHAR2(3)&lt;/td&gt;
+&lt;td&gt;Archive status (&lt;code&gt;YES&lt;/code&gt;) or (&lt;code&gt;NO&lt;/code&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;STATUS&lt;/td&gt;
+&lt;td&gt;VARCHAR2(16)&lt;/td&gt;
+&lt;td&gt;UNUSED,CURRENT,ACTIVE,CLEARING,CLEARING_CURRENT,INACTIVE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;FIRST_CHANGE#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Lowest system change number (SCN) in the log&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;FIRST_TIME&lt;/td&gt;
+&lt;td&gt;DATE&lt;/td&gt;
+&lt;td&gt;Time of the first SCN in the log&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NEXT_CHANGE#&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;Highest change number (SCN) in the log. When &lt;code&gt;STATUS=CURRENT&lt;/code&gt;, &lt;code&gt;NEXT_CHANGE#&lt;/code&gt;is set to the highest possible SCN, 281474976710655.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NEXT_TIME&lt;/td&gt;
+&lt;td&gt;DATE&lt;/td&gt;
+&lt;td&gt;Time of the highest SCN in the log. When &lt;code&gt;STATUS=CURRENT&lt;/code&gt;, &lt;code&gt;NEXT_TIME&lt;/code&gt; is set to&lt;code&gt;NULL&lt;/code&gt;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CON_ID&lt;/td&gt;
+&lt;td&gt;NUMBER&lt;/td&gt;
+&lt;td&gt;0，1，n三种情况&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;日志文件的六种状态UNUSED,CURRENT,ACTIVE,CLEARING,CLEARING_CURRENT,INACTIVE代表的意思分别如下所述：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;UNUSED&lt;/strong&gt; - Online redo log has never been written to. This is the state of a redo log that was just added, or just after a &lt;em&gt;RESETLOGS&lt;/em&gt;, when it is not the current redo log.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CURRENT&lt;/strong&gt; - Current redo log. This implies that the redo log is active. The redo log could be open or closed.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ACTIVE&lt;/strong&gt; - Log is active but is not the current log. It is needed for crash recovery. It may be in use for block recovery. It may or may not be archived.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CLEARING&lt;/strong&gt; - Log is being re-created as an empty log after an &lt;code&gt;ALTER DATABASE CLEAR LOGFILE&lt;/code&gt; statement. After the log is cleared, the status changes to &lt;code&gt;UNUSED&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CLEARING_CURRENT&lt;/strong&gt; - Current log is being cleared of a closed thread. The log can stay in this status if there is some failure in the switch such as an I/O error writing the new log header.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;INACTIVE&lt;/strong&gt; - Log is no longer needed for instance recovery. It may be in use for media recovery. It may or may not be archived.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;lgwr如何重复使用redo-log-files&#34;&gt;LGWR如何重复使用redo log files&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Reuse%20of%20Redo%20Log%20Files%20by%20LGWR.gif&#34; alt=&#34;Figure 11-1 Reuse of Redo Log Files by LGWR&#34;&gt;&lt;/p&gt;
+&lt;p&gt;上图就是Oracle LGWR进程向redo log files中写入redo记录的过程，可见，Oracle数据库每次只是用一个redo log file来存储redo log buffer中的redo记录。LGWR正在写入的那个redo log file就是current redo log file。&lt;/p&gt;
+&lt;p&gt;可用于实例恢复的redo log files就是active redo log files。&lt;/p&gt;
+&lt;p&gt;不再用于实例恢复的redo log files就是inactive redo log files。&lt;/p&gt;
+&lt;p&gt;如果数据库当前是Archivelog模式，那么直到有一个后台归档进程ARCn已经归档成功，数据库才能重用或者覆盖active online log file。&lt;/p&gt;
+&lt;p&gt;如果数据库当前是NoArchivelog模式，当最后一个redo log file写满的时候，LGWR会继续按顺序覆盖下一个inactive redo log file。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Oracle内存结构和后台进程</title>
+      <link>https://suncle.me/2016/03/16/Oracle%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/</link>
+      <pubDate>Wed, 16 Mar 2016 11:22:28 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/Oracle%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Oracle%E5%86%85%E5%AD%98%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Oracle实例=内存+后台进程&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Oracle数据库=实例+物理存储结构&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;由上图可知Oracle实例（一个Instance）由内存结构和程序结构组成，内存结构主要是SGA，程序结构主要是后台进程。&lt;/p&gt;
+&lt;p&gt;物理存储结构主要是数据库文件。&lt;/p&gt;
+&lt;p&gt;这次仔细学习了Oracle实例的具体内容。&lt;/p&gt;
+&lt;h2 id=&#34;为什么oracle数据库做的这么复杂&#34;&gt;为什么Oracle数据库做的这么复杂？&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;内存&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据查询的速度&lt;/li&gt;
+&lt;li&gt;更好的提升数据处理的速度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;后台进程&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;为了完成特定的任务的服务进程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;数据文件&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据的永久性保存&lt;/li&gt;
+&lt;li&gt;也是数据库性能下降的主要原因&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;实例之内存结构&#34;&gt;实例之内存结构&lt;/h2&gt;
+&lt;h3 id=&#34;system-global-areasga&#34;&gt;System global area(SGA)&lt;/h3&gt;
+&lt;p&gt;SGA区包括Oracle实例需要的一系列内存组件，用于存放数据信息和数据控制信息，这些&lt;strong&gt;内存信息被所有进程所共享&lt;/strong&gt;。SGA的各个组成包括：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;组成&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Database buffer cache&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;数据库高速缓冲区，里面存放着从磁盘读取到内存的数据块，这些数据块可以被所有的会话访问，是全局共享的。buffer cache分为三个部分，分别是default pool，keep pool，recycle pool。default pool是正常情况下，数据块存放的内存区域，default pool会根据一个过期算法（LRU，Least Recently Used，近期最少使用）将过期的脏数据（修改过的数据，没有修改的数据可以不写到磁盘上）写到磁盘上。keep pool这个区域用于将一些数据始终固定在内存中。recycle pool存放一些不经常使用的数据块，避免这些数据块在default pool中占据空间。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Shared pool&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;共享池缓存着一些用户可以共用的信息：1、可以重新使用的SQL语句  2、存放一些数据字典的信息，包括用户账户数据，表，索引，权限等等。  3、存储存放在数据库中的可执行代码。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Redo log buffer&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;重做日志缓冲区，存放着数据库操作产生的redo数据，Redo log buffer以循环的方式写入，当redo log已经写到磁盘后，就可以被后续的日志数据覆盖。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Large pool&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;对数据的处理不适用LRU算法，比shared pool更搞笑的内存收取方式。并行执行时会使用large pool。Rman备份时启动并行备份方式时，使用large pool。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Java pool&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;这块内存区域用来存放所有特定会话的JVM（Java Virtual Machine）中的java代码和数据。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Streams pool&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;里面存放着流相关的信息，比如流队列，其中也会流复制中capture进程提供进程内存空间。Streams pool只为流复制提供内存空间，如果没有手工配置，也没有配置流复制，这个空间将设置为0。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;Result cache&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;结果缓存，当表的访问方式以读为主前提下，从一张大表中过滤出少量的记录作为结果集，把查询结果集放入result cache，后续相同的查询语句可以直接从result cache里获取想要的结果，省去了CPU、I/O上的开销。这个SGA组件加速了频繁运行的查询语句的执行速度。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description>
+    </item>
+    
+    <item>
+      <title>DBA日常工作和职责</title>
+      <link>https://suncle.me/2016/03/16/DBA%E6%97%A5%E5%B8%B8%E5%B7%A5%E4%BD%9C%E5%92%8C%E8%81%8C%E8%B4%A3/</link>
+      <pubDate>Wed, 16 Mar 2016 11:15:27 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/DBA%E6%97%A5%E5%B8%B8%E5%B7%A5%E4%BD%9C%E5%92%8C%E8%81%8C%E8%B4%A3/</guid>
+      <description>&lt;hr&gt;
+&lt;p&gt;经过前面的学习，对数据库有了一个大致的了解，从这周起对Oracle数据库进行进一步的深入学习。先来学习下DBA日常工作和职责&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Oracle DBA的职责&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;系统建设当中：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库的设计&lt;/li&gt;
+&lt;li&gt;数据库的建模&lt;/li&gt;
+&lt;li&gt;数据安全（备份方案，容灾方案）&lt;/li&gt;
+&lt;li&gt;数据库性能（系统性能）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;运维当中：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;保证数据的安全（备份方案，容灾方案）&lt;/li&gt;
+&lt;li&gt;数据库的可用性&lt;/li&gt;
+&lt;li&gt;日常故障处理&lt;/li&gt;
+&lt;li&gt;性能分析处理&lt;/li&gt;
+&lt;li&gt;数据库升级（打补丁），改造&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Oracle DBA的日常工作&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;通用数据库的监控&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;表空间（磁盘，ASM）容量的监控&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;一整块存储使用ASM管理，将数据文件设置为自动扩展，最后只需要监控ASM的使用率&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;告警日志文件（alert_sid.ora）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;写一个自动分析alert文件的程序，做到alert错误实时告警&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;定制监控指标&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;某个表空间的数据增长率&lt;/li&gt;
+&lt;li&gt;某个对象（表，索引）的数据增长率&lt;/li&gt;
+&lt;li&gt;阻塞（v$lock）&lt;/li&gt;
+&lt;li&gt;cpu&lt;/li&gt;
+&lt;li&gt;i/o&lt;/li&gt;
+&lt;li&gt;内存（SGA+PGA）&lt;/li&gt;
+&lt;li&gt;会话数（session number）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;养成好的习惯&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;DBA应该多使用sqlplus工具&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sqlplus是Oracle最基本的配置，不受任何环境的影响。&lt;/li&gt;
+&lt;li&gt;熟练掌握SQL语句&lt;/li&gt;
+&lt;li&gt;熟悉Oracle的性能视图&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;开发人员可以考虑使用图形工具&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;更高的代码编写的效率&lt;/li&gt;
+&lt;li&gt;更好的继承开发环境&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Oracle DBA常用的SQL语句&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;常用的SQL语句应该包括以下几个方面：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;表空间的大小（数据库的大小）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;数据对象的大小（数据对象占用的空间）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;会话当前的SQL语句&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;会话对应的进程号&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;会话的阻塞&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;SQL的执行计划&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;跟踪SQL语句&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>DBA常用的SQL语句</title>
+      <link>https://suncle.me/2016/03/16/DBA%E5%B8%B8%E7%94%A8%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/</link>
+      <pubDate>Wed, 16 Mar 2016 11:07:19 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/DBA%E5%B8%B8%E7%94%A8%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/</guid>
+      <description>&lt;hr&gt;
+&lt;p&gt;DBA常用的SQL语句&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;数据库的大小&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;数据库的大小主要是数据文件（dba_data_files）和临时文件(dba_temp_files;)的大小之和。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;c1&#34;&gt;--查询数据文件大小
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SQL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;sum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bytes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dba_data_files&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;SUM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BYTES&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;----------
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1515192320&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;--查询临时文件大小
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SQL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;sum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bytes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dba_temp_files&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;SUM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BYTES&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;----------
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;mi&#34;&gt;30408704&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;--查询数据库的大小：两项相加
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SQL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;sum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bytes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dba_data_files&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;sum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bytes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dba_&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;temp_files&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SELECTSUM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BYTES&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FROMDBA_DATA_FILES&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SELECTSUM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BYTES&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FROMDBA_TEMP_FILES&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;-------------------------------------------------------------------------
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;                                                               &lt;span class=&#34;mi&#34;&gt;1545601024&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;--取一个别名total_size
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SQL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;sum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bytes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dba_data_files&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;sum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bytes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dba_&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;temp_files&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;total_size&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;TOTAL_SIZE&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;----------
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1545601024&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>做一名合格的DBA</title>
+      <link>https://suncle.me/2016/03/16/%E5%81%9A%E4%B8%80%E5%90%8D%E5%90%88%E6%A0%BC%E7%9A%84DBA/</link>
+      <pubDate>Wed, 16 Mar 2016 10:59:00 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/%E5%81%9A%E4%B8%80%E5%90%8D%E5%90%88%E6%A0%BC%E7%9A%84DBA/</guid>
+      <description>&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Oracle DBA的角色定义&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;开发型DBA&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库安装&lt;/li&gt;
+&lt;li&gt;数据库架构设计（架构和建模）&lt;/li&gt;
+&lt;li&gt;代码开发（存储过程，SQL）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;运维型DBA&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库日常监控&lt;/li&gt;
+&lt;li&gt;故障处理&lt;/li&gt;
+&lt;li&gt;性能优化&lt;/li&gt;
+&lt;li&gt;数据备份，容灾&lt;/li&gt;
+&lt;li&gt;数据库安全规划&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;DBA的操守&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;在自己的责任范围内&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;让数据库设计更合理，预防设计导致的性能或安全隐患&lt;/li&gt;
+&lt;li&gt;数据更安全&lt;/li&gt;
+&lt;li&gt;数据库性能更优&lt;/li&gt;
+&lt;li&gt;数据库日常管理更合理&lt;/li&gt;
+&lt;li&gt;故障发现，处理及时&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;数据库的架构设计&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;数据库架构&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分布or单库&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;实例的冗余&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RAC or single&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;数据库的安全和容灾&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DG or streams or Rman&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;空间的考虑存储的规划&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ASM （自动存储管理）+ SAN（Storage Area Network，SAN网络存储）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;软件的生命周期和业务（数据）增长的预测&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;数据库的建模&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;实体，关系的设计E-R&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;表&lt;/li&gt;
+&lt;li&gt;索引&lt;/li&gt;
+&lt;li&gt;主、外键的引用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;数据库的开发&amp;ndash;SQL和存储过程&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SQL是否绑定变量&lt;/li&gt;
+&lt;li&gt;SQL语句的性能问题&lt;/li&gt;
+&lt;li&gt;表的分析的方式-分析选项，分析频率等&amp;hellip;&lt;/li&gt;
+&lt;li&gt;影响SQL执行效率的性能参数&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>RAC与DG</title>
+      <link>https://suncle.me/2016/03/16/RAC%E4%B8%8EDG/</link>
+      <pubDate>Wed, 16 Mar 2016 10:35:05 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/RAC%E4%B8%8EDG/</guid>
+      <description>&lt;h2 id=&#34;rac&#34;&gt;RAC&lt;/h2&gt;
+&lt;p&gt;RAC: real application clustersrac&lt;/p&gt;
+&lt;p&gt;RAC: real application clustersrac&lt;/p&gt;
+&lt;p&gt;单节点数据库：数据文件和示例文件一一对应&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;实例损坏时数据库就损坏了&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;RAC架构数据库：数据文件和多个实例对应&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;RAC最根本的初衷是实例级的容错，并不是基于数据的&lt;/p&gt;
+&lt;p&gt;实例都是基于数据的。&lt;/p&gt;
+&lt;p&gt;dataguard是基于数据容错的。&lt;/p&gt;
+&lt;p&gt;Oracle数据库支持网格计算环境的核心技术&lt;/p&gt;
+&lt;p&gt;SAN网络存储（Storage Area Network）：集中式管理的高速存储网络
+&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-RAC%E6%9E%B6%E6%9E%84.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;RAC的目的&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提供实例级别的冗余&lt;/li&gt;
+&lt;li&gt;提供更多的系统资源&lt;/li&gt;
+&lt;li&gt;增加更多的并行处理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;RAC的优点和缺点&lt;/p&gt;
+&lt;p&gt;优点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;提供系统冗余&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;更多的系统资源&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;业务分割处理&lt;/p&gt;
+&lt;p&gt;缺点&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;内存共享和资源竞争（cache fusion）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;底层技术复杂，对DBA技术要求高&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;什么时候需要使用RAC？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;实例冗余——第一考虑的目的&lt;/li&gt;
+&lt;li&gt;处理能力和性能的提升&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>数据库备份和恢复</title>
+      <link>https://suncle.me/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D/</link>
+      <pubDate>Wed, 16 Mar 2016 10:32:18 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D/</guid>
+      <description>&lt;p&gt;commit &amp;ndash;lgwr&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事务相关的操作，保证事务的安全&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;checkpoint &amp;ndash;dbwr&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据相关的操作，保证数据的安全&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;实例的恢复-crash-recovery&#34;&gt;&lt;strong&gt;实例的恢复 crash recovery&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;什么时候发生oracle实例恢复&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;shutdown abort&lt;/li&gt;
+&lt;li&gt;数据库异常down掉（机器死机，掉电）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;###从Redo的什么位置开始恢复？&lt;/p&gt;
+&lt;p&gt;在某一点，在这一点之前的所有数据，Oracle都已经成功的写入到了磁盘上。&lt;/p&gt;
+&lt;p&gt;实例恢复是一个自动的过程，不需要人工干预&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;实例恢复发生在那个阶段？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;–sql&amp;gt;startup nomount（读取spfle) ，没有实例恢复。&lt;/p&gt;
+&lt;p&gt;–sql&amp;gt;alter database mount (读取控制文件），没有实例恢复。&lt;/p&gt;
+&lt;p&gt;–sql&amp;gt;alter database open （检查控制文件，数据文件头），发生实例恢复。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果直接startup命令，会经过启动装载打开三个步骤。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;SQL&amp;gt; shutdown abort;
+ORACLE 例程已经关闭。
+SQL&amp;gt; startup;
+ORACLE 例程已经启动。
+
+Total System Global Area 3307048960 bytes
+Fixed Size                  2180264 bytes
+Variable Size            1828719448 bytes
+Database Buffers         1459617792 bytes
+Redo Buffers               16531456 bytes
+数据库装载完毕。
+数据库已经打开。
+SQL&amp;gt; shutdown abort;
+ORACLE 例程已经关闭。
+SQL&amp;gt; startup nomount;
+ORACLE 例程已经启动。
+
+Total System Global Area 3307048960 bytes
+Fixed Size                  2180264 bytes
+Variable Size            1828719448 bytes
+Database Buffers         1459617792 bytes
+Redo Buffers               16531456 bytes
+SQL&amp;gt; alter database mount;
+
+数据库已更改。
+
+SQL&amp;gt; alter database open;
+
+数据库已更改。
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;oracle在打开数据库时（alter database open），会检查每个文件头上的信息（SCN），并同控制文件中相应的信息（SCN）比较，如果不一致就进行实例恢复。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例恢复的过程&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;前滚rolling forward&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;读取状态为current和active状态的日志（redo log），将发生crash时，没有来得及写磁盘的数据块，使用redo信息来恢复。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;打开数据库alter database open&lt;/li&gt;
+&lt;li&gt;回滚rolling back&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;将没有提交的事务进行回滚&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>Oracle数据字典</title>
+      <link>https://suncle.me/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8/</link>
+      <pubDate>Wed, 16 Mar 2016 10:23:40 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;数据字典的组成——两类视图&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;静态数据字典：描述数据库的信息&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;这些数据经常是静止的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;动态数据字典：描述实例的信息&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;反映数据局运行的状态，反映数据库实例运行的信息，这些信息经常是变化的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;users&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ALL_USERS&amp;ndash;lists all users of the database visible to the current user. This view does not describe the users&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;描述不是用户自己，而是当前用户可见（也就是有权访问）的数据库的所有的用户。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;DBA_USERS&amp;ndash;describes all users of the database&lt;/p&gt;
+&lt;p&gt;USER_USERS&amp;ndash;describes the current user&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;数据字典视图&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查询所有的数据字典视图&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;select * from dict;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;数据字典的基表&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;是保存数据的真正的表&lt;/li&gt;
+&lt;li&gt;数据字典视图的数据来自于基表&lt;/li&gt;
+&lt;li&gt;Oracle不对基表做支持和解释&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;DBA常用的一些数据字典视图——静态视图&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;user_tables&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;内容和ALL_TABLES类似。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_2105.htm#REFRN20286&#34;&gt;https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_2105.htm#REFRN20286&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;user_tab_partitions&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;内容和ALL_TAB_PARTITIONS类似&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_2098.htm#i1591118&#34;&gt;https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_2098.htm#i1591118&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>复杂一点的SQL语句</title>
+      <link>https://suncle.me/2016/02/19/%E5%A4%8D%E6%9D%82%E4%B8%80%E7%82%B9%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/</link>
+      <pubDate>Fri, 19 Feb 2016 22:50:12 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/02/19/%E5%A4%8D%E6%9D%82%E4%B8%80%E7%82%B9%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/</guid>
+      <description>&lt;h2 id=&#34;ddl对表或者表的属性进行了改变&#34;&gt;DDL：对表或者表的属性进行了改变&lt;/h2&gt;
+&lt;h3 id=&#34;create创建表创建用户创建视图&#34;&gt;create：创建表创建用户创建视图&lt;/h3&gt;
+&lt;p&gt;创建表&lt;/p&gt;
+&lt;p&gt;create table student(id int,score int) ;&lt;/p&gt;
+&lt;p&gt;student后面与括号之间可以有空格可以没有&lt;/p&gt;
+&lt;p&gt;创建用户&lt;/p&gt;
+&lt;p&gt;create user liuyifei identified by 4852396;&lt;/p&gt;
+&lt;p&gt;drop：删除整个表、删除指定的用户、删除指定的存储空间&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;drop table table_name;
+drop user user_name;
+
+--删除空的表空间，但是不包含物理文件
+drop tablespace tablespace_name;
+--删除非空表空间，但是不包含物理文件
+drop tablespace tablespace_name including contents;
+--删除空表空间，包含物理文件
+drop tablespace tablespace_name including datafiles;
+--删除非空表空间，包含物理文件
+drop tablespace tablespace_name including contents and datafiles;
+--如果其他表空间中的表有外键等约束关联到了本表空间中的表的字段，就要加上CASCADE CONSTRAINTS
+drop tablespace tablespace_name including contents and datafiles CASCADE CONSTRAINTS;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;truncate&#34;&gt;truncate&lt;/h3&gt;
+&lt;p&gt;删除表中的所有数据，但是表还是存在的。和drop的先后参见如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;SQL&amp;gt; create table st1(id int);
+
+表已创建。
+
+SQL&amp;gt; truncate table st1;
+
+表被截断。
+
+SQL&amp;gt; drop table st1;
+
+表已删除。
+
+SQL&amp;gt; create table st1(id int);
+
+表已创建。
+
+SQL&amp;gt; drop table st1;
+
+表已删除。
+
+SQL&amp;gt; truncate table st1;
+truncate table st1
+               *
+第 1 行出现错误:
+ORA-00942: 表或视图不存在
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>plsql</title>
+      <link>https://suncle.me/2016/02/19/PLSQL/</link>
+      <pubDate>Fri, 19 Feb 2016 22:45:12 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/02/19/PLSQL/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;PL/SQL&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;PL/SQL也是一种程序语言，叫做&lt;strong&gt;过程化SQL语言&lt;/strong&gt;（Procedural Language/SQL）。PL/SQL是Oracle数据库对SQL语句的扩展。在普通SQL语句的使用上增加了编程语言的特点，所以PL/SQL就是把数据操作和查询语句组织在PL/SQL代码的过程性单元中，通过逻辑判断、循环等操作实现复杂的功能或者计算的程序语言。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;SQL是一种集合性语言&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;PL/SQL语句效率比SQL低，尽量用SQL。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;PL/SQL循环&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;SQL&amp;gt; create table t(id int);
+
+表已创建。
+
+SQL&amp;gt; begin
+  2  for i in 1..100 loop
+  3  insert into t values(i);
+  4  end loop;
+  5  end;
+  6  /
+
+PL/SQL 过程已成功完成。
+
+SQL&amp;gt; select count(*) from t;
+
+  COUNT(*)
+----------
+       100
+
+SQL&amp;gt; commit;
+
+提交完成。
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Oracle数据库的对象</title>
+      <link>https://suncle.me/2016/02/19/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AF%B9%E8%B1%A1/</link>
+      <pubDate>Fri, 19 Feb 2016 17:04:15 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/02/19/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AF%B9%E8%B1%A1/</guid>
+      <description>&lt;p&gt;查看oracle数据库中的所有对象&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;select distinct object_type from dba_objects; /*distinct??*/
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;dba_objects是存放数据库对象的一个视图&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;schema&lt;/strong&gt;：数据库中一个对象的合集称为一个schema，它的名字和拥有这些对象的用户名相同。&amp;mdash;比如scott用户和它下面的表统一称为一个schema&lt;/p&gt;
+&lt;p&gt;下面分别介绍一下Oracle数据库中的各个对象&lt;/p&gt;
+&lt;h2 id=&#34;1表&#34;&gt;1、表&lt;/h2&gt;
+&lt;h3 id=&#34;表-段segment&#34;&gt;表-段（segment）&lt;/h3&gt;
+&lt;p&gt;段是表物理化的过程，在Oracle数据库里只要是分配了存储空间的对象，都可以叫做段。&lt;/p&gt;
+&lt;p&gt;CLOB是内置类型，它将字符大对象 (Character Large Object) 存储为数据库表某一行中的一个列值。&lt;/p&gt;
+&lt;h3 id=&#34;表-分区partition&#34;&gt;表-分区（partition）&lt;/h3&gt;
+&lt;p&gt;便于对表的管理。&lt;/p&gt;
+&lt;p&gt;对分区的具体操作如下图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Oracle%E8%A1%A8%E5%88%86%E5%8C%BA%E7%9A%84%E6%93%8D%E4%BD%9C.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Oracle数据库的文件以及Oracle体系架构</title>
+      <link>https://suncle.me/2016/02/06/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%96%87%E4%BB%B6%E4%BB%A5%E5%8F%8AOracle%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84/</link>
+      <pubDate>Sat, 06 Feb 2016 21:27:16 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/02/06/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%96%87%E4%BB%B6%E4%BB%A5%E5%8F%8AOracle%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84/</guid>
+      <description>&lt;h2 id=&#34;第一部分oracle数据库的文件&#34;&gt;第一部分、Oracle数据库的文件&lt;/h2&gt;
+&lt;h3 id=&#34;1参数文件控制实例的行为的参数的集合&#34;&gt;1、参数文件:控制实例的行为的参数的集合&lt;/h3&gt;
+&lt;h4 id=&#34;参数文件的作用&#34;&gt;参数文件的作用&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;设定数据库的限制&lt;/li&gt;
+&lt;li&gt;设置用户或者进程的限制&lt;/li&gt;
+&lt;li&gt;设定数据库资源的限制&lt;/li&gt;
+&lt;li&gt;调整系统的性能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;主要的参数文件&#34;&gt;主要的参数文件&lt;/h4&gt;
+&lt;p&gt;SGA_TARGET：Oracle在SGA区（SGA是Oracle最重要的一块内存区域，存放各种各样的数据、SQL解析以及redo日志等等）需要分配多大的内存。&lt;/p&gt;
+&lt;p&gt;PGA_AGGREGATE_TARGET：此参数用来指定所有session总计可以使用最大PGA（程序全局区，会话分配的内存）内存。SGA和PGA基本就是oracle使用的内存的总和。&lt;/p&gt;
+&lt;p&gt;DB_CACHE_SIZE：数据块缓冲缓存区大小&lt;/p&gt;
+&lt;p&gt;DB_FILES：db_files参数限制了数据库数据文件总的个数,datafiles数目达到db_files指定后数据库不能添加新的数据文件&lt;/p&gt;
+&lt;p&gt;LOG_ARCHIVE_DEST_n：此参数可以设置最多10(n=[1..10])个不同的归档路径&lt;/p&gt;
+&lt;p&gt;USER_DUMP_DEST：specifies the pathname for a directory where the server will write debugging trace files on behalf of a user process.&lt;/p&gt;
+&lt;p&gt;查看参数文件初始化值可以在oracle的官方文档上去看。在&lt;a href=&#34;https://docs.oracle.com/cd/E11882_01/server.112/e40402/initparams002.htm#REFRN00101&#34;&gt;Basic Initialization Parameters&lt;/a&gt;就可以查看各项初始化参数了。每个基本参数点进去就有了详细的说明。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-Oracle%E5%9F%BA%E6%9C%AC%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8F%82%E6%95%B0.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Oracle SQL语句分类</title>
+      <link>https://suncle.me/2016/01/27/Oracle-SQL%E8%AF%AD%E5%8F%A5%E5%88%86%E7%B1%BB/</link>
+      <pubDate>Wed, 27 Jan 2016 15:37:15 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/27/Oracle-SQL%E8%AF%AD%E5%8F%A5%E5%88%86%E7%B1%BB/</guid>
+      <description>&lt;p&gt;SQL语句按照功能分为三类，数据库操作语言，数据库定义语言，数据库控制语言。&lt;/p&gt;
+&lt;h2 id=&#34;一dml---data-manipulation-language&#34;&gt;一、DML&amp;mdash;data manipulation language&lt;/h2&gt;
+&lt;p&gt;数据库操作语言(select,insert,update,delete)&lt;/p&gt;
+&lt;h3 id=&#34;select&#34;&gt;SELECT&lt;/h3&gt;
+&lt;h3 id=&#34;insert&#34;&gt;INSERT&lt;/h3&gt;
+&lt;h3 id=&#34;update&#34;&gt;UPDATE&lt;/h3&gt;
+&lt;h3 id=&#34;delete&#34;&gt;DELETE&lt;/h3&gt;
+&lt;h2 id=&#34;二ddl---data-definition-language&#34;&gt;二、DDL&amp;mdash;data definition language&lt;/h2&gt;
+&lt;p&gt;数据库定义语言(create,drop,truncate,alter)&lt;/p&gt;
+&lt;h3 id=&#34;create&#34;&gt;CREATE&lt;/h3&gt;
+&lt;h3 id=&#34;drop&#34;&gt;DROP&lt;/h3&gt;
+&lt;h3 id=&#34;truncate空间收回&#34;&gt;TRUNCATE（空间收回）&lt;/h3&gt;
+&lt;h3 id=&#34;alter&#34;&gt;ALTER&lt;/h3&gt;
+&lt;h2 id=&#34;三dcl---data-control-language&#34;&gt;三、DCL&amp;mdash;data control language &lt;/h2&gt;
+&lt;p&gt;数据库控制语言(grant,revoke)&lt;/p&gt;
+&lt;h3 id=&#34;grant&#34;&gt;GRANT&lt;/h3&gt;
+&lt;h3 id=&#34;revoke&#34;&gt;REVOKE&lt;/h3&gt;</description>
+    </item>
+    
+    <item>
+      <title>CentOS6.7环境下安装配置Oracle数据库</title>
+      <link>https://suncle.me/2016/01/26/CentOS6.7%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+      <pubDate>Tue, 26 Jan 2016 15:28:31 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/26/CentOS6.7%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+      <description>Linux下静默安装Oracle数据库</description>
+    </item>
+    
+    <item>
+      <title>win7x64安装配置Oracle 11g R2数据库</title>
+      <link>https://suncle.me/2016/01/25/win7x64%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle-11g-R2%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+      <pubDate>Mon, 25 Jan 2016 10:41:46 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/01/25/win7x64%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle-11g-R2%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+      <description>&lt;h2 id=&#34;安装前的准备&#34;&gt;安装前的准备&lt;/h2&gt;
+&lt;p&gt;Oracle数据库安装文件，下载地址见Oracle官网：&lt;a href=&#34;https://www.oracle.com/&#34;&gt;https://www.oracle.com/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;开始安装&#34;&gt;开始安装&lt;/h2&gt;
+&lt;p&gt;1、Oracle11gR2的安装文件分成了两个，需要我们在解压的时候，解压到相同的目录下边，里面文件的目录名是默认的database，如图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E8%A3%85%E5%8C%85.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2、解压到相同目录之后，双击文件夹中的setup.exe文件，双击之后，出现启动安装界面的命令窗口，会检查监视器配置，并且启动安装界面进入正式安装界面，如图所示，取消下图所示的选中，即不接受安全更新，然后单击&amp;quot;下一步&amp;quot;继续，会提示尚未提供电子邮件，不管，直接点是，Oracle默认是选择基本安装。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-oracle%E6%AD%A3%E5%BC%8F%E5%AE%89%E8%A3%85%E7%95%8C%E9%9D%A2.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

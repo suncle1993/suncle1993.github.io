@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>堆栈 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E5%A0%86%E6%A0%88/</link>
+    <description>Recent content in 堆栈 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 31 Oct 2017 09:43:51 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E5%A0%86%E6%A0%88/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>从Python调用堆栈获取行号等信息</title>
+      <link>https://suncle.me/2017/10/31/%E4%BB%8EPython%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88%E8%8E%B7%E5%8F%96%E8%A1%8C%E5%8F%B7%E7%AD%89%E4%BF%A1%E6%81%AF/</link>
+      <pubDate>Tue, 31 Oct 2017 09:43:51 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/10/31/%E4%BB%8EPython%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88%E8%8E%B7%E5%8F%96%E8%A1%8C%E5%8F%B7%E7%AD%89%E4%BF%A1%E6%81%AF/</guid>
+      <description>&lt;p&gt;程序中的日志打印，或者消息上传，比如kafka消息等等。经常上传的消息中需要上传堆栈信息中的文件名、行号、上层调用者等具体用于定位的消息。Python提供了以下两种方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;sys._getframe&lt;/code&gt;， 基础方法&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;inspect.currentframe&lt;/code&gt;， 推荐方法，提供除了&lt;code&gt;sys._getframe&lt;/code&gt;方法之外更多的frame相关的方法&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

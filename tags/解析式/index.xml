@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>解析式 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E8%A7%A3%E6%9E%90%E5%BC%8F/</link>
+    <description>Recent content in 解析式 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 11 Jan 2017 22:44:30 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E8%A7%A3%E6%9E%90%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python解析式</title>
+      <link>https://suncle.me/2017/01/11/Python%E8%A7%A3%E6%9E%90%E5%BC%8F/</link>
+      <pubDate>Wed, 11 Jan 2017 22:44:30 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/01/11/Python%E8%A7%A3%E6%9E%90%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;python解析式&#34;&gt;Python解析式&lt;/h1&gt;
+&lt;p&gt;在python中经常能够看到形如&lt;code&gt;ret = [x ** 2 for x in lst]&lt;/code&gt;这样的赋值语句，对于从C++转到python的人不太容易理解这种for循环的使用，这就是python为了简洁而发明的新语法。python解析式有以下优点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代码简洁，可读性强&lt;/li&gt;
+&lt;li&gt;效率比普通迭代稍高&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;python的解析式具体分为以下四种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;列表解析式&lt;/li&gt;
+&lt;li&gt;生成器解析式&lt;/li&gt;
+&lt;li&gt;集合解析式&lt;/li&gt;
+&lt;li&gt;字典解析式&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面分别介绍这四种解析式的使用。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

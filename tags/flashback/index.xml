@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>flashback on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/flashback/</link>
+    <description>Recent content in flashback on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 21 Mar 2016 17:32:01 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/flashback/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>闪回flashback</title>
+      <link>https://suncle.me/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/</link>
+      <pubDate>Mon, 21 Mar 2016 17:32:01 +0000</pubDate>
+      
+      <guid>https://suncle.me/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Oracle-flashback_pic.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;参考资料：&lt;/strong&gt;&lt;a href=&#34;https://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_flashback.htm&#34;&gt;Using Oracle Flashback Technology&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Oracle 11g的新特性闪回操作&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;闪回查询
+&lt;ul&gt;
+&lt;li&gt;闪回查询&lt;/li&gt;
+&lt;li&gt;闪回版本查询&lt;/li&gt;
+&lt;li&gt;闪回事务查询&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;闪回数据
+&lt;ul&gt;
+&lt;li&gt;闪回表&lt;/li&gt;
+&lt;li&gt;闪回删除&lt;/li&gt;
+&lt;li&gt;闪回数据&lt;/li&gt;
+&lt;li&gt;闪回归档&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面会分别介绍这些操作。在介绍这些操作之前先看下闪回特性是否开启。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

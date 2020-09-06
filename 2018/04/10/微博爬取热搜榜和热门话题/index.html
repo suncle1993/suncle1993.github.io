@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>微博爬取热搜榜和热门话题 - Suncle&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Suncle" /><meta name="description" content="weibo_spider 微博爬虫：
+ 爬取热搜榜：不需要登录，但是需要处理反扒措施 爬取热门话题：需要登录之后获得cookies和user_id " /><meta name="keywords" content="计算机, 后端, Python, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://suncle.me/2018/04/10/%E5%BE%AE%E5%8D%9A%E7%88%AC%E5%8F%96%E7%83%AD%E6%90%9C%E6%A6%9C%E5%92%8C%E7%83%AD%E9%97%A8%E8%AF%9D%E9%A2%98/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="微博爬取热搜榜和热门话题" />
+<meta property="og:description" content="weibo_spider
+微博爬虫：
+
+爬取热搜榜：不需要登录，但是需要处理反扒措施
+爬取热门话题：需要登录之后获得cookies和user_id
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://suncle.me/2018/04/10/%E5%BE%AE%E5%8D%9A%E7%88%AC%E5%8F%96%E7%83%AD%E6%90%9C%E6%A6%9C%E5%92%8C%E7%83%AD%E9%97%A8%E8%AF%9D%E9%A2%98/" />
+<meta property="article:published_time" content="2018-04-10T17:58:31+00:00" />
+<meta property="article:modified_time" content="2018-04-10T17:58:31+00:00" />
+<meta itemprop="name" content="微博爬取热搜榜和热门话题">
+<meta itemprop="description" content="weibo_spider
+微博爬虫：
+
+爬取热搜榜：不需要登录，但是需要处理反扒措施
+爬取热门话题：需要登录之后获得cookies和user_id
+">
+<meta itemprop="datePublished" content="2018-04-10T17:58:31+00:00" />
+<meta itemprop="dateModified" content="2018-04-10T17:58:31+00:00" />
+<meta itemprop="wordCount" content="2712">
+
+
+
+<meta itemprop="keywords" content="微博,爬虫,Python,selenium," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="微博爬取热搜榜和热门话题"/>
+<meta name="twitter:description" content="weibo_spider
+微博爬虫：
+
+爬取热搜榜：不需要登录，但是需要处理反扒措施
+爬取热门话题：需要登录之后获得cookies和user_id
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Suncle&#39;s Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Suncle&#39;s Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">微博爬取热搜榜和热门话题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-04-10 </span>
+        <div class="post-category">
+            <a href="/categories/Python/"> Python </a>
+            </div>
+          <span class="more-meta"> 约 2712 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#weibo_spider">weibo_spider</a></li>
+    <li><a href="#爬取热搜榜">爬取热搜榜</a></li>
+    <li><a href="#爬取热门话题">爬取热门话题</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="weibo_spider">weibo_spider</h1>
+<p>微博爬虫：</p>
+<ul>
+<li>爬取热搜榜：不需要登录，但是需要处理反扒措施</li>
+<li>爬取热门话题：需要登录之后获得cookies和user_id</li>
+</ul>
+<h1 id="爬取热搜榜">爬取热搜榜</h1>
+<p>微博热搜榜地址：<code>https://s.weibo.com/top/summary?cate=realtimehot</code>，具体爬取代码如下，其中最终的部分在于对热搜标题中的反扒处理，具体可参见<a href="https://www.jianshu.com/p/e6c24feeb806">简书中的爬取新浪微博热搜</a>。具体代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 4/3/18 2:08 PM
+</span><span class="s2">@author: Chen Liang
+</span><span class="s2">@function: 爬取weibo实时热搜榜（不需要登录）
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="kn">from</span> <span class="nn">spider.base_spider</span> <span class="kn">import</span> <span class="n">BaseSpider</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">class</span> <span class="nc">RealTimeHotSpider</span><span class="p">(</span><span class="n">BaseSpider</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;爬取weibo实时热搜榜（不需要登录）&#34;&#34;&#34;</span>
+    <span class="k">def</span> <span class="nf">get_hot_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_html_content</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;class=</span><span class="se">\\</span><span class="s1">&#34;star_name</span><span class="se">\\</span><span class="s1">&#34;&gt;.*?&lt;a href=</span><span class="se">\\</span><span class="s1">&#34;</span><span class="se">\\</span><span class="s1">/weibo</span><span class="se">\\</span><span class="s1">/(.*?)&amp;Refer=[top|new]&#39;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+        <span class="n">hot_degree_lst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;class=</span><span class="se">\\</span><span class="s1">&#34;star_num</span><span class="se">\\</span><span class="s1">&#34;&gt;&lt;span&gt;(.*?)&lt;</span><span class="se">\\</span><span class="s1">/span&gt;&#39;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+        <span class="n">hot_degree_lst</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">)</span>
+        <span class="n">title_lst</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">names_lst</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">links_lst</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">:</span>
+            <span class="n">title_lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;25&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">title_lst</span><span class="p">:</span>
+            <span class="n">names_lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parse</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;https://s.weibo.com/weibo/&#39;</span> <span class="o">+</span> <span class="n">i</span>
+            <span class="n">links_lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+
+        <span class="n">hot_info</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names_lst</span><span class="p">):</span>
+            <span class="c1"># print(i, v, links_lst[i], hot_degree_lst[i])</span>
+            <span class="n">json_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&#34;number&#34;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+                <span class="s2">&#34;title&#34;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
+                <span class="s2">&#34;url&#34;</span><span class="p">:</span> <span class="n">links_lst</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="s2">&#34;hot&#34;</span><span class="p">:</span> <span class="n">hot_degree_lst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="p">}</span>
+            <span class="n">hot_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hot_info</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">spider</span> <span class="o">=</span> <span class="n">RealTimeHotSpider</span><span class="p">()</span>
+    <span class="n">target_real_time_hot</span> <span class="o">=</span> <span class="s1">&#39;https://s.weibo.com/top/summary?cate=realtimehot&#39;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">spider</span><span class="o">.</span><span class="n">get_hot_list</span><span class="p">(</span><span class="n">target_real_time_hot</span><span class="p">))</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="爬取热门话题">爬取热门话题</h1>
+<p>热门话题在登录之后会出现在home页面中，示例地址：<code>https://weibo.com/u/3655576503/home</code></p>
+<p>可以采用selenium模拟登录，模拟登录的关键是通过selenium提供的选择器找到对应的input标签和对应的submit按钮。使用过程中遇到了以下问题：</p>
+<p>微博selenium模拟登录bug</p>
+<blockquote>
+<p>验证版本：</p>
+<p>chromedriver=2.37 and os = ubuntu 16.04 LTS</p>
+</blockquote>
+<p>如果不增加chrome_options会出现chromedriver加载失败的报错，报错如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Traceback (most recent call last):
+  File &#34;/root/PycharmProjects/smart_login/sina_login/sina_login_by_selenium.py&#34;, line 54, in &lt;module&gt;
+    cookies = login(name_input, passwd_input, url)
+  File &#34;/root/PycharmProjects/smart_login/sina_login/sina_login_by_selenium.py&#34;, line 14, in login
+    driver = webdriver.Chrome(&#39;/root/qk_python/python/data/collect/weibo_spider/priv/chromedriver&#39;)
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/chrome/webdriver.py&#34;, line 75, in __init__
+    desired_capabilities=desired_capabilities)
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/remote/webdriver.py&#34;, line 154, in __init__
+    self.start_session(desired_capabilities, browser_profile)
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/remote/webdriver.py&#34;, line 243, in start_session
+    response = self.execute(Command.NEW_SESSION, parameters)
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/remote/webdriver.py&#34;, line 312, in execute
+    self.error_handler.check_response(response)
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/remote/errorhandler.py&#34;, line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Chrome failed to start: exited abnormally
+  (Driver info: chromedriver=2.37.544315 (730aa6a5fdba159ac9f4c1e8cbc59bf1b5ce12b7),platform=Linux 4.13.0-38-generic x86_64)
+</code></pre></td></tr></table>
+</div>
+</div><p>同时需要在get操作之前增加<code>driver.set_window_size(1124, 850)</code>进行窗口大小的预置（合适的值即可），否则得到的WebElement的状态is_displayed为False，即不可见，导致进行clear操作和send_keys操作时出现异常。异常如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Traceback (most recent call last):
+  File &#34;/root/PycharmProjects/smart_login/sina_login/sina_login_by_selenium.py&#34;, line 61, in &lt;module&gt;
+    cookies = login(name_input, passwd_input, url)
+  File &#34;/root/PycharmProjects/smart_login/sina_login/sina_login_by_selenium.py&#34;, line 27, in login
+    name_field.clear()
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/remote/webelement.py&#34;, line 95, in clear
+    self._execute(Command.CLEAR_ELEMENT)
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/remote/webelement.py&#34;, line 628, in _execute
+    return self._parent.execute(command, params)
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/remote/webdriver.py&#34;, line 312, in execute
+    self.error_handler.check_response(response)
+  File &#34;/usr/local/lib/python3.5/dist-packages/selenium/webdriver/remote/errorhandler.py&#34;, line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidElementStateException: Message: invalid element state: Element is not currently interactable and may not be manipulated
+  (Session info: headless chrome=65.0.3325.162)
+  (Driver info: chromedriver=2.37.544315 (730aa6a5fdba159ac9f4c1e8cbc59bf1b5ce12b7),platform=Linux 4.13.0-38-generic x86_64)
+</code></pre></td></tr></table>
+</div>
+</div><p>处理方法参考PhantomJs 的一个issue：https://github.com/ariya/phantomjs/issues/11637</p>
+<p>bug解决之后完整的登录代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 4/8/18 10:41 AM
+</span><span class="s2">@author: Chen Liang
+</span><span class="s2">@function: selenium模拟登录
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="kn">import</span> <span class="n">WebDriverWait</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.action_chains</span> <span class="kn">import</span> <span class="n">ActionChains</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="kn">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver</span> <span class="kn">import</span> <span class="n">ChromeOptions</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<span class="c1"># def singleton(cls):</span>
+<span class="c1">#     instances = {}</span>
+<span class="c1">#</span>
+<span class="c1">#     def wrap(*args, **kwargs):</span>
+<span class="c1">#         if cls not in instances:</span>
+<span class="c1">#             instances[cls] = cls(*args, **kwargs)</span>
+<span class="c1">#         return instances[cls]</span>
+<span class="c1">#</span>
+<span class="c1">#     return wrap</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># @singleton</span>
+<span class="k">class</span> <span class="nc">WeiboSeleniumLogin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">driver_path</span><span class="p">):</span>
+        <span class="n">chrome_options</span> <span class="o">=</span> <span class="n">ChromeOptions</span><span class="p">()</span>
+        <span class="n">chrome_options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--headless&#39;</span><span class="p">)</span>
+        <span class="n">chrome_options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--no-sandbox&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">driver_path</span><span class="p">,</span> <span class="n">chrome_options</span><span class="o">=</span><span class="n">chrome_options</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">maximize_window</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">set_page_load_timeout</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">set_window_size</span><span class="p">(</span><span class="mi">1124</span><span class="p">,</span> <span class="mi">850</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__cookies</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_source</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">login_url</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">login_url</span><span class="p">)</span>
+        <span class="n">name_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;loginname&#39;</span><span class="p">)</span>
+        <span class="n">name_field</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">name_field</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">password_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">find_element_by_class_name</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+        <span class="n">password_field</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">password_field</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+        <span class="n">submit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s1">&#39;//*[@id=&#34;pl_login_form&#34;]/div/div[3]/div[6]/a/span&#39;</span><span class="p">)</span>
+        <span class="n">ActionChains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="p">)</span><span class="o">.</span><span class="n">double_click</span><span class="p">(</span><span class="n">submit</span><span class="p">)</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">WebDriverWait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">presence_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">CLASS_NAME</span><span class="p">,</span> <span class="s1">&#39;WB_miniblog&#39;</span><span class="p">)))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">page_source</span>
+        <span class="c1"># print(self._source)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_login</span><span class="p">():</span>
+            <span class="c1"># print(&#39;login success&#39;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__cookies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">get_cookies</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">is_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&#34;CONFIG\[&#39;islogin&#39;\]=&#39;(\d)&#39;&#34;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cookies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cookies</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&#34;CONFIG\[&#39;uid&#39;\]=&#39;(\d+)&#39;&#34;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">chrome_driver_path1</span> <span class="o">=</span> <span class="s1">&#39;/root/qk_python/python/data/collect/weibo_spider/priv/chromedriver&#39;</span>
+    <span class="n">username1</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;请输入你的账号</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">password1</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;请输入你的密码</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">login_url1</span> <span class="o">=</span> <span class="s1">&#39;https://weibo.com/login.php&#39;</span>
+    <span class="n">sl</span> <span class="o">=</span> <span class="n">WeiboSeleniumLogin</span><span class="p">(</span><span class="n">chrome_driver_path1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sl</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username1</span><span class="p">,</span> <span class="n">password1</span><span class="p">,</span> <span class="n">login_url1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;login success&#39;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;login failed&#39;</span><span class="p">)</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>登录成功之后可以获取到cookies数据和后续抓取所需要的user_id。并且cookies也需要转变成request库所需要的格式。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">Created on 4/3/18 2:08 PM
+</span><span class="s2">@author: Chen Liang
+</span><span class="s2">@function: 爬取weibo热门话题（需要处理登录）
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+
+<span class="kn">from</span> <span class="nn">spider.base_spider</span> <span class="kn">import</span> <span class="n">BaseSpider</span>
+<span class="kn">from</span> <span class="nn">login.simulate_login</span> <span class="kn">import</span> <span class="n">WeiboSeleniumLogin</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<span class="k">class</span> <span class="nc">HotNewTopicSpider</span><span class="p">(</span><span class="n">BaseSpider</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;爬取weibo热门话题（需要处理登录）：需要获取title, url, 阅读数, 讨论数, 粉丝数&#34;&#34;&#34;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cookies</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cookie_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cookies</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&#34;argument type error&#34;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&#34;argument type error&#34;</span>
+        <span class="k">for</span> <span class="n">cookie</span> <span class="ow">in</span> <span class="n">cookies</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">cookie</span> <span class="ow">and</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">cookie</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_cookie_dict</span><span class="p">[</span><span class="n">cookie</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cookie</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_user_id</span> <span class="o">=</span> <span class="n">user_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_html_content</span><span class="p">(</span><span class="s1">&#39;https://weibo.com/u/{}/home&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_user_id</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cookie_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_topic_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;获取热门话题列表&#34;&#34;&#34;</span>
+        <span class="n">topic_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&lt;span class=</span><span class="se">\\</span><span class="s1">&#34;total S_txt2</span><span class="se">\\</span><span class="s1">&#34; title=</span><span class="se">\\</span><span class="s1">&#34;阅读量</span><span class="se">\\</span><span class="s1">&#34;&gt;(.*?)&lt;.*?href=</span><span class="se">\\</span><span class="s1">&#34;</span><span class="se">\\</span><span class="s1">/</span><span class="se">\\</span><span class="s1">/weibo.com</span><span class="se">\\</span><span class="s1">/p</span><span class="se">\\</span><span class="s1">/(.*?from=&#39;</span> \
+                  <span class="sa">r</span><span class="s1">&#39;trendtop_api&amp;refer=index_hot_new).*?title=</span><span class="se">\\</span><span class="s1">&#34;(.*?)</span><span class="se">\\</span><span class="s1">&#34;&gt;&#39;</span>
+        <span class="n">raw_list</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_html</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">raw_list</span><span class="p">:</span>
+            <span class="n">read_cnt</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">raw</span>
+            <span class="n">topic_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;read_cnt&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_cnt_transfer</span><span class="p">(</span><span class="n">read_cnt</span><span class="p">),</span>
+                    <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://weibo.com/p/{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+                    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">topic_list</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_cnt_transfer</span><span class="p">(</span><span class="n">read_cnt_str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">read_cnt_str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;亿&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">read_cnt_str</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">read_cnt_str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;亿&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100000000</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">read_cnt_str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;万&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">read_cnt_str</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">read_cnt_str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;万&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">read_cnt_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;根据话题的url获取 阅读数, 讨论数, 粉丝数等数据
+</span><span class="s2">            进一步解析topic_list中的详情url
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="k">pass</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">chrome_driver_path1</span> <span class="o">=</span> <span class="s1">&#39;/root/qk_python/python/data/collect/weibo_spider/priv/chromedriver&#39;</span>
+    <span class="n">username1</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;请输入你的账号</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">password1</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;请输入你的密码</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">login_url1</span> <span class="o">=</span> <span class="s1">&#39;https://weibo.com/login.php&#39;</span>
+    <span class="n">sl</span> <span class="o">=</span> <span class="n">WeiboSeleniumLogin</span><span class="p">(</span><span class="n">chrome_driver_path1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sl</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username1</span><span class="p">,</span> <span class="n">password1</span><span class="p">,</span> <span class="n">login_url1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;login success&#39;</span><span class="p">)</span>
+        <span class="c1"># print(sl.cookies)</span>
+        <span class="c1"># print(sl.user_id)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;login failed&#39;</span><span class="p">)</span>
+
+    <span class="n">spd</span> <span class="o">=</span> <span class="n">HotNewTopicSpider</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">cookies</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">topic_list1</span> <span class="o">=</span> <span class="n">spd</span><span class="o">.</span><span class="n">get_topic_list</span><span class="p">()</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">topic_list1</span><span class="p">))</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>最后能成功获取到热门话题以及对应的链接和阅读量。</p>
+<h1 id="总结">总结</h1>
+<p>整个爬取任务中的关键在于反扒，模拟登录，以及抓取正则表达式。本次涉及到了以下爬虫技巧：</p>
+<ul>
+<li>登录：cookie</li>
+<li>登录：表单</li>
+<li>伪装成浏览器访问</li>
+<li>反”反盗链”</li>
+</ul>
+<p>要做一个完整的大爬虫，还需要涉及以下几个部分：</p>
+<ul>
+<li>验证码：想尽一切办法避免验证码（目前验证码的难度比较大，一定有验证码时，可以做成服务）</li>
+<li>gzip/deflate：流式解压用于提高效率</li>
+<li>多线程（线程类和线程池）</li>
+<li>http代理池：squid和haipproxy构成高可用的ip代理迟</li>
+</ul>
+<p>这几个部分本次用不上，后续补充。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li>weibo_spider：https://github.com/Flowsnow/weibo_spider</li>
+<li>smart_login：https://github.com/Flowsnow/smart_login</li>
+<li>爬取新浪微博热搜：https://www.jianshu.com/p/e6c24feeb806</li>
+<li>python爬虫技巧总结：http://www.pythonclub.org/python-network-application/observer-spider</li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Suncle</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-04-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/wechat-reward-image.png">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/alipay-reward-image.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E5%BE%AE%E5%8D%9A/">微博</a>
+          <a href="/tags/%E7%88%AC%E8%99%AB/">爬虫</a>
+          <a href="/tags/Python/">Python</a>
+          <a href="/tags/selenium/">selenium</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/2018/04/11/FilmReview-Ready-Player-One/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">影评：Ready Player One</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/2018/03/24/BFS-And-Prune-To-Search-Target-Deliver-Node/">
+            <span class="next-text nav-default">BFS&#43;剪枝查找目标转推流节点</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="suncle1993/suncle1993.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:im.suncle@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.facebook.com/sunclechen" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="https://github.com/suncle1993" class="iconfont icon-github" title="github"></a>
+      <a href="https://weibo.com/3655576503" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="https://www.zhihu.com/people/flowsnow" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="https://space.bilibili.com/362765899" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://suncle.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Suncle</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72506112-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+
+
+</body>
+</html>

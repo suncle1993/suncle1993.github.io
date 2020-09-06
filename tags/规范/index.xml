@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>规范 on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/%E8%A7%84%E8%8C%83/</link>
+    <description>Recent content in 规范 on Suncle&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 09 Mar 2018 13:52:45 +0000</lastBuildDate>
+    
+	<atom:link href="https://suncle.me/tags/%E8%A7%84%E8%8C%83/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>rtmp规范1.0</title>
+      <link>https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/</link>
+      <pubDate>Fri, 09 Mar 2018 13:52:45 +0000</pubDate>
+      
+      <guid>https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/rtmp_img/rtmp_illustration.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;RTMP（real time messaging protocol）协议&lt;/p&gt;
+&lt;p&gt;本文为Adobe rtmp规范1.0的中文介绍，其中内容大部分都是翻译自rtmp官方文档&lt;a href=&#34;http://wwwimages.adobe.com/www.adobe.com/content/dam/acom/en/devnet/rtmp/pdf/rtmp_specification_1.0.pdf&#34;&gt;rtmp_specification_1.0.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;具体文章目录参见文章内侧边栏&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>思考一次整体调整Python项目规范性的过程</title>
+      <link>https://suncle.me/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4Python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Tue, 31 Oct 2017 09:44:25 +0000</pubDate>
+      
+      <guid>https://suncle.me/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4Python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/</guid>
+      <description>&lt;p&gt;本篇文章主要是记录整体调整Python数据统计分析项目规范性的过程，以及自己的一些思考。&lt;/p&gt;
+&lt;h1 id=&#34;为什么要调整&#34;&gt;为什么要调整？&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;主要是为了解决数据类程序不容易测试发现错误的现状。调整公共模块出错时抛出错误到业务层，便于报警模块上传错误信息到kafka，最后能主动发出报警邮件。以及方便加入报警之外的其他程序埋点。&lt;/li&gt;
+&lt;li&gt;调整所有Python数据统计分析程序满足pep8规范和Google Python风格规范，减少IDE提示。&lt;/li&gt;
+&lt;li&gt;完善代码注释和文档便于后续维护（之前的开发人员是Erlang风格，主张不写或者少写注释）。&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
