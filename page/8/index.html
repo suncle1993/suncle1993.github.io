@@ -117,6 +117,35 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/">设计一个基于flask的高并发高可用的查询ip的http服务</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-08-16 </span>
+      <div class="post-category">
+          <a href="/categories/Python/"> Python </a>
+          </div>
+        <span class="more-meta"> 约 5129 字 </span>
+        <span class="more-meta"> 预计阅读 11 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h1 id="结构设计">结构设计</h1>
+<p>基础架构为flask+gunicorn+负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。</p>
+<p><strong>使用nginx软件负载结构图</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/python/%E4%BD%BF%E7%94%A8nginx%E8%BD%AF%E4%BB%B6%E8%B4%9F%E8%BD%BD%E7%BB%93%E6%9E%84%E5%9B%BE.jpg" alt=""></p>
+<p><strong>使用阿里云硬件负载均衡服务结构图</strong></p>
+<p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/python/%E4%BD%BF%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E7%A1%AC%E4%BB%B6%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9C%8D%E5%8A%A1%E7%BB%93%E6%9E%84%E5%9B%BE.jpg" alt=""></p>
+<p>因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务</p>
+    </div>
+    <div class="read-more">
+      <a href="/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">Erlang学习笔记(1)</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2017-08-11 </span>
@@ -633,35 +662,6 @@ mysql -uroot -p  <span class="c1"># 登录</span>
     </div>
     <div class="read-more">
       <a href="/2017/04/14/Python-pymysql/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/">Python-WSGI接口</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-04-07 </span>
-      <div class="post-category">
-          <a href="/categories/Python/"> Python </a>
-          </div>
-        <span class="more-meta"> 约 1605 字 </span>
-        <span class="more-meta"> 预计阅读 4 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>Python WSGI规定了Web服务器和Python Web应用程序或Web框架之间的标准接口，主要是为了促进Web应用程序在各种Web服务器上的可移植性。</p>
-<p>上述这句话翻译自Python官方的PEP333标准：<a href="https://www.python.org/dev/peps/pep-0333/">PEP 333 &ndash; Python Web Server Gateway Interface v1.0</a></p>
-<h1 id="wsgi接口概述">WSGI接口概述</h1>
-<p>WSGI的含义：Web Server Gateway Interface（Web服务器网管接口）。</p>
-<p>WSGI接口包含两方面：server/gateway端 及 application/framework端。后面直接使用server和application来说明，不再使用gateway和framework。server端直接调用application端提供的<strong>可调用对象</strong>。另外在server和application之间还可以有一种称作middleware的中间件。中间件对于server来说就是一个application，但是对于application来说中间件却是一个server。</p>
-<p>上述可调用对象是指：函数、方法、类或者带有<code>__call__</code>方法的实例。</p>
-<p>以下分别介绍application端，Server端和middleware三个部分</p>
-    </div>
-    <div class="read-more">
-      <a href="/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

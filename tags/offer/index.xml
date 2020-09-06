@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>面试 on Suncle&#39;s Blog</title>
-    <link>https://suncle.me/tags/%E9%9D%A2%E8%AF%95/</link>
-    <description>Recent content in 面试 on Suncle&#39;s Blog</description>
+    <title>offer on Suncle&#39;s Blog</title>
+    <link>https://suncle.me/tags/offer/</link>
+    <description>Recent content in offer on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 30 Aug 2020 16:35:30 +0800</lastBuildDate>
     
-	<atom:link href="https://suncle.me/tags/%E9%9D%A2%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://suncle.me/tags/offer/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -21,16 +21,6 @@
 &lt;p&gt;而我呢，因为是从上海到广州工作，就没有提前先把工作定下来。刚好也趁这个机会出去旅游了两个月。&lt;/p&gt;
 &lt;p&gt;旅游结束，等到要开始找工作的时候，发现很多知识点也都忘记的差不多了。说是从0开始准备面试似乎也不是那么过分。&lt;/p&gt;
 &lt;p&gt;但最终，大概花了3周时间，最终面试通过找到了一个薪资还不错的工作，入职广州仅有的几家大厂之一的YY欢聚时代，任职高级后端开发工程师。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>经典面试题</title>
-      <link>https://suncle.me/2018/05/17/Classic-Interview-Questions/</link>
-      <pubDate>Thu, 17 May 2018 10:06:37 +0000</pubDate>
-      
-      <guid>https://suncle.me/2018/05/17/Classic-Interview-Questions/</guid>
-      <description>&lt;p&gt;整理面试中遇到的一些常规面试题，在此记录&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/Classic-Interview-Questions/interview-questions-collection.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

@@ -72,6 +72,27 @@
   </url>
   
   <url>
+    <loc>https://suncle.me/tags/offer/</loc>
+    <lastmod>2020-08-30T16:35:30+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://suncle.me/2020/08/30/programmer-teach-you-to-take-big-factory-offer/</loc>
+    <lastmod>2020-08-30T16:35:30+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://suncle.me/tags/%E9%9D%A2%E8%AF%95/</loc>
+    <lastmod>2020-08-30T16:35:30+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://suncle.me/tags/2019/</loc>
     <lastmod>2019-12-31T23:59:59+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -829,13 +850,6 @@
   
   <url>
     <loc>https://suncle.me/2018/05/17/Classic-Interview-Questions/</loc>
-    <lastmod>2018-05-17T10:06:37+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://suncle.me/tags/%E9%9D%A2%E8%AF%95/</loc>
     <lastmod>2018-05-17T10:06:37+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
