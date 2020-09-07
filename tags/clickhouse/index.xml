@@ -6,7 +6,7 @@
     <description>Recent content in clickhouse on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 27 Jul 2019 17:23:31 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 27 Jul 2019 17:23:31 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/clickhouse/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Clickhouse创建分布式表以及表引擎介绍</title>
       <link>https://suncle.me/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/</link>
-      <pubDate>Sat, 27 Jul 2019 17:23:31 +0000</pubDate>
+      <pubDate>Sat, 27 Jul 2019 17:23:31 +0800</pubDate>
       
       <guid>https://suncle.me/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/</guid>
       <description>&lt;h1 id=&#34;表引擎&#34;&gt;表引擎&lt;/h1&gt;
@@ -35,7 +35,7 @@
     <item>
       <title>Clickhouse分布式集群搭建</title>
       <link>https://suncle.me/2019/07/27/clickhouse-build-distributed-cluster/</link>
-      <pubDate>Sat, 27 Jul 2019 17:13:16 +0000</pubDate>
+      <pubDate>Sat, 27 Jul 2019 17:13:16 +0800</pubDate>
       
       <guid>https://suncle.me/2019/07/27/clickhouse-build-distributed-cluster/</guid>
       <description>&lt;h1 id=&#34;目标1分片2副本的集群&#34;&gt;目标：1分片2副本的集群&lt;/h1&gt;
@@ -50,7 +50,7 @@
     <item>
       <title>Clickhouse简介和性能对比</title>
       <link>https://suncle.me/2019/07/27/clickhouse-introduction-and-comparison-of-performance/</link>
-      <pubDate>Sat, 27 Jul 2019 14:13:26 +0000</pubDate>
+      <pubDate>Sat, 27 Jul 2019 14:13:26 +0800</pubDate>
       
       <guid>https://suncle.me/2019/07/27/clickhouse-introduction-and-comparison-of-performance/</guid>
       <description>&lt;h1 id=&#34;clickhouse简介和性能对比&#34;&gt;Clickhouse简介和性能对比&lt;/h1&gt;

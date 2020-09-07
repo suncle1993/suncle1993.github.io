@@ -6,7 +6,7 @@
     <description>Recent content in YARN on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 03 May 2018 16:54:05 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 03 May 2018 16:54:05 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/YARN/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>搭建Hadoop3集群</title>
       <link>https://suncle.me/2018/05/03/Building-Hadoop3-Cluster/</link>
-      <pubDate>Thu, 03 May 2018 16:54:05 +0000</pubDate>
+      <pubDate>Thu, 03 May 2018 16:54:05 +0800</pubDate>
       
       <guid>https://suncle.me/2018/05/03/Building-Hadoop3-Cluster/</guid>
       <description>&lt;p&gt;强烈建议再搭建hadoop集群之前体验一下单机模式和伪分布式模式的搭建过程，可以参考以下链接：&lt;/p&gt;

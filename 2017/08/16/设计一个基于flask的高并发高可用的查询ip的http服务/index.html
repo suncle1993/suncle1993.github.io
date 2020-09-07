@@ -53,8 +53,8 @@
 因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://suncle.me/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/" />
-<meta property="article:published_time" content="2017-08-16T20:17:13+00:00" />
-<meta property="article:modified_time" content="2017-08-16T20:17:13+00:00" />
+<meta property="article:published_time" content="2017-08-16T20:17:13+08:00" />
+<meta property="article:modified_time" content="2017-08-16T20:17:13+08:00" />
 <meta itemprop="name" content="设计一个基于flask的高并发高可用的查询ip的http服务">
 <meta itemprop="description" content="结构设计
 基础架构为flask&#43;gunicorn&#43;负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。
@@ -63,8 +63,8 @@
 使用阿里云硬件负载均衡服务结构图
 
 因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个worker内存占用较小（不到100M），因此占用1.3G的内存（即需要一个2G内存的服务器）。当gunicorn任意一个节点挂断或者升级时，另外一个节点仍然在使用，不会影响整体服务">
-<meta itemprop="datePublished" content="2017-08-16T20:17:13+00:00" />
-<meta itemprop="dateModified" content="2017-08-16T20:17:13+00:00" />
+<meta itemprop="datePublished" content="2017-08-16T20:17:13+08:00" />
+<meta itemprop="dateModified" content="2017-08-16T20:17:13+08:00" />
 <meta itemprop="wordCount" content="5129">
 
 

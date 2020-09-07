@@ -6,7 +6,7 @@
     <description>Recent content in practice on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 13 Dec 2016 22:01:08 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 13 Dec 2016 22:01:08 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/practice/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>【填坑系列】Python习题集</title>
       <link>https://suncle.me/2016/12/13/filling-holes-series-python-workbook/</link>
-      <pubDate>Tue, 13 Dec 2016 22:01:08 +0000</pubDate>
+      <pubDate>Tue, 13 Dec 2016 22:01:08 +0800</pubDate>
       
       <guid>https://suncle.me/2016/12/13/filling-holes-series-python-workbook/</guid>
       <description>&lt;h2 id=&#34;求100万以内的所有素数个数&#34;&gt;求100万以内的所有素数个数&lt;/h2&gt;

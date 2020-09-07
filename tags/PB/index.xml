@@ -6,7 +6,7 @@
     <description>Recent content in PB on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 06 Feb 2018 17:36:47 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 06 Feb 2018 17:36:47 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/PB/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Python Google Protocol Buffer</title>
       <link>https://suncle.me/2018/02/06/Python-Google-Protocol-Buffer/</link>
-      <pubDate>Tue, 06 Feb 2018 17:36:47 +0000</pubDate>
+      <pubDate>Tue, 06 Feb 2018 17:36:47 +0800</pubDate>
       
       <guid>https://suncle.me/2018/02/06/Python-Google-Protocol-Buffer/</guid>
       <description>&lt;p&gt;本篇主要介绍如何在Python语言中使用Google Protocol Buffer（后续都简写为PB）， 包括以下几个部分：&lt;/p&gt;

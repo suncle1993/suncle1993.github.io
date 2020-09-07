@@ -6,7 +6,7 @@
     <description>Recent content in 编辑 on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 11 Jan 2016 10:50:22 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 11 Jan 2016 10:50:22 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/%E7%BC%96%E8%BE%91/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Sublime Text 3解决中文乱码</title>
       <link>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</link>
-      <pubDate>Mon, 11 Jan 2016 10:50:22 +0000</pubDate>
+      <pubDate>Mon, 11 Jan 2016 10:50:22 +0800</pubDate>
       
       <guid>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</guid>
       <description>&lt;p&gt;众所周知，Sublime Text 3（下面简称ST3）的默认编码是utf-8，因此需要把GB2312和GBK编码转换成utf-8。在Sublime Text 2中大家解决中文乱码的方法都是先装好Package Control，然后再通过这个安装ConvertToUTF8的Package。&lt;/p&gt;</description>

@@ -50,16 +50,16 @@ rhea是一个典型的使用mybatis orm的springboot项目，我们使用h2内�
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://suncle.me/2019/12/19/record-a-troubleshooting-process-of-ut-hanging-caused-by-mybatis-cache-and-transaction-propagation/" />
-<meta property="article:published_time" content="2019-12-19T19:42:19+00:00" />
-<meta property="article:modified_time" content="2019-12-19T19:42:19+00:00" />
+<meta property="article:published_time" content="2019-12-19T19:42:19+08:00" />
+<meta property="article:modified_time" content="2019-12-19T19:42:19+08:00" />
 <meta itemprop="name" content="记录一次mybatis缓存和事务传播行为导致ut挂的排查过程">
 <meta itemprop="description" content="记录一次mybatis缓存和事务传播行为导致ut挂的排查过程
 起因
 rhea项目有两个ut一直都是挂的，之前也经过几个同事排查过，但是都没有找到解决办法，慢慢的这个问题就搁置了。因为之前负责rhea项目的同事离职，我临时接手了这个项目，刚好最近来了一个新同事在做新的功能开发的时候遇到了这个问题，于是我就接了一个锅，最终证明这个锅很好玩。
 rhea是一个典型的使用mybatis orm的springboot项目，我们使用h2内存数据库做单元测试，每个单元测试都在一个事务内，都由Transactional进行注解。testGetBGWechatAccountByOpenid这个ut的核心调用链如下
 ">
-<meta itemprop="datePublished" content="2019-12-19T19:42:19+00:00" />
-<meta itemprop="dateModified" content="2019-12-19T19:42:19+00:00" />
+<meta itemprop="datePublished" content="2019-12-19T19:42:19+08:00" />
+<meta itemprop="dateModified" content="2019-12-19T19:42:19+08:00" />
 <meta itemprop="wordCount" content="3074">
 
 

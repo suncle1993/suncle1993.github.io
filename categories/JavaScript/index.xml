@@ -6,7 +6,7 @@
     <description>Recent content in JavaScript on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 27 Apr 2017 21:53:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 27 Apr 2017 21:53:00 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/categories/JavaScript/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>react基础</title>
       <link>https://suncle.me/2017/04/27/react%E5%9F%BA%E7%A1%80/</link>
-      <pubDate>Thu, 27 Apr 2017 21:53:00 +0000</pubDate>
+      <pubDate>Thu, 27 Apr 2017 21:53:00 +0800</pubDate>
       
       <guid>https://suncle.me/2017/04/27/react%E5%9F%BA%E7%A1%80/</guid>
       <description>&lt;h1 id=&#34;hello-world&#34;&gt;Hello World&lt;/h1&gt;
@@ -52,7 +52,7 @@
     <item>
       <title>JavaScript函数和类</title>
       <link>https://suncle.me/2017/04/18/JavaScript%E5%87%BD%E6%95%B0%E5%92%8C%E7%B1%BB/</link>
-      <pubDate>Tue, 18 Apr 2017 23:00:29 +0000</pubDate>
+      <pubDate>Tue, 18 Apr 2017 23:00:29 +0800</pubDate>
       
       <guid>https://suncle.me/2017/04/18/JavaScript%E5%87%BD%E6%95%B0%E5%92%8C%E7%B1%BB/</guid>
       <description>&lt;h1 id=&#34;javascript函数&#34;&gt;JavaScript函数&lt;/h1&gt;
@@ -126,7 +126,7 @@
     <item>
       <title>JavaScript基础</title>
       <link>https://suncle.me/2017/04/18/JavaScript%E5%9F%BA%E7%A1%80/</link>
-      <pubDate>Tue, 18 Apr 2017 23:00:20 +0000</pubDate>
+      <pubDate>Tue, 18 Apr 2017 23:00:20 +0800</pubDate>
       
       <guid>https://suncle.me/2017/04/18/JavaScript%E5%9F%BA%E7%A1%80/</guid>
       <description>&lt;p&gt;JavaScript 从 Java 中借用其大部分语法，但也受 Awk，Perl 和 Python的影响。因此本篇博客基于对Java和Python的认识来记录JavaScript的差异点。&lt;/p&gt;

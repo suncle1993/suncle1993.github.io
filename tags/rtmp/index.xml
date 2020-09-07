@@ -6,7 +6,7 @@
     <description>Recent content in rtmp on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 20 Mar 2018 12:45:29 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 20 Mar 2018 12:45:29 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/rtmp/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>排查rtmp协议推流时握手bug</title>
       <link>https://suncle.me/2018/03/20/rtmp-handshake-bug/</link>
-      <pubDate>Tue, 20 Mar 2018 12:45:29 +0000</pubDate>
+      <pubDate>Tue, 20 Mar 2018 12:45:29 +0800</pubDate>
       
       <guid>https://suncle.me/2018/03/20/rtmp-handshake-bug/</guid>
       <description>&lt;h1 id=&#34;概况&#34;&gt;概况&lt;/h1&gt;
@@ -43,7 +43,7 @@
     <item>
       <title>rtmp规范1.0</title>
       <link>https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/</link>
-      <pubDate>Fri, 09 Mar 2018 13:52:45 +0000</pubDate>
+      <pubDate>Fri, 09 Mar 2018 13:52:45 +0800</pubDate>
       
       <guid>https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/rtmp_img/rtmp_illustration.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;

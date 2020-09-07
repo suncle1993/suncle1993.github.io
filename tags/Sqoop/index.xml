@@ -6,7 +6,7 @@
     <description>Recent content in Sqoop on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 09 May 2018 15:17:50 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 09 May 2018 15:17:50 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/Sqoop/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Sqoop导入导出</title>
       <link>https://suncle.me/2018/05/09/Sqoop-Import-Export/</link>
-      <pubDate>Wed, 09 May 2018 15:17:50 +0000</pubDate>
+      <pubDate>Wed, 09 May 2018 15:17:50 +0800</pubDate>
       
       <guid>https://suncle.me/2018/05/09/Sqoop-Import-Export/</guid>
       <description>&lt;p&gt;Apache Sqoop是一种用于在Apache Hadoop和结构化数据存储（如关系数据库）之间高效传输批量数据的工具。实质就是将导入导出命令转换成mapreduce程序来实现。&lt;/p&gt;

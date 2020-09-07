@@ -6,7 +6,7 @@
     <description>Recent content in web on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 22 May 2017 00:52:13 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 May 2017 00:52:13 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/web/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Python实现通用web框架</title>
       <link>https://suncle.me/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/</link>
-      <pubDate>Mon, 22 May 2017 00:52:13 +0000</pubDate>
+      <pubDate>Mon, 22 May 2017 00:52:13 +0800</pubDate>
       
       <guid>https://suncle.me/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/</guid>
       <description>概述 Python WSGI规定了Web服务器和Python Web应用程序或Web框架之间的标准接口，主要是为了促进Web应用程序在各种Web服务器上的可</description>
@@ -23,7 +23,7 @@
     <item>
       <title>Python-WSGI接口</title>
       <link>https://suncle.me/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/</link>
-      <pubDate>Fri, 07 Apr 2017 21:41:08 +0000</pubDate>
+      <pubDate>Fri, 07 Apr 2017 21:41:08 +0800</pubDate>
       
       <guid>https://suncle.me/2017/04/07/Python-WSGI%E6%8E%A5%E5%8F%A3/</guid>
       <description>&lt;p&gt;Python WSGI规定了Web服务器和Python Web应用程序或Web框架之间的标准接口，主要是为了促进Web应用程序在各种Web服务器上的可移植性。&lt;/p&gt;

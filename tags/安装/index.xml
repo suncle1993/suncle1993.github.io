@@ -6,7 +6,7 @@
     <description>Recent content in 安装 on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 16 Apr 2018 19:08:28 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 16 Apr 2018 19:08:28 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/%E5%AE%89%E8%A3%85/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Hadoop3单机和伪分布式模式安装配置</title>
       <link>https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</link>
-      <pubDate>Mon, 16 Apr 2018 19:08:28 +0000</pubDate>
+      <pubDate>Mon, 16 Apr 2018 19:08:28 +0800</pubDate>
       
       <guid>https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</guid>
       <description>&lt;blockquote&gt;
@@ -32,7 +32,7 @@
     <item>
       <title>CentOS7-Nginx编译安装</title>
       <link>https://suncle.me/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</link>
-      <pubDate>Thu, 30 Mar 2017 14:29:45 +0000</pubDate>
+      <pubDate>Thu, 30 Mar 2017 14:29:45 +0800</pubDate>
       
       <guid>https://suncle.me/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</guid>
       <description>&lt;h1 id=&#34;安装编译环境&#34;&gt;安装编译环境&lt;/h1&gt;
@@ -77,7 +77,7 @@ make install
     <item>
       <title>CentOS6.7环境下安装配置Oracle数据库</title>
       <link>https://suncle.me/2016/01/26/CentOS6.7%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
-      <pubDate>Tue, 26 Jan 2016 15:28:31 +0000</pubDate>
+      <pubDate>Tue, 26 Jan 2016 15:28:31 +0800</pubDate>
       
       <guid>https://suncle.me/2016/01/26/CentOS6.7%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
       <description>Linux下静默安装Oracle数据库</description>
@@ -86,7 +86,7 @@ make install
     <item>
       <title>win7x64安装配置Oracle 11g R2数据库</title>
       <link>https://suncle.me/2016/01/25/win7x64%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle-11g-R2%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
-      <pubDate>Mon, 25 Jan 2016 10:41:46 +0000</pubDate>
+      <pubDate>Mon, 25 Jan 2016 10:41:46 +0800</pubDate>
       
       <guid>https://suncle.me/2016/01/25/win7x64%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle-11g-R2%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
       <description>&lt;h2 id=&#34;安装前的准备&#34;&gt;安装前的准备&lt;/h2&gt;
@@ -101,7 +101,7 @@ make install
     <item>
       <title>Linux规划、安装、远程管理</title>
       <link>https://suncle.me/2015/12/27/Linux%E8%A7%84%E5%88%92%E5%AE%89%E8%A3%85%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86/</link>
-      <pubDate>Sun, 27 Dec 2015 23:43:53 +0000</pubDate>
+      <pubDate>Sun, 27 Dec 2015 23:43:53 +0800</pubDate>
       
       <guid>https://suncle.me/2015/12/27/Linux%E8%A7%84%E5%88%92%E5%AE%89%E8%A3%85%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86/</guid>
       <description>&lt;h2 id=&#34;linux规划&#34;&gt;Linux规划&lt;/h2&gt;

@@ -6,7 +6,7 @@
     <description>Recent content in Mat on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 10 May 2016 22:01:34 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 10 May 2016 22:01:34 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/Mat/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>OpenCV的Mat类型以及基本函数使用</title>
       <link>https://suncle.me/2016/05/10/opencv%E7%9A%84Mat%E7%B1%BB%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0%E4%BD%BF%E7%94%A8/</link>
-      <pubDate>Tue, 10 May 2016 22:01:34 +0000</pubDate>
+      <pubDate>Tue, 10 May 2016 22:01:34 +0800</pubDate>
       
       <guid>https://suncle.me/2016/05/10/opencv%E7%9A%84Mat%E7%B1%BB%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0%E4%BD%BF%E7%94%A8/</guid>
       <description>&lt;h1 id=&#34;opencv的mat类型以及基本函数使用&#34;&gt;OpenCV的Mat类型以及基本函数使用&lt;/h1&gt;

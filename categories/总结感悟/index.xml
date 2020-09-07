@@ -6,7 +6,7 @@
     <description>Recent content in 总结感悟 on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 26 Nov 2019 10:36:51 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 26 Nov 2019 10:36:51 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/categories/%E6%80%BB%E7%BB%93%E6%84%9F%E6%82%9F/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>从哈夫曼编码再出发：原理和现实</title>
       <link>https://suncle.me/2019/11/26/Huffman-encode-the-principle-and-the-reality/</link>
-      <pubDate>Tue, 26 Nov 2019 10:36:51 +0000</pubDate>
+      <pubDate>Tue, 26 Nov 2019 10:36:51 +0800</pubDate>
       
       <guid>https://suncle.me/2019/11/26/Huffman-encode-the-principle-and-the-reality/</guid>
       <description>&lt;p&gt;对于计算机科班出身的人来说，在大学阶段几乎都学过信息论和算法这两门课，信息论都会讲到香农三大定理以及哈夫曼编码，算法课上会学习二叉树，甚至哈弗曼树。在介绍哈夫曼编码之前，先介绍一下什么是有效编码，以及香农第一定理的内容。&lt;/p&gt;
@@ -30,7 +30,7 @@
     <item>
       <title>一次奇怪的http状态码改变</title>
       <link>https://suncle.me/2019/11/13/http-3xx-status-code/</link>
-      <pubDate>Wed, 13 Nov 2019 20:14:44 +0000</pubDate>
+      <pubDate>Wed, 13 Nov 2019 20:14:44 +0800</pubDate>
       
       <guid>https://suncle.me/2019/11/13/http-3xx-status-code/</guid>
       <description>&lt;p&gt;最近将一个很久没有更新的部署在物理机上的一个老服务迁移到k8s时，发现在gitlab ci跑pytest的过程中出现以下报错：&lt;/p&gt;
@@ -66,7 +66,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>精选唐诗十首</title>
       <link>https://suncle.me/2019/04/15/10-tang-poems/</link>
-      <pubDate>Mon, 15 Apr 2019 19:41:54 +0000</pubDate>
+      <pubDate>Mon, 15 Apr 2019 19:41:54 +0800</pubDate>
       
       <guid>https://suncle.me/2019/04/15/10-tang-poems/</guid>
       <description>&lt;p&gt;平衡思维方式的唐诗&lt;/p&gt;
@@ -90,7 +90,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>海底捞的经营哲学</title>
       <link>https://suncle.me/2019/03/10/haidilao-management-philosophy/</link>
-      <pubDate>Sun, 10 Mar 2019 15:06:44 +0000</pubDate>
+      <pubDate>Sun, 10 Mar 2019 15:06:44 +0800</pubDate>
       
       <guid>https://suncle.me/2019/03/10/haidilao-management-philosophy/</guid>
       <description>&lt;p&gt;在京东选书为了满减凑单入了这本《海底捞的经营哲学》，和《飘》不同，这本书比较薄，全书只有200页，很快就看完了，但是内容涉及到了海底捞的方方面面，，当然这也就导致这本书不可能对每个方面都说得很细致。下面是这本书的大致提纲：&lt;/p&gt;
@@ -100,7 +100,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>人间失格</title>
       <link>https://suncle.me/2019/03/02/no-longer-human/</link>
-      <pubDate>Sat, 02 Mar 2019 16:40:55 +0000</pubDate>
+      <pubDate>Sat, 02 Mar 2019 16:40:55 +0800</pubDate>
       
       <guid>https://suncle.me/2019/03/02/no-longer-human/</guid>
       <description>&lt;blockquote class=&#34;blockquote-center&#34;&gt;每天面对相同的事情&lt;br&gt;只需遵从昨天的习性不要过度欢喜&lt;br&gt;
@@ -110,7 +110,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>2018个人年度报告</title>
       <link>https://suncle.me/2019/01/12/2018-annual-report/</link>
-      <pubDate>Sat, 12 Jan 2019 23:36:53 +0000</pubDate>
+      <pubDate>Sat, 12 Jan 2019 23:36:53 +0800</pubDate>
       
       <guid>https://suncle.me/2019/01/12/2018-annual-report/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/summary/2018-annual-report/eyeemfiltered1520083346838.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
@@ -122,7 +122,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>硅谷来信—投资哲学</title>
       <link>https://suncle.me/2018/09/22/Silicon-Valley-Letters-Investment-Philosophy/</link>
-      <pubDate>Sat, 22 Sep 2018 00:26:10 +0000</pubDate>
+      <pubDate>Sat, 22 Sep 2018 00:26:10 +0800</pubDate>
       
       <guid>https://suncle.me/2018/09/22/Silicon-Valley-Letters-Investment-Philosophy/</guid>
       <description>&lt;p&gt;经过小半年的不懈努力，终于追完了吴军博士的硅谷来信，其中对于投资部分的篇幅较多，而且很实用，因此马不停蹄的梳理完所有的来信中的投资哲学。因此本篇主要包含三个部分：&lt;/p&gt;
@@ -138,7 +138,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>此生未完成</title>
       <link>https://suncle.me/2018/09/17/This-Life-Is-Not-Completed/</link>
-      <pubDate>Mon, 17 Sep 2018 01:26:22 +0000</pubDate>
+      <pubDate>Mon, 17 Sep 2018 01:26:22 +0800</pubDate>
       
       <guid>https://suncle.me/2018/09/17/This-Life-Is-Not-Completed/</guid>
       <description>&lt;p&gt;我们要用多大的代价，才能认清活着的意义？&lt;/p&gt;
@@ -153,7 +153,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>在杰克玫瑰的一顿晚餐</title>
       <link>https://suncle.me/2018/08/07/A-Dinner-At-Jack-Rose/</link>
-      <pubDate>Tue, 07 Aug 2018 00:22:31 +0000</pubDate>
+      <pubDate>Tue, 07 Aug 2018 00:22:31 +0800</pubDate>
       
       <guid>https://suncle.me/2018/08/07/A-Dinner-At-Jack-Rose/</guid>
       <description>&lt;p&gt;本次晚餐人员总共五人，分别是zhiyuan、yanyun、qiuiqu、yuliangmu、suncle。&lt;/p&gt;
@@ -163,7 +163,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>经典面试题</title>
       <link>https://suncle.me/2018/05/17/Classic-Interview-Questions/</link>
-      <pubDate>Thu, 17 May 2018 10:06:37 +0000</pubDate>
+      <pubDate>Thu, 17 May 2018 10:06:37 +0800</pubDate>
       
       <guid>https://suncle.me/2018/05/17/Classic-Interview-Questions/</guid>
       <description>&lt;p&gt;整理面试中遇到的一些常规面试题，在此记录&lt;/p&gt;
@@ -173,7 +173,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>2017年终总结</title>
       <link>https://suncle.me/2018/02/11/2017-year-end-summary/</link>
-      <pubDate>Sun, 11 Feb 2018 23:57:27 +0000</pubDate>
+      <pubDate>Sun, 11 Feb 2018 23:57:27 +0800</pubDate>
       
       <guid>https://suncle.me/2018/02/11/2017-year-end-summary/</guid>
       <description>&lt;h2 id=&#34;开篇&#34;&gt;开篇&lt;/h2&gt;
@@ -187,7 +187,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>个人CSDN博客和博客园重点文章摘取</title>
       <link>https://suncle.me/2015/11/28/%E4%B8%AA%E4%BA%BACSDN%E5%8D%9A%E5%AE%A2%E5%92%8C%E5%8D%9A%E5%AE%A2%E5%9B%AD%E9%87%8D%E7%82%B9%E6%96%87%E7%AB%A0%E6%91%98%E5%8F%96/</link>
-      <pubDate>Sat, 28 Nov 2015 15:09:17 +0000</pubDate>
+      <pubDate>Sat, 28 Nov 2015 15:09:17 +0800</pubDate>
       
       <guid>https://suncle.me/2015/11/28/%E4%B8%AA%E4%BA%BACSDN%E5%8D%9A%E5%AE%A2%E5%92%8C%E5%8D%9A%E5%AE%A2%E5%9B%AD%E9%87%8D%E7%82%B9%E6%96%87%E7%AB%A0%E6%91%98%E5%8F%96/</guid>
       <description>VMware11.1.2安装CentOS6.7详细步骤 CentOS6.7配置静态IP CentOS配置本地yum源 《从缺陷中学习CC++》总结</description>
@@ -196,7 +196,7 @@ tests/test_hello.py:18: AssertionError
     <item>
       <title>我的四年，我的校招</title>
       <link>https://suncle.me/2015/11/27/%E6%88%91%E7%9A%84%E5%9B%9B%E5%B9%B4%E6%88%91%E7%9A%84%E6%A0%A1%E6%8B%9B/</link>
-      <pubDate>Fri, 27 Nov 2015 20:52:22 +0000</pubDate>
+      <pubDate>Fri, 27 Nov 2015 20:52:22 +0800</pubDate>
       
       <guid>https://suncle.me/2015/11/27/%E6%88%91%E7%9A%84%E5%9B%9B%E5%B9%B4%E6%88%91%E7%9A%84%E6%A0%A1%E6%8B%9B/</guid>
       <description>&lt;p&gt;机遇只会光顾有准备的人&lt;/p&gt;

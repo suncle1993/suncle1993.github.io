@@ -6,7 +6,7 @@
     <description>Recent content in 配置 on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 16 Apr 2018 19:08:28 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 16 Apr 2018 19:08:28 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Hadoop3单机和伪分布式模式安装配置</title>
       <link>https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</link>
-      <pubDate>Mon, 16 Apr 2018 19:08:28 +0000</pubDate>
+      <pubDate>Mon, 16 Apr 2018 19:08:28 +0800</pubDate>
       
       <guid>https://suncle.me/2018/04/16/Hadoop3-basic-installation-and-configuration/</guid>
       <description>&lt;blockquote&gt;
@@ -32,7 +32,7 @@
     <item>
       <title>Sublime Text 3解决中文乱码</title>
       <link>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</link>
-      <pubDate>Mon, 11 Jan 2016 10:50:22 +0000</pubDate>
+      <pubDate>Mon, 11 Jan 2016 10:50:22 +0800</pubDate>
       
       <guid>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</guid>
       <description>&lt;p&gt;众所周知，Sublime Text 3（下面简称ST3）的默认编码是utf-8，因此需要把GB2312和GBK编码转换成utf-8。在Sublime Text 2中大家解决中文乱码的方法都是先装好Package Control，然后再通过这个安装ConvertToUTF8的Package。&lt;/p&gt;</description>
@@ -41,7 +41,7 @@
     <item>
       <title>Linux vi的使用</title>
       <link>https://suncle.me/2016/01/10/Linux-vi%E7%9A%84%E4%BD%BF%E7%94%A8/</link>
-      <pubDate>Sun, 10 Jan 2016 14:15:34 +0000</pubDate>
+      <pubDate>Sun, 10 Jan 2016 14:15:34 +0800</pubDate>
       
       <guid>https://suncle.me/2016/01/10/Linux-vi%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
       <description>&lt;h1 id=&#34;linux-vi的使用&#34;&gt;Linux vi的使用&lt;/h1&gt;
@@ -55,7 +55,7 @@
     <item>
       <title>Linux用户和组管理</title>
       <link>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</link>
-      <pubDate>Sat, 09 Jan 2016 00:16:04 +0000</pubDate>
+      <pubDate>Sat, 09 Jan 2016 00:16:04 +0800</pubDate>
       
       <guid>https://suncle.me/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
       <description>&lt;hr&gt;
@@ -81,7 +81,7 @@
     <item>
       <title>虚拟机的三种网络模式</title>
       <link>https://suncle.me/2016/01/08/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/</link>
-      <pubDate>Fri, 08 Jan 2016 17:47:21 +0000</pubDate>
+      <pubDate>Fri, 08 Jan 2016 17:47:21 +0800</pubDate>
       
       <guid>https://suncle.me/2016/01/08/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/</guid>
       <description>&lt;h1 id=&#34;虚拟机的三种网络模式&#34;&gt;虚拟机的三种网络模式&lt;/h1&gt;

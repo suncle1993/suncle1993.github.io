@@ -6,7 +6,7 @@
     <description>Recent content in C&#43;&#43; on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 29 Dec 2016 14:39:17 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 29 Dec 2016 14:39:17 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/C++/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>linux配置c&#43;&#43;11编译环境</title>
       <link>https://suncle.me/2016/12/29/linux%E9%85%8D%E7%BD%AEc-11%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/</link>
-      <pubDate>Thu, 29 Dec 2016 14:39:17 +0000</pubDate>
+      <pubDate>Thu, 29 Dec 2016 14:39:17 +0800</pubDate>
       
       <guid>https://suncle.me/2016/12/29/linux%E9%85%8D%E7%BD%AEc-11%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/</guid>
       <description>&lt;h1 id=&#34;linux配置c11编译环境&#34;&gt;linux配置c++11编译环境&lt;/h1&gt;

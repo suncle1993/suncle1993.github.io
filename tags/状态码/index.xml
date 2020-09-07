@@ -6,7 +6,7 @@
     <description>Recent content in 状态码 on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 13 Nov 2019 20:14:44 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 Nov 2019 20:14:44 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/%E7%8A%B6%E6%80%81%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>一次奇怪的http状态码改变</title>
       <link>https://suncle.me/2019/11/13/http-3xx-status-code/</link>
-      <pubDate>Wed, 13 Nov 2019 20:14:44 +0000</pubDate>
+      <pubDate>Wed, 13 Nov 2019 20:14:44 +0800</pubDate>
       
       <guid>https://suncle.me/2019/11/13/http-3xx-status-code/</guid>
       <description>&lt;p&gt;最近将一个很久没有更新的部署在物理机上的一个老服务迁移到k8s时，发现在gitlab ci跑pytest的过程中出现以下报错：&lt;/p&gt;

@@ -6,7 +6,7 @@
     <description>Recent content in 并发 on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 18 Dec 2017 15:27:32 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 18 Dec 2017 15:27:32 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/%E5%B9%B6%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>基于消息传递的并发模型</title>
       <link>https://suncle.me/2017/12/18/%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</link>
-      <pubDate>Mon, 18 Dec 2017 15:27:32 +0000</pubDate>
+      <pubDate>Mon, 18 Dec 2017 15:27:32 +0800</pubDate>
       
       <guid>https://suncle.me/2017/12/18/%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</guid>
       <description>&lt;blockquote&gt;An object oriented language is a language with good support for objects.&lt;br&gt;A concurrency oriented language has good support for concurrency.&lt;br&gt;&lt;br&gt;--Joe Armstrong&lt;/blockquote&gt;

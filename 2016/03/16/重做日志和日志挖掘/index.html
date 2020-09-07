@@ -177,8 +177,8 @@ LGWR如何重复使用redo log files
 如果数据库当前是NoArchivelog模式，当最后一个redo log file写满的时候，LGWR会继续按顺序覆盖下一个inactive redo log file。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://suncle.me/2016/03/16/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E5%92%8C%E6%97%A5%E5%BF%97%E6%8C%96%E6%8E%98/" />
-<meta property="article:published_time" content="2016-03-16T11:24:34+00:00" />
-<meta property="article:modified_time" content="2016-03-16T11:24:34+00:00" />
+<meta property="article:published_time" content="2016-03-16T11:24:34+08:00" />
+<meta property="article:modified_time" content="2016-03-16T11:24:34+08:00" />
 <meta itemprop="name" content="重做日志和日志挖掘">
 <meta itemprop="description" content="重做日志-Redo log
 首先给出参考资料：
@@ -304,8 +304,8 @@ LGWR如何重复使用redo log files
 不再用于实例恢复的redo log files就是inactive redo log files。
 如果数据库当前是Archivelog模式，那么直到有一个后台归档进程ARCn已经归档成功，数据库才能重用或者覆盖active online log file。
 如果数据库当前是NoArchivelog模式，当最后一个redo log file写满的时候，LGWR会继续按顺序覆盖下一个inactive redo log file。">
-<meta itemprop="datePublished" content="2016-03-16T11:24:34+00:00" />
-<meta itemprop="dateModified" content="2016-03-16T11:24:34+00:00" />
+<meta itemprop="datePublished" content="2016-03-16T11:24:34+08:00" />
+<meta itemprop="dateModified" content="2016-03-16T11:24:34+08:00" />
 <meta itemprop="wordCount" content="2404">
 
 

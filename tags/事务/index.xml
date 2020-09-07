@@ -6,7 +6,7 @@
     <description>Recent content in 事务 on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 19 Dec 2019 19:42:19 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 19 Dec 2019 19:42:19 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/%E4%BA%8B%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>记录一次mybatis缓存和事务传播行为导致ut挂的排查过程</title>
       <link>https://suncle.me/2019/12/19/record-a-troubleshooting-process-of-ut-hanging-caused-by-mybatis-cache-and-transaction-propagation/</link>
-      <pubDate>Thu, 19 Dec 2019 19:42:19 +0000</pubDate>
+      <pubDate>Thu, 19 Dec 2019 19:42:19 +0800</pubDate>
       
       <guid>https://suncle.me/2019/12/19/record-a-troubleshooting-process-of-ut-hanging-caused-by-mybatis-cache-and-transaction-propagation/</guid>
       <description>&lt;p&gt;记录一次mybatis缓存和事务传播行为导致ut挂的排查过程&lt;/p&gt;
@@ -27,7 +27,7 @@
     <item>
       <title>事务Transaction</title>
       <link>https://suncle.me/2016/03/23/%E4%BA%8B%E5%8A%A1Transaction/</link>
-      <pubDate>Wed, 23 Mar 2016 11:00:22 +0000</pubDate>
+      <pubDate>Wed, 23 Mar 2016 11:00:22 +0800</pubDate>
       
       <guid>https://suncle.me/2016/03/23/%E4%BA%8B%E5%8A%A1Transaction/</guid>
       <description>&lt;p&gt;参考资料：&lt;/p&gt;

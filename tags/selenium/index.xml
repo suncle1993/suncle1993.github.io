@@ -6,7 +6,7 @@
     <description>Recent content in selenium on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 10 Apr 2018 17:58:31 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 10 Apr 2018 17:58:31 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/selenium/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>微博爬取热搜榜和热门话题</title>
       <link>https://suncle.me/2018/04/10/%E5%BE%AE%E5%8D%9A%E7%88%AC%E5%8F%96%E7%83%AD%E6%90%9C%E6%A6%9C%E5%92%8C%E7%83%AD%E9%97%A8%E8%AF%9D%E9%A2%98/</link>
-      <pubDate>Tue, 10 Apr 2018 17:58:31 +0000</pubDate>
+      <pubDate>Tue, 10 Apr 2018 17:58:31 +0800</pubDate>
       
       <guid>https://suncle.me/2018/04/10/%E5%BE%AE%E5%8D%9A%E7%88%AC%E5%8F%96%E7%83%AD%E6%90%9C%E6%A6%9C%E5%92%8C%E7%83%AD%E9%97%A8%E8%AF%9D%E9%A2%98/</guid>
       <description>&lt;h1 id=&#34;weibo_spider&#34;&gt;weibo_spider&lt;/h1&gt;

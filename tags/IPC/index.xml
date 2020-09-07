@@ -6,7 +6,7 @@
     <description>Recent content in IPC on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 11 Dec 2017 14:01:05 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 11 Dec 2017 14:01:05 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/IPC/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>unix domain socket</title>
       <link>https://suncle.me/2017/12/11/unix-domain-socket/</link>
-      <pubDate>Mon, 11 Dec 2017 14:01:05 +0000</pubDate>
+      <pubDate>Mon, 11 Dec 2017 14:01:05 +0800</pubDate>
       
       <guid>https://suncle.me/2017/12/11/unix-domain-socket/</guid>
       <description>&lt;h1 id=&#34;unix-domain-socket&#34;&gt;unix domain socket&lt;/h1&gt;

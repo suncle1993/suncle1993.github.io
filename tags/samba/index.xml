@@ -6,7 +6,7 @@
     <description>Recent content in samba on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 02 Sep 2017 00:53:01 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 02 Sep 2017 00:53:01 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/samba/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>ubuntu16.04配置samba解决linux的svn使用舒适问题</title>
       <link>https://suncle.me/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/</link>
-      <pubDate>Sat, 02 Sep 2017 00:53:01 +0000</pubDate>
+      <pubDate>Sat, 02 Sep 2017 00:53:01 +0800</pubDate>
       
       <guid>https://suncle.me/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/</guid>
       <description>&lt;p&gt;个人感觉，svn的命令行使用起来没有git那么舒适，但是windows上的svn GUI客户端TortoiseSVN 使用非常方便。因此对于经常在虚拟机中做服务程序开发但是又不得不用svn的同学来说，结合linux开发环境和TortoiseSVN 来管理代码版本就显得尤其有用。&lt;/p&gt;

@@ -6,7 +6,7 @@
     <description>Recent content in ab on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 01 Feb 2018 18:46:45 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 01 Feb 2018 18:46:45 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/tags/ab/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>使用ab和wrk对腾讯CLS进行benchmark测试</title>
       <link>https://suncle.me/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/</link>
-      <pubDate>Thu, 01 Feb 2018 18:46:45 +0000</pubDate>
+      <pubDate>Thu, 01 Feb 2018 18:46:45 +0800</pubDate>
       
       <guid>https://suncle.me/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/</guid>
       <description>&lt;h1 id=&#34;使用ab和wrk对cls进行benchmark测试&#34;&gt;使用ab和wrk对CLS进行benchmark测试&lt;/h1&gt;

@@ -6,7 +6,7 @@
     <description>Recent content in 工具使用 on Suncle&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 01 Feb 2018 18:46:45 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 01 Feb 2018 18:46:45 +0800</lastBuildDate>
     
 	<atom:link href="https://suncle.me/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>使用ab和wrk对腾讯CLS进行benchmark测试</title>
       <link>https://suncle.me/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/</link>
-      <pubDate>Thu, 01 Feb 2018 18:46:45 +0000</pubDate>
+      <pubDate>Thu, 01 Feb 2018 18:46:45 +0800</pubDate>
       
       <guid>https://suncle.me/2018/02/01/Benchmarking-Tencent-CLS-with-ab-and-wrk/</guid>
       <description>&lt;h1 id=&#34;使用ab和wrk对cls进行benchmark测试&#34;&gt;使用ab和wrk对CLS进行benchmark测试&lt;/h1&gt;
@@ -68,7 +68,7 @@
     <item>
       <title>详解supervisor进程管理</title>
       <link>https://suncle.me/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</link>
-      <pubDate>Mon, 25 Sep 2017 17:05:22 +0000</pubDate>
+      <pubDate>Mon, 25 Sep 2017 17:05:22 +0800</pubDate>
       
       <guid>https://suncle.me/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</guid>
       <description>&lt;h1 id=&#34;supervisor&#34;&gt;supervisor&lt;/h1&gt;
@@ -82,7 +82,7 @@
     <item>
       <title>ubuntu16.04配置samba解决linux的svn使用舒适问题</title>
       <link>https://suncle.me/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/</link>
-      <pubDate>Sat, 02 Sep 2017 00:53:01 +0000</pubDate>
+      <pubDate>Sat, 02 Sep 2017 00:53:01 +0800</pubDate>
       
       <guid>https://suncle.me/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/</guid>
       <description>&lt;p&gt;个人感觉，svn的命令行使用起来没有git那么舒适，但是windows上的svn GUI客户端TortoiseSVN 使用非常方便。因此对于经常在虚拟机中做服务程序开发但是又不得不用svn的同学来说，结合linux开发环境和TortoiseSVN 来管理代码版本就显得尤其有用。&lt;/p&gt;
@@ -102,7 +102,7 @@
     <item>
       <title>Sublime Text 3解决中文乱码</title>
       <link>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</link>
-      <pubDate>Mon, 11 Jan 2016 10:50:22 +0000</pubDate>
+      <pubDate>Mon, 11 Jan 2016 10:50:22 +0800</pubDate>
       
       <guid>https://suncle.me/2016/01/11/Sublime-Text-3%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</guid>
       <description>&lt;p&gt;众所周知，Sublime Text 3（下面简称ST3）的默认编码是utf-8，因此需要把GB2312和GBK编码转换成utf-8。在Sublime Text 2中大家解决中文乱码的方法都是先装好Package Control，然后再通过这个安装ConvertToUTF8的Package。&lt;/p&gt;</description>
