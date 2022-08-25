@@ -1,0 +1,918 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/img/android-chrome-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Suncle Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Clickhouse简介和性能对比ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)。 常见的列式数据库有： Vertica、 Paraccel (Actian Matrix，Amazon Redshift)、 Sybase IQ、 Exasol、 Infobright、 InfiniDB、 MonetDB (VectorWise， Actian Vector)、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clickhouse简介和性能对比">
+<meta property="og:url" content="https://suncle.me/2019/07/27/clickhouse%E7%AE%80%E4%BB%8B%E5%92%8C%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/index.html">
+<meta property="og:site_name" content="Suncle">
+<meta property="og:description" content="Clickhouse简介和性能对比ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)。 常见的列式数据库有： Vertica、 Paraccel (Actian Matrix，Amazon Redshift)、 Sybase IQ、 Exasol、 Infobright、 InfiniDB、 MonetDB (VectorWise， Actian Vector)、">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-07-27T06:13:26.000Z">
+<meta property="article:modified_time" content="2022-08-25T03:33:47.080Z">
+<meta property="article:author" content="Suncle Chen">
+<meta property="article:tag" content="clickhouse">
+<meta property="article:tag" content="性能">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Clickhouse简介和性能对比 - Suncle</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-72506112-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Suncle&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/newsletter/">
+                <i class="iconfont icon-mail"></i>
+                周刊
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                更多
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml">
+                    <i class="iconfont icon-rss-fill"></i>
+                    RSS
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/suncle-banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Clickhouse简介和性能对比</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-07-27 14:13" pubdate>
+          2019年7月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="大数据"
+        id="heading-2c657e7dce6effaecbb458deb45e800a" role="tab" data-toggle="collapse" href="#collapse-2c657e7dce6effaecbb458deb45e800a"
+        aria-expanded="true"
+      >
+        大数据
+        <span class="list-group-count">(12)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-2c657e7dce6effaecbb458deb45e800a"
+           role="tabpanel" aria-labelledby="heading-2c657e7dce6effaecbb458deb45e800a">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2019/07/27/clickhouse%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" title="Clickhouse分布式集群搭建"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Clickhouse分布式集群搭建</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/27/clickhouse%E5%88%9B%E5%BB%BA%E5%88%86%E5%B8%83%E5%BC%8F%E8%A1%A8%E4%BB%A5%E5%8F%8A%E8%A1%A8%E5%BC%95%E6%93%8E%E4%BB%8B%E7%BB%8D/" title="Clickhouse创建分布式表以及表引擎介绍"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Clickhouse创建分布式表以及表引擎介绍</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/27/clickhouse%E7%AE%80%E4%BB%8B%E5%92%8C%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Clickhouse简介和性能对比"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Clickhouse简介和性能对比</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/16/hadoop3%E5%8D%95%E6%9C%BA%E5%92%8C%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" title="Hadoop3单机和伪分布式模式安装配置"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop3单机和伪分布式模式安装配置</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/16/hadoop%E3%80%81mapreduce%E3%80%81hdfs%E4%BB%8B%E7%BB%8D/" title="Hadoop、MapReduce、HDFS介绍"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop、MapReduce、HDFS介绍</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/16/hadoop%E9%A1%B9%E7%9B%AE%EF%BC%9A%E4%BB%8Ecdn%E6%97%A5%E5%BF%97%E7%BB%9F%E8%AE%A1%E7%9B%B4%E6%92%AD%E6%B5%81%E9%87%8F/" title="Hadoop项目：从cdn日志统计直播流量"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop项目：从cdn日志统计直播流量</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/09/sqoop%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA/" title="Sqoop导入导出"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Sqoop导入导出</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/17/%E4%BD%BF%E7%94%A8python%E8%AF%AD%E8%A8%80%E5%86%99hadoop-mapreduce%E7%A8%8B%E5%BA%8F/" title="使用Python语言写Hadoop MapReduce程序"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用Python语言写Hadoop MapReduce程序</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/08/02/%E5%A4%A7%E6%95%B0%E6%8D%AEolap%E7%B3%BB%E7%BB%9F%E6%AF%94%E8%BE%83/" title="大数据OLAP系统比较"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">大数据OLAP系统比较</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/03/%E6%90%AD%E5%BB%BAhadoop3%E9%9B%86%E7%BE%A4/" title="搭建Hadoop3集群"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">搭建Hadoop3集群</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/05/08/%E6%95%B0%E4%BB%93%E5%B7%A5%E4%BD%9C%E7%9A%84%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E5%92%8C%E5%AF%B9%E6%AF%94/" title="数仓工作的简单介绍和对比"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">数仓工作的简单介绍和对比</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/30/%E9%98%BF%E9%87%8C%E4%BA%91%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E8%B0%83%E7%A0%94/" title="阿里云大数据基础组件调研"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">阿里云大数据基础组件调研</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Clickhouse简介和性能对比</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Clickhouse简介和性能对比"><a href="#Clickhouse简介和性能对比" class="headerlink" title="Clickhouse简介和性能对比"></a>Clickhouse简介和性能对比</h1><p>ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)。</p>
+<p>常见的列式数据库有： Vertica、 Paraccel (Actian Matrix，Amazon Redshift)、 Sybase IQ、 Exasol、 Infobright、 InfiniDB、 MonetDB (VectorWise， Actian Vector)、 LucidDB、 SAP HANA、 Google Dremel、 Google PowerDrill、 Druid、 kdb+。</p>
+<span id="more"></span>
+
+<p>不同的存储方式适合不同的场景，这里的查询场景包括： </p>
+<ul>
+<li>进行了哪些查询</li>
+<li>多久查询一次</li>
+<li>各类查询的比例</li>
+<li>每种查询读取多少数据————行、列和字节</li>
+<li>读取数据和写入数据之间的关系</li>
+<li>使用的数据集大小以及如何使用本地的数据集</li>
+<li>是否使用事务,以及它们是如何进行隔离的</li>
+<li>数据的复制机制与数据的完整性要求</li>
+<li>每种类型的查询要求的延迟与吞吐量</li>
+</ul>
+<p>系统负载越高，根据使用场景进行定制化就越重要，并且定制将会变的越精细。没有一个系统同样适用于明显不同的场景。如果系统适用于广泛的场景，在负载高的情况下，所有的场景可以会被公平但低效处理，或者高效处理一小部分场景。</p>
+<h1 id="OLAP场景的关键特征"><a href="#OLAP场景的关键特征" class="headerlink" title="OLAP场景的关键特征"></a>OLAP场景的关键特征</h1><ul>
+<li>大多数是读请求</li>
+<li>数据总是以相当大的批(&gt; 1000 rows)进行写入</li>
+<li>不修改已添加的数据</li>
+<li>每次查询都从数据库中读取大量的行，但是同时又仅需要少量的列</li>
+<li>宽表，即每个表包含着大量的列</li>
+<li>较少的查询(通常每台服务器每秒数百个查询或更少)</li>
+<li>对于简单查询，允许延迟大约50毫秒</li>
+<li>列中的数据相对较小： 数字和短字符串(例如，每个URL 60个字节)</li>
+<li>处理单个查询时需要高吞吐量（每个服务器每秒高达数十亿行）</li>
+<li>事务不是必须的</li>
+<li>对数据一致性要求低</li>
+<li>每一个查询除了一个大表外都很小</li>
+<li>查询结果明显小于源数据，换句话说，数据被过滤或聚合后能够被盛放在单台服务器的内存中</li>
+</ul>
+<h1 id="Clickhouse优缺点"><a href="#Clickhouse优缺点" class="headerlink" title="Clickhouse优缺点"></a>Clickhouse优缺点</h1><p>优点</p>
+<ul>
+<li>数据压缩</li>
+<li>多核并行处理</li>
+<li>支持数据复制和数据完整性<ul>
+<li>shard分片</li>
+<li>replica副本</li>
+</ul>
+</li>
+<li>多服务器分布式处理。其他列式数据库管理系统中，几乎没有一个支持分布式的查询处理</li>
+<li>支持sql<ul>
+<li>大部分情况下是与SQL标准兼容的。 支持的查询包括 GROUP BY，ORDER BY，IN，JOIN以及非相关子查询。 不支持窗口函数和相关子查询。</li>
+</ul>
+</li>
+<li>向量引擎</li>
+<li>实时数据插入</li>
+<li>稀疏索引</li>
+<li>适合在线查询</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>没有完整的事务支持。</li>
+<li>缺少高频率，低延迟的修改或删除已存在数据的能力。仅能用于批量删除或修改数据，但这符合 <a target="_blank" rel="noopener" href="https://gdpr-info.eu/">GDPR</a>。</li>
+<li>稀疏索引使得ClickHouse不适合通过其键检索单行的点查询。</li>
+</ul>
+<h1 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h1><p>官方的性能测试对比报告参见：<a target="_blank" rel="noopener" href="https://clickhouse.yandex/benchmark.html">https://clickhouse.yandex/benchmark.html</a></p>
+<p>知乎上的一篇OLAP引擎比较：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/54907288">https://zhuanlan.zhihu.com/p/54907288</a></p>
+<p>在一张有44个字段的大表中做单表查询并且和Amazon RedShift做对比，结果如下：</p>
+<p>Clickhouse 测试环境：单CPU 2核 4G内存</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> /proc/cpuinfo| grep <span class="hljs-string">&quot;physical id&quot;</span>| <span class="hljs-built_in">sort</span>| <span class="hljs-built_in">uniq</span>| <span class="hljs-built_in">wc</span> -l  <span class="hljs-comment"># # 查看物理CPU个数</span><br><span class="hljs-built_in">cat</span> /proc/cpuinfo| grep <span class="hljs-string">&quot;cpu cores&quot;</span>| <span class="hljs-built_in">uniq</span>  <span class="hljs-comment"># 查看每个物理CPU中core的个数(即核数)</span><br></code></pre></td></tr></table></figure>
+<p>数据量：1580万</p>
+<p>clickhouse engine和index：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">ENGINE = ReplacingMergeTree(<span class="hljs-keyword">insert_time)</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">order </span><span class="hljs-keyword">by </span>(membership_uid, <span class="hljs-keyword">business_group_uid, </span>calendar_date, <span class="hljs-keyword">insert_time);</span><br></code></pre></td></tr></table></figure>
+<p>Sql执行速度取决于：执行时间execution和数据拉取时间fetching</p>
+<p>Clickhouse:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.membership_id<span class="hljs-operator">=</span><span class="hljs-number">666</span>; <span class="hljs-comment">-- 160ms</span><br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.membership_uid<span class="hljs-operator">=</span><span class="hljs-string">&#x27;3ec723abeffc470ea42593f0d1e9d279&#x27;</span>; <span class="hljs-comment">-- 120ms</span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.business_group_id<span class="hljs-operator">=</span><span class="hljs-number">44</span>; <span class="hljs-comment">--  120ms</span><br><span class="hljs-keyword">select</span> account_phone <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.membership_id<span class="hljs-operator">=</span><span class="hljs-number">666</span>; <span class="hljs-comment">-- 58ms</span><br><span class="hljs-keyword">select</span> account_phone <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.membership_uid<span class="hljs-operator">=</span><span class="hljs-string">&#x27;3ec723abeffc470ea42593f0d1e9d279&#x27;</span>; <span class="hljs-comment">-- 44 ms</span><br><span class="hljs-keyword">select</span> account_phone <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.business_group_id<span class="hljs-operator">=</span><span class="hljs-number">44</span>; <span class="hljs-comment">-- 190ms</span><br></code></pre></td></tr></table></figure>
+
+<p>RedShift: 机器配置高于clickhouse单机数倍</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.business_group_id<span class="hljs-operator">=</span><span class="hljs-number">44</span>; <span class="hljs-comment">--  1286条数据一次取出来时间较长</span><br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.business_group_uid<span class="hljs-operator">=</span><span class="hljs-string">&#x27;7a68b4a7350c4d7288e8befef91f8581&#x27;</span>; <span class="hljs-comment">-- 1286条数据一次取出来时间较长</span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.business_group_uid<span class="hljs-operator">=</span><span class="hljs-string">&#x27;fa26f456030940b8b6ec4b56e256aee2&#x27;</span>; <span class="hljs-comment">-- 250ms</span><br><span class="hljs-keyword">select</span> account_phone <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.business_group_uid<span class="hljs-operator">=</span><span class="hljs-string">&#x27;7a68b4a7350c4d7288e8befef91f8581&#x27;</span>; <span class="hljs-comment">-- 360ms</span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-keyword">distinct</span> t.membership_uid) <span class="hljs-keyword">from</span> dm.delphi_membership_properties t <span class="hljs-keyword">where</span> t.business_group_uid<span class="hljs-operator">=</span><span class="hljs-string">&#x27;fa26f456030940b8b6ec4b56e256aee2&#x27;</span>; <span class="hljs-comment">-- 450ms</span><br></code></pre></td></tr></table></figure>
+
+<p>将clickhouse 表engine的order by key修改如下：颗粒度小的在后</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">ENGINE = ReplacingMergeTree(<span class="hljs-keyword">insert_time)</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">order </span><span class="hljs-keyword">by </span>(<span class="hljs-keyword">business_group_uid, </span>calendar_date, created_at, <span class="hljs-keyword">insert_time, </span>membership_uid);<br></code></pre></td></tr></table></figure>
+<p>修改order by key之后含有bguid的查询速度大幅提升，均低于60ms。这个速度提升主要是clickhouse的稀疏索引导致的，关于索引会在其他文章中介绍到。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" class="category-chain-item">大数据</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/clickhouse/">#clickhouse</a>
+      
+        <a href="/tags/%E6%80%A7%E8%83%BD/">#性能</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Clickhouse简介和性能对比</div>
+      <div>https://suncle.me/2019/07/27/clickhouse简介和性能对比/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Suncle Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年7月27日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/07/27/clickhouse%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" title="Clickhouse分布式集群搭建">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Clickhouse分布式集群搭建</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/06/16/%E6%80%8E%E6%A0%B7%E6%8B%8D%E5%87%BA%E4%B8%80%E5%BC%A0%E5%A5%BD%E7%85%A7%E7%89%87/" title="怎样拍出一张好照片">
+                        <span class="hidden-mobile">怎样拍出一张好照片</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,851 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/img/android-chrome-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Suncle Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。 主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Erlang入门路线">
+<meta property="og:url" content="https://suncle.me/2017/12/14/erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/index.html">
+<meta property="og:site_name" content="Suncle">
+<meta property="og:description" content="间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。 主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-12-14T06:33:30.000Z">
+<meta property="article:modified_time" content="2022-08-25T03:34:28.598Z">
+<meta property="article:author" content="Suncle Chen">
+<meta property="article:tag" content="Erlang">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="入门">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Erlang入门路线 - Suncle</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-72506112-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Suncle&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/newsletter/">
+                <i class="iconfont icon-mail"></i>
+                周刊
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                更多
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml">
+                    <i class="iconfont icon-rss-fill"></i>
+                    RSS
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/suncle-banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Erlang入门路线</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2017-12-14 14:33" pubdate>
+          2017年12月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="erlang"
+        id="heading-622c84b69ee448a07d80de5cbeb13e3d" role="tab" data-toggle="collapse" href="#collapse-622c84b69ee448a07d80de5cbeb13e3d"
+        aria-expanded="true"
+      >
+        erlang
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-622c84b69ee448a07d80de5cbeb13e3d"
+           role="tabpanel" aria-labelledby="heading-622c84b69ee448a07d80de5cbeb13e3d">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2017/12/14/erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/" title="Erlang入门路线"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Erlang入门路线</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/08/11/erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-1/" title="Erlang学习笔记(1)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Erlang学习笔记(1)</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/01/29/erlang%E6%B5%8B%E8%AF%95%E5%85%A8%E9%9B%86-%E6%8C%96%E5%9D%91/" title="Erlang测试全集(挖坑)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Erlang测试全集(挖坑)</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/11/20/erlang%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99behaviour/" title="Erlang设计原则Behaviour"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Erlang设计原则Behaviour</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Erlang入门路线</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。</p>
+<p>主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。</p>
+<span id="more"></span>
+
+<h1 id="Erlang环境"><a href="#Erlang环境" class="headerlink" title="Erlang环境"></a>Erlang环境</h1><p>主要是Erlang环境搭建和Erlang shell的使用</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>在<a target="_blank" rel="noopener" href="https://www.erlang.org/downloads">Erlang官网下载</a>Erlang源码包或者二进制包进行安装，因项目需要选择OTP18&#x2F;erl7.3。</p>
+<p>从源码安装Erlang&#x2F;OTP的方法参见<a target="_blank" rel="noopener" href="https://github.com/erlang/otp/blob/maint/HOWTO/INSTALL.md">github仓库</a></p>
+<blockquote>
+<p>windows安装完成之后需要配置环境变量，最终以在命令行输入erl能进入erlang shell为准</p>
+</blockquote>
+<h2 id="Erlang-shell"><a href="#Erlang-shell" class="headerlink" title="Erlang shell"></a>Erlang shell</h2><p>开始第一个程序：Erlang程序的编写，编译，执行。</p>
+<p>输入下面的程序，把它存成一个叫做 hello.erl 的文件。</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs erlang"><span class="hljs-keyword">-module</span><span class="hljs-params">(hello)</span>.<br><span class="hljs-keyword">-compile</span><span class="hljs-params">(export_all)</span>.<br><span class="hljs-function"><span class="hljs-title">start</span><span class="hljs-params">()</span> -&gt;</span><br>  <span class="hljs-string">&quot;hello world&quot;</span>.<br></code></pre></td></tr></table></figure>
+
+<p>启动 erlang shell，输入以下命令：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs erlang">root@ubuntu:/tmp# erl<br>Erlang/OTP <span class="hljs-number">18</span> [erts-<span class="hljs-number">7.3</span>] [source] [<span class="hljs-number">64</span>-bit] [async-threads:<span class="hljs-number">10</span>] [kernel-poll:<span class="hljs-literal">false</span>]<br><br>Eshell V7.<span class="hljs-number">3</span>  (abort with ^G)<br><span class="hljs-number">1</span>&gt; c(hello).<br>&#123;ok,hello&#125;<br><span class="hljs-number">2</span>&gt; hello:start().<br><span class="hljs-string">&quot;hello world&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>第一句是编译这个程序。第二句是执行命令，这就是所有要做的。</p>
+<h1 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h1><h2 id="学习语法"><a href="#学习语法" class="headerlink" title="学习语法"></a>学习语法</h2><p>推荐阅读Erlang之父Joe Armstrong编写的<strong>Erlang程序设计</strong>这本书，网上有pdf版本。也可参见<a href="https://suncle.me/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)/">Erlang学习笔记1</a>。 </p>
+<p>需要重点掌握Erlang内置数据结构如tuple，list，record，function，case&#x2F;if等知识点的使用。</p>
+<p>此外需要学习以下几项：</p>
+<ol>
+<li>ets</li>
+<li>dets</li>
+<li>gen_tcp</li>
+<li>database</li>
+</ol>
+<h2 id="练习题"><a href="#练习题" class="headerlink" title="练习题"></a>练习题</h2><p>学习基础语法之后需要做一些练习题，练习题来源有</p>
+<ol>
+<li><strong>Erlang程序设计</strong>书后练习题</li>
+<li><a target="_blank" rel="noopener" href="https://www.erlang.org/course/exercises.html">Erlang 官方练习题</a></li>
+<li>常用oj上的简单算法题使用Erlang实现</li>
+</ol>
+<p>后续更新一些习题（<strong>挖坑</strong>）</p>
+<h1 id="OTP"><a href="#OTP" class="headerlink" title="OTP"></a>OTP</h1><p>什么是OTP？和Erlang的区别是什么？</p>
+<blockquote>
+<p>OTP即Open Telecom Platform（开放电信平台），不用理会OTP的名称，OTP的本质是一个应用程序操作系统，还包含大量库和程序用来构建大规模的分布式容错系统（这就是OTP的目的）。使用OTP写程序关键在于OTP中的行为（即behavior）。一个行为封装了某种常见的行为模糊。可以把这些行为理解为常见的编程套件，或者程序框架，只是使用这些框架方式是通过回调模块。</p>
+<p>直接使用Erlang原语而不使用OTP编写Erlang程序是完全可行的，只是需要自己考虑容错、扩容和动态代码升级等等非功能性特性。也就是使用OTP编写Erlang程序，OTP的行为解决问题的非功能性部分，功能性的部分留给程序猿根据业务自己写回调模块来实现——因为对于所有的系统来说，非功能性的部分都是一样的。</p>
+</blockquote>
+<p>需要掌握的OTP常见的行为有：</p>
+<ol>
+<li>gen_server：服务器&#x2F;客户端模型</li>
+<li>supervisor：监控树</li>
+<li>application：应用</li>
+<li>gen_fsm：有限状态机</li>
+<li>gen_event：事件处理器</li>
+</ol>
+<p>掌握前三项就可以写普通的服务，包括tcp，http服务，amqp消息处理的服务等等。</p>
+<h1 id="集成开发环境"><a href="#集成开发环境" class="headerlink" title="集成开发环境"></a>集成开发环境</h1><p>分为使用rebar从零构建Erlang项目和调试打包发布这2块。</p>
+<h2 id="使用rebar从零构建Erlang项目"><a href="#使用rebar从零构建Erlang项目" class="headerlink" title="使用rebar从零构建Erlang项目"></a>使用rebar从零构建Erlang项目</h2><p>开发环境推荐使用IDEA + Erlang + rebar:</p>
+<ul>
+<li>Erlang&#x2F;OTP语言</li>
+<li>rebar工具构建Erlang项目</li>
+<li>IDE选择IDEA</li>
+</ul>
+<p>OTP的application构建时需要遵循一定的约定来组织项目，具体的约定参考：<a target="_blank" rel="noopener" href="https://www.erlang.org/doc/design_principles/applications.html">OTP应用设计原则</a>。rebar遵循OTP设计原则，因此rebar构建的项目目录需要下列子文件夹：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cmake">─ <span class="hljs-variable">$&#123;application&#125;</span><br>      ├── doc<br>      ├── <span class="hljs-keyword">include</span><br>      ├── priv<br>      ├── src<br>      │   └── <span class="hljs-variable">$&#123;application&#125;</span>.app.src<br>      └── <span class="hljs-keyword">test</span><br></code></pre></td></tr></table></figure>
+
+<p>rebar具体的构建方法参见：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/panfeng412/archive/2011/08/14/compile-erlang-with-rebar.html"><strong>Rebar：Erlang构建工具</strong></a></p>
+<p>构建完成之后，加上自己编写的模块，一个完整的Erlang示例项目目录结构如下（有省略）：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs stylus">cdn_gateway<br>├── app<span class="hljs-selector-class">.config</span><br>├── build<br>├── cdn_gateway<span class="hljs-selector-class">.cmd</span><br>├── cdn_gateway<span class="hljs-selector-class">.iml</span><br>├── deps<br>│   ├── amqp_client<br>│   ├── erldis<br>│   ├── goldrush<br>│   ├── lager<br>│   ├── meck<br>│   ├── rabbit_common<br>│   └── rfc4627_jsonrpc<br>├── ebin<br>├── include<br>├── Makefile<br>├── priv<br>├── rebar<span class="hljs-selector-class">.config</span><br>├── rel<br>├── reltool<span class="hljs-selector-class">.config</span><br>├── run<span class="hljs-selector-class">.bat</span><br>├── <span class="hljs-attribute">src</span><br>│   ├── cdn_gateway_app<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gateway<span class="hljs-selector-class">.app</span><span class="hljs-selector-class">.src</span><br>│   ├── cdn_gateway<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gateway<span class="hljs-selector-class">.hrl</span><br>│   ├── cdn_gateway_sup<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gw_amqp_agent<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gw_cluster<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gw_http_acceptor<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gw_live_operator<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gw_live_plan_auth_mgr<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gw_live_plan_online_mgr<span class="hljs-selector-class">.erl</span><br>│   ├── cdn_gw_notice_http_handler<span class="hljs-selector-class">.erl</span><br>│   └── cdn_gw_notice_http_handler_sup<span class="hljs-selector-class">.erl</span><br>└── vm<span class="hljs-selector-class">.args</span><br><br><span class="hljs-number">211</span> directories, <span class="hljs-number">1799</span> files<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="调试打包"><a href="#调试打包" class="headerlink" title="调试打包"></a>调试打包</h2><p>调试脚本run.bat的功能主要是编译源代码，开启Erlang shell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">call rebar compile skip_deps=<span class="hljs-literal">true</span><br><span class="hljs-built_in">cd</span> ..<br>start werl -name cdn_gateway@127.0.0.1 -setcookie cdn_gateway -pa cdn_gateway\ebin cdn_gateway\deps\amqp_client\ebin cdn_gateway\deps\qk_ipdb\ebin cdn_gateway\deps\erldis\ebin cdn_gateway\deps\gen_server3\ebin cdn_gateway\deps\goldrush\ebin deps\mysql_agent\ebin cdn_gateway\deps\lager\ebin cdn_gateway\deps\mysql\ebin cdn_gateway\deps\pb\ebin cdn_gateway\deps\protobuffs\ebin cdn_gateway\deps\qukan_lib\ebin cdn_gateway\deps\rabbit_common\ebin cdn_gateway\deps\rfc4627_jsonrpc\ebin cdn_gateway\deps\qk_odbc_pool\ebin cdn_gateway\deps\qk_json\ebin -s cdn_gateway<br><span class="hljs-built_in">cd</span> cdn_gateway<br></code></pre></td></tr></table></figure>
+
+<p>打包的makefile文件如下：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs makefile">node_name := cdn_gateway<br><br><span class="hljs-section">release:</span><br>	rm -rf deps<br>	rm -rf test/logs<br>	rm -rf build<br>	rm -f test/*.beam<br>	rebar clean<br>	rebar get-deps compile ct<br>	mkdir -p ./build/<span class="hljs-variable">$(node_name)</span>;cp -rf ./ebin ./build/<span class="hljs-variable">$(node_name)</span>/;cp -rf ./priv ./build/<span class="hljs-variable">$(node_name)</span>/;cp -rf ./<span class="hljs-keyword">include</span> ./build/<span class="hljs-variable">$(node_name)</span>/<br>	mkdir -p ./rel;cd ./rel;rm -rf *;rebar create-node nodeid=<span class="hljs-variable">$(node_name)</span>;cp ../reltool.config ./;rebar generate;tar -cjf <span class="hljs-variable">$(node_name)</span>.tar.bz2 <span class="hljs-variable">$(node_name)</span><br>	mkdir -p ../build_linux<br>	mv rel/<span class="hljs-variable">$(node_name)</span>.tar.bz2 ../build_linux<br></code></pre></td></tr></table></figure>
+
+<p>windows上调试，打包最好再对应的生产环境系统（比如ubuntu16.04）中打包，避免有坑。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.yuanmas.com/info/nmaW66VBz3.html">erlang工作前新手学习指引路线</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wwh578867817/article/details/49774169">Erlang 中的并发 – Actor 模型</a></li>
+<li><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/83126">云栖社区-Erlang入门（二）—并发编程</a></li>
+<li><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/229322?spm=5176.8067842.tagmain.121.dwjreE">为什么我们放弃了Erlang技术栈</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/erlang/" class="category-chain-item">erlang</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Erlang/">#Erlang</a>
+      
+        <a href="/tags/%E6%80%BB%E7%BB%93/">#总结</a>
+      
+        <a href="/tags/%E5%85%A5%E9%97%A8/">#入门</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Erlang入门路线</div>
+      <div>https://suncle.me/2017/12/14/erlang入门路线/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Suncle Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2017年12月14日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/12/18/%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/" title="基于消息传递的并发模型">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">基于消息传递的并发模型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2017/12/11/unix-domain-socket/" title="unix domain socket">
+                        <span class="hidden-mobile">unix domain socket</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

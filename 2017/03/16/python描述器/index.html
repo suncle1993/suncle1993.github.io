@@ -1,0 +1,1125 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/img/android-chrome-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Suncle Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="引入描述器以stackoverflow上关于描述器（descriptor ）的疑问开篇。 123456789101112131415161718192021class Celsius:    def __get__(self, instance, owner):        return 5 * (instance.fahrenheit - 32) &#x2F; 9    def __set__(self">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python描述器">
+<meta property="og:url" content="https://suncle.me/2017/03/16/python%E6%8F%8F%E8%BF%B0%E5%99%A8/index.html">
+<meta property="og:site_name" content="Suncle">
+<meta property="og:description" content="引入描述器以stackoverflow上关于描述器（descriptor ）的疑问开篇。 123456789101112131415161718192021class Celsius:    def __get__(self, instance, owner):        return 5 * (instance.fahrenheit - 32) &#x2F; 9    def __set__(self">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-03-16T15:01:23.000Z">
+<meta property="article:modified_time" content="2022-08-25T03:41:39.049Z">
+<meta property="article:author" content="Suncle Chen">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="描述器">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python描述器 - Suncle</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-72506112-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Suncle&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/newsletter/">
+                <i class="iconfont icon-mail"></i>
+                周刊
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                更多
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml">
+                    <i class="iconfont icon-rss-fill"></i>
+                    RSS
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/suncle-banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Python描述器</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2017-03-16 23:01" pubdate>
+          2017年3月16日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          72 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="python"
+        id="heading-23eeeb4347bdd26bfc6b7ee9a3b755dd" role="tab" data-toggle="collapse" href="#collapse-23eeeb4347bdd26bfc6b7ee9a3b755dd"
+        aria-expanded="true"
+      >
+        python
+        <span class="list-group-count">(32)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-23eeeb4347bdd26bfc6b7ee9a3b755dd"
+           role="tabpanel" aria-labelledby="heading-23eeeb4347bdd26bfc6b7ee9a3b755dd">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2018/02/06/python-google-protocol-buffer/" title="Python Google Protocol Buffer"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python Google Protocol Buffer</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/02/13/python-io/" title="Python IO"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python IO</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/04/07/python-wsgi%E6%8E%A5%E5%8F%A3/" title="Python-WSGI接口"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python-WSGI接口</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/04/14/python-pymysql/" title="Python-pymysql"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python-pymysql</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/01/07/python%E5%87%BD%E6%95%B0/" title="Python函数"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python函数</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/09/05/python%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89%E5%8F%8A%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" title="Python函数定义及参数详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python函数定义及参数详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/11/14/python%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" title="Python单元测试"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python单元测试</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/09/02/python%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-list-tuple-dict-set/" title="Python基本数据类型-list-tuple-dict-set"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python基本数据类型-list-tuple-dict-set</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/23/python%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="Python多线程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python多线程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/08/30/python%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="Python字符串"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python字符串</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/05/22/python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/" title="Python实现通用web框架"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python实现通用web框架</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/03/12/python%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97%E9%9B%86%E9%94%A6/" title="Python常用模块集锦"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python常用模块集锦</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/05/python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" title="Python异常处理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python异常处理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/01/12/python%E6%8B%89%E9%93%BE%E6%B3%95%E5%92%8C%E5%BC%80%E5%9C%B0%E5%9D%80%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%AD%97%E5%85%B8/" title="Python拉链法和开地址法实现字典"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python拉链法和开地址法实现字典</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/16/python%E6%8F%8F%E8%BF%B0%E5%99%A8/" title="Python描述器"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Python描述器</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/09/07/python%E6%97%B6%E9%97%B4%E6%A8%A1%E5%9D%97%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/" title="Python时间模块常用操作总结"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python时间模块常用操作总结</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/04/python%E7%AD%94%E7%96%91%E8%A7%A3%E6%83%91/" title="Python答疑解惑"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python答疑解惑</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/24/python%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="Python网络编程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python网络编程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/02/15/python%E8%A3%85%E9%A5%B0%E5%99%A8/" title="Python装饰器"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python装饰器</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/02/16/python%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%9E%E7%8E%B0%E5%87%BD%E6%95%B0%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5/" title="Python装饰器实现函数动态类型检查"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python装饰器实现函数动态类型检查</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/23/python%E8%A7%A3%E6%9E%84%E4%B8%8E%E5%B0%81%E8%A3%85/" title="Python解构与封装"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python解构与封装</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/01/11/python%E8%A7%A3%E6%9E%90%E5%BC%8F/" title="Python解析式"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python解析式</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/08/python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/" title="Python面向对象基础"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python面向对象基础</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/15/python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Python面向对象的魔术方法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python面向对象的魔术方法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/05/10/sqlalchemy%E4%BD%BF%E7%94%A8/" title="SQLAlchemy使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SQLAlchemy使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/13/%E3%80%90%E5%A1%AB%E5%9D%91%E7%B3%BB%E5%88%97%E3%80%91python%E4%B9%A0%E9%A2%98%E9%9B%86/" title="【填坑系列】Python习题集"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【填坑系列】Python习题集</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/04/%E3%80%90%E5%A1%AB%E5%9D%91%E7%B3%BB%E5%88%97%E3%80%91python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%9B%AE%E5%BD%95/" title="【填坑系列】Python基础知识总目录"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【填坑系列】Python基础知识总目录</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/10/31/%E4%BB%8Epython%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88%E8%8E%B7%E5%8F%96%E8%A1%8C%E5%8F%B7%E7%AD%89%E4%BF%A1%E6%81%AF/" title="从Python调用堆栈获取行号等信息"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">从Python调用堆栈获取行号等信息</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/03/22/%E4%BD%BF%E7%94%A8google%E7%BF%BB%E8%AF%91api/" title="使用Google翻译Api"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用Google翻译Api</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/10/%E5%BE%AE%E5%8D%9A%E7%88%AC%E5%8F%96%E7%83%AD%E6%90%9C%E6%A6%9C%E5%92%8C%E7%83%AD%E9%97%A8%E8%AF%9D%E9%A2%98/" title="微博爬取热搜榜和热门话题"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">微博爬取热搜榜和热门话题</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/" title="设计一个基于flask的高并发高可用的查询ip的http服务"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">设计一个基于flask的高并发高可用的查询ip的http服务</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="详解supervisor进程管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">详解supervisor进程管理</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python描述器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="引入描述器"><a href="#引入描述器" class="headerlink" title="引入描述器"></a>引入描述器</h1><p>以stackoverflow上关于描述器（descriptor ）的疑问开篇。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Celsius</span>:<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance, owner</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">5</span> * (instance.fahrenheit - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__set__</span>(<span class="hljs-params">self, instance, value</span>):<br>        instance.fahrenheit = <span class="hljs-number">32</span> + <span class="hljs-number">9</span> * value / <span class="hljs-number">5</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Temperature</span>:<br><br>    celsius = Celsius()<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, initial_f</span>):<br>        self.fahrenheit = initial_f<br><br><br>t = Temperature(<span class="hljs-number">212</span>)<br><span class="hljs-built_in">print</span>(t.celsius)  <span class="hljs-comment"># 输出100.0</span><br>t.celsius = <span class="hljs-number">0</span><br><span class="hljs-built_in">print</span>(t.fahrenheit)  <span class="hljs-comment"># 输出32.0</span><br></code></pre></td></tr></table></figure>
+
+<p>以上代码实现了温度的摄氏温度和华氏温度之间的自动转换。其中Temperature类含有实例变量fahrenheit和类变量celsius，celsius由描述器Celsius进行代理。由这段代码引出的三点疑问：</p>
+<ol>
+<li>疑问一：什么是描述器？</li>
+<li>疑问二：<code>__get__</code>,<code>__set__</code>,<code>__delete__</code>三种方法的参数</li>
+<li>疑问三：描述器有哪些应用场景</li>
+<li>疑问四：property和描述器的区别是什么？</li>
+</ol>
+<span id="more"></span>
+
+<h1 id="疑问一：什么是描述器？"><a href="#疑问一：什么是描述器？" class="headerlink" title="疑问一：什么是描述器？"></a>疑问一：什么是描述器？</h1><p>描述器是一个 实现了 <code>__get__</code>、 <code>__set__</code>和<code>__delete__</code>中1个或多个方法的类对象。当一个类变量指向这样的一个装饰器的时候， 访问这个类变量会调用<code>__get__</code> 方法， 对这个类变量赋值会调用<code>__set__ </code>方法，这种类变量就叫做描述器。</p>
+<p>描述器 事实上是一种代理机制：当一个<strong>类变量</strong>被定义为描述器，对这个类变量的操作，将由此描述器来代理。</p>
+<h1 id="疑问二：描述器三种方法的参数"><a href="#疑问二：描述器三种方法的参数" class="headerlink" title="疑问二：描述器三种方法的参数"></a>疑问二：描述器三种方法的参数</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">descriptor</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance, owner</span>):<br>        <span class="hljs-built_in">print</span>(instance)<br>        <span class="hljs-built_in">print</span>(owner)<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;desc&#x27;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__set__</span>(<span class="hljs-params">self, instance, value</span>):<br>        <span class="hljs-built_in">print</span>(instance)<br>        <span class="hljs-built_in">print</span>(value)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__delete__</span>(<span class="hljs-params">self, instance</span>):<br>        <span class="hljs-built_in">print</span>(instance)<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span>:<br>    a = descriptor()<br><br><span class="hljs-keyword">del</span> A().a  <span class="hljs-comment"># 输出&lt;__main__.A object at 0x7f3fc867cbe0&gt;</span><br>A().a  <span class="hljs-comment"># 返回desc，输出&lt;__main__.A object at 0x7f3fc86741d0&gt;，&lt;class &#x27;__main__.A&#x27;&gt;</span><br>A.a  <span class="hljs-comment"># 返回desc，输出None，&lt;class &#x27;__main__.A&#x27;&gt;</span><br>A().a = <span class="hljs-number">5</span>  <span class="hljs-comment"># 输出&lt;__main__.A object at 0x7f3fc86744a8&gt;，5</span><br>A.a = <span class="hljs-number">5</span>  <span class="hljs-comment"># 直接修改类A的类变量，也就是a不再由descriptor描述器进行代理。</span><br></code></pre></td></tr></table></figure>
+
+<p>由以上输出结果可以得出结论：</p>
+<h2 id="参数解释"><a href="#参数解释" class="headerlink" title="参数解释"></a>参数解释</h2><ul>
+<li><code>__get__(self, instance, owner)</code> instance 表示当前实例 owner 表示类本身, 使用类访问的时候， instance为None</li>
+<li><code>__set__(self, instance, value)</code> instance 表示当前实例, value 右值， 只有实例才会调用 <code>__set__</code></li>
+<li><code>__delete__(self, instance)</code> instance 表示当前实例</li>
+</ul>
+<h2 id="三种方法的本质"><a href="#三种方法的本质" class="headerlink" title="三种方法的本质"></a>三种方法的本质</h2><ul>
+<li>访问：<code>instance.descriptor</code>实际是调用了<code>descriptor.__get__(self, instance, owner)</code>方法，并且需要返回一个value</li>
+<li>赋值：<code>instance.descriptor = value</code>实际是调用了<code>descriptor.__set__(self, instance, value)</code>方法，返回值为None。</li>
+<li>删除：<code>del instance.descriptor</code>实际是调用了<code>descriptor.__delete__(self, obj_instance)</code>方法，返回值为None</li>
+</ul>
+<h1 id="疑问三：描述器有哪些应用场景"><a href="#疑问三：描述器有哪些应用场景" class="headerlink" title="疑问三：描述器有哪些应用场景"></a>疑问三：描述器有哪些应用场景</h1><blockquote>
+<p>我们想创建一种新形式的实例属性，除了修改、访问之外还有一些额外的功能，例如 类型检查、数值校验等，就需要用到描述器 《Python Cookbook》</p>
+</blockquote>
+<p>即描述器主要用来接管对实例变量的操作。</p>
+<h2 id="实现classmethod装饰器"><a href="#实现classmethod装饰器" class="headerlink" title="实现classmethod装饰器"></a>实现classmethod装饰器</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> partial<br><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> wraps<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Classmethod</span>():<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, fn</span>):<br>        self.fn = fn<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance, owner</span>):<br>        <span class="hljs-keyword">return</span> wraps(self.fn)(partial(self.fn, owner))<br></code></pre></td></tr></table></figure>
+
+<p>将方法fn的第一个参数固定成实例的类。可参考python官方文档的另一种写法：<a target="_blank" rel="noopener" href="https://docs.python.org/3.5/howto/descriptor.html#static-methods-and-class-methods">descriptor</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassMethod</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, fn</span>):<br>        self.fn = fn<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance, owner=<span class="hljs-literal">None</span></span>):<br>        <span class="hljs-keyword">if</span> owner <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            owner = <span class="hljs-built_in">type</span>(obj)<br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">newfunc</span>(<span class="hljs-params">*args</span>):<br>            <span class="hljs-keyword">return</span> self.f(owner, *args)<br>        <span class="hljs-keyword">return</span> newfunc<br></code></pre></td></tr></table></figure>
+
+<h2 id="实现staticmethod装饰器"><a href="#实现staticmethod装饰器" class="headerlink" title="实现staticmethod装饰器"></a>实现staticmethod装饰器</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Staticmethod</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, fn</span>):<br>        self.fn = fn<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance, cls</span>):<br>        <span class="hljs-keyword">return</span> self.fn<br></code></pre></td></tr></table></figure>
+
+<h2 id="实现property装饰器"><a href="#实现property装饰器" class="headerlink" title="实现property装饰器"></a>实现property装饰器</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Property</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, fget, fset=<span class="hljs-literal">None</span>, fdel=<span class="hljs-literal">None</span>, doc=<span class="hljs-string">&#x27;&#x27;</span></span>):<br>        self.fget = fget<br>        self.fset = fset<br>        self.fdel = fdel<br>        self.doc = doc<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance ,owner</span>):<br>        <span class="hljs-keyword">if</span> instance <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-keyword">return</span> self.fget(instance)<br>        <span class="hljs-keyword">return</span> self<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__set__</span>(<span class="hljs-params">self, instance, value</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">callable</span>(self.fset):<br>            <span class="hljs-keyword">raise</span> AttibuteError(<span class="hljs-string">&#x27;cannot set&#x27;</span>)<br>        self.fset(instance, value)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__delete__</span>(<span class="hljs-params">self, instance</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">callable</span>(self.fdel):<br>            <span class="hljs-keyword">raise</span> AttributeError(<span class="hljs-string">&#x27;cannot delete&#x27;</span>)<br>        self.fdel(instance)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">setter</span>(<span class="hljs-params">self, fset</span>):<br>        self.fset = fset<br>        <span class="hljs-keyword">return</span> self<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">deleter</span>(<span class="hljs-params">self, fdel</span>):<br>        self.fdel = fdel<br>        <span class="hljs-keyword">return</span> self<br></code></pre></td></tr></table></figure>
+
+<p>使用自定义的Property来描述farenheit和celsius类变量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Temperature</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, cTemp</span>):<br>        self.cTemp = cTemp  <span class="hljs-comment"># 有一个实例变量cTemp：celsius temperature</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">fget</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> self.celsius * <span class="hljs-number">9</span> /<span class="hljs-number">5</span> +<span class="hljs-number">32</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">fset</span>(<span class="hljs-params">self, value</span>):<br>        self.celsius = (<span class="hljs-built_in">float</span>(value) -<span class="hljs-number">32</span>) * <span class="hljs-number">5</span> /<span class="hljs-number">9</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">fdel</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Farenhei cannot delete&#x27;</span>)<br><br>    farenheit = Property(fget, fset, fdel, doc=<span class="hljs-string">&#x27;Farenheit temperature&#x27;</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">cget</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> self.cTemp<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">cset</span>(<span class="hljs-params">self, value</span>):<br>        self.cTemp = <span class="hljs-built_in">float</span>(value)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">cdel</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Celsius cannot delete&#x27;</span>)<br><br>    celsius = Property(cget, cset, cdel, doc=<span class="hljs-string">&#x27;Celsius temperature&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>使用结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python">t = Temperature(<span class="hljs-number">0</span>)<br>t.celsius  <span class="hljs-comment"># 返回0.0</span><br><span class="hljs-keyword">del</span> t.celsius  <span class="hljs-comment"># 输出Celsius cannot delete</span><br>t.celsius = <span class="hljs-number">5</span><br>t.farenheit  <span class="hljs-comment"># 返回41.0</span><br>t.farenheit = <span class="hljs-number">212</span><br>t.celsius  <span class="hljs-comment"># 返回100.0</span><br><span class="hljs-keyword">del</span> t.farenheit  <span class="hljs-comment"># 输出Farenhei cannot delete</span><br></code></pre></td></tr></table></figure>
+
+<p>使用装饰器的方式来装饰Temperature的两个属性farenheit和celsius：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Temperature</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, cTemp</span>):<br>        self.cTemp = cTemp<br><br><span class="hljs-meta">    @Property  </span><span class="hljs-comment"># celsius = Property(celsius)</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">celsius</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> self.cTemp<br><br><span class="hljs-meta">    @celsius.setter</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">celsius</span>(<span class="hljs-params">self, value</span>):<br>        self.cTemp = value<br><br><span class="hljs-meta">    @celsius.deleter</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">celsius</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Celsius cannot delete&#x27;</span>)<br><br><span class="hljs-meta">    @Property  </span><span class="hljs-comment"># farenheit = Property(farenheit)</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">farenheit</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> self.celsius * <span class="hljs-number">9</span> /<span class="hljs-number">5</span> +<span class="hljs-number">32</span><br><br><span class="hljs-meta">    @farenheit.setter</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">farenheit</span>(<span class="hljs-params">self, value</span>):<br>        self.celsius = (<span class="hljs-built_in">float</span>(value) -<span class="hljs-number">32</span>) * <span class="hljs-number">5</span> /<span class="hljs-number">9</span><br><br><span class="hljs-meta">    @farenheit.deleter</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">farenheit</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Farenheit cannot delete&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>使用结果同直接用描述器描述类变量</p>
+<h2 id="实现属性的类型检查"><a href="#实现属性的类型检查" class="headerlink" title="实现属性的类型检查"></a>实现属性的类型检查</h2><p>首先实现一个类型检查的描述器Typed</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Typed</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name, expected_type</span>):<br>        <span class="hljs-comment"># 每个属性都有一个名称和对应的类型</span><br>        self.name = name<br>        self.expected_type = expected_type<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance, cls</span>):<br>        <span class="hljs-keyword">if</span> instance <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-keyword">return</span> self<br>        <span class="hljs-keyword">return</span> instance.__dict__[self.name]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__set__</span>(<span class="hljs-params">self, instance ,value</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(value, self.expected_type):<br>            <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">&#x27;Attribute &#123;&#125; expected &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(self.name, self.expected_type))<br>        instance.__dict__[self.name] = value<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__delete__</span>(<span class="hljs-params">self, instance</span>):<br>        <span class="hljs-keyword">del</span> instance.__dict__[self.name]<br></code></pre></td></tr></table></figure>
+
+<p>然后实现一个Person类，Person类的属性name和age都由Typed来描述</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span>:<br>    name = Typed(<span class="hljs-string">&#x27;name&#x27;</span>, <span class="hljs-built_in">str</span>)<br>    age = Typed(<span class="hljs-string">&#x27;age&#x27;</span>, <span class="hljs-built_in">int</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name: <span class="hljs-built_in">str</span>, age: <span class="hljs-built_in">int</span></span>):<br>        self.name = name<br>        self.age = age<br></code></pre></td></tr></table></figure>
+
+<p>类型检查过程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>Person.__dict__<br>mappingproxy(&#123;<span class="hljs-string">&#x27;__dict__&#x27;</span>: &lt;attribute <span class="hljs-string">&#x27;__dict__&#x27;</span> of <span class="hljs-string">&#x27;Person&#x27;</span> objects&gt;,<br>              <span class="hljs-string">&#x27;__doc__&#x27;</span>: <span class="hljs-literal">None</span>,<br>              <span class="hljs-string">&#x27;__init__&#x27;</span>: &lt;function __main__.Person.__init__&gt;,<br>              <span class="hljs-string">&#x27;__module__&#x27;</span>: <span class="hljs-string">&#x27;__main__&#x27;</span>,<br>              <span class="hljs-string">&#x27;__weakref__&#x27;</span>: &lt;attribute <span class="hljs-string">&#x27;__weakref__&#x27;</span> of <span class="hljs-string">&#x27;Person&#x27;</span> objects&gt;,<br>              <span class="hljs-string">&#x27;age&#x27;</span>: &lt;__main__.Typed at <span class="hljs-number">0x7fe2f440bd68</span>&gt;,<br>              <span class="hljs-string">&#x27;name&#x27;</span>: &lt;__main__.Typed at <span class="hljs-number">0x7fe2f440bc88</span>&gt;&#125;)<br><span class="hljs-meta">&gt;&gt;&gt; </span>p = Person(<span class="hljs-string">&#x27;suncle&#x27;</span>, <span class="hljs-number">18</span>)<br><span class="hljs-meta">&gt;&gt;&gt; </span>p.__dict__<br>&#123;<span class="hljs-string">&#x27;age&#x27;</span>: <span class="hljs-number">18</span>, <span class="hljs-string">&#x27;name&#x27;</span>: <span class="hljs-string">&#x27;suncle&#x27;</span>&#125;<br><span class="hljs-meta">&gt;&gt;&gt; </span>p = Person(<span class="hljs-number">18</span>, <span class="hljs-string">&#x27;suncle&#x27;</span>)<br>---------------------------------------------------------------------------<br>TypeError                                 Traceback (most recent call last)<br>&lt;ipython-<span class="hljs-built_in">input</span>-<span class="hljs-number">88</span>-ca4808b23f89&gt; <span class="hljs-keyword">in</span> &lt;module&gt;()<br>----&gt; <span class="hljs-number">1</span> p = Person(<span class="hljs-number">18</span>, <span class="hljs-string">&#x27;suncle&#x27;</span>)<br><br>&lt;ipython-<span class="hljs-built_in">input</span>-<span class="hljs-number">84</span>-f876ec954895&gt; <span class="hljs-keyword">in</span> __init__(self, name, age)<br>      <span class="hljs-number">4</span> <br>      <span class="hljs-number">5</span>     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name: <span class="hljs-built_in">str</span>, age: <span class="hljs-built_in">int</span></span>):<br>----&gt; <span class="hljs-number">6</span>         self.name = name<br>      <span class="hljs-number">7</span>         self.age = age<br><br>&lt;ipython-<span class="hljs-built_in">input</span>-<span class="hljs-number">83</span>-ac59ba73c709&gt; <span class="hljs-keyword">in</span> __set__(self, instance, value)<br>     <span class="hljs-number">11</span>     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__set__</span>(<span class="hljs-params">self, instance ,value</span>):<br>     <span class="hljs-number">12</span>         <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(value, self.expected_type):<br>---&gt; <span class="hljs-number">13</span>             <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">&#x27;Attribute &#123;&#125; expected &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(self.name, self.expected_type))<br>     <span class="hljs-number">14</span>         instance.__dict__[self.name] = value<br>     <span class="hljs-number">15</span> <br><br>TypeError: Attribute name expected &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;str&#x27;</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<p>但是上述类型检查的方法存在一些问题，Person类可能有很多属性，那么每一个属性都需要使用Typed描述器描述一次。我们可以写一个带参数的类装饰器来解决这个问题：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">typeassert</span>(<span class="hljs-params">**kwargs</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrap</span>(<span class="hljs-params">cls</span>):<br>        <span class="hljs-keyword">for</span> name, expected_type <span class="hljs-keyword">in</span> kwargs.items():<br>            <span class="hljs-built_in">setattr</span>(cls, name, Typed(name, expected_type))  <span class="hljs-comment"># 经典写法</span><br>        <span class="hljs-keyword">return</span> cls<br>    <span class="hljs-keyword">return</span> wrap<br></code></pre></td></tr></table></figure>
+
+<p>然后使用typeassert类装饰器重新定义Person类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">@typeassert(<span class="hljs-params">name=<span class="hljs-built_in">str</span>, age=<span class="hljs-built_in">int</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name, age</span>):<br>        self.name = name<br>        self.age = age<br></code></pre></td></tr></table></figure>
+
+<p>可以看到typeassert类装饰器的参数是传入的属性名称和类型的键值对。</p>
+<p>如果我们想让typeassert类装饰器自动的识别类的初始化参数类型，并且增加相应的类变量的时候，我们就可以借助inspect库和python的类型注解实现了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> inspect<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">typeassert</span>(<span class="hljs-params">cls</span>):<br>    params = inspect.signature(cls).parameters<br>    <span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> params.items():<br>        <span class="hljs-keyword">if</span> param.annotation != inspect._empty:<br>            <span class="hljs-built_in">setattr</span>(cls, name, Typed(name, param.annotation))<br>    <span class="hljs-keyword">return</span> cls<br><br><span class="hljs-meta">@typeassert</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name: <span class="hljs-built_in">str</span>, age: <span class="hljs-built_in">int</span></span>):  <span class="hljs-comment"># 没有类型注解的参数不会被托管</span><br>        self.name = name<br>        self.age = age<br></code></pre></td></tr></table></figure>
+
+<h1 id="疑问四：property和描述器的区别"><a href="#疑问四：property和描述器的区别" class="headerlink" title="疑问四：property和描述器的区别"></a>疑问四：property和描述器的区别</h1><p>我们可以利用Python的内部机制获取和设置属性值。总共有三种方法：</p>
+<ol>
+<li>Getters和Setter。我们可以使用方法来封装每个实例变量，获取和设置该实例变量的值。为了确保实例变量不被外部访问，可以把这些实例变量定义为私有的。所以，访问对象的属性需要通过显式函数：anObject.setPrice（someValue）; anObject.getValue（）。</li>
+<li>property。我们可以使用内置的property函数将getter，setter（和deleter）函数与属性名绑定。因此，对属性的引用看起来就像直接访问那么简单，但是本质上是调用对象的相应函数。例如，anObject.price &#x3D; someValue; anObject.value。</li>
+<li>描述器。我们可以将getter，setter（和deleter）函数绑定到一个单独的类中。然后，我们将该类的对象分配给属性名称。这时候对每个属性的引用也像直接访问一样，但是本质上是调用这个描述器对象相应的方法，例如，anObject.price &#x3D; someValue; anObject.value。</li>
+</ol>
+<p>Getter和Setter这种设计模式不够Pythonic，虽然在C++和JAVA中很常见，但是Python追求的是简介，追求的是能够直接访问。</p>
+<hr>
+<p><strong>附1、data-descriptor and no-data descriptor</strong></p>
+<p>翻译为中文其实就是资料描述器和非资料描述器</p>
+<ul>
+<li>data-descriptor：同时实现了<code>__get__</code>和<code>__set__</code>方法的描述器</li>
+<li>no-data descriptor：只实现了<code>__get__</code>方法的描述器</li>
+</ul>
+<p>两者的区别在于：</p>
+<ul>
+<li>no-data descriptor的优先级低于<code>instance.__dict__</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Int</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance, cls</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">3</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span>:<br>    val = Int()<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        self.__dict__[<span class="hljs-string">&#x27;val&#x27;</span>] = <span class="hljs-number">5</span><br><br>A().val  <span class="hljs-comment"># 返回5</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>data descriptor的优先级高于<code>instance.__dict__</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Int</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__get__</span>(<span class="hljs-params">self, instance, cls</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">3</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__set__</span>(<span class="hljs-params">self, instance, value</span>):<br>        <span class="hljs-keyword">pass</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span>:<br>    val = Int()<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        self.__dict__[<span class="hljs-string">&#x27;val&#x27;</span>] = <span class="hljs-number">5</span><br><br>A().val  <span class="hljs-comment"># 返回3</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>附2、描述器机制分析资料：</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3.5/howto/descriptor.html">官方文档-descriptor</a></li>
+<li><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/3798835/understanding-get-and-set-and-python-descriptors">understanding-get-and-set-and-python-descriptors</a></li>
+<li><a target="_blank" rel="noopener" href="https://anyisalin.github.io/2017/03/08/python-descriptor/">anyisalin - Python - 描述器</a></li>
+<li><a target="_blank" rel="noopener" href="http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html#id8">Python描述器引导(翻译)</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.linuxtopia.org/online_books/programming_books/python_programming/python_ch25.html">Properties and Descriptors</a></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/python/" class="category-chain-item">python</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+        <a href="/tags/%E6%8F%8F%E8%BF%B0%E5%99%A8/">#描述器</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python描述器</div>
+      <div>https://suncle.me/2017/03/16/python描述器/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Suncle Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2017年3月16日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/03/23/python%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="Python多线程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python多线程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2017/03/15/python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Python面向对象的魔术方法">
+                        <span class="hidden-mobile">Python面向对象的魔术方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

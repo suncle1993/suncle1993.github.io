@@ -1,0 +1,937 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/img/android-chrome-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Suncle Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="目标：1分片2副本的集群所以需要两台机器，分别是：172.31.59.118|172.31.40.79 安装参考dockerfile:  https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;yandex&#x2F;clickhouse-client&#x2F;dockerfile https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;yandex&#x2F;clickhouse-server&#x2F;dockerfile">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clickhouse分布式集群搭建">
+<meta property="og:url" content="https://suncle.me/2019/07/27/clickhouse%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Suncle">
+<meta property="og:description" content="目标：1分片2副本的集群所以需要两台机器，分别是：172.31.59.118|172.31.40.79 安装参考dockerfile:  https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;yandex&#x2F;clickhouse-client&#x2F;dockerfile https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;yandex&#x2F;clickhouse-server&#x2F;dockerfile">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-07-27T09:13:16.000Z">
+<meta property="article:modified_time" content="2022-08-25T03:33:40.643Z">
+<meta property="article:author" content="Suncle Chen">
+<meta property="article:tag" content="搭建">
+<meta property="article:tag" content="clickhouse">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Clickhouse分布式集群搭建 - Suncle</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-72506112-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Suncle&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/newsletter/">
+                <i class="iconfont icon-mail"></i>
+                周刊
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                更多
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml">
+                    <i class="iconfont icon-rss-fill"></i>
+                    RSS
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/suncle-banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Clickhouse分布式集群搭建</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-07-27 17:13" pubdate>
+          2019年7月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          136 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="大数据"
+        id="heading-2c657e7dce6effaecbb458deb45e800a" role="tab" data-toggle="collapse" href="#collapse-2c657e7dce6effaecbb458deb45e800a"
+        aria-expanded="true"
+      >
+        大数据
+        <span class="list-group-count">(12)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-2c657e7dce6effaecbb458deb45e800a"
+           role="tabpanel" aria-labelledby="heading-2c657e7dce6effaecbb458deb45e800a">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2019/07/27/clickhouse%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" title="Clickhouse分布式集群搭建"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Clickhouse分布式集群搭建</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/27/clickhouse%E5%88%9B%E5%BB%BA%E5%88%86%E5%B8%83%E5%BC%8F%E8%A1%A8%E4%BB%A5%E5%8F%8A%E8%A1%A8%E5%BC%95%E6%93%8E%E4%BB%8B%E7%BB%8D/" title="Clickhouse创建分布式表以及表引擎介绍"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Clickhouse创建分布式表以及表引擎介绍</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/27/clickhouse%E7%AE%80%E4%BB%8B%E5%92%8C%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Clickhouse简介和性能对比"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Clickhouse简介和性能对比</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/16/hadoop3%E5%8D%95%E6%9C%BA%E5%92%8C%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" title="Hadoop3单机和伪分布式模式安装配置"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop3单机和伪分布式模式安装配置</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/16/hadoop%E3%80%81mapreduce%E3%80%81hdfs%E4%BB%8B%E7%BB%8D/" title="Hadoop、MapReduce、HDFS介绍"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop、MapReduce、HDFS介绍</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/16/hadoop%E9%A1%B9%E7%9B%AE%EF%BC%9A%E4%BB%8Ecdn%E6%97%A5%E5%BF%97%E7%BB%9F%E8%AE%A1%E7%9B%B4%E6%92%AD%E6%B5%81%E9%87%8F/" title="Hadoop项目：从cdn日志统计直播流量"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop项目：从cdn日志统计直播流量</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/09/sqoop%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA/" title="Sqoop导入导出"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Sqoop导入导出</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/17/%E4%BD%BF%E7%94%A8python%E8%AF%AD%E8%A8%80%E5%86%99hadoop-mapreduce%E7%A8%8B%E5%BA%8F/" title="使用Python语言写Hadoop MapReduce程序"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用Python语言写Hadoop MapReduce程序</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/08/02/%E5%A4%A7%E6%95%B0%E6%8D%AEolap%E7%B3%BB%E7%BB%9F%E6%AF%94%E8%BE%83/" title="大数据OLAP系统比较"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">大数据OLAP系统比较</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/03/%E6%90%AD%E5%BB%BAhadoop3%E9%9B%86%E7%BE%A4/" title="搭建Hadoop3集群"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">搭建Hadoop3集群</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/05/08/%E6%95%B0%E4%BB%93%E5%B7%A5%E4%BD%9C%E7%9A%84%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E5%92%8C%E5%AF%B9%E6%AF%94/" title="数仓工作的简单介绍和对比"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">数仓工作的简单介绍和对比</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/30/%E9%98%BF%E9%87%8C%E4%BA%91%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E8%B0%83%E7%A0%94/" title="阿里云大数据基础组件调研"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">阿里云大数据基础组件调研</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Clickhouse分布式集群搭建</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="目标：1分片2副本的集群"><a href="#目标：1分片2副本的集群" class="headerlink" title="目标：1分片2副本的集群"></a>目标：1分片2副本的集群</h1><p>所以需要两台机器，分别是：172.31.59.118|172.31.40.79</p>
+<p>安装参考dockerfile:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://hub.docker.com/r/yandex/clickhouse-client/dockerfile">https://hub.docker.com/r/yandex/clickhouse-client/dockerfile</a></li>
+<li><a target="_blank" rel="noopener" href="https://hub.docker.com/r/yandex/clickhouse-server/dockerfile">https://hub.docker.com/r/yandex/clickhouse-server/dockerfile</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h1><p>Amazon linux 2是centos系的，使用的yum系的安装方式</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Altinity/clickhouse-rpm-install">GitHub - Altinity&#x2F;clickhouse-rpm-install: How to install clickhouse RPM packages</a></li>
+</ul>
+<p>修改机器时区(不需要重启)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">cp</span> /usr/share/zoneinfo/Asia/Shanghai /etc/localtime<br></code></pre></td></tr></table></figure>
+
+<p>开始安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo yum install -y curl<br>sudo yum install -y epel-release<br>curl -s https://packagecloud.io/install/repositories/altinity/clickhouse/script.rpm.sh | sudo os=centos dist=7 bash  <span class="hljs-comment"># for Amazon Linux</span><br>sudo yum list <span class="hljs-string">&#x27;clickhouse*&#x27;</span><br>sudo yum install -y clickhouse-server clickhouse-client<br>sudo yum list installed <span class="hljs-string">&#x27;clickhouse*&#x27;</span><br>sudo /etc/init.d/clickhouse-server restart<br>clickhouse-client<br></code></pre></td></tr></table></figure>
+<p>安装zookeeper集群，也可以使用现成的，本次使用现成的，配置如下，后续加入配置文件中</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">zookeeper-servers</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;1&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>172.31.3.79<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;2&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>172.31.47.229<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;3&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>172.31.53.227<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">zookeeper-servers</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>设置每台机器clickhouse用户和密码，先生成sha256的密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">PASSWORD=$(<span class="hljs-built_in">base64</span> &lt; /dev/urandom | <span class="hljs-built_in">head</span> -c16); <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$PASSWORD</span>&quot;</span>; <span class="hljs-built_in">echo</span> -n <span class="hljs-string">&quot;<span class="hljs-variable">$PASSWORD</span>&quot;</span> | <span class="hljs-built_in">sha256sum</span> | <span class="hljs-built_in">tr</span> -d <span class="hljs-string">&#x27;-&#x27;</span><br>rKbfrrze4PO5xWeN<br>93626c6535b2817d55eca365d9a00bbe88c63e24fa4941ce8cdaf4c07f4ab4a6<br></code></pre></td></tr></table></figure>
+<p>添加用户<code>sudo vim /etc/clickhouse-server/users.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">users</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">zaihui</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">password_sha256_hex</span>&gt;</span>93626c6535b2817d55eca365d9a00bbe88c63e24fa4941ce8cdaf4c07f4ab4a6<span class="hljs-tag">&lt;/<span class="hljs-name">password_sha256_hex</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">networks</span> <span class="hljs-attr">incl</span>=<span class="hljs-string">&quot;networks&quot;</span> <span class="hljs-attr">replace</span>=<span class="hljs-string">&quot;replace&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">ip</span>&gt;</span>::/0<span class="hljs-tag">&lt;/<span class="hljs-name">ip</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">networks</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">profile</span>&gt;</span>default<span class="hljs-tag">&lt;/<span class="hljs-name">profile</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">quota</span>&gt;</span>default<span class="hljs-tag">&lt;/<span class="hljs-name">quota</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">zaihui</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">users</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>验证</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">clickhouse-client -u zaihui --password rKbfrrze4PO5xWeN<br>clickhouse-client -u zaihui --password rKbfrrze4PO5xWeN<br></code></pre></td></tr></table></figure>
+<p>修改clickhouse时区配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">&lt;timezone&gt;Asia/Shanghai&lt;/timezone&gt;<br></code></pre></td></tr></table></figure>
+
+<p>取消访问来源ip的限制<code>sudo vim /etc/clickhouse-server/config.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- &lt;listen_host&gt;::&lt;/listen_host&gt; --&gt;</span><br><span class="hljs-comment">&lt;!-- Same for hosts with disabled ipv6: --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">listen_host</span>&gt;</span>0.0.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">listen_host</span>&gt;</span><br><br><span class="hljs-comment">&lt;!-- Default values - try listen localhost on ipv4 and ipv6: --&gt;</span><br><span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">&lt;listen_host&gt;::1&lt;/listen_host&gt;</span><br><span class="hljs-comment">&lt;listen_host&gt;127.0.0.1&lt;/listen_host&gt;</span><br><span class="hljs-comment">--&gt;</span><br></code></pre></td></tr></table></figure>
+<p>开始配置集群<br>配置<code>sudo vim /etc/clickhouse-server/config.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- If element has &#x27;incl&#x27; attribute, then for it&#x27;s value will be used corresponding substitution from another file.</span><br><span class="hljs-comment">     By default, path to file with substitutions is /etc/metrika.xml. It could be changed in config in &#x27;include_from&#x27; element.</span><br><span class="hljs-comment">     Values for substitutions are specified in /yandex/name_of_substitution elements in that file.</span><br><span class="hljs-comment">  --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">include_from</span>&gt;</span>/etc/clickhouse-server/metrika.xml<span class="hljs-tag">&lt;/<span class="hljs-name">include_from</span>&gt;</span><br><span class="hljs-comment">&lt;!-- ZooKeeper is used to store metadata about replicas, when using Replicated tables.</span><br><span class="hljs-comment">     Optional. If you don&#x27;t use replicated tables, you could omit that.</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">     See https://clickhouse.yandex/docs/en/table_engines/replication/</span><br><span class="hljs-comment">  --&gt;</span><br></code></pre></td></tr></table></figure>
+<p>配置<code>/etc/clickhouse-server/metrika.xml</code>，所有机器都一样</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">yandex</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">clickhouse_remote_servers</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">ck_cluster</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>172.31.59.118<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">user</span>&gt;</span>zaihui<span class="hljs-tag">&lt;/<span class="hljs-name">user</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>rKbfrrze4PO5xWeN<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>172.31.40.79<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">user</span>&gt;</span>zaihui<span class="hljs-tag">&lt;/<span class="hljs-name">user</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>rKbfrrze4PO5xWeN<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">ck_cluster</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">clickhouse_remote_servers</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">zookeeper-servers</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;1&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>172.31.3.79<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;2&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>172.31.47.229<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;3&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>172.31.53.227<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">zookeeper-servers</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">networks</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">ip</span>&gt;</span>::/0<span class="hljs-tag">&lt;/<span class="hljs-name">ip</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">networks</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">clickhouse_compression</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">case</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">min_part_size</span>&gt;</span>10000000000<span class="hljs-tag">&lt;/<span class="hljs-name">min_part_size</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">min_part_size_ratio</span>&gt;</span>0.01<span class="hljs-tag">&lt;/<span class="hljs-name">min_part_size_ratio</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">method</span>&gt;</span>lz4<span class="hljs-tag">&lt;/<span class="hljs-name">method</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">case</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">clickhouse_compression</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">yandex</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>配置<code>/etc/clickhouse-server/config.d/macros.xml</code>，所有机器都不一样，虽然也可以把配置放在metrika.xml中，但是把不同的独立出来更合适</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">yandex</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>172.31.59.118<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">yandex</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">yandex</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>172.31.40.79<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">yandex</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>集群配置完成之后重启一下，确保每个机器都能连接成功</p>
+<blockquote>
+<p> 使用datagrip连接各个机器，全部成功</p>
+</blockquote>
+<h1 id="验证集群功能"><a href="#验证集群功能" class="headerlink" title="验证集群功能"></a>验证集群功能</h1><p>创建以replica结尾的本地表delphi_membership_properties_replica和分布式表delphi_membership_properties</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> dm.delphi_membership_properties_replica<br>(<br>  membership_id  <span class="hljs-type">int</span>,  <span class="hljs-comment">-- comment &#x27;会员id&#x27;,</span><br>  membership_uid String, <span class="hljs-comment">-- comment &#x27;会员uid&#x27;,</span><br>  business_group_id <span class="hljs-type">int</span>, <span class="hljs-comment">-- comment &#x27;商户id&#x27;,</span><br>  business_group_uid String , <span class="hljs-comment">--comment &#x27;商户uid&#x27;,</span><br>  business_group_name String, <span class="hljs-comment">-- comment &#x27;商户名&#x27;,</span><br>  business_id Nullable(<span class="hljs-type">int</span>), <span class="hljs-comment">-- comment &#x27;门店id&#x27;,</span><br>  business_uid Nullable(String), <span class="hljs-comment">-- comment &#x27;门店uid&#x27;,</span><br>  business_name Nullable(String), <span class="hljs-comment">-- comment &#x27;门店name&#x27;,</span><br>  membership_source String, <span class="hljs-comment">-- comment &#x27;会员入会来源&#x27;,</span><br>  created_at DateTime,<br>  calendar_date <span class="hljs-type">Date</span>,<br>  last_visited_date <span class="hljs-type">Date</span>, <span class="hljs-comment">-- comment &#x27;最近一次访问时间&#x27;,</span><br>  membership_level <span class="hljs-type">int</span>, <span class="hljs-comment">-- comment &#x27;会员等级&#x27;,</span><br>  customer_type String, <span class="hljs-comment">-- comment &#x27;会员类型:新会员/忠诚会员/常来会员/淡忘会员/流失会员，根据最后一次访问时间和商户配置计算而来&#x27;,</span><br>  visit_count <span class="hljs-type">int</span>, <span class="hljs-comment">-- comment &#x27;到访次数&#x27;,</span><br>  consumptions_count Nullable(<span class="hljs-type">int</span>), <span class="hljs-comment">-- comment &#x27;消费次数&#x27;,</span><br>  consumptions_original_amount Nullable(Decimal128(<span class="hljs-number">2</span>)), <span class="hljs-comment">-- comment &#x27;消费总金额：原始金额&#x27;,</span><br>  consumptions_amount Nullable(Decimal128(<span class="hljs-number">2</span>)), <span class="hljs-comment">-- comment &#x27;消费总金额：实付金额&#x27;,</span><br>  average_consume Nullable(Decimal128(<span class="hljs-number">2</span>)), <span class="hljs-comment">-- comment &#x27;平均消费金额：原始金额/消费次数&#x27;,</span><br>  account_id <span class="hljs-type">int</span>, <span class="hljs-comment">-- comment &#x27;用户id&#x27;,</span><br>  account_uid String, <span class="hljs-comment">-- comment &#x27;用户uid&#x27;,</span><br>  account_phone String, <span class="hljs-comment">-- comment &#x27;用户手机&#x27;,</span><br>  age Nullable(<span class="hljs-type">int</span>), <span class="hljs-comment">-- comment &#x27;年龄&#x27;,</span><br>  birthday Nullable(String), <span class="hljs-comment">-- comment &#x27;生日&#x27;,</span><br>  birthday_month Nullable(<span class="hljs-type">int</span>), <span class="hljs-comment">-- comment &#x27;生日月份&#x27;,</span><br>  birthday_day Nullable(<span class="hljs-type">int</span>), <span class="hljs-comment">-- comment &#x27;生日天&#x27;,</span><br>  birthday_year Nullable(<span class="hljs-type">int</span>), <span class="hljs-comment">-- comment &#x27;生日年&#x27;,</span><br>  zodiac String, <span class="hljs-comment">-- comment &#x27;星座&#x27;,</span><br>  name Nullable(String), <span class="hljs-comment">-- comment &#x27;姓名&#x27;,</span><br>  gender <span class="hljs-type">int</span>, <span class="hljs-comment">-- comment &#x27;性别&#x27;,</span><br>  profession Nullable(String), <span class="hljs-comment">-- comment &#x27;职业&#x27;,</span><br>  country Nullable(String), <span class="hljs-comment">-- comment &#x27;国家&#x27;,</span><br>  province Nullable(String), <span class="hljs-comment">-- comment &#x27;省份&#x27;,</span><br>  city Nullable(String), <span class="hljs-comment">-- comment &#x27;城市&#x27;,</span><br>  region Nullable(String), <span class="hljs-comment">-- comment &#x27;商圈&#x27;,</span><br>  head_img_url Nullable(String), <span class="hljs-comment">-- comment &#x27;头像&#x27;,</span><br>  wechat_name Nullable(String), <span class="hljs-comment">-- comment &#x27;微信名&#x27;,</span><br>  wechat_city Nullable(String), <span class="hljs-comment">-- comment &#x27;微信城市&#x27;,</span><br>  wechat_country Nullable(String), <span class="hljs-comment">-- comment &#x27;微信国家&#x27;,</span><br>  wechat_province Nullable(String), <span class="hljs-comment">-- comment &#x27;微信省份&#x27;,</span><br>  wechat_head_img_url Nullable(String), <span class="hljs-comment">-- comment &#x27;微信头像&#x27;,</span><br>  wechat_groupid <span class="hljs-type">int</span>, <span class="hljs-comment">-- comment &#x27;微信组&#x27;,</span><br>  wechat_remark Nullable(String), <span class="hljs-comment">-- comment &#x27;微信备注&#x27;</span><br>  insert_time DateTime <span class="hljs-keyword">DEFAULT</span> now(), <span class="hljs-comment">-- 数据插入时间</span><br>  insert_date <span class="hljs-type">Date</span> <span class="hljs-keyword">DEFAULT</span> toDate(now()) <span class="hljs-comment">-- 数据插入日期</span><br>)<br>ENGINE <span class="hljs-operator">=</span> ReplicatedMergeTree(<span class="hljs-string">&#x27;/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/delphi_membership_properties_replica&#x27;</span>, <span class="hljs-string">&#x27;&#123;replica&#125;&#x27;</span>)<br><span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> (business_group_uid, calendar_date, created_at, membership_uid);<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> dm.delphi_membership_properties <span class="hljs-keyword">as</span> dm.delphi_membership_properties_replica<br>ENGINE <span class="hljs-operator">=</span> Distributed(ck_cluster, dm, delphi_membership_properties_replica, rand())<br></code></pre></td></tr></table></figure>
+<p>插入数据：在本地表和分布式表插入时在每个replica中都有数据生成</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dm.delphi_membership_properties_replica (membership_id, membership_uid, business_group_id, business_group_uid, business_group_name, business_id, business_uid, business_name, membership_source, created_at, calendar_date, last_visited_date, membership_level, customer_type, visit_count, consumptions_count, consumptions_original_amount, consumptions_amount, average_consume, account_id, account_uid, account_phone, age, birthday, birthday_month, birthday_day, birthday_year, zodiac, name, gender, profession, country, province, city, region, head_img_url, wechat_name, wechat_city, wechat_country, wechat_province, wechat_head_img_url, wechat_groupid, wechat_remark, insert_time, insert_date) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">3209903</span>, <span class="hljs-string">&#x27;6735462d5ce444dd8d80763dbcaee746&#x27;</span>, <span class="hljs-number">2524</span>, <span class="hljs-string">&#x27;00067f26104445ff89f89820b898af37&#x27;</span>, <span class="hljs-string">&#x27;沐沐茶旅&#x27;</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;third_party&#x27;</span>, <span class="hljs-string">&#x27;2017-12-24 16:17:34&#x27;</span>, <span class="hljs-string">&#x27;2017-12-24&#x27;</span>, <span class="hljs-string">&#x27;2017-12-24&#x27;</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;Forget&#x27;</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.00</span>, <span class="hljs-number">0.00</span>, <span class="hljs-number">0.00</span>, <span class="hljs-number">2754132</span>, <span class="hljs-string">&#x27;e3c8b0925460435586f05741eaae548f&#x27;</span>, <span class="hljs-string">&#x27;18616566494&#x27;</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;Unknown&#x27;</span>, <span class="hljs-keyword">null</span>, <span class="hljs-number">1</span>, <span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;中国&#x27;</span>, <span class="hljs-string">&#x27;上海&#x27;</span>, <span class="hljs-string">&#x27;黄浦&#x27;</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;fengyi&#x27;</span>, <span class="hljs-string">&#x27;黄浦&#x27;</span>, <span class="hljs-string">&#x27;中国&#x27;</span>, <span class="hljs-string">&#x27;上海&#x27;</span>, <span class="hljs-string">&#x27;https://thirdwx.qlogo.cn/mmopen/Ria7DkYdO91HKPibgeJm3Inq3lbbFXlwHJAJMFREYOVibwNCriab41qpVvicm6zd3kZqByBQFC9t9pfMuORQoUIroyicBibicSQIIn0Z/132&#x27;</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;2019-07-10 07:50:00&#x27;</span>, <span class="hljs-string">&#x27;2019-07-10&#x27;</span>);<br><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dm.delphi_membership_properties (membership_id, membership_uid, business_group_id, business_group_uid, business_group_name, business_id, business_uid, business_name, membership_source, created_at, calendar_date, last_visited_date, membership_level, customer_type, visit_count, consumptions_count, consumptions_original_amount, consumptions_amount, average_consume, account_id, account_uid, account_phone, age, birthday, birthday_month, birthday_day, birthday_year, zodiac, name, gender, profession, country, province, city, region, head_img_url, wechat_name, wechat_city, wechat_country, wechat_province, wechat_head_img_url, wechat_groupid, wechat_remark, insert_time, insert_date) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">3226176</span>, <span class="hljs-string">&#x27;50778ff3ca434edcb113f93af43d646a&#x27;</span>, <span class="hljs-number">2524</span>, <span class="hljs-string">&#x27;00067f26104445ff89f89820b898af37&#x27;</span>, <span class="hljs-string">&#x27;沐沐茶旅&#x27;</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;third_party&#x27;</span>, <span class="hljs-string">&#x27;2017-12-25 15:44:41&#x27;</span>, <span class="hljs-string">&#x27;2017-12-25&#x27;</span>, <span class="hljs-string">&#x27;2017-12-25&#x27;</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;Forget&#x27;</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.00</span>, <span class="hljs-number">0.00</span>, <span class="hljs-number">0.00</span>, <span class="hljs-number">2780924</span>, <span class="hljs-string">&#x27;c01c3877410144a1965b3ede6e18905c&#x27;</span>, <span class="hljs-string">&#x27;13564809560&#x27;</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;Unknown&#x27;</span>, <span class="hljs-keyword">null</span>, <span class="hljs-number">1</span>, <span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;中国&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;骨头™&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;中国&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;https://thirdwx.qlogo.cn/mmopen/VNMic85jx3X5tq6iaBbVY7spB1dWWsWiae5Dz1p2LCsq0mCxps6Zt9sxPjdb7RkribVVElytAmichfx8ibayvC4QmW0g/132&#x27;</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;2019-07-10 08:50:11&#x27;</span>, <span class="hljs-string">&#x27;2019-07-10&#x27;</span>);<br></code></pre></td></tr></table></figure>
+<p>查询数据：停掉一个replica之后仍然能查询出数据</p>
+<h1 id="JDBC连接clickhouse-cluster"><a href="#JDBC连接clickhouse-cluster" class="headerlink" title="JDBC连接clickhouse cluster"></a>JDBC连接clickhouse cluster</h1><p>两种方式，一种是使用clickhouse-jdbc连接集群中的每一个节点，另外一种是使用SLB提供一个对外的统一地址</p>
+<h2 id="使用BalancedClickhouseDataSource"><a href="#使用BalancedClickhouseDataSource" class="headerlink" title="使用BalancedClickhouseDataSource"></a>使用BalancedClickhouseDataSource</h2><p>参考以下clickhouse-jdbc中的代码中的注释：<code>jdbc:clickhouse://localhost:8123,localhost:8123/database?compress=1&amp;decompress=2</code></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/yandex/clickhouse-jdbc/blob/master/src/main/java/ru/yandex/clickhouse/BalancedClickhouseDataSource.java">clickhouse-jdbc&#x2F;BalancedClickhouseDataSource.java at master · yandex&#x2F;clickhouse-jdbc · GitHub</a><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * create Datasource for clickhouse JDBC connections</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> url address for connection to the database</span><br><span class="hljs-comment"> *            must have the next format &#123;<span class="hljs-doctag">@code</span> jdbc:clickhouse://&lt;first-host&gt;:&lt;port&gt;,&lt;second-host&gt;:&lt;port&gt;/&lt;database&gt;?param1=value1&amp;param2=value2 &#125;</span><br><span class="hljs-comment"> *            for example, &#123;<span class="hljs-doctag">@code</span> jdbc:clickhouse://localhost:8123,localhost:8123/database?compress=1&amp;decompress=2 &#125;</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@throws</span> IllegalArgumentException if param have not correct format, or error happens when checking host availability</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">BalancedClickhouseDataSource</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String url)</span> &#123;<br>    <span class="hljs-built_in">this</span>(splitUrl(url), getFromUrl(url));<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * create Datasource for clickhouse JDBC connections</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> url        address for connection to the database</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> properties database properties</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@see</span> #BalancedClickhouseDataSource(String)</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">BalancedClickhouseDataSource</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String url, Properties properties)</span> &#123;<br>    <span class="hljs-built_in">this</span>(splitUrl(url), <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClickHouseProperties</span>(properties));<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * create Datasource for clickhouse JDBC connections</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> url        address for connection to the database</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> properties database properties</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@see</span> #BalancedClickhouseDataSource(String)</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">BalancedClickhouseDataSource</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String url, ClickHouseProperties properties)</span> &#123;<br>    <span class="hljs-built_in">this</span>(splitUrl(url), properties.merge(getFromUrlWithoutDefault(url)));<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="使用SLB"><a href="#使用SLB" class="headerlink" title="使用SLB"></a>使用SLB</h2><p>使用LB均衡到各个副本，保证应用方查询单host，本次不使用BalancedClickhouseDataSource，从github issue上看BalancedClickhouseDataSource在之前版本出现副本故障时没能故障转移，不知道是否有修复。</p>
+<p>配置LB：<strong>使用标准JDBC连接时需要映射http协议到clickhouse的8123端口(http监听端口)</strong></p>
+<p>验证LB配置是否生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;SELECT * from dm.delphi_membership_properties FORMAT Pretty&#x27;</span> | curl <span class="hljs-string">&#x27;internal-clickhouse-prod-621097858.</span><br><span class="hljs-string">cn-north-1.elb.amazonaws.com.cn:80/?&#x27;</span> --data-binary @-<br></code></pre></td></tr></table></figure>
+
+<p>贴一下在Springboot中使用标准JDBC数据源HikariDataSource÷连接clickhouse的配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.kezaihui.delphi.core.config;<br><br><span class="hljs-keyword">import</span> com.baomidou.mybatisplus.entity.GlobalConfiguration;<br><span class="hljs-keyword">import</span> com.baomidou.mybatisplus.enums.DBType;<br><span class="hljs-keyword">import</span> com.baomidou.mybatisplus.enums.IdType;<br><span class="hljs-keyword">import</span> com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean;<br><span class="hljs-keyword">import</span> com.zaxxer.hikari.HikariDataSource;<br><span class="hljs-keyword">import</span> lombok.extern.slf4j.Slf4j;<br><span class="hljs-keyword">import</span> org.apache.ibatis.session.SqlSessionFactory;<br><span class="hljs-keyword">import</span> org.mybatis.spring.annotation.MapperScan;<br><span class="hljs-keyword">import</span> org.mybatis.spring.boot.autoconfigure.MybatisProperties;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Qualifier;<br><span class="hljs-keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;<br><span class="hljs-keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;<br><br><span class="hljs-keyword">import</span> javax.sql.DataSource;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * clickhouse 数据源配置</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Suncle</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019-07-05</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@MapperScan(basePackages = &#123;</span><br><span class="hljs-meta">    &quot;com.kezaihui.delphi.core.membership.**.mapper&quot;</span><br><span class="hljs-meta">&#125;, sqlSessionFactoryRef = &quot;ckSqlSessionFactory&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CkDataSourceConfig</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> MybatisProperties mybatisProperties;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 读取数据源</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> javax.sql.DataSource 数据源</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Bean(name = &quot;ckDataSource&quot;)</span><br>    <span class="hljs-meta">@ConfigurationProperties(prefix = &quot;spring.clickhouse.datasource&quot;)</span><br>    <span class="hljs-keyword">public</span> DataSource <span class="hljs-title function_">dataSource</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HikariDataSource</span>();<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * sql 会话工厂配置</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> ckDataSource javax.sql.DataSource 数据源</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> SqlSessionFactory</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Bean(name = &quot;ckSqlSessionFactory&quot;)</span><br>    <span class="hljs-keyword">public</span> SqlSessionFactory <span class="hljs-title function_">sqlSessionFactory</span><span class="hljs-params">(<span class="hljs-meta">@Qualifier(&quot;ckDataSource&quot;)</span> DataSource ckDataSource)</span> &#123;<br>        <span class="hljs-type">MybatisSqlSessionFactoryBean</span> <span class="hljs-variable">bean</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MybatisSqlSessionFactoryBean</span>();<br>        bean.setDataSource(ckDataSource);<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">GlobalConfiguration</span> <span class="hljs-variable">configuration</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">GlobalConfiguration</span>();<br>            configuration.setDbType(DBType.OTHER.name());<br>            configuration.setIdType(IdType.AUTO.getKey());<br>            configuration.setDbColumnUnderline(<span class="hljs-literal">true</span>);<br>            bean.setGlobalConfig(configuration);<br>            <span class="hljs-type">ResourcePatternResolver</span> <span class="hljs-variable">resolver</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PathMatchingResourcePatternResolver</span>();<br>            bean.setMapperLocations(mybatisProperties.resolveMapperLocations());<br>            bean.setConfigLocation(resolver.getResource(mybatisProperties.getConfigLocation()));<br>            <span class="hljs-keyword">return</span> bean.getObject();<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>配置好之后可以使用mybatis查询数据</p>
+<h1 id="原生TCP协议连接clickhouse-cluster"><a href="#原生TCP协议连接clickhouse-cluster" class="headerlink" title="原生TCP协议连接clickhouse cluster"></a>原生TCP协议连接clickhouse cluster</h1><p>同样是采用SLB映射到不同的节点上，但是映射的时候需要注意不同之处：</p>
+<ul>
+<li><strong>映射TCP协议到clickhouse的9000端口</strong></li>
+</ul>
+<p>连接方式可以参考clickhouse-driver的连接，也可以直接使用python语言clickhouse-driver库</p>
+<h1 id="clickhouse-python-client的选择"><a href="#clickhouse-python-client的选择" class="headerlink" title="clickhouse python client的选择"></a>clickhouse python client的选择</h1><p>官方没有维护各语言的driver，全部由第三方维护，主要有以下两个，对比参见后面。</p>
+<p>结论：选择clickhouse-driver，数仓项目使用orm的意义不大。因为应用层不是python项目，是java项目</p>
+<h2 id="clickhouse-driver"><a href="#clickhouse-driver" class="headerlink" title="clickhouse-driver"></a>clickhouse-driver</h2><p> <a target="_blank" rel="noopener" href="https://github.com/mymarilyn/clickhouse-driver">GitHub - mymarilyn&#x2F;clickhouse-driver: ClickHouse Python Driver with native interface support</a><br>活跃度高，star数最高。语法主要是执行原生sql</p>
+<h2 id="infi-clickhouse-orm"><a href="#infi-clickhouse-orm" class="headerlink" title="infi.clickhouse_orm"></a>infi.clickhouse_orm</h2><p><a target="_blank" rel="noopener" href="https://github.com/Infinidat/infi.clickhouse_orm">GitHub - Infinidat&#x2F;infi.clickhouse_orm: A Python library for working with the ClickHouse database (https://clickhouse.yandex/)</a><br>活跃度高，star数第二高。是一个为clickhouse封装的orm框架，写起来有django的感觉</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/jneo8/clickhouse-setup">https://github.com/jneo8/clickhouse-setup</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://clickhouse.yandex/docs/zh/operations/table_engines/replication/">https://clickhouse.yandex/docs/zh/operations/table_engines/replication/</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://clickhouse.yandex/docs/zh/operations/table_engines/distributed/">https://clickhouse.yandex/docs/zh/operations/table_engines/distributed/</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://clickhouse.yandex/docs/en/operations/table_engines/replication/">https://clickhouse.yandex/docs/en/operations/table_engines/replication/</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://clickhouse.yandex/tutorial.html">https://clickhouse.yandex/tutorial.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://hzkeung.com/2018/06/30/clickhouse-cluster-test">https://hzkeung.com/2018/06/30/clickhouse-cluster-test</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://hzkeung.com/2018/06/21/clickhouse-cluster-install">https://hzkeung.com/2018/06/21/clickhouse-cluster-install</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/383cae967a64">https://www.jianshu.com/p/383cae967a64</a></p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" class="category-chain-item">大数据</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%90%AD%E5%BB%BA/">#搭建</a>
+      
+        <a href="/tags/clickhouse/">#clickhouse</a>
+      
+        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">#分布式</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Clickhouse分布式集群搭建</div>
+      <div>https://suncle.me/2019/07/27/clickhouse分布式集群搭建/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Suncle Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年7月27日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/07/27/clickhouse%E5%88%9B%E5%BB%BA%E5%88%86%E5%B8%83%E5%BC%8F%E8%A1%A8%E4%BB%A5%E5%8F%8A%E8%A1%A8%E5%BC%95%E6%93%8E%E4%BB%8B%E7%BB%8D/" title="Clickhouse创建分布式表以及表引擎介绍">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Clickhouse创建分布式表以及表引擎介绍</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/07/27/clickhouse%E7%AE%80%E4%BB%8B%E5%92%8C%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Clickhouse简介和性能对比">
+                        <span class="hidden-mobile">Clickhouse简介和性能对比</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

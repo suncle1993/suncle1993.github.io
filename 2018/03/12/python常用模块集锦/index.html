@@ -1,0 +1,1047 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/img/android-chrome-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Suncle Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python常用模块集锦 常用模块主要分为以下几类（缺失的后续再补充）：  时间转换 时间计算 序列化和反序列化：json，pickle 编解码：unicode，base64 加解密：md5，sha1，hmac_sha1，aes 常见装饰器： 计算执行时间装饰器 缓存装饰器 错误重试装饰器 延迟装饰器 尾递归优化装饰器   ini配置文件读取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python常用模块集锦">
+<meta property="og:url" content="https://suncle.me/2018/03/12/python%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97%E9%9B%86%E9%94%A6/index.html">
+<meta property="og:site_name" content="Suncle">
+<meta property="og:description" content="Python常用模块集锦 常用模块主要分为以下几类（缺失的后续再补充）：  时间转换 时间计算 序列化和反序列化：json，pickle 编解码：unicode，base64 加解密：md5，sha1，hmac_sha1，aes 常见装饰器： 计算执行时间装饰器 缓存装饰器 错误重试装饰器 延迟装饰器 尾递归优化装饰器   ini配置文件读取">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-03-12T09:51:35.000Z">
+<meta property="article:modified_time" content="2022-08-25T03:41:39.049Z">
+<meta property="article:author" content="Suncle Chen">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python常用模块集锦 - Suncle</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-72506112-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Suncle&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/newsletter/">
+                <i class="iconfont icon-mail"></i>
+                周刊
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                更多
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml">
+                    <i class="iconfont icon-rss-fill"></i>
+                    RSS
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/suncle-banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Python常用模块集锦</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-03-12 17:51" pubdate>
+          2018年3月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          62 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="python"
+        id="heading-23eeeb4347bdd26bfc6b7ee9a3b755dd" role="tab" data-toggle="collapse" href="#collapse-23eeeb4347bdd26bfc6b7ee9a3b755dd"
+        aria-expanded="true"
+      >
+        python
+        <span class="list-group-count">(32)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-23eeeb4347bdd26bfc6b7ee9a3b755dd"
+           role="tabpanel" aria-labelledby="heading-23eeeb4347bdd26bfc6b7ee9a3b755dd">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2018/02/06/python-google-protocol-buffer/" title="Python Google Protocol Buffer"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python Google Protocol Buffer</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/02/13/python-io/" title="Python IO"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python IO</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/04/07/python-wsgi%E6%8E%A5%E5%8F%A3/" title="Python-WSGI接口"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python-WSGI接口</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/04/14/python-pymysql/" title="Python-pymysql"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python-pymysql</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/01/07/python%E5%87%BD%E6%95%B0/" title="Python函数"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python函数</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/09/05/python%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89%E5%8F%8A%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" title="Python函数定义及参数详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python函数定义及参数详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/11/14/python%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" title="Python单元测试"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python单元测试</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/09/02/python%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-list-tuple-dict-set/" title="Python基本数据类型-list-tuple-dict-set"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python基本数据类型-list-tuple-dict-set</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/23/python%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="Python多线程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python多线程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/08/30/python%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="Python字符串"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python字符串</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/05/22/python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/" title="Python实现通用web框架"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python实现通用web框架</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/03/12/python%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97%E9%9B%86%E9%94%A6/" title="Python常用模块集锦"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Python常用模块集锦</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/05/python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" title="Python异常处理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python异常处理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/01/12/python%E6%8B%89%E9%93%BE%E6%B3%95%E5%92%8C%E5%BC%80%E5%9C%B0%E5%9D%80%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%AD%97%E5%85%B8/" title="Python拉链法和开地址法实现字典"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python拉链法和开地址法实现字典</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/16/python%E6%8F%8F%E8%BF%B0%E5%99%A8/" title="Python描述器"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python描述器</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/09/07/python%E6%97%B6%E9%97%B4%E6%A8%A1%E5%9D%97%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/" title="Python时间模块常用操作总结"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python时间模块常用操作总结</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/04/python%E7%AD%94%E7%96%91%E8%A7%A3%E6%83%91/" title="Python答疑解惑"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python答疑解惑</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/24/python%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="Python网络编程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python网络编程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/02/15/python%E8%A3%85%E9%A5%B0%E5%99%A8/" title="Python装饰器"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python装饰器</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/02/16/python%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%9E%E7%8E%B0%E5%87%BD%E6%95%B0%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5/" title="Python装饰器实现函数动态类型检查"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python装饰器实现函数动态类型检查</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/23/python%E8%A7%A3%E6%9E%84%E4%B8%8E%E5%B0%81%E8%A3%85/" title="Python解构与封装"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python解构与封装</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/01/11/python%E8%A7%A3%E6%9E%90%E5%BC%8F/" title="Python解析式"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python解析式</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/08/python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/" title="Python面向对象基础"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python面向对象基础</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/15/python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Python面向对象的魔术方法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Python面向对象的魔术方法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/05/10/sqlalchemy%E4%BD%BF%E7%94%A8/" title="SQLAlchemy使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SQLAlchemy使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/13/%E3%80%90%E5%A1%AB%E5%9D%91%E7%B3%BB%E5%88%97%E3%80%91python%E4%B9%A0%E9%A2%98%E9%9B%86/" title="【填坑系列】Python习题集"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【填坑系列】Python习题集</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/04/%E3%80%90%E5%A1%AB%E5%9D%91%E7%B3%BB%E5%88%97%E3%80%91python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%9B%AE%E5%BD%95/" title="【填坑系列】Python基础知识总目录"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【填坑系列】Python基础知识总目录</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/10/31/%E4%BB%8Epython%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88%E8%8E%B7%E5%8F%96%E8%A1%8C%E5%8F%B7%E7%AD%89%E4%BF%A1%E6%81%AF/" title="从Python调用堆栈获取行号等信息"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">从Python调用堆栈获取行号等信息</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/03/22/%E4%BD%BF%E7%94%A8google%E7%BF%BB%E8%AF%91api/" title="使用Google翻译Api"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用Google翻译Api</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/10/%E5%BE%AE%E5%8D%9A%E7%88%AC%E5%8F%96%E7%83%AD%E6%90%9C%E6%A6%9C%E5%92%8C%E7%83%AD%E9%97%A8%E8%AF%9D%E9%A2%98/" title="微博爬取热搜榜和热门话题"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">微博爬取热搜榜和热门话题</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/" title="设计一个基于flask的高并发高可用的查询ip的http服务"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">设计一个基于flask的高并发高可用的查询ip的http服务</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/09/25/%E8%AF%A6%E8%A7%A3supervisor%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="详解supervisor进程管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">详解supervisor进程管理</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python常用模块集锦</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Python常用模块集锦</p>
+<p>常用模块主要分为以下几类（缺失的后续再补充）：</p>
+<ul>
+<li>时间转换</li>
+<li>时间计算</li>
+<li>序列化和反序列化：<code>json</code>，<code>pickle</code></li>
+<li>编解码：<code>unicode</code>，<code>base64</code></li>
+<li>加解密：<code>md5</code>，<code>sha1</code>，<code>hmac_sha1</code>，<code>aes</code></li>
+<li>常见装饰器：<ul>
+<li>计算执行时间装饰器</li>
+<li>缓存装饰器</li>
+<li>错误重试装饰器</li>
+<li>延迟装饰器</li>
+<li>尾递归优化装饰器</li>
+</ul>
+</li>
+<li><code>ini</code>配置文件读取</li>
+</ul>
+<span id="more"></span>
+
+<p>代码整合如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><span class="hljs-comment"># -*- coding: utf-8 -*-</span><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">Created on 9/21/17 1:46 PM</span><br><span class="hljs-string">@author: Chen Liang</span><br><span class="hljs-string">@function: python常用模块集锦，util.py</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> datetime<br><span class="hljs-keyword">import</span> ConfigParser<br><span class="hljs-keyword">import</span> ast<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> pickle<br><span class="hljs-keyword">import</span> base64<br><span class="hljs-keyword">import</span> hashlib<br><span class="hljs-keyword">from</span> Crypto.Cipher <span class="hljs-keyword">import</span> AES<br><span class="hljs-keyword">from</span> binascii <span class="hljs-keyword">import</span> b2a_hex, a2b_hex<br><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> wraps<br><br><br>BEFORE = <span class="hljs-number">1</span><br>LATER = <span class="hljs-number">2</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CommonUtil</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;Python通用单元：不好归类但常用的方法此处添加&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">pass</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TimeTransferUtil</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;时间相关的常见转换方法&quot;&quot;&quot;</span><br><br>    <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TimeUtil</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;时间相关的常见计算方法&quot;&quot;&quot;</span><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">str_to_date</span>():<br>        <span class="hljs-keyword">pass</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SerializeUtil</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;序列化和反序列化：json, pickle&quot;&quot;&quot;</span><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">json_loads</span>(<span class="hljs-params">json_str, encoding=<span class="hljs-literal">None</span></span>):<br>        <span class="hljs-keyword">try</span>:<br>            obj = json.loads(s=json_str, encoding=encoding)<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>, obj<br>        <span class="hljs-keyword">except</span> ValueError <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">json_dumps</span>(<span class="hljs-params">obj</span>):<br>        <span class="hljs-keyword">try</span>:<br>            json_str = json.dumps(obj=obj)<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>, json_str<br>        <span class="hljs-keyword">except</span> TypeError <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">pickle_loads</span>(<span class="hljs-params">pickle_str</span>):<br>        <span class="hljs-keyword">try</span>:<br>            obj = pickle.loads(pickle_str)<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>, obj<br>        <span class="hljs-keyword">except</span> IndexError <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">pickle_dumps</span>(<span class="hljs-params">obj</span>):<br>        <span class="hljs-keyword">try</span>:<br>            pickle_str = pickle.dumps(obj)<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>, pickle_str<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CodecUtil</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;编解码相关常见方法：base64 unicode&quot;&quot;&quot;</span><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">base64_encode</span>(<span class="hljs-params">data</span>):<br>        <span class="hljs-keyword">try</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>, base64.b64encode(data)<br>        <span class="hljs-keyword">except</span> TypeError <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">base64_decode</span>(<span class="hljs-params">encoded_data</span>):<br>        <span class="hljs-keyword">try</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>, base64.b64decode(encoded_data)<br>        <span class="hljs-keyword">except</span> TypeError <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-built_in">str</span>(e)<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">to_unicode</span>(<span class="hljs-params">s, encoding=<span class="hljs-string">&#x27;utf-8&#x27;</span></span>):<br>        <span class="hljs-keyword">return</span> s <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(s, unicode) <span class="hljs-keyword">else</span> unicode(s, encoding)<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">unicode_to</span>(<span class="hljs-params">unicode_s, encoding=<span class="hljs-string">&#x27;utf-8&#x27;</span></span>):<br>        <span class="hljs-keyword">return</span> unicode_s.encode(encoding)<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CryptoUtil</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;加解密相关常见方法： md5 aes&quot;&quot;&quot;</span><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">md5</span>(<span class="hljs-params">str_object</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;md5&quot;&quot;&quot;</span><br>        m = hashlib.md5()<br>        m.update(str_object)<br>        <span class="hljs-keyword">return</span> m.hexdigest()<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">aes_encrypt</span>(<span class="hljs-params">s, key, salt, mode=AES.MODE_CBC</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        aes加密</span><br><span class="hljs-string">        :param s: 待加密字符串</span><br><span class="hljs-string">        :param key: 密钥</span><br><span class="hljs-string">        :param salt: 盐, 16bit eg. b&#x27;0000000101000000&#x27;</span><br><span class="hljs-string">        :param mode: AES模式</span><br><span class="hljs-string">        :return: 加密后的字符串</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        cipher = AES.new(hashlib.md5(key).hexdigest(), mode, salt)<br>        n_text = s + (<span class="hljs-string">&#x27;\0&#x27;</span> * (<span class="hljs-number">16</span> - (<span class="hljs-built_in">len</span>(s) % <span class="hljs-number">16</span>)))<br>        <span class="hljs-keyword">return</span> b2a_hex(cipher.encrypt(n_text))<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">aes_decrypt</span>(<span class="hljs-params">s, key, salt, mode=AES.MODE_CBC</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        aes解密</span><br><span class="hljs-string">        :param s: 待解密字符串</span><br><span class="hljs-string">        :param key: 密钥</span><br><span class="hljs-string">        :param salt: 盐, 16bit eg. b&#x27;0000000101000000&#x27;</span><br><span class="hljs-string">        :param mode: AES模式</span><br><span class="hljs-string">        :return: 解密后的字符串</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        cipher = AES.new(hashlib.md5(key).hexdigest(), mode, salt)<br>        <span class="hljs-keyword">return</span> cipher.decrypt(a2b_hex(s)).rstrip(<span class="hljs-string">&#x27;\0&#x27;</span>)<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TailRecurseException</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;尾递归异常&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, args, kwargs</span>):<br>        self.args = args<br>        self.kwargs = kwargs<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DecoratorUtil</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;常见装饰器： 执行时间timeit，缓存cache，错误重试retry&quot;&quot;&quot;</span><br><br>    __cache_dict = &#123;&#125;<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">timeit</span>(<span class="hljs-params">fn</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;计算执行时间&quot;&quot;&quot;</span><br><span class="hljs-meta">        @wraps(<span class="hljs-params">fn</span>)</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrap</span>(<span class="hljs-params">*args, **kwargs</span>):<br>            start = time.time()<br>            ret = fn(*args, **kwargs)<br>            end = time.time()<br>            <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;@timeit: &#123;0&#125; tasks, &#123;1&#125; secs&quot;</span>.<span class="hljs-built_in">format</span>(fn.__name__, <span class="hljs-built_in">str</span>(end - start))<br>            <span class="hljs-keyword">return</span> ret<br>        <span class="hljs-keyword">return</span> wrap<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__is_expired</span>(<span class="hljs-params">entry, duration</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;是否过期&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">if</span> duration == -<span class="hljs-number">1</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span><br>        <span class="hljs-keyword">return</span> time.time() - entry[<span class="hljs-string">&#x27;time&#x27;</span>] &gt; duration<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__compute_key</span>(<span class="hljs-params">fn, args, kw</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;序列化并求其哈希值&quot;&quot;&quot;</span><br>        key = pickle.dumps((fn.__name__, args, kw))<br>        <span class="hljs-keyword">return</span> hashlib.sha1(key).hexdigest()<br><br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">cache</span>(<span class="hljs-params">cls, expired_time=-<span class="hljs-number">1</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        缓存</span><br><span class="hljs-string">        :param expired_time: 过期时间，-1 表示不过期</span><br><span class="hljs-string">        :return: 返回缓存的结果或者计算的结果</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">_cache</span>(<span class="hljs-params">fn</span>):<br><span class="hljs-meta">            @wraps(<span class="hljs-params">fn</span>)</span><br>            <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrap</span>(<span class="hljs-params">*args, **kwargs</span>):<br>                key = cls.__compute_key(fn, args, kwargs)<br>                <span class="hljs-keyword">if</span> key <span class="hljs-keyword">in</span> cls.__cache_dict:<br>                    <span class="hljs-keyword">if</span> cls.__is_expired(cls.__cache_dict[key], expired_time) <span class="hljs-keyword">is</span> <span class="hljs-literal">False</span>:<br>                        <span class="hljs-keyword">return</span> cls.__cache_dict[key][<span class="hljs-string">&#x27;value&#x27;</span>]<br>                ret = fn(*args, **kwargs)<br>                cls.__cache_dict[key] = &#123;<br>                    <span class="hljs-string">&#x27;value&#x27;</span>: ret,<br>                    <span class="hljs-string">&#x27;time&#x27;</span>: time.time()<br>                &#125;<br>                <span class="hljs-keyword">return</span> ret<br>            <span class="hljs-keyword">return</span> wrap<br>        <span class="hljs-keyword">return</span> _cache<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">retry</span>(<span class="hljs-params">exceptions, retry_times=<span class="hljs-number">3</span>, time_pause=<span class="hljs-number">3</span>, time_offset=<span class="hljs-number">1</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        错误重试</span><br><span class="hljs-string">        :param exceptions: 单个异常比如ValueError, 或者tuple,元组元素是异常，比如(ValueError, TypeError)</span><br><span class="hljs-string">        :param retry_times: 重试次数</span><br><span class="hljs-string">        :param time_pause: 初始暂停时间</span><br><span class="hljs-string">        :param time_offset: 暂停时间的偏移倍数，默认不偏移</span><br><span class="hljs-string">        :return: 返回成功的值，或者重拾次数结束时抛出异常</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">_retry</span>(<span class="hljs-params">fn</span>):<br><span class="hljs-meta">            @wraps(<span class="hljs-params">fn</span>)</span><br>            <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrap</span>(<span class="hljs-params">*args, **kwargs</span>):<br>                retry_times_tmp, time_pause_tmp = retry_times, time_pause<br>                <span class="hljs-keyword">while</span> retry_times_tmp &gt; <span class="hljs-number">1</span>:<br>                    <span class="hljs-keyword">try</span>:<br>                        <span class="hljs-keyword">return</span> fn(*args, **kwargs)<br>                    <span class="hljs-keyword">except</span> exceptions:<br>                        time.sleep(time_pause_tmp)<br>                        retry_times_tmp -= <span class="hljs-number">1</span><br>                        time_pause_tmp *= time_offset<br>                <span class="hljs-keyword">return</span> fn(*args, **kwargs)<br>            <span class="hljs-keyword">return</span> wrap<br>        <span class="hljs-keyword">return</span> _retry<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">delay</span>(<span class="hljs-params">delay_time=<span class="hljs-number">3</span>, mode=BEFORE</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        延迟装饰器，支持在函数执行之前和之后加延时，如果想在前后同时加，可以使用两次装饰。</span><br><span class="hljs-string">        time.sleep只会阻塞当前线程不会阻塞整个进程，其它线程不受影响</span><br><span class="hljs-string">        :param delay_time: 延迟时间，是float类型</span><br><span class="hljs-string">        :param mode: 模式，指定是在函数执行之前加延时还是在执行之后加，值为BEFORE(1)或者LATER(2)</span><br><span class="hljs-string">        :return:</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">_delay</span>(<span class="hljs-params">fn</span>):<br><span class="hljs-meta">            @wraps(<span class="hljs-params">fn</span>)</span><br>            <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrap</span>(<span class="hljs-params">*args, **kwargs</span>):<br>                <span class="hljs-keyword">if</span> mode == BEFORE:<br>                    time.sleep(delay_time)<br>                ret = fn(*args, **kwargs)<br>                <span class="hljs-keyword">if</span> mode == LATER:<br>                    time.sleep(delay_time)<br>                <span class="hljs-keyword">return</span> ret<br>            <span class="hljs-keyword">return</span> wrap<br>        <span class="hljs-keyword">return</span> _delay<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">tail_call_optimized</span>(<span class="hljs-params">fn</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;尾递归优化装饰器，如果被装饰函数不是尾递归函数则会报错&quot;&quot;&quot;</span><br><span class="hljs-meta">        @wraps(<span class="hljs-params">fn</span>)</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrap</span>(<span class="hljs-params">*args, **kwargs</span>):<br>            f = sys._getframe()<br>            <span class="hljs-keyword">if</span> f.f_back <span class="hljs-keyword">and</span> f.f_back.f_back <span class="hljs-keyword">and</span> f.f_back.f_back.f_code == f.f_code:<br>                <span class="hljs-keyword">raise</span> TailRecurseException(args, kwargs)<br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>                    <span class="hljs-keyword">try</span>:<br>                        <span class="hljs-keyword">return</span> fn(*args, **kwargs)<br>                    <span class="hljs-keyword">except</span> TailRecurseException <span class="hljs-keyword">as</span> e:<br>                        args = e.args<br>                        kwargs = e.kwargs<br>        <span class="hljs-keyword">return</span> wrap<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">IniConfigParserUtil</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;ini配置文件读取&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, *file_names</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        init</span><br><span class="hljs-string">        :param file_names: 包含多个元素的可迭代对象</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        self.config = ConfigParser.ConfigParser()<br>        <span class="hljs-keyword">for</span> file_name <span class="hljs-keyword">in</span> file_names:<br>            <span class="hljs-keyword">try</span>:<br>                self.config.readfp(<span class="hljs-built_in">open</span>(file_name, <span class="hljs-string">&#x27;rb&#x27;</span>))<br>                <span class="hljs-keyword">break</span><br>            <span class="hljs-keyword">except</span> IOError:<br>                <span class="hljs-keyword">continue</span><br>        <span class="hljs-keyword">else</span>:<br>            sys.exit(<span class="hljs-string">&#x27;All files have failed to read&#x27;</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_string</span>(<span class="hljs-params">self, section, option</span>):<br>        <span class="hljs-keyword">return</span> self.config.get(section, option)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_int</span>(<span class="hljs-params">self, section, option</span>):<br>        <span class="hljs-keyword">return</span> self.config.getint(section, option)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_float</span>(<span class="hljs-params">self, section, option</span>):<br>        <span class="hljs-keyword">return</span> self.config.getfloat(section, option)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_boolean</span>(<span class="hljs-params">self, section, option</span>):<br>        <span class="hljs-keyword">return</span> self.config.getboolean(section, option)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_list</span>(<span class="hljs-params">self, section, option</span>):<br>        <span class="hljs-keyword">return</span> ast.literal_eval(self.config.get(section, option))<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_dict</span>(<span class="hljs-params">self, section, option</span>):<br>        <span class="hljs-keyword">return</span> ast.literal_eval(self.config.get(section, option))<br></code></pre></td></tr></table></figure>
+
+<p>缺失部分后续待添加，记得填坑。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/python/" class="category-chain-item">python</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%80%BB%E7%BB%93/">#总结</a>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python常用模块集锦</div>
+      <div>https://suncle.me/2018/03/12/python常用模块集锦/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Suncle Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年3月12日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/03/20/%E6%8E%92%E6%9F%A5rtmp%E5%8D%8F%E8%AE%AE%E6%8E%A8%E6%B5%81%E6%97%B6%E6%8F%A1%E6%89%8Bbug/" title="排查rtmp协议推流时握手bug">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">排查rtmp协议推流时握手bug</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/" title="rtmp规范1.0">
+                        <span class="hidden-mobile">rtmp规范1.0</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
