@@ -2284,11 +2284,11 @@
     
     <tags>
       
-      <tag>ubuntu</tag>
-      
       <tag>samba</tag>
       
       <tag>linux</tag>
+      
+      <tag>ubuntu</tag>
       
       <tag>svn</tag>
       
@@ -2537,9 +2537,9 @@
     
     <tags>
       
-      <tag>JavaScript</tag>
-      
       <tag>基础</tag>
+      
+      <tag>JavaScript</tag>
       
     </tags>
     
@@ -3953,11 +3953,11 @@
     
     <tags>
       
-      <tag>文件</tag>
-      
       <tag>Oracle</tag>
       
       <tag>CentOS</tag>
+      
+      <tag>文件</tag>
       
       <tag>体系架构</tag>
       
@@ -4096,11 +4096,11 @@
     
     <tags>
       
-      <tag>网络</tag>
-      
       <tag>CentOS</tag>
       
       <tag>Linux</tag>
+      
+      <tag>网络</tag>
       
     </tags>
     
@@ -4230,8 +4230,6 @@
       
       <tag>总结</tag>
       
-      <tag>网络</tag>
-      
       <tag>CentOS</tag>
       
       <tag>Linux</tag>
@@ -4239,6 +4237,8 @@
       <tag>模式</tag>
       
       <tag>配置</tag>
+      
+      <tag>网络</tag>
       
       <tag>Vmware</tag>
       
