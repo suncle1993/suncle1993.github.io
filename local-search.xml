@@ -1681,9 +1681,9 @@
     
     <tags>
       
-      <tag>总结</tag>
-      
       <tag>Python</tag>
+      
+      <tag>总结</tag>
       
     </tags>
     
@@ -2255,9 +2255,9 @@
     
     <tags>
       
-      <tag>总结</tag>
-      
       <tag>Python</tag>
+      
+      <tag>总结</tag>
       
       <tag>时间</tag>
       
@@ -2678,11 +2678,11 @@
     
     <tags>
       
+      <tag>安装</tag>
+      
       <tag>CentOS</tag>
       
       <tag>Nginx</tag>
-      
-      <tag>安装</tag>
       
     </tags>
     
@@ -3953,9 +3953,9 @@
     
     <tags>
       
-      <tag>CentOS</tag>
-      
       <tag>Oracle</tag>
+      
+      <tag>CentOS</tag>
       
       <tag>文件</tag>
       
@@ -4011,11 +4011,11 @@
     
     <tags>
       
-      <tag>CentOS</tag>
+      <tag>Oracle</tag>
       
       <tag>安装</tag>
       
-      <tag>Oracle</tag>
+      <tag>CentOS</tag>
       
     </tags>
     
@@ -4158,13 +4158,13 @@
       
       <tag>Linux</tag>
       
-      <tag>配置</tag>
-      
       <tag>vi</tag>
       
       <tag>vim</tag>
       
       <tag>模式</tag>
+      
+      <tag>配置</tag>
       
     </tags>
     
@@ -4195,6 +4195,8 @@
       
       <tag>Linux</tag>
       
+      <tag>配置</tag>
+      
       <tag>命令</tag>
       
       <tag>用户</tag>
@@ -4202,8 +4204,6 @@
       <tag>管理</tag>
       
       <tag>组</tag>
-      
-      <tag>配置</tag>
       
     </tags>
     
@@ -4234,9 +4234,9 @@
       
       <tag>Linux</tag>
       
-      <tag>配置</tag>
-      
       <tag>模式</tag>
+      
+      <tag>配置</tag>
       
       <tag>网络</tag>
       
@@ -4265,9 +4265,9 @@
     
     <tags>
       
-      <tag>CentOS</tag>
-      
       <tag>安装</tag>
+      
+      <tag>CentOS</tag>
       
       <tag>Linux</tag>
       
