@@ -21,7 +21,7 @@
     <meta name="description" content="结构设计基础架构为flask+gunicorn+负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。 使用nginx软件负载结构图  使用阿里云硬件负载均衡服务结构图  因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个w">
 <meta property="og:type" content="article">
 <meta property="og:title" content="设计一个基于flask的高并发高可用的查询ip的http服务">
-<meta property="og:url" content="http://example.com/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:url" content="https://suncle.me/2017/08/16/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Eflask%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2ip%E7%9A%84http%E6%9C%8D%E5%8A%A1/index.html">
 <meta property="og:site_name" content="Suncle&#39;s Blog">
 <meta property="og:description" content="结构设计基础架构为flask+gunicorn+负载均衡，负载均衡分为阿里云硬件负载均衡服务和软负载nginx。gunicorn使用supervisor进行管理。 使用nginx软件负载结构图  使用阿里云硬件负载均衡服务结构图  因为flask app需要在内存中保存ip树以及国家、省份、城市相关的字典，因此占用内存较高。gunicorn的1个worker需要占用300M内存，nginx的4个w">
 <meta property="og:locale" content="zh_CN">
@@ -80,7 +80,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -878,7 +878,7 @@
 <li><a target="_blank" rel="noopener" href="https://www.ipip.net/download.html">全球 IPv4 地址归属地数据库(IPIP.NET 版)</a></li>
 <li><a target="_blank" rel="noopener" href="http://python.jobbole.com/85008/">使用flask开发RESTful架构的api服务器端(5)–部署flask应用到nginx</a></li>
 <li><a target="_blank" rel="noopener" href="http://www.jianshu.com/p/be9dd421fb8d">python web 部署：nginx + gunicorn + supervisor + flask 部署笔记</a></li>
-<li><a target="_blank" rel="noopener" href="https://suncle.me/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/">flowsnow-nginx编译安装</a></li>
+<li><a href="https://suncle.me/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/">flowsnow-nginx编译安装</a></li>
 <li><a target="_blank" rel="noopener" href="http://liyangliang.me/posts/2015/06/using-supervisor/">supervisor推荐教程-使用 supervisor 管理进程</a></li>
 <li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%85%83%E6%90%9C%E5%B0%8B%E6%A8%B9">维基-二叉查找树</a></li>
 <li><a target="_blank" rel="noopener" href="http://www.jianshu.com/p/cf0853226dc6">简书-wrk压力测试post接口</a></li>
@@ -936,7 +936,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>设计一个基于flask的高并发高可用的查询ip的http服务</div>
-      <div>http://example.com/2017/08/16/设计一个基于flask的高并发高可用的查询ip的http服务/</div>
+      <div>https://suncle.me/2017/08/16/设计一个基于flask的高并发高可用的查询ip的http服务/</div>
     </div>
     <div class="license-meta">
       
@@ -1016,7 +1016,7 @@
       window.UtterancesThemeDark = dark;
       var s = document.createElement('script');
       s.setAttribute('src', 'https://utteranc.es/client.js');
-      s.setAttribute('repo', 'suncle1993.github.io');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
       s.setAttribute('issue-term', 'pathname');
       
       s.setAttribute('label', 'utterances');

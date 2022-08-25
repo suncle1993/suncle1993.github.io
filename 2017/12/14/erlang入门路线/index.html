@@ -21,7 +21,7 @@
     <meta name="description" content="间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。 主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Erlang入门路线">
-<meta property="og:url" content="http://example.com/2017/12/14/erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/index.html">
+<meta property="og:url" content="https://suncle.me/2017/12/14/erlang%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/index.html">
 <meta property="og:site_name" content="Suncle&#39;s Blog">
 <meta property="og:description" content="间歇性的学了一些Erlang，写了一个直播cdn网关的程序，也算是贡献了代码，完成了第一个项目。结束之际写一个入门路线，记录学习过程。 主要根据个人经验介绍最佳的学习路线，包括环境，Erlang语法，OTP和rebar构建调试打包过程等几个部分。">
 <meta property="og:locale" content="zh_CN">
@@ -75,7 +75,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -405,7 +405,7 @@
 <figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs erlang">root@ubuntu:/tmp# erl<br>Erlang/OTP <span class="hljs-number">18</span> [erts-<span class="hljs-number">7.3</span>] [source] [<span class="hljs-number">64</span>-bit] [async-threads:<span class="hljs-number">10</span>] [kernel-poll:<span class="hljs-literal">false</span>]<br><br>Eshell V7.<span class="hljs-number">3</span>  (abort with ^G)<br><span class="hljs-number">1</span>&gt; c(hello).<br>&#123;ok,hello&#125;<br><span class="hljs-number">2</span>&gt; hello:start().<br><span class="hljs-string">&quot;hello world&quot;</span><br></code></pre></td></tr></table></figure>
 
 <p>第一句是编译这个程序。第二句是执行命令，这就是所有要做的。</p>
-<h1 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h1><h2 id="学习语法"><a href="#学习语法" class="headerlink" title="学习语法"></a>学习语法</h2><p>推荐阅读Erlang之父Joe Armstrong编写的<strong>Erlang程序设计</strong>这本书，网上有pdf版本。也可参见<a target="_blank" rel="noopener" href="https://suncle.me/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)/">Erlang学习笔记1</a>。 </p>
+<h1 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h1><h2 id="学习语法"><a href="#学习语法" class="headerlink" title="学习语法"></a>学习语法</h2><p>推荐阅读Erlang之父Joe Armstrong编写的<strong>Erlang程序设计</strong>这本书，网上有pdf版本。也可参见<a href="https://suncle.me/2017/08/11/Erlang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)/">Erlang学习笔记1</a>。 </p>
 <p>需要重点掌握Erlang内置数据结构如tuple，list，record，function，case&#x2F;if等知识点的使用。</p>
 <p>此外需要学习以下几项：</p>
 <ol>
@@ -514,7 +514,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Erlang入门路线</div>
-      <div>http://example.com/2017/12/14/erlang入门路线/</div>
+      <div>https://suncle.me/2017/12/14/erlang入门路线/</div>
     </div>
     <div class="license-meta">
       
@@ -594,7 +594,7 @@
       window.UtterancesThemeDark = dark;
       var s = document.createElement('script');
       s.setAttribute('src', 'https://utteranc.es/client.js');
-      s.setAttribute('repo', 'suncle1993.github.io');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
       s.setAttribute('issue-term', 'pathname');
       
       s.setAttribute('label', 'utterances');

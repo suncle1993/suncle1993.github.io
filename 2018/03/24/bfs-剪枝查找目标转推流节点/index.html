@@ -21,7 +21,7 @@
     <meta name="description" content="需求：在各个国家都有可能部署转推流节点，因此需要高效快捷的查找到离推理地点最近的一个目标转推流节点。 现状：国内以省为单位，国外以国家为单位，虽然当前节点较少，但是为了保障业务拓展之后的效果，因此需要及时进行图优化。 分析：建立中国地图和世界地图，根据ip地址在ip数据库中查找，得到ip所属的国家名称，国家代码，省份名称，省份代码。用国家代码在世界地图中查找最近的国家节点，用省份代码在中国地图中查">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BFS+剪枝查找目标转推流节点">
-<meta property="og:url" content="http://example.com/2018/03/24/bfs-%E5%89%AA%E6%9E%9D%E6%9F%A5%E6%89%BE%E7%9B%AE%E6%A0%87%E8%BD%AC%E6%8E%A8%E6%B5%81%E8%8A%82%E7%82%B9/index.html">
+<meta property="og:url" content="https://suncle.me/2018/03/24/bfs-%E5%89%AA%E6%9E%9D%E6%9F%A5%E6%89%BE%E7%9B%AE%E6%A0%87%E8%BD%AC%E6%8E%A8%E6%B5%81%E8%8A%82%E7%82%B9/index.html">
 <meta property="og:site_name" content="Suncle&#39;s Blog">
 <meta property="og:description" content="需求：在各个国家都有可能部署转推流节点，因此需要高效快捷的查找到离推理地点最近的一个目标转推流节点。 现状：国内以省为单位，国外以国家为单位，虽然当前节点较少，但是为了保障业务拓展之后的效果，因此需要及时进行图优化。 分析：建立中国地图和世界地图，根据ip地址在ip数据库中查找，得到ip所属的国家名称，国家代码，省份名称，省份代码。用国家代码在世界地图中查找最近的国家节点，用省份代码在中国地图中查">
 <meta property="og:locale" content="zh_CN">
@@ -75,7 +75,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -500,7 +500,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>BFS+剪枝查找目标转推流节点</div>
-      <div>http://example.com/2018/03/24/bfs-剪枝查找目标转推流节点/</div>
+      <div>https://suncle.me/2018/03/24/bfs-剪枝查找目标转推流节点/</div>
     </div>
     <div class="license-meta">
       
@@ -580,7 +580,7 @@
       window.UtterancesThemeDark = dark;
       var s = document.createElement('script');
       s.setAttribute('src', 'https://utteranc.es/client.js');
-      s.setAttribute('repo', 'suncle1993.github.io');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
       s.setAttribute('issue-term', 'pathname');
       
       s.setAttribute('label', 'utterances');

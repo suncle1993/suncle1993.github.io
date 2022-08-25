@@ -21,7 +21,7 @@
     <meta name="description" content="演示本地演示：ffmpeg&#x2F;obs + livego + mpv  推流选择ffmpeg或者obs 流媒体服务直接使用livego 播放使用mpv  推流截图：  拉流截图：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="直播系统介绍">
-<meta property="og:url" content="http://example.com/2018/12/18/%E7%9B%B4%E6%92%AD%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:url" content="https://suncle.me/2018/12/18/%E7%9B%B4%E6%92%AD%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="Suncle&#39;s Blog">
 <meta property="og:description" content="演示本地演示：ffmpeg&#x2F;obs + livego + mpv  推流选择ffmpeg或者obs 流媒体服务直接使用livego 播放使用mpv  推流截图：  拉流截图：">
 <meta property="og:locale" content="zh_CN">
@@ -80,7 +80,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -457,7 +457,7 @@
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">ffmpeg -re -i ~<span class="hljs-regexp">/Documents/</span>Taylor\ Swift\ -\ You\ Belong\ With\ Me.mp4 -c copy -f flv rtmp:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">1935</span><span class="hljs-regexp">/live/</span>taylor<br></code></pre></td></tr></table></figure>
 <h1 id="视频流"><a href="#视频流" class="headerlink" title="视频流"></a>视频流</h1><p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/live-20181218/%E7%9B%B4%E6%92%AD%E7%B3%BB%E7%BB%9F%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" lazyload></p>
 <h1 id="直播系统组成"><a href="#直播系统组成" class="headerlink" title="直播系统组成"></a>直播系统组成</h1><p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/image/tech/live-20181218/%E7%9B%B4%E6%92%AD%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90.png" srcset="/img/loading.gif" lazyload></p>
-<h1 id="直播流协议"><a href="#直播流协议" class="headerlink" title="直播流协议"></a>直播流协议</h1><h2 id="RTMP"><a href="#RTMP" class="headerlink" title="RTMP"></a>RTMP</h2><p>Rtmp规范1.0：<a target="_blank" rel="noopener" href="https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/">https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/</a></p>
+<h1 id="直播流协议"><a href="#直播流协议" class="headerlink" title="直播流协议"></a>直播流协议</h1><h2 id="RTMP"><a href="#RTMP" class="headerlink" title="RTMP"></a>RTMP</h2><p>Rtmp规范1.0：<a href="https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/">https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/</a></p>
 <p>Rtmp规范1.0 en：<a target="_blank" rel="noopener" href="http://wwwimages.adobe.com/www.adobe.com/content/dam/acom/en/devnet/rtmp/pdf/rtmp_specification_1.0.pdf">http://wwwimages.adobe.com/www.adobe.com/content/dam/acom/en/devnet/rtmp/pdf/rtmp_specification_1.0.pdf</a></p>
 <ol>
 <li>RTMP协议是应用层协议，基于下层的传输层协议TCP</li>
@@ -544,7 +544,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>直播系统介绍</div>
-      <div>http://example.com/2018/12/18/直播系统介绍/</div>
+      <div>https://suncle.me/2018/12/18/直播系统介绍/</div>
     </div>
     <div class="license-meta">
       
@@ -624,7 +624,7 @@
       window.UtterancesThemeDark = dark;
       var s = document.createElement('script');
       s.setAttribute('src', 'https://utteranc.es/client.js');
-      s.setAttribute('repo', 'suncle1993.github.io');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
       s.setAttribute('issue-term', 'pathname');
       
       s.setAttribute('label', 'utterances');

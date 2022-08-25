@@ -21,7 +21,7 @@
     <meta name="description" content="概述只有root用户才能管理用户和组，所以一切命令都是root执行。 用户分类 超级用户：root，UID&#x3D;0  普通用户：具有操作系统有限的权限，500&lt;&#x3D;UID&lt;&#x3D;65535(2^32-1),有限个  伪用户：为了安全,1&lt;&#x3D;UID&lt;&#x3D;499  伪用户解释：linux中任何一个命令的操作都必须有一个用户的身份。伪用户一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux用户和组管理">
-<meta property="og:url" content="http://example.com/2016/01/09/linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:url" content="https://suncle.me/2016/01/09/linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/index.html">
 <meta property="og:site_name" content="Suncle&#39;s Blog">
 <meta property="og:description" content="概述只有root用户才能管理用户和组，所以一切命令都是root执行。 用户分类 超级用户：root，UID&#x3D;0  普通用户：具有操作系统有限的权限，500&lt;&#x3D;UID&lt;&#x3D;65535(2^32-1),有限个  伪用户：为了安全,1&lt;&#x3D;UID&lt;&#x3D;499  伪用户解释：linux中任何一个命令的操作都必须有一个用户的身份。伪用户一">
 <meta property="og:locale" content="zh_CN">
@@ -31,11 +31,11 @@
 <meta property="article:tag" content="总结">
 <meta property="article:tag" content="CentOS">
 <meta property="article:tag" content="Linux">
-<meta property="article:tag" content="配置">
 <meta property="article:tag" content="命令">
 <meta property="article:tag" content="用户">
 <meta property="article:tag" content="管理">
 <meta property="article:tag" content="组">
+<meta property="article:tag" content="配置">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -80,7 +80,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -621,8 +621,6 @@
       
         <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/tags/%E9%85%8D%E7%BD%AE/">#配置</a>
-      
         <a href="/tags/%E5%91%BD%E4%BB%A4/">#命令</a>
       
         <a href="/tags/%E7%94%A8%E6%88%B7/">#用户</a>
@@ -630,6 +628,8 @@
         <a href="/tags/%E7%AE%A1%E7%90%86/">#管理</a>
       
         <a href="/tags/%E7%BB%84/">#组</a>
+      
+        <a href="/tags/%E9%85%8D%E7%BD%AE/">#配置</a>
       
     </div>
   
@@ -642,7 +642,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Linux用户和组管理</div>
-      <div>http://example.com/2016/01/09/linux用户和组管理/</div>
+      <div>https://suncle.me/2016/01/09/linux用户和组管理/</div>
     </div>
     <div class="license-meta">
       
@@ -722,7 +722,7 @@
       window.UtterancesThemeDark = dark;
       var s = document.createElement('script');
       s.setAttribute('src', 'https://utteranc.es/client.js');
-      s.setAttribute('repo', 'suncle1993.github.io');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
       s.setAttribute('issue-term', 'pathname');
       
       s.setAttribute('label', 'utterances');

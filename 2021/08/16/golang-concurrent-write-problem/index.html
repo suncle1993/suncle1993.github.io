@@ -21,7 +21,7 @@
     <meta name="description" content="分享几个golang并发写入的坑 并发读写map在golang的实际项目中经常需要并发写数据，并且将数据塞到一个map中作为一个整体返回。 分为2种情况：这两种情况都会造成panic  并发读写map 并发写map  并发读写map的示例代码： 1234567891011121314151617181920212223package utilimport &quot;testing&quot;fu">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Golang Concurrent Write Problem">
-<meta property="og:url" content="http://example.com/2021/08/16/golang-concurrent-write-problem/index.html">
+<meta property="og:url" content="https://suncle.me/2021/08/16/golang-concurrent-write-problem/index.html">
 <meta property="og:site_name" content="Suncle&#39;s Blog">
 <meta property="og:description" content="分享几个golang并发写入的坑 并发读写map在golang的实际项目中经常需要并发写数据，并且将数据塞到一个map中作为一个整体返回。 分为2种情况：这两种情况都会造成panic  并发读写map 并发写map  并发读写map的示例代码： 1234567891011121314151617181920212223package utilimport &quot;testing&quot;fu">
 <meta property="og:locale" content="zh_CN">
@@ -76,7 +76,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -484,7 +484,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Golang Concurrent Write Problem</div>
-      <div>http://example.com/2021/08/16/golang-concurrent-write-problem/</div>
+      <div>https://suncle.me/2021/08/16/golang-concurrent-write-problem/</div>
     </div>
     <div class="license-meta">
       
@@ -564,7 +564,7 @@
       window.UtterancesThemeDark = dark;
       var s = document.createElement('script');
       s.setAttribute('src', 'https://utteranc.es/client.js');
-      s.setAttribute('repo', 'suncle1993.github.io');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
       s.setAttribute('issue-term', 'pathname');
       
       s.setAttribute('label', 'utterances');

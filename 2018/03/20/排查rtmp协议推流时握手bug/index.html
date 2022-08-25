@@ -21,7 +21,7 @@
     <meta name="description" content="概况转推流程序的过程：从一个观看地址拉流，然后推流到另一个推流地址。主要用于cdn之间转推，目前市面上大多数cdn厂商都愿意不支持动态转推，因此只能通过转推流程序进行转推。 bug现象：使用obs studio推流到微赞可以成功，但是使用Erlang版本的转推流程序推流到微赞却失败。 日志如下： 1234514:12:35.926 [debug] payload [&amp;#123;amf,[&amp;quot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="排查rtmp协议推流时握手bug">
-<meta property="og:url" content="http://example.com/2018/03/20/%E6%8E%92%E6%9F%A5rtmp%E5%8D%8F%E8%AE%AE%E6%8E%A8%E6%B5%81%E6%97%B6%E6%8F%A1%E6%89%8Bbug/index.html">
+<meta property="og:url" content="https://suncle.me/2018/03/20/%E6%8E%92%E6%9F%A5rtmp%E5%8D%8F%E8%AE%AE%E6%8E%A8%E6%B5%81%E6%97%B6%E6%8F%A1%E6%89%8Bbug/index.html">
 <meta property="og:site_name" content="Suncle&#39;s Blog">
 <meta property="og:description" content="概况转推流程序的过程：从一个观看地址拉流，然后推流到另一个推流地址。主要用于cdn之间转推，目前市面上大多数cdn厂商都愿意不支持动态转推，因此只能通过转推流程序进行转推。 bug现象：使用obs studio推流到微赞可以成功，但是使用Erlang版本的转推流程序推流到微赞却失败。 日志如下： 1234514:12:35.926 [debug] payload [&amp;#123;amf,[&amp;quot">
 <meta property="og:locale" content="zh_CN">
@@ -78,7 +78,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -429,7 +429,7 @@
 
 <p>rtmp握手过程中C1数据包匹配<code>&lt;&lt;_:32, 0:32, _/binary&gt;&gt;</code>格式后和S2数据包匹配不成功，程序直接crash dump。因此需要弄清楚rtmp握手过程中是否有对S2和C1进行匹配验证。</p>
 <h1 id="Rtmp握手过程"><a href="#Rtmp握手过程" class="headerlink" title="Rtmp握手过程"></a>Rtmp握手过程</h1><p>此处重点关注rtmp握手过程中的C1和S2数据包。</p>
-<p>先看官方文档中的握手过程，中文翻译版本可以参见：<a target="_blank" rel="noopener" href="https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/">rtmp规范1.0</a>。 官方文档中对于是否要保证C1和S2完全一致，并没有明确说法。因此可以先参见obs studio依赖的**<code>librtmp</code><strong>库，看握手过程是如何处理的。obs studio依赖的</strong><code>librtmp</code>**的代码如下连接：</p>
+<p>先看官方文档中的握手过程，中文翻译版本可以参见：<a href="https://suncle.me/2018/03/09/rtmp%E8%A7%84%E8%8C%831-0/">rtmp规范1.0</a>。 官方文档中对于是否要保证C1和S2完全一致，并没有明确说法。因此可以先参见obs studio依赖的**<code>librtmp</code><strong>库，看握手过程是如何处理的。obs studio依赖的</strong><code>librtmp</code>**的代码如下连接：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/rtmp.c">https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/rtmp.c</a></li>
 <li><a target="_blank" rel="noopener" href="https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/handshake.h">https://github.com/obsproject/obs-studio/blob/master/plugins/obs-outputs/librtmp/handshake.h</a></li>
@@ -512,7 +512,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>排查rtmp协议推流时握手bug</div>
-      <div>http://example.com/2018/03/20/排查rtmp协议推流时握手bug/</div>
+      <div>https://suncle.me/2018/03/20/排查rtmp协议推流时握手bug/</div>
     </div>
     <div class="license-meta">
       
@@ -592,7 +592,7 @@
       window.UtterancesThemeDark = dark;
       var s = document.createElement('script');
       s.setAttribute('src', 'https://utteranc.es/client.js');
-      s.setAttribute('repo', 'suncle1993.github.io');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
       s.setAttribute('issue-term', 'pathname');
       
       s.setAttribute('label', 'utterances');

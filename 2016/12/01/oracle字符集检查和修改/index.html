@@ -21,7 +21,7 @@
     <meta name="description" content="Oracle字符集检查和修改在部署重构版测试环境时，需要创建Oracle数据库，使用dbca创建数据库之后没有注意数据库本身的字符集，导致后续所有的数据库脚本执行后中文乱码。最后的解决办法是清掉全库数据，再修改字符集，重启数据库。 1、Oracle字符集概述系统或者程序运行的环境就是一个我们常见的locale。而设置数据库locale最简单的方法就是设置NLS_LANG这个环境参数。在linux中">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Oracle字符集检查和修改">
-<meta property="og:url" content="http://example.com/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/index.html">
+<meta property="og:url" content="https://suncle.me/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/index.html">
 <meta property="og:site_name" content="Suncle&#39;s Blog">
 <meta property="og:description" content="Oracle字符集检查和修改在部署重构版测试环境时，需要创建Oracle数据库，使用dbca创建数据库之后没有注意数据库本身的字符集，导致后续所有的数据库脚本执行后中文乱码。最后的解决办法是清掉全库数据，再修改字符集，重启数据库。 1、Oracle字符集概述系统或者程序运行的环境就是一个我们常见的locale。而设置数据库locale最简单的方法就是设置NLS_LANG这个环境参数。在linux中">
 <meta property="og:locale" content="zh_CN">
@@ -77,7 +77,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -612,7 +612,7 @@
 <p><img src="https://flowsnow.oss-cn-shanghai.aliyuncs.com/history/image/oracle/2016-11-29_194757.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>意思就是：返回的是当前会话使用的language和territory。characterset是数据库的字符集。</p>
 <p>userenv函数的具体使用和当前会话字符集的取值详见以下链接</p>
-<p><a target="_blank" rel="noopener" href="https://suncle.me/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/">oracle的userenv和nls_lang详解</a></p>
+<p><a href="https://suncle.me/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/">oracle的userenv和nls_lang详解</a></p>
 <h2 id="3、修改Oracle-Server字符集"><a href="#3、修改Oracle-Server字符集" class="headerlink" title="3、修改Oracle Server字符集"></a>3、修改Oracle Server字符集</h2><p>一旦数据库创建后，数据库的字符集理论上讲是不能改变的。因此，在设计和安装之初考虑使用哪一种字符集十分重要。根据Oracle的官方说明，字符集的转换是从子集到超集受支持,反之不行。如果两种字符集之间根本没有子集和超集的关系，那么字符集的转换是不受oracle支持的。对数据库server而言，错误的修改字符集将会导致很多不可测的后果，可能会严重影响数据库的正常运行，所以在修改之前一定要确认两种字符集是否存在子集和超集的关系。一般来说，除非万不得已，我们不建议修改oracle数据库server端的字符集。</p>
 <p>以下是修改server端字符集的方法——不建议使用</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> conn <span class="hljs-operator">/</span><span class="hljs-keyword">as</span> sysdba <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> shutdown immediate; <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> startup mount <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">SYSTEM</span> ENABLE RESTRICTED SESSION; <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">SYSTEM</span> <span class="hljs-keyword">SET</span> JOB_QUEUE_PROCESSES<span class="hljs-operator">=</span><span class="hljs-number">0</span>; <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">SYSTEM</span> <span class="hljs-keyword">SET</span> AQ_TM_PROCESSES<span class="hljs-operator">=</span><span class="hljs-number">0</span>; <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">alter</span> database <span class="hljs-keyword">open</span>; <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">ALTER</span> DATABASE <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> ZHS16GBK; <br><span class="hljs-keyword">ALTER</span> DATABASE <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> ZHS16GBK <br><span class="hljs-operator">*</span> <br>ERROR <span class="hljs-keyword">at</span> line <span class="hljs-number">1</span>: <br>ORA<span class="hljs-number">-12712</span>: <span class="hljs-keyword">new</span> <span class="hljs-type">character</span> <span class="hljs-keyword">set</span> must be a superset <span class="hljs-keyword">of</span> <span class="hljs-keyword">old</span> <span class="hljs-type">character</span> <span class="hljs-keyword">set</span> <br>提示我们的字符集：新字符集必须为旧字符集的超集，这时我们可以跳过超集的检查做更改： <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">ALTER</span> DATABASE <span class="hljs-type">character</span> <span class="hljs-keyword">set</span> INTERNAL_USE ZHS16GBK; <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> v$nls_parameters; <br>重启检查是否更改完成： <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> shutdown immediate;  <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> startup <br><span class="hljs-keyword">SQL</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> v$nls_parameters; <br></code></pre></td></tr></table></figure>
@@ -694,7 +694,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Oracle字符集检查和修改</div>
-      <div>http://example.com/2016/12/01/oracle字符集检查和修改/</div>
+      <div>https://suncle.me/2016/12/01/oracle字符集检查和修改/</div>
     </div>
     <div class="license-meta">
       
@@ -774,7 +774,7 @@
       window.UtterancesThemeDark = dark;
       var s = document.createElement('script');
       s.setAttribute('src', 'https://utteranc.es/client.js');
-      s.setAttribute('repo', 'suncle1993.github.io');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
       s.setAttribute('issue-term', 'pathname');
       
       s.setAttribute('label', 'utterances');
