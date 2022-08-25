@@ -1681,9 +1681,9 @@
     
     <tags>
       
-      <tag>Python</tag>
-      
       <tag>总结</tag>
+      
+      <tag>Python</tag>
       
     </tags>
     
@@ -1708,9 +1708,9 @@
     
     <tags>
       
-      <tag>规范</tag>
-      
       <tag>rtmp</tag>
+      
+      <tag>规范</tag>
       
     </tags>
     
@@ -2255,9 +2255,9 @@
     
     <tags>
       
-      <tag>Python</tag>
-      
       <tag>总结</tag>
+      
+      <tag>Python</tag>
       
       <tag>时间</tag>
       
@@ -2369,9 +2369,9 @@
     
     <tags>
       
-      <tag>CMDB</tag>
-      
       <tag>Python</tag>
+      
+      <tag>CMDB</tag>
       
     </tags>
     
@@ -2537,9 +2537,9 @@
     
     <tags>
       
-      <tag>JavaScript</tag>
-      
       <tag>基础</tag>
+      
+      <tag>JavaScript</tag>
       
     </tags>
     
@@ -2875,9 +2875,9 @@
     
     <tags>
       
-      <tag>inspect</tag>
-      
       <tag>装饰器</tag>
+      
+      <tag>inspect</tag>
       
       <tag>类型检查</tag>
       
@@ -3418,9 +3418,9 @@
     
     <tags>
       
-      <tag>Oracle</tag>
-      
       <tag>事务</tag>
+      
+      <tag>Oracle</tag>
       
       <tag>Transaction</tag>
       
@@ -3953,11 +3953,11 @@
     
     <tags>
       
+      <tag>文件</tag>
+      
       <tag>Oracle</tag>
       
       <tag>CentOS</tag>
-      
-      <tag>文件</tag>
       
       <tag>体系架构</tag>
       
@@ -4096,11 +4096,11 @@
     
     <tags>
       
+      <tag>网络</tag>
+      
       <tag>CentOS</tag>
       
       <tag>Linux</tag>
-      
-      <tag>网络</tag>
       
     </tags>
     
@@ -4152,19 +4152,19 @@
     
     <tags>
       
-      <tag>CentOS</tag>
-      
       <tag>总结</tag>
       
+      <tag>CentOS</tag>
+      
       <tag>Linux</tag>
+      
+      <tag>配置</tag>
       
       <tag>vi</tag>
       
       <tag>vim</tag>
       
       <tag>模式</tag>
-      
-      <tag>配置</tag>
       
     </tags>
     
@@ -4189,13 +4189,11 @@
     
     <tags>
       
-      <tag>CentOS</tag>
-      
       <tag>总结</tag>
       
-      <tag>Linux</tag>
+      <tag>CentOS</tag>
       
-      <tag>配置</tag>
+      <tag>Linux</tag>
       
       <tag>命令</tag>
       
@@ -4204,6 +4202,8 @@
       <tag>管理</tag>
       
       <tag>组</tag>
+      
+      <tag>配置</tag>
       
     </tags>
     
@@ -4228,17 +4228,17 @@
     
     <tags>
       
-      <tag>CentOS</tag>
-      
       <tag>总结</tag>
+      
+      <tag>网络</tag>
+      
+      <tag>CentOS</tag>
       
       <tag>Linux</tag>
       
-      <tag>模式</tag>
-      
       <tag>配置</tag>
       
-      <tag>网络</tag>
+      <tag>模式</tag>
       
       <tag>Vmware</tag>
       
