@@ -1,0 +1,930 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/img/android-chrome-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Suncle Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。 本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：单词计数  尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Python语言写Hadoop MapReduce程序">
+<meta property="og:url" content="https://suncle.me/2018/04/17/Writing-An-Hadoop-MapReduce-Program-In-Python/index.html">
+<meta property="og:site_name" content="Suncle">
+<meta property="og:description" content="在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。 本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：单词计数  尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-04-17T07:54:21.000Z">
+<meta property="article:modified_time" content="2022-08-25T03:46:50.947Z">
+<meta property="article:author" content="Suncle Chen">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Hadoop">
+<meta property="article:tag" content="MapReduce">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>使用Python语言写Hadoop MapReduce程序 - Suncle</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-72506112-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Suncle&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/newsletter/">
+                <i class="iconfont icon-mail"></i>
+                周刊
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                更多
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml">
+                    <i class="iconfont icon-rss-fill"></i>
+                    RSS
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/suncle-banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">使用Python语言写Hadoop MapReduce程序</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-04-17 15:54" pubdate>
+          2018年4月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          68 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="大数据"
+        id="heading-2c657e7dce6effaecbb458deb45e800a" role="tab" data-toggle="collapse" href="#collapse-2c657e7dce6effaecbb458deb45e800a"
+        aria-expanded="true"
+      >
+        大数据
+        <span class="list-group-count">(12)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-2c657e7dce6effaecbb458deb45e800a"
+           role="tabpanel" aria-labelledby="heading-2c657e7dce6effaecbb458deb45e800a">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2019/07/27/clickhouse-build-distributed-cluster/" title="Clickhouse分布式集群搭建"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Clickhouse分布式集群搭建</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/27/clickhouse-create-distributed-table-and-table-engine-introduction/" title="Clickhouse创建分布式表以及表引擎介绍"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Clickhouse创建分布式表以及表引擎介绍</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/27/clickhouse-introduction-and-comparison-of-performance/" title="Clickhouse简介和性能对比"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Clickhouse简介和性能对比</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/16/Hadoop3-basic-installation-and-configuration/" title="Hadoop3单机和伪分布式模式安装配置"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop3单机和伪分布式模式安装配置</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/16/Hadoop-MapReduce-HDFS-Introduction/" title="Hadoop、MapReduce、HDFS介绍"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop、MapReduce、HDFS介绍</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/16/Hadoop-Project-Live-Flow-Statistic/" title="Hadoop项目：从cdn日志统计直播流量"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hadoop项目：从cdn日志统计直播流量</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/09/Sqoop-Import-Export/" title="Sqoop导入导出"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Sqoop导入导出</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/04/17/Writing-An-Hadoop-MapReduce-Program-In-Python/" title="使用Python语言写Hadoop MapReduce程序"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">使用Python语言写Hadoop MapReduce程序</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/08/02/Comparison-of-the-Open-Source-OLAP-Systems-for-BigData/" title="大数据OLAP系统比较"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">大数据OLAP系统比较</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/05/03/Building-Hadoop3-Cluster/" title="搭建Hadoop3集群"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">搭建Hadoop3集群</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/05/08/brief-introduction-and-comparison-of-data-warehouse/" title="数仓工作的简单介绍和对比"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">数仓工作的简单介绍和对比</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/07/30/Aliyun-big-data-infrastructure-components-research/" title="阿里云大数据基础组件调研"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">阿里云大数据基础组件调研</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">使用Python语言写Hadoop MapReduce程序</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>在了解到Hadoop的生态环境以及Hadoop单机模式和伪分布式模式安装配置之后，我们可以使用自己熟悉的语言来编写Hadoop MapReduce程序，进一步了解MapReduce编程模型。</p>
+<p>本教程将使用Python语言为Hadoop编写一个简单的MapReduce程序：<strong>单词计数</strong></p>
+<blockquote>
+<p>尽管Hadoop框架是用Java编写的，但是为Hadoop编写的程序不必非要Java写，还可以使用其他语言开发，比如Python，Ruby，C++等</p>
+</blockquote>
+<p>编写完成的MapReduce程序可以直接在你已经搭建好的伪分布式程序中调试运行。</p>
+<span id="more"></span>
+
+<h1 id="MapReduce的Python代码"><a href="#MapReduce的Python代码" class="headerlink" title="MapReduce的Python代码"></a>MapReduce的Python代码</h1><p>我们将使用<a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r1.2.1/streaming.html#Hadoop+Streaming">Hadoop流API</a>通过STDIN和STDOUT在Map和Reduce代码间传递数据。我们只需要使用Python的sys.stdin读取输入数据和打印输出到sys.stdout。这就是我们需要做的，因为Hadoop流会处理好其他的一切。</p>
+<h2 id="mapper-py"><a href="#mapper-py" class="headerlink" title="mapper.py"></a>mapper.py</h2><p>将下面的代码保存在文件 <code>/home/hadoop/workspace/mapper.py</code> 中。它将从STDIN读取数据，拆分为单词并输出一组映射单词和它们数量（中间值）的行到STDOUT。尽管这个Map脚本不会计算出单词出现次数的总和（中间值）。相反，它会立即输出<code>&lt;word&gt; 1</code>元组的形式——即使某个特定的单词可能会在输入中出现多次。在我们的例子中，我们让后续的Reduce做最终的总和计数。当然，你可以按照你的想法在你自己的脚本中修改这段代码。</p>
+<p>需要给mapper.py文件赋予可执行权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> +x /home/hadoop/workspace/mapper.py<br></code></pre></td></tr></table></figure>
+
+<p><code>/home/hadoop/workspace/mapper.py</code>代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><span class="hljs-comment"># -*- coding: utf-8 -*-</span><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">Created on 4/17/18 11:16 AM</span><br><span class="hljs-string">@author: Chen Liang</span><br><span class="hljs-string">@function:  word count mapper</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">import</span> sys<br><br><span class="hljs-comment"># 从标准输入STDIN输入</span><br><span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> sys.stdin:<br>    <span class="hljs-comment"># 移除line收尾的空白字符</span><br>    line = line.strip()<br>    <span class="hljs-comment"># 将line分割为单词</span><br>    words = line.split()<br>    <span class="hljs-comment"># 遍历</span><br>    <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> words:<br>        <span class="hljs-comment"># 将结果写到标准输出STDOUT</span><br>        <span class="hljs-comment"># 此处的输出会作为Reduce代码的输入</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#123;&#125;\t&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(word, <span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
+
+<h2 id="reducer-py"><a href="#reducer-py" class="headerlink" title="reducer.py"></a>reducer.py</h2><p>将下面的代码保存在文件 <code>/home/hadoop/workspace/reducer.py</code> 中。它将从STDIN读取mapper.py的结果（因此mapper.py的输出格式和reducer.py预期的输入格式必须匹配），然后统计每个单词出现的次数，最后将结果输出到STDOUT中。</p>
+<p>需要给reducer.py文件赋予可执行权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> +x /home/hadoop/workspace/reducer.py<br></code></pre></td></tr></table></figure>
+
+<p><code>/home/hadoop/workspace/reducer.py</code>代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><span class="hljs-comment"># -*- coding: utf-8 -*-</span><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">Created on 4/17/18 11:16 AM</span><br><span class="hljs-string">@author: Chen Liang</span><br><span class="hljs-string">@function: word count reducer</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">import</span> sys<br><br>current_word = <span class="hljs-literal">None</span><br>current_count = <span class="hljs-number">0</span><br>word = <span class="hljs-literal">None</span><br><br><span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> sys.stdin:<br>    <span class="hljs-comment"># 移除line收尾的空白字符</span><br>    line = line.strip()<br><br>    <span class="hljs-comment"># 解析我们从mapper.py得到的输入</span><br>    word, count = line.split(<span class="hljs-string">&#x27;\t&#x27;</span>, <span class="hljs-number">1</span>)<br><br>    <span class="hljs-comment"># 将字符串count转换为int</span><br>    <span class="hljs-keyword">try</span>:<br>        count = <span class="hljs-built_in">int</span>(count)<br>    <span class="hljs-keyword">except</span> ValueError:<br>        <span class="hljs-comment"># 不是数字，不做处理，跳过</span><br>        <span class="hljs-keyword">continue</span><br><br>    <span class="hljs-comment"># hadoop在将kv对传递给reduce之前会进行按照key进行排序，在这里也就是word</span><br>    <span class="hljs-keyword">if</span> current_word == word:<br>        current_count += count<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">if</span> current_word <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-comment"># 将结果写入STDOUT</span><br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#123;&#125;\t&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(current_word, current_count))<br>        current_count = count<br>        current_word = word<br><br><span class="hljs-comment"># 最后一个单词不要忘记输出</span><br><span class="hljs-keyword">if</span> current_word == word:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#123;&#125;\t&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(current_word, current_count))<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="代码测试"><a href="#代码测试" class="headerlink" title="代码测试"></a>代码测试</h2><p>在MapReduce作业中正式使用mapper.py和reducer.py之前，最好先在本地测试mapper.py和reducer.py脚本。否则，作业可能成功完成了但没有得到作业结果数据或者得到了不是你想要的结果。</p>
+<p>这里有一些想法，关于如何测试这个Map和Reduce脚本的功能。</p>
+<p>使用<code>cat data | map | sort | reduce</code>这样的顺序。具体测试如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 首先在本地测试 mapper.py 和 reducer.py</span><br><br><span class="hljs-comment"># 非常基本的测试</span><br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;foo foo quux labs foo bar quux&quot;</span> | /home/hadoop/workspace/mapper.py<br>foo	1<br>foo	1<br>quux	1<br>labs	1<br>foo	1<br>bar	1<br>quux	1<br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ vim reducer.py <br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;foo foo quux labs foo bar quux&quot;</span> | /home/hadoop/workspace/mapper.py | <span class="hljs-built_in">sort</span> -k1,1 | /home/hadoop/workspace/reducer.py<br>bar	1<br>foo	3<br>labs	1<br>quux	2<br><span class="hljs-comment"># 使用示例文件</span><br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ <span class="hljs-built_in">cat</span> /home/hadoop/workspace/file/input1.txt | /home/hadoop/workspace/mapper.py <br>Now	1<br>that	1<br>everything	1<br>is	1<br>prepared,	1<br>we	1<br>can	1<br>finally	1<br>run	1<br>our	1<br>Python	1<br>MapReduce	1<br>...<br></code></pre></td></tr></table></figure>
+
+<p>其中<code>/home/hadoop/workspace/file/input1.txt</code>示例输入文件的内容如下：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">Now that everything <span class="hljs-keyword">is</span> <span class="hljs-keyword">prepared</span>, we can finally run our Python MapReduce job <span class="hljs-keyword">on</span> the Hadoop <span class="hljs-keyword">cluster</span>.<br><span class="hljs-keyword">As</span> I said above, we leverage the Hadoop Streaming API <span class="hljs-keyword">for</span> helping us <span class="hljs-keyword">passing</span> data <span class="hljs-keyword">between</span> our Map <span class="hljs-keyword">and</span> Reduce code via STDIN <span class="hljs-keyword">and</span> STDOUT.<br></code></pre></td></tr></table></figure>
+
+<h1 id="在Hadoop上运行Python代码"><a href="#在Hadoop上运行Python代码" class="headerlink" title="在Hadoop上运行Python代码"></a>在Hadoop上运行Python代码</h1><h2 id="下载示例输入数据"><a href="#下载示例输入数据" class="headerlink" title="下载示例输入数据"></a>下载示例输入数据</h2><p>对于这个示例，我们将使用的三个文本来自Gutenberg项目：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.gutenberg.org/etext/20417">The Outline of Science, Vol. 1 (of 4) by J. Arthur Thomson</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gutenberg.org/etext/5000">The Notebooks of Leonardo Da Vinci</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gutenberg.org/etext/4300">Ulysses by James Joyce</a></li>
+</ol>
+<p>下载对应链接下的<code>Plain Text UTF-8</code>，三个文本对应的地址分别为：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.gutenberg.org/cache/epub/20417/pg20417.txt">https://www.gutenberg.org/cache/epub/20417/pg20417.txt</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gutenberg.org/files/5000/5000-8.txt">https://www.gutenberg.org/files/5000/5000-8.txt</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gutenberg.org/files/4300/4300-0.txt">https://www.gutenberg.org/files/4300/4300-0.txt</a></li>
+</ol>
+<p>下载每个文件为纯文本文件，以UTF-8编译并且将这些文件存储在一个临时目录中，如&#x2F;tmp&#x2F;gutenberg。</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs tap">hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace/file$ ll<br>total 3612<br>drwxrwxr-x<span class="hljs-number"> 2 </span>hadoop hadoop   <span class="hljs-number"> 4096 </span>Apr<span class="hljs-number"> 17 </span>14:46 ./<br>drwxrwxr-x<span class="hljs-number"> 3 </span>hadoop hadoop   <span class="hljs-number"> 4096 </span>Apr<span class="hljs-number"> 17 </span>14:32 ../<br>-rw-rw-r--<span class="hljs-number"> 1 </span>hadoop hadoop    <span class="hljs-number"> 237 </span>Apr<span class="hljs-number"> 17 </span>14:32 input1.txt<br>-rw-rw-r--<span class="hljs-number"> 1 </span>hadoop hadoop <span class="hljs-number"> 674570 </span>Apr<span class="hljs-number"> 17 </span>14:45 pg20417.txt<br>-rw-rw-r--<span class="hljs-number"> 1 </span>hadoop hadoop<span class="hljs-number"> 1580890 </span>Aug<span class="hljs-number"> 17 </span><span class="hljs-number"> 2017 </span>pg4300.txt<br>-rw-rw-r--<span class="hljs-number"> 1 </span>hadoop hadoop<span class="hljs-number"> 1428841 </span>Apr <span class="hljs-number"> 7 </span><span class="hljs-number"> 2015 </span>pg5000.txt<br></code></pre></td></tr></table></figure>
+
+<h2 id="将本地示例数据拷贝到HDFS"><a href="#将本地示例数据拷贝到HDFS" class="headerlink" title="将本地示例数据拷贝到HDFS"></a>将本地示例数据拷贝到HDFS</h2><p>首先在HDFS中创建一个子目录，然后拷贝文件过来（如果input已存在先删除再创建，以免影响测试结果）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -<span class="hljs-built_in">mkdir</span> input<br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -<span class="hljs-built_in">ls</span><br>Found 1 items<br>drwxr-xr-x   - hadoop supergroup          0 2018-04-17 14:51 input<br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -put /home/hadoop/workspace/file/pg*.txt input<br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -<span class="hljs-built_in">ls</span> input<br>Found 3 items<br>-rw-r--r--   1 hadoop supergroup     674570 2018-04-17 14:53 input/pg20417.txt<br>-rw-r--r--   1 hadoop supergroup    1580890 2018-04-17 14:53 input/pg4300.txt<br>-rw-r--r--   1 hadoop supergroup    1428841 2018-04-17 14:53 input/pg5000.txt<br></code></pre></td></tr></table></figure>
+
+<h2 id="运行MapReduce作业"><a href="#运行MapReduce作业" class="headerlink" title="运行MapReduce作业"></a>运行MapReduce作业</h2><p>运行MapReduce作业，敲入如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hadoop jar /usr/local/src/hadoop-3.1.0/share/hadoop/tools/lib/hadoop-streaming-3.1.0.jar -file mapper.py -mapper mapper.py -file reducer.py -reducer reducer.py -input input/* -output output-first<br></code></pre></td></tr></table></figure>
+
+<p>查看<code>output-first</code>目录确保程序执行正常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -<span class="hljs-built_in">ls</span> output-first<br>Found 2 items<br>-rw-r--r--   1 hadoop supergroup          0 2018-04-17 15:03 output-first/_SUCCESS<br>-rw-r--r--   1 hadoop supergroup     878847 2018-04-17 15:03 output-first/part-00000<br></code></pre></td></tr></table></figure>
+
+<p>将文件从HDFS中拷入到你本地文件系统中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ <span class="hljs-built_in">mkdir</span> /home/hadoop/workspace/file/output-first<br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ hdfs dfs -get output-first/* /home/hadoop/workspace/file/output-first/<br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace$ <span class="hljs-built_in">cd</span> /home/hadoop/workspace/file/output-first/<br>hadoop@iZwz9367lkujh8ulgxc2cwZ:~/workspace/file/output-first$ <span class="hljs-built_in">ls</span><br>part-00000  _SUCCESS<br></code></pre></td></tr></table></figure>
+
+<p>一般情况下，Hadoop对每个reducer产生一个输出文件；在我们的示例中，然而它将只创建单个文件，因为输入的文件都很小。</p>
+<p>如果你想要在运行的时候修改Hadoop参数，如增加Reduce任务的数量，你可以使用-D选项：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">-D mapred.reduce.tasks=16<br></code></pre></td></tr></table></figure>
+
+<p>只能指定reduce的task数量不能指定map的task数量。</p>
+<h1 id="改进Mapper和Reducer代码"><a href="#改进Mapper和Reducer代码" class="headerlink" title="改进Mapper和Reducer代码"></a>改进Mapper和Reducer代码</h1><p>上面的Mapper和Reducer例子应该给你提供了一种思路，关于如何创建第一个MapReduce程序。重点是代码简洁和易于理解，特别是对于Python语言的初学者。在现实程序中，你可能想要通过<a target="_blank" rel="noopener" href="http://www.ibm.com/developerworks/library/l-pycon.html">Python的迭代器和生成器</a>来优化你的代码。</p>
+<p>一般来说，迭代器和生成器有一个优点：序列中的元素在你需要它的时候才会生成。计算资源昂贵或内存紧缺的时候很有用。</p>
+<p>注意：下面的Map和Reduce脚本只有运行在Hadoop环境中才会正常工作，即在 MapReduce任务中作为Mapper和Reducer。这表示在本地运行的测试命令”cat DATA | .&#x2F;mapper.py | sort -k1,1 | .&#x2F;reducer.py”不会正常工作，因为一些功能是由Hadoop来完成的。</p>
+<p>准确地说，我们计算了一个单词出现的次数，例如(“foo”, 4)，只有恰巧相同的单词（foo）相继出现多次。然而，在大多数情况下，我们让Hadoop在Map和Reduce过程时自动分组(key, value)对这样的形式，因为Hadoop在这方面比我们简单的Python脚本效率更高。</p>
+<h2 id="advanced-mapper-py"><a href="#advanced-mapper-py" class="headerlink" title="advanced_mapper.py"></a>advanced_mapper.py</h2><p>advanced_mapper.py是改进之后的mapper代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><span class="hljs-comment"># -*- coding: utf-8 -*-</span><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">Created on 4/17/18 3:23 PM</span><br><span class="hljs-string">@author: Chen Liang</span><br><span class="hljs-string">@function: 更高级的Mapper，使用Python迭代器和生成器</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">import</span> sys<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">read_input</span>(<span class="hljs-params">std_input</span>):<br>    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> std_input:<br>        <span class="hljs-comment"># 将line分割成单词</span><br>        <span class="hljs-keyword">yield</span> line.split()<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">separator=<span class="hljs-string">&#x27;\t&#x27;</span></span>):<br>    <span class="hljs-comment"># 从标准输入STDIN输入</span><br>    data = read_input(sys.stdin)<br>    <span class="hljs-keyword">for</span> words <span class="hljs-keyword">in</span> data:<br>        <span class="hljs-comment"># 将结果写到标准输出，此处的输出会作为reduce的输入</span><br>        <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> words:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#123;&#125;&#123;&#125;&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(word, separator, <span class="hljs-number">1</span>))<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    main()<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="advanced-reducer-py"><a href="#advanced-reducer-py" class="headerlink" title="advanced_reducer.py"></a>advanced_reducer.py</h2><p>advanced_reducer.py是改进之后的reducer代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><span class="hljs-comment"># -*- coding: utf-8 -*-</span><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">Created on 4/17/18 3:23 PM</span><br><span class="hljs-string">@author: Chen Liang</span><br><span class="hljs-string">@function: 更高级的Reducer，使用Python迭代器和生成器</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">from</span> itertools <span class="hljs-keyword">import</span> groupby<br><span class="hljs-keyword">from</span> operator <span class="hljs-keyword">import</span> itemgetter<br><span class="hljs-keyword">import</span> sys<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">read_mapper_output</span>(<span class="hljs-params">std_input, separator=<span class="hljs-string">&#x27;\t&#x27;</span></span>):<br>    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> std_input:<br>        <span class="hljs-keyword">yield</span> line.rstrip().split(separator, <span class="hljs-number">1</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">separator=<span class="hljs-string">&#x27;\t&#x27;</span></span>):<br>    <span class="hljs-comment"># 从STDIN输入</span><br>    data = read_mapper_output(sys.stdin, separator=separator)<br>    <span class="hljs-comment"># groupby通过word对多个word-count对进行分组，并创建一个返回连续键和它们的组的迭代器：</span><br>    <span class="hljs-comment">#  - current_word - 包含单词的字符串（键）</span><br>    <span class="hljs-comment">#  - group - 是一个迭代器，能产生所有的[&quot;current_word&quot;, &quot;count&quot;]项</span><br>    <span class="hljs-comment"># itemgetter: 用于获取对象的哪些维的数据，itemgetter(0)表示获取第0维</span><br>    <span class="hljs-keyword">for</span> current_word, group <span class="hljs-keyword">in</span> groupby(data, itemgetter(<span class="hljs-number">0</span>)):<br>        <span class="hljs-keyword">try</span>:<br>            total_count = <span class="hljs-built_in">sum</span>(<span class="hljs-built_in">int</span>(count) <span class="hljs-keyword">for</span> current_word, count <span class="hljs-keyword">in</span> group)<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#123;&#125;&#123;&#125;&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(current_word, separator, total_count))<br>        <span class="hljs-keyword">except</span> ValueError:<br>            <span class="hljs-keyword">pass</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    main()<br><br></code></pre></td></tr></table></figure>
+
+<p>代码改进结束。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://emunix.emich.edu/~sverdlik/COSC472/WritingAnHadoopMapReduceProgramInPython-MichaelG.Noll.html">https://emunix.emich.edu/~sverdlik/COSC472/WritingAnHadoopMapReduceProgramInPython-MichaelG.Noll.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://python.freelycode.com/contribution/detail/307">https://python.freelycode.com/contribution/detail/307</a></li>
+<li><a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r1.2.1/streaming.html#Hadoop+Streaming">https://hadoop.apache.org/docs/r1.2.1/streaming.html#Hadoop+Streaming</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.apache.org/hadoop/HadoopStreaming">https://wiki.apache.org/hadoop/HadoopStreaming</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dongtingzhizi/article/details/12068205">https://blog.csdn.net/dongtingzhizi/article/details/12068205</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dreamer-fish/p/5522687.html">https://www.cnblogs.com/dreamer-fish/p/5522687.html</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" class="category-chain-item">大数据</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+        <a href="/tags/Hadoop/">#Hadoop</a>
+      
+        <a href="/tags/MapReduce/">#MapReduce</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>使用Python语言写Hadoop MapReduce程序</div>
+      <div>https://suncle.me/2018/04/17/Writing-An-Hadoop-MapReduce-Program-In-Python/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Suncle Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年4月17日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/05/03/Building-Hadoop3-Cluster/" title="搭建Hadoop3集群">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">搭建Hadoop3集群</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/04/16/Hadoop3-basic-installation-and-configuration/" title="Hadoop3单机和伪分布式模式安装配置">
+                        <span class="hidden-mobile">Hadoop3单机和伪分布式模式安装配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

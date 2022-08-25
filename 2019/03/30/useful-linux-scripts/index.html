@@ -1,0 +1,920 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/img/android-chrome-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Suncle Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="常用linux脚本：  Linux系统bash脚本获取系统硬件资源 Aix系统ksh脚本获取系统硬件资源 服务器打开session时显示帮助信息 curl post中带有变量的脚本 金三系统基线包安装部署脚本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用Linux脚本集锦">
+<meta property="og:url" content="https://suncle.me/2019/03/30/useful-linux-scripts/index.html">
+<meta property="og:site_name" content="Suncle">
+<meta property="og:description" content="常用linux脚本：  Linux系统bash脚本获取系统硬件资源 Aix系统ksh脚本获取系统硬件资源 服务器打开session时显示帮助信息 curl post中带有变量的脚本 金三系统基线包安装部署脚本">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-29T17:13:35.000Z">
+<meta property="article:modified_time" content="2022-08-25T03:46:35.669Z">
+<meta property="article:author" content="Suncle Chen">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Bash">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>常用Linux脚本集锦 - Suncle</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-72506112-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Suncle&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/newsletter/">
+                <i class="iconfont icon-mail"></i>
+                周刊
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                更多
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml">
+                    <i class="iconfont icon-rss-fill"></i>
+                    RSS
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/suncle-banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">常用Linux脚本集锦</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-03-30 01:13" pubdate>
+          2019年3月30日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          111 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="linux"
+        id="heading-e206a54e97690cce50cc872dd70ee896" role="tab" data-toggle="collapse" href="#collapse-e206a54e97690cce50cc872dd70ee896"
+        aria-expanded="true"
+      >
+        linux
+        <span class="list-group-count">(16)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-e206a54e97690cce50cc872dd70ee896"
+           role="tabpanel" aria-labelledby="heading-e206a54e97690cce50cc872dd70ee896">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2016/01/26/CentOS6.7%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle%E6%95%B0%E6%8D%AE%E5%BA%93/" title="CentOS6.7环境下安装配置Oracle数据库"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">CentOS6.7环境下安装配置Oracle数据库</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/30/CentOS7%E4%B8%8ANginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/" title="CentOS7-Nginx编译安装"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">CentOS7-Nginx编译安装</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/03/30/CentOS7-Nginx%E9%85%8D%E7%BD%AELets-Encrypt-SSL%E8%AF%81%E4%B9%A6/" title="CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">CentOS7-Nginx配置Let&#39;s-Encrypt-SSL证书</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/01/10/Linux%20vi%E7%9A%84%E4%BD%BF%E7%94%A8/" title="Linux vi的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Linux vi的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/01/09/Linux%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86/" title="Linux用户和组管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Linux用户和组管理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/01/14/Linux%E7%9A%84%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86/" title="Linux的文件和文件系统的管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Linux的文件和文件系统的管理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/01/22/Linux%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E5%92%8C%E7%AE%A1%E7%90%86/" title="Linux网络配置和管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Linux网络配置和管理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2015/12/27/Linux%E8%A7%84%E5%88%92%E3%80%81%E5%AE%89%E8%A3%85%E3%80%81%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86/" title="Linux规划、安装、远程管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Linux规划、安装、远程管理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/01/22/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="Linux进程管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Linux进程管理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/29/linux%E9%85%8D%E7%BD%AEc++11%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/" title="linux配置c++11编译环境"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">linux配置c++11编译环境</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/11/10/ubuntu16-04%E5%AE%89%E5%85%A8%E5%B0%8F%E7%BB%93-01/" title="ubuntu16.04安全小结-01"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ubuntu16.04安全小结-01</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/09/02/samba%E8%A7%A3%E5%86%B3linux%E7%9A%84svn%E9%97%AE%E9%A2%98/" title="ubuntu16.04配置samba解决linux的svn使用舒适问题"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ubuntu16.04配置samba解决linux的svn使用舒适问题</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/03/30/useful-linux-commands/" title="常用Linux命令集锦"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">常用Linux命令集锦</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2019/03/30/useful-linux-scripts/" title="常用Linux脚本集锦"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">常用Linux脚本集锦</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/01/08/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/" title="虚拟机的三种网络模式"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">虚拟机的三种网络模式</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/28/%E8%BF%90%E7%BB%B4%E4%BA%BA%E5%91%98%E5%B8%B8%E7%94%A8%E7%9A%84Linux%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/" title="运维人员常用的Linux命令总结"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">运维人员常用的Linux命令总结</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">常用Linux脚本集锦</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>常用linux脚本：</p>
+<ul>
+<li>Linux系统bash脚本获取系统硬件资源</li>
+<li>Aix系统ksh脚本获取系统硬件资源</li>
+<li>服务器打开session时显示帮助信息</li>
+<li>curl post中带有变量的脚本</li>
+<li>金三系统基线包安装部署脚本</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Linux系统bash脚本获取系统硬件资源"><a href="#Linux系统bash脚本获取系统硬件资源" class="headerlink" title="Linux系统bash脚本获取系统硬件资源"></a>Linux系统bash脚本获取系统硬件资源</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;系统资源使用情况：以下各个数字均为百分比%&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;CPU平均使用率：&quot;</span><br>top -n 3 b|grep <span class="hljs-string">&#x27;Cpu(s)&#x27;</span>|awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>|<span class="hljs-built_in">cut</span> -d <span class="hljs-string">&#x27;%&#x27;</span> -f 1|awk <span class="hljs-string">&#x27;&#123;sum+= $1&#125; END &#123;printf &quot;%.2f\n&quot;,sum/3&#125;&#x27;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;内存使用率：&quot;</span><br>free|grep <span class="hljs-string">&#x27;Mem:&#x27;</span>|awk <span class="hljs-string">&#x27;&#123;realused=$3-$6-$7&#125; END &#123;printf &quot;%.2f\n&quot;,realused*100/$2&#125;&#x27;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;磁盘使用率：&quot;</span><br><span class="hljs-built_in">df</span>|awk <span class="hljs-string">&#x27;&#123;if(length($6)==1) print $5&#125;&#x27;</span>|<span class="hljs-built_in">cut</span> -d <span class="hljs-string">&#x27;%&#x27;</span> -f 1<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Inode使用率：&quot;</span><br><span class="hljs-built_in">df</span> -i|awk <span class="hljs-string">&#x27;&#123;if(length($6)==1) print $5&#125;&#x27;</span>|<span class="hljs-built_in">cut</span> -d <span class="hljs-string">&#x27;%&#x27;</span> -f 1<br></code></pre></td></tr></table></figure>
+
+<h2 id="Aix系统ksh脚本获取系统硬件资源"><a href="#Aix系统ksh脚本获取系统硬件资源" class="headerlink" title="Aix系统ksh脚本获取系统硬件资源"></a>Aix系统ksh脚本获取系统硬件资源</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/sh</span><br>echo &quot;以下数据均为百分比&quot;<br>echo &quot;cpu&quot;<br>vmstat 1 3|sed -n &#x27;7,9p&#x27;|awk &#x27;&#123;free+=$16&#125; END &#123;printf &quot;%.2f\n&quot;,100-free/3.0&#125;&#x27;<br>echo &quot;memory&quot;<br>svmon|grep memory|awk &#x27;&#123;printf &quot;%.2f\n&quot;,1.0*$3/$2&#125;&#x27;<br>echo &quot;disk&quot;<br>df /u01|sed -n 2p|awk &#x27;&#123;print $4&#125;&#x27;|cut -d &#x27;%&#x27; -f 1<br>echo &quot;Inode&quot;<br>df /u01|sed -n 2p|awk &#x27;&#123;print $6&#125;&#x27;|cut -d &#x27;%&#x27; -f 1<br></code></pre></td></tr></table></figure>
+
+<h2 id="服务器打开session时显示帮助信息"><a href="#服务器打开session时显示帮助信息" class="headerlink" title="服务器打开session时显示帮助信息"></a>服务器打开session时显示帮助信息</h2><p>将脚本的执行语句写在用户profile中，登录时即可看到帮助信息</p>
+<p>脚本名称：help.sh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">tput setaf 2<br>tput blink<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;====================测试服务器133======================&quot;</span><br>tput sgr0<br>tput setaf 2<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;</span><br><span class="hljs-string">--------------**支持dt,hx,sj,js---------------------</span><br><span class="hljs-string"> log-gs**.sh            查看日志</span><br><span class="hljs-string"> re-gs**.sh             重启应用</span><br><span class="hljs-string">--------------**支持dt,hx,sj,js---------------------</span><br><span class="hljs-string"></span><br><span class="hljs-string"> *****    help.sh       呼唤帮助信息      *****&quot;</span><br>tput blink  <br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;====================测试服务器133======================&quot;</span><br>tput sgr0<br></code></pre></td></tr></table></figure>
+
+<h2 id="curl-post中带有变量的脚本"><a href="#curl-post中带有变量的脚本" class="headerlink" title="curl post中带有变量的脚本"></a>curl post中带有变量的脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br>username=<span class="hljs-string">&quot;suncle&quot;</span><br>apiKey=<span class="hljs-string">&quot;xxxxxx&quot;</span><br>domain=<span class="hljs-variable">$1</span><br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$domain</span><br><span class="hljs-built_in">date</span>=`<span class="hljs-built_in">date</span> -R -u | awk <span class="hljs-string">&#x27;&#123;print $1&quot; &quot;$2&quot; &quot;$3&quot; &quot;$4&quot; &quot;$5&quot; GMT&quot;&#125;&#x27;</span>`<br>password=`<span class="hljs-built_in">echo</span> -en <span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span> | openssl dgst -sha1 -hmac <span class="hljs-variable">$apiKey</span> -binary | openssl enc -<span class="hljs-built_in">base64</span>`<br>curl -i --url <span class="hljs-string">&quot;https://open.chinanetcenter.com/api/report/flow/stream/detail&quot;</span> \<br>-X <span class="hljs-string">&quot;POST&quot;</span> \<br>-u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$password</span> \<br>-H <span class="hljs-string">&quot;Date: <span class="hljs-variable">$date</span>&quot;</span> \<br>-H <span class="hljs-string">&quot;Accept: application/json&quot;</span> \<br>-d <span class="hljs-string">&#x27;&#123;</span><br><span class="hljs-string">    &quot;dateFrom&quot;: &quot;2018-03-01T00:00:00+08:00&quot;,</span><br><span class="hljs-string">    &quot;dateTo&quot;: &quot;2018-03-02T00:00:00+08:00&quot;,</span><br><span class="hljs-string">    &quot;domainStream&quot;: [</span><br><span class="hljs-string">        &#123;</span><br><span class="hljs-string">            &quot;domain&quot;: &quot;&#x27;</span><span class="hljs-string">&quot;<span class="hljs-variable">$domain</span>&quot;</span><span class="hljs-string">&#x27;&quot;</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    ],</span><br><span class="hljs-string">    &quot;dataType&quot;: &quot;bandwidth&quot;,</span><br><span class="hljs-string">    &quot;dataInterval&quot;: &quot;5m&quot;</span><br><span class="hljs-string">&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>参见domain变量的处理：”domain”: “‘“$domain”‘“</p>
+</blockquote>
+<h2 id="金三系统基线包安装部署脚本"><a href="#金三系统基线包安装部署脚本" class="headerlink" title="金三系统基线包安装部署脚本"></a>金三系统基线包安装部署脚本</h2><p><strong>判断weblogic用户和组是否存在，判断&#x2F;weblogic目录是否存在</strong></p>
+<blockquote>
+<p>脚本名称：install-gs-1-init.sh</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><br>USER_NAME=<span class="hljs-string">&quot;weblogic&quot;</span><br>GROUP_NAME=<span class="hljs-string">&quot;weblogic&quot;</span><br><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-subst">$(whoami)</span>&quot;</span> != <span class="hljs-string">&quot;root&quot;</span> ]; <span class="hljs-keyword">then</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m当前登录用户不是root用户，请使用root用户操作。\033[0m&quot;</span>;<span class="hljs-built_in">exit</span> 1<br><span class="hljs-keyword">fi</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m该脚本需在所有应用服务器执行。\033[0m&quot;</span><br><br>testing1=$(egrep <span class="hljs-string">&quot;^<span class="hljs-variable">$&#123;USER_NAME&#125;</span>:&quot;</span> /etc/passwd)<br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;testing1&#125;</span>&quot;</span> != <span class="hljs-string">&quot;&quot;</span> ]; <span class="hljs-keyword">then</span><br>    GROUP_ID=$(egrep <span class="hljs-string">&quot;^<span class="hljs-variable">$&#123;USER_NAME&#125;</span>:&quot;</span> /etc/passwd|<span class="hljs-built_in">cut</span> -d <span class="hljs-string">&quot;:&quot;</span> -f 4)<br>    GROUP_NAME=$(egrep <span class="hljs-string">&quot;:<span class="hljs-variable">$&#123;GROUP_ID&#125;</span>:&quot;</span> /etc/group|<span class="hljs-built_in">cut</span> -d <span class="hljs-string">&quot;:&quot;</span> -f 1)<br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m用户<span class="hljs-variable">$&#123;USER_NAME&#125;</span>已存在，用户组为<span class="hljs-variable">$&#123;GROUP_NAME&#125;</span>。\033[0m&quot;</span><br><span class="hljs-keyword">else</span><br>    testing2=$(egrep <span class="hljs-string">&quot;^<span class="hljs-variable">$&#123;GROUP_NAME&#125;</span>:&quot;</span> /etc/group)<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$testing2</span>&quot;</span> != <span class="hljs-string">&quot;&quot;</span> ]; <span class="hljs-keyword">then</span><br>        useradd -g <span class="hljs-variable">$&#123;GROUP_NAME&#125;</span> <span class="hljs-variable">$&#123;USER_NAME&#125;</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m用户组<span class="hljs-variable">$&#123;GROUP_NAME&#125;</span>存在，但用户<span class="hljs-variable">$&#123;USER_NAME&#125;</span>不存在，已创建。\033[0m&quot;</span><br>    <span class="hljs-keyword">else</span><br>        groupadd <span class="hljs-variable">$&#123;GROUP_NAME&#125;</span>;useradd -g <span class="hljs-variable">$&#123;GROUP_NAME&#125;</span> <span class="hljs-variable">$&#123;USER_NAME&#125;</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m用户组<span class="hljs-variable">$&#123;GROUP_NAME&#125;</span>和用户<span class="hljs-variable">$&#123;USER_NAME&#125;</span>都不存在，均已创建。\033[0m&quot;</span><br>    <span class="hljs-keyword">fi</span><br><span class="hljs-keyword">fi</span><br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span> -d /weblogic; <span class="hljs-keyword">then</span><br>    CURRENT_TIME=$(<span class="hljs-built_in">date</span> +%Y%m%d%H%M%S)<br>    <span class="hljs-built_in">mv</span> /weblogic /weblogic_<span class="hljs-variable">$&#123;CURRENT_TIME&#125;</span><br>    <span class="hljs-built_in">mkdir</span> -p /weblogic;<span class="hljs-built_in">chown</span> -R <span class="hljs-variable">$&#123;USER_NAME&#125;</span>:<span class="hljs-variable">$&#123;GROUP_NAME&#125;</span> /weblogic<br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m目录/weblogic已存在，自动备份为/weblogic_<span class="hljs-variable">$&#123;CURRENT_TIME&#125;</span>，并重新创建空目录/weblogic。\033[0m&quot;</span><br><span class="hljs-keyword">else</span><br>    <span class="hljs-built_in">mkdir</span> -p /weblogic;<span class="hljs-built_in">chown</span> -R <span class="hljs-variable">$&#123;USER_NAME&#125;</span>:<span class="hljs-variable">$&#123;GROUP_NAME&#125;</span> /weblogic<br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m目录/weblogic不存在，已创建。\033[0m&quot;</span><br><span class="hljs-keyword">fi</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m请确认已设置weblogic用户的密码。\033[0m&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>解压安装weblogic中间件和jdk并且设置环境变量</strong></p>
+<blockquote>
+<p>脚本名称：install-gs-2-base.sh</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><br>INITIAL_PATH=<span class="hljs-string">&quot;/tmp/weblogic_initial&quot;</span><br><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-subst">$(whoami)</span>&quot;</span> != <span class="hljs-string">&quot;weblogic&quot;</span> ]; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m当前登录用户不是weblogic用户，请使用weblogic用户操作。\033[0m&quot;</span>;<span class="hljs-built_in">exit</span> 1<br><span class="hljs-keyword">fi</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m该脚本需在所有应用服务器执行。\033[0m&quot;</span><br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span> -d <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>; <span class="hljs-keyword">then</span><br>    CURRENT_TIME=$(<span class="hljs-built_in">date</span> +%Y%m%d%H%M%S)<br>    <span class="hljs-built_in">mv</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>_<span class="hljs-variable">$&#123;CURRENT_TIME&#125;</span>&amp;&amp;<span class="hljs-built_in">mkdir</span> -p <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>&amp;&amp;<span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m目录<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>已存在，自动备份为<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>_<span class="hljs-variable">$&#123;CURRENT_TIME&#125;</span>，并重新创建空目录<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>。\033[0m&quot;</span><br><span class="hljs-keyword">else</span><br>    <span class="hljs-built_in">mkdir</span> -p <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>&amp;&amp;<span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m目录<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>不存在，已创建。\033[0m&quot;</span><br><span class="hljs-keyword">fi</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;请将基础软件包weblogic_base_*.tar.bz2上传到该服务器<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>目录下。\033[31m请使用weblogic用户上传。\033[0m&quot;</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m上传完毕后，\033[0m请按任意键继续...&quot;</span><br><span class="hljs-built_in">read</span> -n 1 var<br><br>num=$(<span class="hljs-built_in">ls</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/weblogic_base_*.tar.bz2|<span class="hljs-built_in">wc</span> -l)<br><span class="hljs-keyword">while</span> <span class="hljs-literal">true</span><br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;检测到【<span class="hljs-variable">$&#123;num&#125;</span>】个基础软件包<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/weblogic_base_*.tar.bz2&quot;</span><br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$&#123;num&#125;</span> -eq 0 ]; <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m请确认是否已正确上传。\033[0m&quot;</span><br>    <span class="hljs-keyword">elif</span> [ <span class="hljs-variable">$&#123;num&#125;</span> -gt 1 ]; <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m请移除多余的base包。\033[0m&quot;</span><br>    <span class="hljs-keyword">else</span><br>        base_package=$(<span class="hljs-built_in">ls</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/weblogic_base_*.tar.bz2)<br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;包名为\033[32m<span class="hljs-variable">$&#123;base_package&#125;</span>\033[0m&quot;</span><br>        <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请确认包名是否正确？正确输入Y，否则输入N。&quot;</span> yn<br>        <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;Y&quot;</span> -o  <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;y&quot;</span> ]; <span class="hljs-keyword">then</span><br>            yn=<br>            <span class="hljs-built_in">break</span><br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m输入不是Y，包名错误，需要重新上传。\033[0m&quot;</span><br>            yn=<br>        <span class="hljs-keyword">fi</span><br>    <span class="hljs-keyword">fi</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m处理完毕后，\033[0m请按任意键继续...&quot;</span><br>    <span class="hljs-built_in">read</span> -n 1 var<br>    num=$(<span class="hljs-built_in">ls</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/weblogic_base_*.tar.bz2|<span class="hljs-built_in">wc</span> -l)<br><span class="hljs-keyword">done</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;开始解压安装包...&quot;</span><br>tar -xjvf <span class="hljs-variable">$&#123;base_package&#125;</span> -C /<br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m解压base包到/weblogic完毕。\033[0m&quot;</span><br><br><span class="hljs-built_in">mkdir</span> -p /weblogic/user_projects/domains<br><span class="hljs-built_in">mkdir</span> -p /weblogic/user_projects/scripts<br><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;~&quot;</span> != <span class="hljs-string">&quot;/weblogic&quot;</span> ]; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">cp</span> /weblogic/.bash_profile ~/.bash_profile<br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m用户环境变量已经更新，请执行命令source ~/.bash_profile使环境变量生效。\033[0m&quot;</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+<p>根据具体服务器情况抽取相应的应用到各台服务器</p>
+<blockquote>
+<p>脚本名称：install-gs-3-gsap.sh</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><br>INITIAL_PATH=<span class="hljs-string">&quot;/tmp/weblogic_initial&quot;</span><br><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-subst">$(whoami)</span>&quot;</span> != <span class="hljs-string">&quot;weblogic&quot;</span> ]; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m当前登录用户不是weblogic用户，请使用weblogic用户操作。\033[0m&quot;</span>;<span class="hljs-built_in">exit</span> 1<br><span class="hljs-keyword">fi</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m该脚本只需在【**一台[可任选]**】应用服务器执行。\n\033[0m&quot;</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m请确认【**所有**】应用服务器都已经成功执行过脚本1和脚本2？\033[0m&quot;</span><br><span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;已执行过输入Y，否则输入N。&quot;</span> yn<br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> != <span class="hljs-string">&quot;Y&quot;</span> -a <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> != <span class="hljs-string">&quot;y&quot;</span> ]; <span class="hljs-keyword">then</span><br>    yn=<br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m输入不是Y，请先在所有服务器都执行脚本1和脚本2。\033[0m&quot;</span><br>    <span class="hljs-built_in">exit</span> 1<br><span class="hljs-keyword">fi</span><br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span> -d <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects; <span class="hljs-keyword">then</span><br>    CURRENT_TIME=$(<span class="hljs-built_in">date</span> +%Y%m%d%H%M%S)<br>    <span class="hljs-built_in">mv</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects_<span class="hljs-variable">$&#123;CURRENT_TIME&#125;</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m目录<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects已存在，自动备份为<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects_<span class="hljs-variable">$&#123;CURRENT_TIME&#125;</span>。\033[0m&quot;</span><br><span class="hljs-keyword">fi</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;请将个税应用包weblogic_gsap_*.tar.bz2上传到该服务器<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>目录下&quot;</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m上传完毕后，\033[0m请按任意键继续...&quot;</span><br><span class="hljs-built_in">read</span> -n 1 var<br><br>num=$(<span class="hljs-built_in">ls</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/weblogic_gsap_*.tar.bz2|<span class="hljs-built_in">wc</span> -l)<br><span class="hljs-keyword">while</span> <span class="hljs-literal">true</span><br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;检测到【<span class="hljs-variable">$&#123;num&#125;</span>】个个税应用包<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/weblogic_gsap_*.tar.bz2&quot;</span><br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$&#123;num&#125;</span> -eq 0 ]; <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m请确认是否已正确上传。\033[0m&quot;</span><br>    <span class="hljs-keyword">elif</span> [ <span class="hljs-variable">$&#123;num&#125;</span> -gt 1 ]; <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m请移除多余的gsap包。\033[0m&quot;</span><br>    <span class="hljs-keyword">else</span><br>        gsap_package=$(<span class="hljs-built_in">ls</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/weblogic_gsap_*.tar.bz2)<br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;包名为\033[32m<span class="hljs-variable">$&#123;gsap_package&#125;</span>\033[0m&quot;</span><br>        <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请确认包名是否正确？正确输入Y，否则输入N。&quot;</span> yn<br>        <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;Y&quot;</span> -o  <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;y&quot;</span> ]; <span class="hljs-keyword">then</span><br>            yn=<br>            <span class="hljs-built_in">break</span><br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m输入不是Y，包名错误，需要重新上传。\033[0m&quot;</span><br>            yn=<br>        <span class="hljs-keyword">fi</span><br>    <span class="hljs-keyword">fi</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m处理完毕后，\033[0m请按任意键继续...&quot;</span><br>    <span class="hljs-built_in">read</span> -n 1 var<br>    num=$(<span class="hljs-built_in">ls</span> <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/weblogic_gsap_*.tar.bz2|<span class="hljs-built_in">wc</span> -l)<br><span class="hljs-keyword">done</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;开始解压安装包...&quot;</span><br>tar -xjvf <span class="hljs-variable">$&#123;gsap_package&#125;</span> -C <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m解压gsap包到<span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>完毕。\033[0m&quot;</span><br><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m开始安装管理节点应用：\n\033[0m&quot;</span><br><span class="hljs-keyword">while</span> <span class="hljs-literal">true</span><br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请输入【管理节点】所在服务器的IP：&quot;</span> IP_gl<br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;输入的\033[32m【管理节点】\033[0m所在服务器<span class="hljs-variable">$&#123;i&#125;</span>的IP为：\033[32m【<span class="hljs-variable">$&#123;IP_gl&#125;</span>】\033[0m&quot;</span> <br>    <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请确认是否正确？正确输入Y，否则输入N。&quot;</span> yn<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;Y&quot;</span> -o  <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;y&quot;</span> ]; <span class="hljs-keyword">then</span><br>        yn=<br>        <span class="hljs-built_in">break</span><br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&quot;</span><br>        yn=<br>    <span class="hljs-keyword">fi</span><br><span class="hljs-keyword">done</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;【管理节点】所在服务器(IP：<span class="hljs-variable">$&#123;IP_gl&#125;</span>)包含应用为：&quot;</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;个税管理：gsadmin_domain&quot;</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;开始抽取管理节点domain到<span class="hljs-variable">$&#123;IP_gl&#125;</span>/weblogic/user_projects/domains，请耐心等待。&quot;</span><br>scp -r <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/domains/gsadmin_domain <span class="hljs-variable">$&#123;IP_gl&#125;</span>:/weblogic/user_projects/domains<br>scp -r <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/scripts/*-gsadmin.sh <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/scripts/upgrade-*.sh <span class="hljs-variable">$&#123;IP_gl&#125;</span>:/weblogic/user_projects/scripts<br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m管理节点应用抽取完毕。\n\033[0m&quot;</span><br><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m开始安装前端应用：\n\033[0m&quot;</span><br><span class="hljs-keyword">while</span> <span class="hljs-literal">true</span><br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请输入【前端】服务器台数(注意：只能是1/2/3/4四种情况之一)：&quot;</span> number_qd<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$number_qd</span>&quot;</span> != <span class="hljs-string">&quot;1&quot;</span> -a <span class="hljs-string">&quot;<span class="hljs-variable">$number_qd</span>&quot;</span> != <span class="hljs-string">&quot;2&quot;</span> -a <span class="hljs-string">&quot;<span class="hljs-variable">$number_qd</span>&quot;</span> != <span class="hljs-string">&quot;3&quot;</span> -a <span class="hljs-string">&quot;<span class="hljs-variable">$number_qd</span>&quot;</span> != <span class="hljs-string">&quot;4&quot;</span> ]; <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;输入服务器台数\033[31m【<span class="hljs-variable">$number_qd</span>】\033[0m，输入有误，需要重新输入。&quot;</span><br>        <span class="hljs-built_in">continue</span><br>    <span class="hljs-keyword">fi</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;设置【前端】服务器\033[32m【<span class="hljs-variable">$number_qd</span>】\033[0m台。&quot;</span><br>    <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请确认设置是否正确？正确输入Y，否则输入N。&quot;</span> yn<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;Y&quot;</span> -o  <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;y&quot;</span> ]; <span class="hljs-keyword">then</span><br>        yn=<br>        <span class="hljs-built_in">break</span><br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&quot;</span><br>        yn=<br>        <span class="hljs-built_in">continue</span><br>    <span class="hljs-keyword">fi</span><br><span class="hljs-keyword">done</span><br><br><span class="hljs-keyword">for</span> (( i=1; i&lt;=<span class="hljs-variable">$number_qd</span>; i=i+1 ))<br><span class="hljs-keyword">do</span><br>	<span class="hljs-keyword">while</span> <span class="hljs-literal">true</span><br>    <span class="hljs-keyword">do</span><br>        <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请输入【前端】服务器<span class="hljs-variable">$&#123;i&#125;</span>的IP：&quot;</span> IP_qd<br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;输入的【前端】服务器<span class="hljs-variable">$&#123;i&#125;</span>的IP为：\033[32m【<span class="hljs-variable">$&#123;IP_qd&#125;</span>】\033[0m&quot;</span> <br>        <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请确认是否正确？正确输入Y，否则输入N。&quot;</span> yn<br>        <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;Y&quot;</span> -o  <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;y&quot;</span> ]; <span class="hljs-keyword">then</span><br>            yn=<br>            <span class="hljs-built_in">break</span><br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&quot;</span><br>            yn=<br>        <span class="hljs-keyword">fi</span><br>    <span class="hljs-keyword">done</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;【前端】服务器<span class="hljs-variable">$&#123;i&#125;</span> (IP：<span class="hljs-variable">$&#123;IP_qd&#125;</span>)包含应用为：&quot;</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;个税大厅：gsdt0$[ i ]_domain、gsdt0$[ i + number_qd ]_domain；查询统计：cxtj0$[ i ]_domain；&quot;</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;开始抽取需要的domain到<span class="hljs-variable">$&#123;IP_qd&#125;</span>:/weblogic/user_projects/domains，请耐心等待。&quot;</span><br>	scp -r <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/domains/gsdt0$[ i ]_domain <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/domains/gsdt0$[ i + number_qd ]_domain  <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/domains/cxtj0$[ i ]_domain <span class="hljs-variable">$&#123;IP_qd&#125;</span>:/weblogic/user_projects/domains<br>	scp -r <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/scripts/*-gsdt.sh <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/scripts/*-cxtj.sh  <span class="hljs-variable">$&#123;IP_gl&#125;</span>:/weblogic/user_projects/scripts<br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m前端应用抽取完毕。\n\033[0m&quot;</span><br><span class="hljs-keyword">done</span><br><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m开始安装后端应用：\n\033[0m&quot;</span><br><span class="hljs-keyword">while</span> <span class="hljs-literal">true</span><br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请输入【后端】服务器台数(注意：只能是1/2/3/4四种情况之一)：&quot;</span> number_hd<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$number_hd</span>&quot;</span> != <span class="hljs-string">&quot;1&quot;</span> -a <span class="hljs-string">&quot;<span class="hljs-variable">$number_hd</span>&quot;</span> != <span class="hljs-string">&quot;2&quot;</span> -a <span class="hljs-string">&quot;<span class="hljs-variable">$number_hd</span>&quot;</span> != <span class="hljs-string">&quot;3&quot;</span> -a <span class="hljs-string">&quot;<span class="hljs-variable">$number_hd</span>&quot;</span> != <span class="hljs-string">&quot;4&quot;</span> ]; <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;输入服务器台数\033[31m【<span class="hljs-variable">$number_hd</span>】\033[0m，输入有误，需要重新输入。&quot;</span><br>        <span class="hljs-built_in">continue</span><br>    <span class="hljs-keyword">fi</span>   <br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;设置【后端】服务器\033[32m【<span class="hljs-variable">$number_hd</span>】\033[0m台。&quot;</span><br>    <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请确认设置是否正确？正确输入Y，否则输入N。&quot;</span> yn<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;Y&quot;</span> -o  <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;y&quot;</span> ]; <span class="hljs-keyword">then</span><br>        yn=<br>        <span class="hljs-built_in">break</span><br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&quot;</span><br>        yn=<br>        <span class="hljs-built_in">continue</span><br>    <span class="hljs-keyword">fi</span><br><span class="hljs-keyword">done</span><br><br><span class="hljs-keyword">for</span> (( i=1; i&lt;=<span class="hljs-variable">$number_hd</span>; i=i+1 ))<br><span class="hljs-keyword">do</span><br>	<span class="hljs-keyword">while</span> <span class="hljs-literal">true</span><br>    <span class="hljs-keyword">do</span><br>        <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请输入【后端】服务器<span class="hljs-variable">$&#123;i&#125;</span>的IP：&quot;</span> IP_hd<br>        <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;输入的【后端】服务器<span class="hljs-variable">$&#123;i&#125;</span>的IP为：\033[32m【<span class="hljs-variable">$&#123;IP_hd&#125;</span>】\033[0m&quot;</span> <br>        <span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;请确认是否正确？正确输入Y，否则输入N。&quot;</span> yn<br>        <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;Y&quot;</span> -o  <span class="hljs-string">&quot;<span class="hljs-variable">$yn</span>&quot;</span> == <span class="hljs-string">&quot;y&quot;</span> ]; <span class="hljs-keyword">then</span><br>            yn=<br>            <span class="hljs-built_in">break</span><br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m输入不是Y，设置有误，需要重新输入。\033[0m&quot;</span><br>            yn=<br>        <span class="hljs-keyword">fi</span><br>    <span class="hljs-keyword">done</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;【后端】服务器<span class="hljs-variable">$&#123;i&#125;</span> (IP：<span class="hljs-variable">$&#123;IP_hd&#125;</span>)包含应用为：&quot;</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;个税核心：gshx0$[ i ]_domain、gshx0$[ i + number_hd ]_domain；个税工作流：gswf0$[ i ]_domain；个税间接登记：gsjjdj0$[ i ]_domain&quot;</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;开始抽取需要的domain到<span class="hljs-variable">$&#123;IP_hd&#125;</span>:/weblogic/user_projects/domains，请耐心等待。&quot;</span><br>	scp -r <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/domains/gshx0$[ i ]_domain <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/domains/gshx0$[ i + number_hd ]_domain <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/domains/gswf0$[ i ]_domain <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/domains/gsjjdj0$[ i ]_domain <span class="hljs-variable">$&#123;IP_hd&#125;</span>:/weblogic/user_projects/domains<br>	scp -r <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/scripts/*-gshx.sh <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/scripts/*-gswf.sh <span class="hljs-variable">$&#123;INITIAL_PATH&#125;</span>/user_projects/scripts/*-gsjjdj.sh <span class="hljs-variable">$&#123;IP_gl&#125;</span>:/weblogic/user_projects/scripts<br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m后端应用抽取完毕。\n\033[0m&quot;</span><br><span class="hljs-keyword">done</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[32m安装完毕。\n\033[0m&quot;</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\033[31m请根据说明文档继续手工修改某些配置。\n\033[0m&quot;</span><br><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/Bash/">#Bash</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>常用Linux脚本集锦</div>
+      <div>https://suncle.me/2019/03/30/useful-linux-scripts/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Suncle Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年3月30日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/03/31/migrate-blog-domain/" title="博客域名迁移">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">博客域名迁移</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/03/30/useful-linux-commands/" title="常用Linux命令集锦">
+                        <span class="hidden-mobile">常用Linux命令集锦</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

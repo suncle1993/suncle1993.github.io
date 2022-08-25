@@ -1,0 +1,1003 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/img/android-chrome-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Suncle Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="常用dml和query开并行123456--开并行ALTER SESSION FORCE PARALLEL DML PARALLEL 16;ALTER SESSION FORCE PARALLEL QUERY PARALLEL 16;--关并行ALTER SESSION DISABLE PARALLEL DML ;ALTER SESSION DISABLE PARALLEL QUERY;  索引开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用Oracle SQL集锦">
+<meta property="og:url" content="https://suncle.me/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/index.html">
+<meta property="og:site_name" content="Suncle">
+<meta property="og:description" content="常用dml和query开并行123456--开并行ALTER SESSION FORCE PARALLEL DML PARALLEL 16;ALTER SESSION FORCE PARALLEL QUERY PARALLEL 16;--关并行ALTER SESSION DISABLE PARALLEL DML ;ALTER SESSION DISABLE PARALLEL QUERY;  索引开">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-09T16:57:17.000Z">
+<meta property="article:modified_time" content="2022-08-25T03:49:22.133Z">
+<meta property="article:author" content="Suncle Chen">
+<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="Oracle数据库">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>常用Oracle SQL集锦 - Suncle</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"suncle.me","root":"/","version":"1.9.2","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-72506112-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Suncle&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/newsletter/">
+                <i class="iconfont icon-mail"></i>
+                周刊
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                更多
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml">
+                    <i class="iconfont icon-rss-fill"></i>
+                    RSS
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/suncle-banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">常用Oracle SQL集锦</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2017-05-10 00:57" pubdate>
+          2017年5月10日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          68 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="数据库"
+        id="heading-68051bf4aa2743b030984b694628ee9c" role="tab" data-toggle="collapse" href="#collapse-68051bf4aa2743b030984b694628ee9c"
+        aria-expanded="true"
+      >
+        数据库
+        <span class="list-group-count">(26)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-68051bf4aa2743b030984b694628ee9c"
+           role="tabpanel" aria-labelledby="heading-68051bf4aa2743b030984b694628ee9c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2016/03/16/DBA%E5%B8%B8%E7%94%A8%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/" title="DBA常用的SQL语句"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DBA常用的SQL语句</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/DBA%E6%97%A5%E5%B8%B8%E5%B7%A5%E4%BD%9C%E5%92%8C%E8%81%8C%E8%B4%A3/" title="DBA日常工作和职责"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DBA日常工作和职责</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/01/27/Oracle%20SQL%E8%AF%AD%E5%8F%A5%E5%88%86%E7%B1%BB/" title="Oracle SQL语句分类"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Oracle SQL语句分类</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/Oracle%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B/" title="Oracle内存结构和后台进程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Oracle内存结构和后台进程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/01/oracle%E5%AD%97%E7%AC%A6%E9%9B%86%E6%A3%80%E6%9F%A5%E5%92%8C%E4%BF%AE%E6%94%B9/" title="Oracle字符集检查和修改"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Oracle字符集检查和修改</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8/" title="Oracle数据字典"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Oracle数据字典</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/02/19/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AF%B9%E8%B1%A1/" title="Oracle数据库的对象"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Oracle数据库的对象</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/02/06/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%96%87%E4%BB%B6%E4%BB%A5%E5%8F%8AOracle%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84/" title="Oracle数据库的文件以及Oracle体系架构"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Oracle数据库的文件以及Oracle体系架构</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/Oracle%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="Oracle数据结构"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Oracle数据结构</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/22/PL-SQL-Developer%E8%BF%9E%E6%8E%A5%E6%9C%AC%E5%9C%B0Oracle-11g-64%E4%BD%8D%E6%95%B0%E6%8D%AE%E5%BA%93/" title="PL/SQL Developer连接本地Oracle 11g 64位数据库"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PL/SQL Developer连接本地Oracle 11g 64位数据库</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/RAC%E4%B8%8EDG/" title="RAC与DG"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">RAC与DG</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/18/Rman%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E5%92%8C%E7%AE%A1%E7%90%86/" title="Rman备份恢复和管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Rman备份恢复和管理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/12/01/oracle%E7%9A%84userenv%E5%92%8Cnls-lang%E8%AF%A6%E8%A7%A3/" title="oracle的userenv和nls_lang详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">oracle的userenv和nls_lang详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/02/19/PLSQL/" title="plsql"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">plsql</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/07/08/sql%E8%AF%AD%E5%8F%A5%E4%B8%AD%E5%8A%A0%E5%8F%B7%E7%9A%84%E4%BD%9C%E7%94%A8/" title="sql语句中(+)的作用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">sql语句中(+)的作用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/01/25/win7x64%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEOracle%2011g%20R2%E6%95%B0%E6%8D%AE%E5%BA%93/" title="win7x64安装配置Oracle 11g R2数据库"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">win7x64安装配置Oracle 11g R2数据库</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/23/%E4%BA%8B%E5%8A%A1Transaction/" title="事务Transaction"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">事务Transaction</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/%E5%81%9A%E4%B8%80%E5%90%8D%E5%90%88%E6%A0%BC%E7%9A%84DBA/" title="做一名合格的DBA"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">做一名合格的DBA</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2018/01/22/%E5%85%B3%E4%BA%8E%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E6%80%9D%E8%80%83/" title="关于冷热数据备份和恢复的思考"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">关于冷热数据备份和恢复的思考</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/%E5%9B%9E%E6%BB%9A%E6%AE%B5undo/" title="回滚段undo"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">回滚段undo</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/02/19/%E5%A4%8D%E6%9D%82%E4%B8%80%E7%82%B9%E7%9A%84SQL%E8%AF%AD%E5%8F%A5/" title="复杂一点的SQL语句"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">复杂一点的SQL语句</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2017/05/10/%E5%B8%B8%E7%94%A8SQL%E9%9B%86%E9%94%A6/" title="常用Oracle SQL集锦"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">常用Oracle SQL集锦</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E6%81%A2%E5%A4%8D/" title="数据库备份和恢复"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">数据库备份和恢复</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/21/%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86ASM/" title="自动存储管理ASM"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">自动存储管理ASM</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/16/%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E5%92%8C%E6%97%A5%E5%BF%97%E6%8C%96%E6%8E%98/" title="重做日志和日志挖掘"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">重做日志和日志挖掘</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2016/03/21/%E9%97%AA%E5%9B%9Eflashback/" title="闪回flashback"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">闪回flashback</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">常用Oracle SQL集锦</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="常用dml和query开并行"><a href="#常用dml和query开并行" class="headerlink" title="常用dml和query开并行"></a>常用dml和query开并行</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--开并行</span><br><span class="hljs-keyword">ALTER</span> SESSION FORCE PARALLEL DML PARALLEL <span class="hljs-number">16</span>;<br><span class="hljs-keyword">ALTER</span> SESSION FORCE PARALLEL QUERY PARALLEL <span class="hljs-number">16</span>;<br><span class="hljs-comment">--关并行</span><br><span class="hljs-keyword">ALTER</span> SESSION DISABLE PARALLEL DML ;<br><span class="hljs-keyword">ALTER</span> SESSION DISABLE PARALLEL QUERY;<br></code></pre></td></tr></table></figure>
+
+<h4 id="索引开并行"><a href="#索引开并行" class="headerlink" title="索引开并行"></a>索引开并行</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">drop</span> index IDX_SB_SBZT_LRRQ;<br><span class="hljs-keyword">create</span> index IDX_SB_SBZT_LRRQ <span class="hljs-keyword">on</span> SB_SBZT (LRRQ, CWLX_DM, SWJG_DM)<br>  tablespace TS_GS_SB_IDX<br>  pctfree <span class="hljs-number">20</span><br>  initrans <span class="hljs-number">2</span><br>  maxtrans <span class="hljs-number">255</span><br>  storage<br>  (<br>    <span class="hljs-keyword">initial</span> <span class="hljs-number">64</span>K<br>    next <span class="hljs-number">1</span>M<br>    minextents <span class="hljs-number">1</span><br>    maxextents unlimited<br>  ) parallel <span class="hljs-number">6</span>;<br><br><span class="hljs-keyword">alter</span> index IDX_SB_SBZT_LRRQ noparallel;<br></code></pre></td></tr></table></figure>
+
+<h4 id="查看ASM"><a href="#查看ASM" class="headerlink" title="查看ASM"></a>查看ASM</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 查看asm的各个disk group是否超过80%</span><br><span class="hljs-comment">-- name：name of the disk group</span><br><span class="hljs-comment">-- total_mb：total capacity of the disk group(in megabytes)</span><br><span class="hljs-comment">-- free_mb：unused capacity of the disk group(in megabytes)</span><br><span class="hljs-keyword">select</span> t.name,t.TOTAL_MB <span class="hljs-operator">/</span><span class="hljs-number">1024</span>, round(<span class="hljs-number">100</span> <span class="hljs-operator">*</span> (t.TOTAL_MB <span class="hljs-operator">-</span> t.FREE_MB) <span class="hljs-operator">/</span> t.TOTAL_MB, <span class="hljs-number">2</span>)<span class="hljs-operator">||</span><span class="hljs-string">&#x27;%&#x27;</span><br>  <span class="hljs-keyword">from</span> v$asm_diskgroup t;<br></code></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h4 id="查看数据库表空间"><a href="#查看数据库表空间" class="headerlink" title="查看数据库表空间"></a>查看数据库表空间</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--查询数据表空间情况</span><br><span class="hljs-keyword">SELECT</span> d.status &quot;Status&quot;,<br>d.tablespace_name &quot;Name&quot;,<br>d.contents &quot;Type&quot;,<br>d.extent_management &quot;Extent Management&quot;,<br>       TO_CHAR(NVL(a.bytes <span class="hljs-operator">/</span> <span class="hljs-number">1024</span> <span class="hljs-operator">/</span> <span class="hljs-number">1024</span>, <span class="hljs-number">0</span>), <span class="hljs-string">&#x27;99,999,990.900&#x27;</span>) &quot;Size (M)&quot;,<br>       TO_CHAR(NVL(a.bytes <span class="hljs-operator">-</span> NVL(f.bytes, <span class="hljs-number">0</span>), <span class="hljs-number">0</span>) <span class="hljs-operator">/</span> <span class="hljs-number">1024</span> <span class="hljs-operator">/</span> <span class="hljs-number">1024</span>,<br>               <span class="hljs-string">&#x27;99999999.999&#x27;</span>) &quot;Used (M)&quot;,<br>       TO_CHAR(NVL((a.bytes <span class="hljs-operator">-</span> NVL(f.bytes, <span class="hljs-number">0</span>)) <span class="hljs-operator">/</span> a.bytes <span class="hljs-operator">*</span> <span class="hljs-number">100</span>, <span class="hljs-number">0</span>),<br>               <span class="hljs-string">&#x27;990.00&#x27;</span>) &quot;Used %&quot;<br>  <span class="hljs-keyword">FROM</span> sys.dba_tablespaces d,<br>       (<span class="hljs-keyword">select</span> tablespace_name, <span class="hljs-built_in">sum</span>(bytes) bytes<br>          <span class="hljs-keyword">from</span> dba_data_files<br>         <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> tablespace_name) a,<br>       (<span class="hljs-keyword">select</span> tablespace_name, <span class="hljs-built_in">sum</span>(bytes) bytes<br>          <span class="hljs-keyword">from</span> dba_free_space<br>         <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> tablespace_name) f<br> <span class="hljs-keyword">WHERE</span> d.tablespace_name <span class="hljs-operator">=</span> a.tablespace_name(<span class="hljs-operator">+</span>)<br>   <span class="hljs-keyword">AND</span> d.tablespace_name <span class="hljs-operator">=</span> f.tablespace_name(<span class="hljs-operator">+</span>)<br>   <span class="hljs-keyword">AND</span> <span class="hljs-keyword">NOT</span><br>        (d.extent_management <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;LOCAL&#x27;</span> <span class="hljs-keyword">AND</span> d.contents <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;TEMPORARY&#x27;</span>)<br><span class="hljs-keyword">UNION</span> <span class="hljs-keyword">ALL</span><br><span class="hljs-keyword">SELECT</span> d.status &quot;Status&quot;,<br>d.tablespace_name &quot;Name&quot;,<br>d.contents &quot;Type&quot;,<br>d.extent_management &quot;Extent Management&quot;,<br>       TO_CHAR(NVL(a.bytes <span class="hljs-operator">/</span> <span class="hljs-number">1024</span> <span class="hljs-operator">/</span> <span class="hljs-number">1024</span>, <span class="hljs-number">0</span>), <span class="hljs-string">&#x27;99,999,990.900&#x27;</span>) &quot;Size (M)&quot;,<br>       TO_CHAR(NVL(t.bytes, <span class="hljs-number">0</span>) <span class="hljs-operator">/</span> <span class="hljs-number">1024</span> <span class="hljs-operator">/</span> <span class="hljs-number">1024</span>, <span class="hljs-string">&#x27;99999999.999&#x27;</span>) &quot;Used (M)&quot;,<br>       TO_CHAR(NVL(t.bytes <span class="hljs-operator">/</span> a.bytes <span class="hljs-operator">*</span> <span class="hljs-number">100</span>, <span class="hljs-number">0</span>), <span class="hljs-string">&#x27;990.00&#x27;</span>) &quot;Used %&quot;<br>  <span class="hljs-keyword">FROM</span> sys.dba_tablespaces d,<br>       (<span class="hljs-keyword">select</span> tablespace_name, <span class="hljs-built_in">sum</span>(bytes) bytes<br>          <span class="hljs-keyword">from</span> dba_temp_files<br>         <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> tablespace_name) a,<br>       (<span class="hljs-keyword">select</span> tablespace_name, <span class="hljs-built_in">sum</span>(bytes_cached) bytes<br>          <span class="hljs-keyword">from</span> v$temp_extent_pool<br>         <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> tablespace_name) t<br> <span class="hljs-keyword">WHERE</span> d.tablespace_name <span class="hljs-operator">=</span> a.tablespace_name(<span class="hljs-operator">+</span>)<br>   <span class="hljs-keyword">AND</span> d.tablespace_name <span class="hljs-operator">=</span> t.tablespace_name(<span class="hljs-operator">+</span>)<br>   <span class="hljs-keyword">AND</span> d.extent_management <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;LOCAL&#x27;</span><br>   <span class="hljs-keyword">AND</span> d.contents <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;TEMPORARY&#x27;</span><br>   <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> &quot;Used %&quot; <span class="hljs-keyword">desc</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="判断字段中是否包含小写字母"><a href="#判断字段中是否包含小写字母" class="headerlink" title="判断字段中是否包含小写字母"></a>判断字段中是否包含小写字母</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--gs_cx查询纳税人识别号这个字段中包含小写字母的并且做过工资薪金税费种认定的户数：upper函数</span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> hx_dj.dj_nsrxx a,hx_dj.dj_nsrxx b,hx_rd.rd_sfzrdxxb r<br><span class="hljs-keyword">where</span> a.djxh<span class="hljs-operator">=</span>b.djxh<br><span class="hljs-keyword">and</span> a.djxh<span class="hljs-operator">=</span>r.djxh<br><span class="hljs-keyword">and</span> r.zspm_dm<span class="hljs-operator">=</span><span class="hljs-string">&#x27;101060100&#x27;</span><br><span class="hljs-keyword">and</span> <span class="hljs-built_in">upper</span>(a.nsrsbh) <span class="hljs-operator">&lt;&gt;</span> a.nsrsbh<br><span class="hljs-keyword">and</span> a.nsrsbh <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;3%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="判断字段中是否包含大写字母"><a href="#判断字段中是否包含大写字母" class="headerlink" title="判断字段中是否包含大写字母"></a>判断字段中是否包含大写字母</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--gs_cx查询纳税人识别号这个字段中包含大写字母的并且做过工资薪金税费种认定的企业户数：lower函数</span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> hx_dj.dj_nsrxx a,hx_dj.dj_nsrxx b,hx_rd.rd_sfzrdxxb r<br><span class="hljs-keyword">where</span> a.djxh<span class="hljs-operator">=</span>b.djxh<br><span class="hljs-keyword">and</span> a.djxh<span class="hljs-operator">=</span>r.djxh<br><span class="hljs-keyword">and</span> r.zspm_dm<span class="hljs-operator">=</span><span class="hljs-string">&#x27;101060100&#x27;</span><br><span class="hljs-keyword">and</span> <span class="hljs-built_in">lower</span>(a.nsrsbh) <span class="hljs-operator">&lt;&gt;</span> a.nsrsbh<br><span class="hljs-keyword">and</span> a.nsrsbh <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;3%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="Lengthb和length"><a href="#Lengthb和length" class="headerlink" title="Lengthb和length"></a>Lengthb和length</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> length(<span class="hljs-string">&#x27;新奥投资基金管理（北京）有限公司&#x27;</span>) <span class="hljs-keyword">from</span> dual;<br><span class="hljs-keyword">select</span> lengthb(<span class="hljs-string">&#x27;新奥投资基金管理（北京）有限公司&#x27;</span>) <span class="hljs-keyword">from</span> dual;<br><span class="hljs-comment">--utf-8：一个中文对三个字节</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="按时间段统计数据量"><a href="#按时间段统计数据量" class="headerlink" title="按时间段统计数据量"></a>按时间段统计数据量</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--sb_kjgrsdsbgb 按五分钟统计数量</span><br><span class="hljs-keyword">select</span> tmp.newTime, <span class="hljs-built_in">count</span>(tmp.newTime)<br>  <span class="hljs-keyword">from</span> (<span class="hljs-keyword">select</span> a.jylsh,<br>               to_char(a.lrrq, <span class="hljs-string">&#x27;yyyy-mm-dd hh24:mi&#x27;</span>) oldTime,<br>               <span class="hljs-keyword">case</span><br>                 <span class="hljs-keyword">when</span> substr(to_char(a.lrrq, <span class="hljs-string">&#x27;mi&#x27;</span>), <span class="hljs-number">2</span>, <span class="hljs-number">1</span>) <span class="hljs-operator">&lt;</span> <span class="hljs-number">5</span> <span class="hljs-keyword">then</span><br>                  to_char(lrrq, <span class="hljs-string">&#x27;yyyy-mm-dd HH24&#x27;</span>) <span class="hljs-operator">||</span> <span class="hljs-string">&#x27;:&#x27;</span> <span class="hljs-operator">||</span><br>                  substr(to_char(a.lrrq, <span class="hljs-string">&#x27;mi&#x27;</span>), <span class="hljs-number">1</span>, <span class="hljs-number">1</span>) <span class="hljs-operator">||</span> <span class="hljs-number">0</span><br>                 <span class="hljs-keyword">else</span><br>                  to_char(lrrq, <span class="hljs-string">&#x27;yyyy-mm-dd HH24&#x27;</span>) <span class="hljs-operator">||</span> <span class="hljs-string">&#x27;:&#x27;</span> <span class="hljs-operator">||</span><br>                  substr(to_char(a.lrrq, <span class="hljs-string">&#x27;mi&#x27;</span>), <span class="hljs-number">1</span>, <span class="hljs-number">1</span>) <span class="hljs-operator">||</span> <span class="hljs-number">5</span><br>               <span class="hljs-keyword">end</span> <span class="hljs-keyword">as</span> newTime<br>          <span class="hljs-keyword">from</span> gs_cxtj.sb_kjgrsdsbgb a<br>         <span class="hljs-keyword">where</span> a.lrrq <span class="hljs-operator">&gt;</span> <span class="hljs-type">date</span> <span class="hljs-string">&#x27;2016-11-16&#x27;</span><br>         <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> newTime <span class="hljs-keyword">desc</span>) tmp<br> <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> tmp.newtime<br> <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> tmp.newtime <span class="hljs-keyword">desc</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="Cursor大数据量批量插入"><a href="#Cursor大数据量批量插入" class="headerlink" title="Cursor大数据量批量插入"></a>Cursor大数据量批量插入</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">declare</span><br>  cnt <span class="hljs-type">integer</span> :<span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">cursor</span> cur_1 <span class="hljs-keyword">is</span><br>    <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> gs_cl.py_dj_nsrxx;<br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">for</span> icur_1 <span class="hljs-keyword">in</span> cur_1 loop<br>    <span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> xtxj_zdgsxx <span class="hljs-keyword">values</span> (icur_1.DJXH,icur_1.ZGSWJ_DM,icur_1.SWJGMC,icur_1.SJTB_SJ,icur_1.YXBZ,icur_1.XGSJ);<br>    cnt :<span class="hljs-operator">=</span> cnt <span class="hljs-operator">+</span> <span class="hljs-number">1</span>;<br>    if cnt <span class="hljs-operator">&gt;=</span> <span class="hljs-number">5000</span> <span class="hljs-keyword">then</span><br>      <span class="hljs-keyword">commit</span>;<br>      cnt :<span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">end</span> if;<br>  <span class="hljs-keyword">end</span> loop;<br>  <span class="hljs-keyword">commit</span>;<br>exception<br>  <span class="hljs-keyword">when</span> others <span class="hljs-keyword">then</span><br>    <span class="hljs-keyword">rollback</span>;<br><span class="hljs-keyword">end</span>;<br><span class="hljs-operator">/</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="decode的使用"><a href="#decode的使用" class="headerlink" title="decode的使用"></a>decode的使用</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--不同渠道扣款数量</span><br><span class="hljs-keyword">select</span> decode(substr(jywysbh, <span class="hljs-number">1</span>, <span class="hljs-number">6</span>),<br>              <span class="hljs-string">&#x27;JSDS.N&#x27;</span>,<br>              <span class="hljs-string">&#x27;网厅&#x27;</span>,<br>              <span class="hljs-string">&#x27;SB0603&#x27;</span>,<br>              <span class="hljs-string">&#x27;客户端&#x27;</span>,<br>              <span class="hljs-string">&#x27;大厅&#x27;</span>) &quot;渠道来源&quot;,<br> <span class="hljs-built_in">count</span>(<span class="hljs-keyword">case</span> <span class="hljs-keyword">when</span> a.lrrq<span class="hljs-operator">&gt;</span>to_date(to_char(sysdate, <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>), <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>)  <span class="hljs-keyword">then</span>   djxh  <span class="hljs-keyword">end</span>)&quot;非0申报当天扣款量&quot;,<br>       <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) &quot;非0申报扣款数量&quot;<br>  <span class="hljs-keyword">from</span> sb_sbzt a<br> <span class="hljs-keyword">where</span> a.lrrq <span class="hljs-operator">&gt;</span> <span class="hljs-type">date</span> <span class="hljs-string">&#x27;2016-10-01&#x27;</span><br>   <span class="hljs-keyword">and</span> a.yrkse_1 <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span><br>   <span class="hljs-keyword">and</span> cwlx_dm <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;Y&#x27;</span><br>   <span class="hljs-keyword">and</span> se <span class="hljs-operator">=</span> yrkse_1<br> <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> substr(jywysbh, <span class="hljs-number">1</span>, <span class="hljs-number">6</span>)<br></code></pre></td></tr></table></figure>
+
+<h4 id="分组数据中每组取前几条数据"><a href="#分组数据中每组取前几条数据" class="headerlink" title="分组数据中每组取前几条数据"></a>分组数据中每组取前几条数据</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--先得到已分组结果集</span><br><span class="hljs-keyword">select</span> t.nsrsbh, t.nsrmc, t.zgswj_dm, swjg.swjgmc<br>  <span class="hljs-keyword">from</span> dj_nsrxx t, rd_sfzrdxxb sfz, dm_gy_swjg swjg<br> <span class="hljs-keyword">where</span> t.djxh <span class="hljs-operator">=</span> sfz.djxh<br>   <span class="hljs-keyword">and</span> t.zgswj_dm <span class="hljs-operator">=</span> swjg.swjg_dm<br>   <span class="hljs-keyword">and</span> t.shxydm <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span><br>   <span class="hljs-keyword">and</span> t.nsrzt_dm <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;03&#x27;</span><br>   <span class="hljs-keyword">and</span> sfz.zspm_dm <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;101060100&#x27;</span><br>   <span class="hljs-keyword">and</span> sfz.rdyxqz <span class="hljs-operator">&gt;</span> <span class="hljs-type">date</span><span class="hljs-string">&#x27;2016-08-31&#x27;</span><br>   <span class="hljs-keyword">and</span> substr(t.zgswj_dm, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>) <span class="hljs-operator">||</span> <span class="hljs-string">&#x27;000000&#x27;</span> <span class="hljs-keyword">in</span><br>       (<span class="hljs-keyword">select</span> b.swjg_dm<br>          <span class="hljs-keyword">from</span> dm_gy_swjg a, dm_gy_swjg b<br>         <span class="hljs-keyword">where</span> substr(a.swjg_dm, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>) <span class="hljs-operator">||</span> <span class="hljs-string">&#x27;000000&#x27;</span> <span class="hljs-operator">=</span> b.swjg_dm<br>           <span class="hljs-keyword">and</span> b.swjg_dm <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span><br>               (<span class="hljs-string">&#x27;23200000000&#x27;</span>, <span class="hljs-string">&#x27;23299000000&#x27;</span>, <span class="hljs-string">&#x27;00000000000&#x27;</span>)<br>         <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> b.swjg_dm)<br><br><span class="hljs-comment">--按税务机关分类查询两条记录</span><br><span class="hljs-keyword">select</span> f.ROWN 行号,<br>       f.djxh 登记序号,<br>       f.nsrsbh 纳税人识别号,<br>       f.nsrmc 纳税人名称,<br>       f.zgswj_dm 主管税务机关代码,<br>       f.swjgmc 主管税务机关名称,<br>       substr(f.zgswj_dm, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>) <span class="hljs-operator">||</span> <span class="hljs-string">&#x27;000000&#x27;</span> 地市税务局名称<br>  <span class="hljs-keyword">from</span> (<span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">ROW_NUMBER</span>() <span class="hljs-keyword">OVER</span>(<span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> substr(res.zgswj_dm, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>) <span class="hljs-operator">||</span> <span class="hljs-string">&#x27;000000&#x27;</span> <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> res.zgswj_dm) <span class="hljs-keyword">as</span> ROWN,<br>               res.<span class="hljs-operator">*</span><br>          <span class="hljs-keyword">FROM</span> （<span class="hljs-keyword">select</span> t.djxh, t.nsrsbh, t.nsrmc, t.zgswj_dm, swjg.swjgmc<br>          <span class="hljs-keyword">from</span> dj_nsrxx t, rd_sfzrdxxb sfz, dm_gy_swjg swjg<br>         <span class="hljs-keyword">where</span> t.djxh <span class="hljs-operator">=</span> sfz.djxh<br>           <span class="hljs-keyword">and</span> t.zgswj_dm <span class="hljs-operator">=</span> swjg.swjg_dm<br>           <span class="hljs-keyword">and</span> t.shxydm <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span><br>           <span class="hljs-keyword">and</span> t.nsrzt_dm <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;03&#x27;</span><br>           <span class="hljs-keyword">and</span> t.nsrmc <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%公司&#x27;</span><br>           <span class="hljs-keyword">and</span> length(t.nsrsbh) <span class="hljs-operator">=</span> <span class="hljs-number">15</span><br>           <span class="hljs-keyword">and</span> sfz.zspm_dm <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;101060100&#x27;</span><br>           <span class="hljs-keyword">and</span> sfz.rdyxqz <span class="hljs-operator">&gt;</span> <span class="hljs-type">date</span> <span class="hljs-string">&#x27;2016-08-31&#x27;</span> ） res) f<br> <span class="hljs-keyword">WHERE</span> f.ROWN <span class="hljs-operator">&lt;=</span> <span class="hljs-number">20</span><br> <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> f.zgswj_dm<br></code></pre></td></tr></table></figure>
+
+<h4 id="case和when的使用"><a href="#case和when的使用" class="headerlink" title="case和when的使用"></a>case和when的使用</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> (<span class="hljs-keyword">select</span> decode(substr(jywysbh, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>),<br>                      <span class="hljs-string">&#x27;JSDS&#x27;</span>,<br>                      <span class="hljs-string">&#x27;网厅&#x27;</span>,<br>                      <span class="hljs-string">&#x27;&#x27;</span>,<br>                      <span class="hljs-string">&#x27;大厅&#x27;</span>,<br>                      <span class="hljs-string">&#x27;客户端&#x27;</span>) &quot;渠道来源&quot;,<br>               <span class="hljs-built_in">count</span>(<span class="hljs-keyword">case</span><br>                       <span class="hljs-keyword">when</span> a.lrrq <span class="hljs-operator">&gt;</span><br>                            to_date(to_char(sysdate, <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>), <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>) <span class="hljs-keyword">and</span><br>                            a.yrkse_1 <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> se <span class="hljs-operator">=</span> yrkse_1 <span class="hljs-keyword">then</span><br>                        yzpzxh<br>                     <span class="hljs-keyword">end</span>) &quot;非0申报当天扣款量&quot;,<br>               <span class="hljs-built_in">count</span>(<span class="hljs-keyword">case</span><br>                       <span class="hljs-keyword">when</span> a.lrrq <span class="hljs-operator">&gt;</span><br>                            to_date(to_char(sysdate, <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>), <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>) <span class="hljs-keyword">and</span><br>                            se <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span> <span class="hljs-keyword">then</span><br>                        yzpzxh<br>                     <span class="hljs-keyword">end</span>) &quot; 当天非0申报量&quot;,<br>               <span class="hljs-built_in">count</span>(<span class="hljs-keyword">case</span><br>                       <span class="hljs-keyword">when</span> a.lrrq <span class="hljs-operator">&gt;</span><br>                            to_date(to_char(sysdate, <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>), <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>) <span class="hljs-keyword">then</span><br>                        yzpzxh<br>                     <span class="hljs-keyword">end</span>) &quot; 当天申报量&quot;,<br>               <span class="hljs-built_in">count</span>(<span class="hljs-keyword">case</span><br>                       <span class="hljs-keyword">when</span> a.yrkse_1 <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> se <span class="hljs-operator">=</span> yrkse_1 <span class="hljs-keyword">then</span><br>                        yzpzxh<br>                     <span class="hljs-keyword">end</span>) &quot;非0申报本月扣款量&quot;,<br>               <span class="hljs-built_in">count</span>(<span class="hljs-keyword">case</span><br>                       <span class="hljs-keyword">when</span> se <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span> <span class="hljs-keyword">then</span><br>                        yzpzxh<br>                     <span class="hljs-keyword">end</span>) &quot;本月非0申报量&quot;,<br>               <span class="hljs-built_in">count</span>(<span class="hljs-keyword">case</span><br>                       <span class="hljs-keyword">when</span> <span class="hljs-number">1</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">then</span><br>                        yzpzxh<br>                     <span class="hljs-keyword">end</span>) &quot;本月总申报量&quot;<br>          <span class="hljs-keyword">from</span> sb_sbzt a<br>         <span class="hljs-keyword">where</span> a.lrrq <span class="hljs-operator">&gt;</span><br>               to_date(to_char(sysdate, <span class="hljs-string">&#x27;yyyy-mm&#x27;</span>) <span class="hljs-operator">||</span> <span class="hljs-string">&#x27;01&#x27;</span>, <span class="hljs-string">&#x27;yyyy-mm-dd&#x27;</span>)<br>           <span class="hljs-keyword">and</span> cwlx_dm <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;Y&#x27;</span><br>         <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> substr(a.jywysbh, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>))<br></code></pre></td></tr></table></figure>
+
+<h4 id="查询性能最差和最耗时的SQL"><a href="#查询性能最差和最耗时的SQL" class="headerlink" title="查询性能最差和最耗时的SQL"></a>查询性能最差和最耗时的SQL</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--性能最差的SQL</span><br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span><br>  <span class="hljs-keyword">from</span> (<span class="hljs-keyword">select</span> sql_text, disk_reads, buffer_gets, rows_processed<br>          <span class="hljs-keyword">from</span> v$sqlarea b<br>         <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> disk_reads <span class="hljs-keyword">desc</span>)<br> <span class="hljs-keyword">where</span> rownum <span class="hljs-operator">&lt;=</span> <span class="hljs-number">10</span>;<br><span class="hljs-comment">--最耗时的SQL</span><br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span><br>  <span class="hljs-keyword">from</span> (<span class="hljs-keyword">select</span> a.SQL_TEXT, a.CPU_TIME, a.PARSING_SCHEMA_NAME<br>          <span class="hljs-keyword">from</span> v$<span class="hljs-keyword">sql</span> a<br>         <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> cpu_time <span class="hljs-keyword">desc</span>)<br> <span class="hljs-keyword">where</span> rownum <span class="hljs-operator">&lt;=</span> <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="创建数据库表空间"><a href="#创建数据库表空间" class="headerlink" title="创建数据库表空间"></a>创建数据库表空间</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span>space TS_GS_ZM_SSWSZMJLMX_2016_DATA<br>datafile <span class="hljs-string">&#x27;D:\APP\CLG\ORADATA\ORCL\TS_GS_ZM_SSWSZMJLMX_2016_DATA.dbf&#x27;</span><br>size <span class="hljs-number">50</span>M<br>AUTOEXTEND <span class="hljs-keyword">ON</span> NEXT <span class="hljs-number">50</span>M;<br></code></pre></td></tr></table></figure>
+
+<h4 id="数据库锁表查询及处理"><a href="#数据库锁表查询及处理" class="headerlink" title="数据库锁表查询及处理"></a>数据库锁表查询及处理</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--以下SQL适用于single instance</span><br><span class="hljs-comment">----Oracle数据库操作中，会用到锁表查询以及解锁和kill进程等操作</span><br><span class="hljs-comment">--(1)锁表查询的代码有以下的形式：</span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> v$locked_object;<br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> v$locked_object;<br><span class="hljs-comment">--(2)查看哪个表被锁</span><br><span class="hljs-keyword">select</span> b.owner,b.object_name,a.session_id,a.locked_mode <span class="hljs-keyword">from</span> v$locked_object a,dba_objects b <span class="hljs-keyword">where</span> b.object_id <span class="hljs-operator">=</span> a.object_id;<br><span class="hljs-comment">--(3)查看是哪个session引起的</span><br><span class="hljs-keyword">select</span> b.username,b.sid,b.serial#,logon_time <span class="hljs-keyword">from</span> v$locked_object a,v$session b <span class="hljs-keyword">where</span> a.session_id <span class="hljs-operator">=</span> b.sid <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> b.logon_time; <br><span class="hljs-comment">--(4)杀掉对应进程</span><br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">system</span> kill session<span class="hljs-string">&#x27;587,295&#x27;</span>;<span class="hljs-comment">--command下执行，其中587为sid,295为serial#.</span><br><br><br><span class="hljs-comment">--以下SQL适用于RAC和Single instance，查询完成之后即可kill会话或者直接在服务器上kill进程</span><br><span class="hljs-keyword">select</span> o.owner,<br>       o.object_name,<br>       l.locked_mode,<br>       s.username,<br>       s.sid,<br>       s.serial#,<br>       s.logon_time,<br>       p.spid,<br>       s.inst_id<br>  <span class="hljs-keyword">from</span> gv$locked_object l, dba_objects o, gv$session s, gv$process p<br> <span class="hljs-keyword">where</span> l.object_id <span class="hljs-operator">=</span> o.object_id<br>   <span class="hljs-keyword">and</span> l.session_id <span class="hljs-operator">=</span> s.sid<br>   <span class="hljs-keyword">and</span> s.paddr <span class="hljs-operator">=</span> p.addr<br></code></pre></td></tr></table></figure>
+
+<h4 id="修改数据库密码为永不失效"><a href="#修改数据库密码为永不失效" class="headerlink" title="修改数据库密码为永不失效"></a>修改数据库密码为永不失效</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dba_profiles t <span class="hljs-keyword">where</span> t.PROFILE<span class="hljs-operator">=</span><span class="hljs-string">&#x27;DEFAULT&#x27;</span> <span class="hljs-keyword">and</span> t.RESOURCE_NAME <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;PASSWORD_LIFE_TIME&#x27;</span>;<br><br><span class="hljs-keyword">alter</span> profile <span class="hljs-keyword">default</span> limit password_life_time unlimited;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/SQL/">#SQL</a>
+      
+        <a href="/tags/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93/">#Oracle数据库</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>常用Oracle SQL集锦</div>
+      <div>https://suncle.me/2017/05/10/常用SQL集锦/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Suncle Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2017年5月10日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/05/22/Python%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8web%E6%A1%86%E6%9E%B6/" title="Python实现通用web框架">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python实现通用web框架</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2017/05/10/SQLAlchemy%E4%BD%BF%E7%94%A8/" title="SQLAlchemy使用">
+                        <span class="hidden-mobile">SQLAlchemy使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'suncle1993/suncle1993.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

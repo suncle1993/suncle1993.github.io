@@ -21,7 +21,7 @@
     <meta name="description" content="本篇文章主要是记录整体调整Python数据统计分析项目规范性的过程，以及自己的一些思考。 为什么要调整？ 主要是为了解决数据类程序不容易测试发现错误的现状。调整公共模块出错时抛出错误到业务层，便于报警模块上传错误信息到kafka，最后能主动发出报警邮件。以及方便加入报警之外的其他程序埋点。 调整所有Python数据统计分析程序满足pep8规范和Google Python风格规范，减少IDE提示。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="思考一次整体调整Python项目规范性的过程">
-<meta property="og:url" content="https://suncle.me/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:url" content="https://suncle.me/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4Python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/index.html">
 <meta property="og:site_name" content="Suncle">
 <meta property="og:description" content="本篇文章主要是记录整体调整Python数据统计分析项目规范性的过程，以及自己的一些思考。 为什么要调整？ 主要是为了解决数据类程序不容易测试发现错误的现状。调整公共模块出错时抛出错误到业务层，便于报警模块上传错误信息到kafka，最后能主动发出报警邮件。以及方便加入报警之外的其他程序埋点。 调整所有Python数据统计分析程序满足pep8规范和Google Python风格规范，减少IDE提示。">
 <meta property="og:locale" content="zh_CN">
@@ -330,7 +330,7 @@
     
       
       
-        <a href="/2018/03/24/bfs-%E5%89%AA%E6%9E%9D%E6%9F%A5%E6%89%BE%E7%9B%AE%E6%A0%87%E8%BD%AC%E6%8E%A8%E6%B5%81%E8%8A%82%E7%82%B9/" title="BFS+剪枝查找目标转推流节点"
+        <a href="/2018/03/24/BFS-And-Prune-To-Search-Target-Deliver-Node/" title="BFS+剪枝查找目标转推流节点"
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">BFS+剪枝查找目标转推流节点</span>
@@ -339,7 +339,7 @@
     
       
       
-        <a href="/2021/07/27/redis%E7%BB%9F%E8%AE%A1%E9%80%81%E7%A4%BC%E4%BA%BA%E6%95%B0/" title="redis统计送礼人数"
+        <a href="/2021/07/27/redis-pfadd-count/" title="redis统计送礼人数"
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">redis统计送礼人数</span>
@@ -348,7 +348,7 @@
     
       
       
-        <a href="/2019/11/13/%E4%B8%80%E6%AC%A1%E5%A5%87%E6%80%AA%E7%9A%84http%E7%8A%B6%E6%80%81%E7%A0%81%E6%94%B9%E5%8F%98/" title="一次奇怪的http状态码改变"
+        <a href="/2019/11/13/http-3xx-status-code/" title="一次奇怪的http状态码改变"
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">一次奇怪的http状态码改变</span>
@@ -366,7 +366,7 @@
     
       
       
-        <a href="/2020/12/14/%E5%9D%9A%E6%8C%81%E4%BD%8F%E5%95%8A%EF%BC%8C%E8%BF%98%E5%9C%A8%E5%B1%8E%E5%B1%B1%E4%B8%AD%E7%88%AC%E8%A1%8C%E7%9A%84%E5%90%8C%E4%BA%8B%E4%BB%AC/" title="坚持住啊，还在屎山中爬行的同事们"
+        <a href="/2020/12/14/best-practice-for-shit-code/" title="坚持住啊，还在屎山中爬行的同事们"
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">坚持住啊，还在屎山中爬行的同事们</span>
@@ -384,7 +384,7 @@
     
       
       
-        <a href="/2018/12/27/%E5%BE%AE%E4%BF%A1%E7%82%B9%E9%A4%90%E7%9A%84%E9%9C%80%E6%B1%82%E5%92%8C%E6%8A%80%E6%9C%AF%E6%BC%94%E5%8F%98/" title="微信点餐的需求和技术演变"
+        <a href="/2018/12/27/wechat-order-evolution/" title="微信点餐的需求和技术演变"
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">微信点餐的需求和技术演变</span>
@@ -393,7 +393,7 @@
     
       
       
-        <a href="/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/" title="思考一次整体调整Python项目规范性的过程"
+        <a href="/2017/10/31/%E6%80%9D%E8%80%83%E4%B8%80%E6%AC%A1%E6%95%B4%E4%BD%93%E8%B0%83%E6%95%B4Python%E9%A1%B9%E7%9B%AE%E8%A7%84%E8%8C%83%E6%80%A7%E7%9A%84%E8%BF%87%E7%A8%8B/" title="思考一次整体调整Python项目规范性的过程"
            class="list-group-item list-group-item-action
            active">
           <span class="category-post">思考一次整体调整Python项目规范性的过程</span>
@@ -402,7 +402,7 @@
     
       
       
-        <a href="/2018/12/18/%E7%9B%B4%E6%92%AD%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D/" title="直播系统介绍"
+        <a href="/2018/12/18/introduce-live-system/" title="直播系统介绍"
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">直播系统介绍</span>
@@ -531,7 +531,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>思考一次整体调整Python项目规范性的过程</div>
-      <div>https://suncle.me/2017/10/31/思考一次整体调整python项目规范性的过程/</div>
+      <div>https://suncle.me/2017/10/31/思考一次整体调整Python项目规范性的过程/</div>
     </div>
     <div class="license-meta">
       
@@ -573,7 +573,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2017/11/08/%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86http3xx%E9%87%8D%E5%AE%9A%E5%90%91%E6%9C%BA%E5%88%B6/" title="重新认识HTTP3xx重定向机制">
+                      <a href="/2017/11/08/%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86http302%E9%87%8D%E5%AE%9A%E5%90%91%E6%9C%BA%E5%88%B6/" title="重新认识HTTP3xx重定向机制">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">重新认识HTTP3xx重定向机制</span>
                         <span class="visible-mobile">上一篇</span>
