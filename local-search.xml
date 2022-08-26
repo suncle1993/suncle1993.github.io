@@ -575,9 +575,9 @@
       
       <tag>http</tag>
       
-      <tag>重定向</tag>
-      
       <tag>状态码</tag>
+      
+      <tag>重定向</tag>
       
     </tags>
     
@@ -2118,9 +2118,9 @@
     
     <tags>
       
-      <tag>Http</tag>
-      
       <tag>重定向</tag>
+      
+      <tag>Http</tag>
       
     </tags>
     
@@ -2510,9 +2510,9 @@
       
       <tag>函数</tag>
       
-      <tag>类</tag>
-      
       <tag>JavaScript</tag>
+      
+      <tag>类</tag>
       
     </tags>
     
@@ -2537,9 +2537,9 @@
     
     <tags>
       
-      <tag>JavaScript</tag>
-      
       <tag>基础</tag>
+      
+      <tag>JavaScript</tag>
       
     </tags>
     
@@ -2678,11 +2678,11 @@
     
     <tags>
       
-      <tag>安装</tag>
-      
       <tag>CentOS</tag>
       
       <tag>Nginx</tag>
+      
+      <tag>安装</tag>
       
     </tags>
     
@@ -2875,9 +2875,9 @@
     
     <tags>
       
-      <tag>inspect</tag>
-      
       <tag>装饰器</tag>
+      
+      <tag>inspect</tag>
       
       <tag>类型检查</tag>
       
@@ -3418,9 +3418,9 @@
     
     <tags>
       
-      <tag>事务</tag>
-      
       <tag>Oracle</tag>
+      
+      <tag>事务</tag>
       
       <tag>Transaction</tag>
       
@@ -3953,9 +3953,9 @@
     
     <tags>
       
-      <tag>Oracle</tag>
-      
       <tag>CentOS</tag>
+      
+      <tag>Oracle</tag>
       
       <tag>文件</tag>
       
@@ -4011,11 +4011,11 @@
     
     <tags>
       
+      <tag>CentOS</tag>
+      
       <tag>Oracle</tag>
       
       <tag>安装</tag>
-      
-      <tag>CentOS</tag>
       
     </tags>
     
@@ -4265,9 +4265,9 @@
     
     <tags>
       
-      <tag>安装</tag>
-      
       <tag>CentOS</tag>
+      
+      <tag>安装</tag>
       
       <tag>Linux</tag>
       
