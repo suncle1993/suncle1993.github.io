@@ -1,0 +1,378 @@
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="auto"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png"><link rel="icon" href="/img/android-chrome-192x192.png"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"><meta name="theme-color" content="#2f4154"><meta name="author" content="Suncle Chen"><meta name="keywords" content=""><meta name="description" content="最佳实践先总结一下，在日常开发工作中，我们是怎么使用panic和error的。 panic最佳实践 在程序启动时，出现明显的配置错误可以直接panic，防止错误的配置产生错误的数据 在程序启动时，如果关键组件启动失败就可以直接panic，比如mysql和redis连接错误 在web框架的入口处，都会加recover避免程序panic直接退出程序 不使用panic和recover做常用的错误处理 频"><meta property="og:type" content="article"><meta property="og:title" content="Go工程化08 - 错误处理"><meta property="og:url" content="https://suncle.me/posts/1358609975/index.html"><meta property="og:site_name" content="Suncle"><meta property="og:description" content="最佳实践先总结一下，在日常开发工作中，我们是怎么使用panic和error的。 panic最佳实践 在程序启动时，出现明显的配置错误可以直接panic，防止错误的配置产生错误的数据 在程序启动时，如果关键组件启动失败就可以直接panic，比如mysql和redis连接错误 在web框架的入口处，都会加recover避免程序panic直接退出程序 不使用panic和recover做常用的错误处理 频"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://suncle-public.oss-cn-shenzhen.aliyuncs.com/picgo/20221204174017.png"><meta property="article:published_time" content="2022-12-04T10:31:37.000Z"><meta property="article:modified_time" content="2022-12-04T09:59:01.049Z"><meta property="article:author" content="Suncle Chen"><meta property="article:tag" content="Go"><meta property="article:tag" content="工程化"><meta property="article:tag" content="Error"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://suncle-public.oss-cn-shenzhen.aliyuncs.com/picgo/20221204174017.png"><meta name="referrer" content="no-referrer-when-downgrade"><title>Go工程化08 - 错误处理 - Suncle</title><link rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css"><link rel="stylesheet" href="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.css"><link rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css"><link rel="stylesheet" href="/css/main.css"><link id="highlight-css" rel="stylesheet" href="/css/highlight.css"><link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css"><script id="fluid-configs">var Fluid=window.Fluid||{};Fluid.ctx=Object.assign({},Fluid.ctx);var CONFIG={hostname:"suncle.me",root:"/",version:"1.9.2",typing:{enable:!1,typeSpeed:70,cursorChar:"_",loop:!1,scope:[]},anchorjs:{enable:!0,element:"h1,h2,h3,h4,h5,h6",placement:"left",visible:"hover",icon:""},progressbar:{enable:!0,height_px:3,color:"#29d",options:{showSpinner:!1,trickleSpeed:100}},code_language:{enable:!0,default:"TEXT"},copy_btn:!0,image_caption:{enable:!0},image_zoom:{enable:!0,img_url_replace:["",""]},toc:{enable:!0,placement:"right",headingSelector:"h1,h2,h3,h4,h5,h6",collapseDepth:0},lazyload:{enable:!0,loading_img:"/img/loading.gif",onlypost:!1,offset_factor:2},web_analytics:{enable:!1,follow_dnt:!0,baidu:"41fc030db57d5570dd22f78997dc4a7e",google:"UA-72506112-1",gtag:null,tencent:{sid:null,cid:null},woyaola:null,cnzz:null,leancloud:{app_id:null,app_key:null,server_url:null,path:"window.location.pathname",ignore_local:!1}},search_path:"/local-search.xml"};if(CONFIG.web_analytics.follow_dnt){var dntVal=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack;Fluid.ctx.dnt=dntVal&&(dntVal.startsWith("1")||dntVal.startsWith("yes")||dntVal.startsWith("on"))}</script><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Suncle" type="application/atom+xml">
+</head><body><header><div class="header-inner" style="height:60vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/"><strong>Suncle&#39;s Blog</strong> </a><button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item"><a class="nav-link" href="/"><i class="iconfont icon-home-fill"></i> 首页</a></li><li class="nav-item"><a class="nav-link" href="/categories/newsletter/"><i class="iconfont icon-mail"></i> 周刊</a></li><li class="nav-item"><a class="nav-link" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" target="_self" href="javascript:;" rel="external nofollow noreferrer" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-books"></i> 更多</a><div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类 </a><a class="dropdown-item" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签 </a><a class="dropdown-item" href="/atom.xml"><i class="iconfont icon-rss-fill"></i> RSS</a></div></li><li class="nav-item" id="search-btn"><a class="nav-link" target="_self" href="javascript:;" rel="external nofollow noreferrer" data-toggle="modal" data-target="#modalSearch" aria-label="Search">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" target="_self" href="javascript:;" rel="external nofollow noreferrer" aria-label="Color Toggle">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div id="banner" class="banner" parallax="true" style="background:url(/img/suncle-banner.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="banner-text text-center fade-in-up"><div class="h2"><span id="subtitle">Go工程化08 - 错误处理</span></div><div class="mt-3"><span class="post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2022-12-04 18:31" pubdate>2022年12月4日 晚上</time></span></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 14k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 114 分钟</span></div></div></div></div></div></div></header><main><div class="container-fluid nopadding-x"><div class="row nomargin-x"><div class="side-col d-none d-lg-block col-lg-2"><aside class="sidebar category-bar" style="margin-right:-1rem"><div class="category-list"><div class="category row nomargin-x"><a class="category-item list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Go进阶" id="heading-c689fa8f0b46087fd59ad220563f7c91" role="tab" data-toggle="collapse" href="#collapse-c689fa8f0b46087fd59ad220563f7c91" aria-expanded="true">Go进阶 <span class="list-group-count">(13)</span> <i class="iconfont icon-arrowright"></i></a><div class="category-collapse collapse show" id="collapse-c689fa8f0b46087fd59ad220563f7c91" role="tabpanel" aria-labelledby="heading-c689fa8f0b46087fd59ad220563f7c91"><div class="category-post-list"></div><div class="category-sub row nomargin-x"><a class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11 col-xm-11" title="01. Go 微服务" id="heading-2678a22278a27bf3b7743d605e5dc47f" role="tab" data-toggle="collapse" href="#collapse-2678a22278a27bf3b7743d605e5dc47f" aria-expanded="false">01. Go 微服务 <span class="list-group-count">(5)</span> <i class="iconfont icon-arrowright"></i></a><div class="category-collapse collapse" id="collapse-2678a22278a27bf3b7743d605e5dc47f" role="tabpanel" aria-labelledby="heading-2678a22278a27bf3b7743d605e5dc47f"><div class="category-post-list"><a href="/posts/1701449190/" title="微服务01 - 微服务概览" class="list-group-item list-group-item-action"><span class="category-post">微服务01 - 微服务概览</span> </a><a href="/posts/3855336898/" title="微服务02 - 微服务设计" class="list-group-item list-group-item-action"><span class="category-post">微服务02 - 微服务设计</span> </a><a href="/posts/2122055596/" title="微服务03 - RPC框架gRPC" class="list-group-item list-group-item-action"><span class="category-post">微服务03 - RPC框架gRPC</span> </a><a href="/posts/2683639300/" title="微服务04 - 服务发现" class="list-group-item list-group-item-action"><span class="category-post">微服务04 - 服务发现</span> </a><a href="/posts/1878301602/" title="微服务05 - 多租户和染色发布" class="list-group-item list-group-item-action"><span class="category-post">微服务05 - 多租户和染色发布</span></a></div></div></div><div class="category-sub row nomargin-x"><a class="category-subitem list-group-item category-item-action col-10 col-md-11 col-xm-11" title="02. Go 工程化" id="heading-8c08e3407803eee73dfda3a89f2ecc7c" role="tab" data-toggle="collapse" href="#collapse-8c08e3407803eee73dfda3a89f2ecc7c" aria-expanded="true">02. Go 工程化 <span class="list-group-count">(8)</span> <i class="iconfont icon-arrowright"></i></a><div class="category-collapse collapse show" id="collapse-8c08e3407803eee73dfda3a89f2ecc7c" role="tabpanel" aria-labelledby="heading-8c08e3407803eee73dfda3a89f2ecc7c"><div class="category-post-list"><a href="/posts/3019844725/" title="Go工程化01 - 项目目录结构" class="list-group-item list-group-item-action"><span class="category-post">Go工程化01 - 项目目录结构</span> </a><a href="/posts/2245353277/" title="Go工程化02 - 依赖注入框架wire" class="list-group-item list-group-item-action"><span class="category-post">Go工程化02 - 依赖注入框架wire</span> </a><a href="/posts/3685267549/" title="Go工程化03 - API结构和设计" class="list-group-item list-group-item-action"><span class="category-post">Go工程化03 - API结构和设计</span> </a><a href="/posts/1629570035/" title="Go工程化04 - 配置管理" class="list-group-item list-group-item-action"><span class="category-post">Go工程化04 - 配置管理</span> </a><a href="/posts/1452445979/" title="Go工程化05 - 单元测试" class="list-group-item list-group-item-action"><span class="category-post">Go工程化05 - 单元测试</span> </a><a href="/posts/2456290388/" title="Go工程化06 - Functional Options编程模式" class="list-group-item list-group-item-action"><span class="category-post">Go工程化06 - Functional Options编程模式</span> </a><a href="/posts/174753588/" title="Go工程化07 - 泛型编程" class="list-group-item list-group-item-action"><span class="category-post">Go工程化07 - 泛型编程</span> </a><a href="/posts/1358609975/" title="Go工程化08 - 错误处理" class="list-group-item list-group-item-action active"><span class="category-post">Go工程化08 - 错误处理</span></a></div></div></div></div></div><div class="category row nomargin-x"><a class="category-item list-group-item category-item-action col-10 col-md-11 col-xm-11" title="02. Go 工程化" id="heading-8c08e3407803eee73dfda3a89f2ecc7c" role="tab" data-toggle="collapse" href="#collapse-8c08e3407803eee73dfda3a89f2ecc7c" aria-expanded="true">02. Go 工程化 <span class="list-group-count">(8)</span> <i class="iconfont icon-arrowright"></i></a><div class="category-collapse collapse show" id="collapse-8c08e3407803eee73dfda3a89f2ecc7c" role="tabpanel" aria-labelledby="heading-8c08e3407803eee73dfda3a89f2ecc7c"><div class="category-post-list"><a href="/posts/3019844725/" title="Go工程化01 - 项目目录结构" class="list-group-item list-group-item-action"><span class="category-post">Go工程化01 - 项目目录结构</span> </a><a href="/posts/2245353277/" title="Go工程化02 - 依赖注入框架wire" class="list-group-item list-group-item-action"><span class="category-post">Go工程化02 - 依赖注入框架wire</span> </a><a href="/posts/3685267549/" title="Go工程化03 - API结构和设计" class="list-group-item list-group-item-action"><span class="category-post">Go工程化03 - API结构和设计</span> </a><a href="/posts/1629570035/" title="Go工程化04 - 配置管理" class="list-group-item list-group-item-action"><span class="category-post">Go工程化04 - 配置管理</span> </a><a href="/posts/1452445979/" title="Go工程化05 - 单元测试" class="list-group-item list-group-item-action"><span class="category-post">Go工程化05 - 单元测试</span> </a><a href="/posts/2456290388/" title="Go工程化06 - Functional Options编程模式" class="list-group-item list-group-item-action"><span class="category-post">Go工程化06 - Functional Options编程模式</span> </a><a href="/posts/174753588/" title="Go工程化07 - 泛型编程" class="list-group-item list-group-item-action"><span class="category-post">Go工程化07 - 泛型编程</span> </a><a href="/posts/1358609975/" title="Go工程化08 - 错误处理" class="list-group-item list-group-item-action active"><span class="category-post">Go工程化08 - 错误处理</span></a></div></div></div></div></aside></div><div class="col-lg-8 nopadding-x-md"><div class="container nopadding-x-md" id="board-ctn"><div id="board"><article class="post-content mx-auto"><h1 style="display:none">Go工程化08 - 错误处理</h1><div class="markdown-body"><h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>先总结一下，在日常开发工作中，我们是怎么使用panic和error的。</p><h3 id="panic最佳实践"><a href="#panic最佳实践" class="headerlink" title="panic最佳实践"></a>panic最佳实践</h3><ol><li>在程序启动时，出现明显的配置错误可以直接panic，防止错误的配置产生错误的数据</li><li>在程序启动时，如果关键组件启动失败就可以直接panic，比如mysql和redis连接错误</li><li>在web框架的入口处，都会加recover避免程序panic直接退出程序</li><li>不使用panic和recover做常用的错误处理<ol><li>频繁 panic recover 性能不好</li><li>不可控，一旦 panic 就将处理逻辑移交给了外部，我们并不能预设外部包一定会进行处理</li></ol></li></ol><h3 id="error最佳实践"><a href="#error最佳实践" class="headerlink" title="error最佳实践"></a>error最佳实践</h3><ol><li>在应用程序中，我们一般使用<code>github.com/pkg/errors</code>这个库来处理应用错误<ol><li>在公共库中，一般不使用这个库，避免报错时产生多次堆栈</li><li>这个库当前已经归档，不少开源项目都不再使用这个库了，但是如果想要有完整的堆栈信息用于排查错误，这个库还是最合适的，等go2中关于错误的新语法出来之后，再决定是否要更换</li></ol></li><li>error应该是函数的最后一个返回值，当error不为nil时，函数的其他返回值我们都不应该再使用</li><li>错误处理的时候应该先判断错误<code>if err != nil</code>， 出现错误及时return，使代码是一条流畅的直线，避免过多的嵌套</li><li>在应用程序中<strong>首次</strong>出现错误时，使用 <code>errors.New</code>  或者 <code>errors.Errorf</code>  返回错误</li><li>如果是调用应用程序的其他函数出现错误，请直接返回，如果需要携带信息，请使用 <code>errors.WithMessage</code></li><li>如果是调用其他库（标准库、公共库、开源第三方库等）获取到错误时，请使用 <code>errors.Wrap</code>  添加堆栈信息<ol><li>为了避免多次堆栈，不要每个地方都是用 <code>errors.Wrap</code>  只需要在错误第一次出现时进行 <code>errors.Wrap</code>  即可</li></ol></li><li>根据“错误只处理一次”原则， <strong>禁止</strong>每个出错的地方都打日志，只需要在进程的最开始的地方使用 <code>%+v</code>  进行统一打印，例如 http&#x2F;rpc 服务的中间件，或者是公司的kit库里面封装统一的middleware</li><li>错误判断使用 <code>errors.Is</code></li><li>错误判断并赋值使用 <code>errors.As</code></li><li>如何判定错误的信息是否足够，想一想当你的代码出现问题需要排查的时候你的错误信息是否可以帮助你快速的定位问题，例如我们在请求中一般会输出参数信息，用于辅助判断错误</li><li>对于业务错误，推荐在一个统一的地方创建一个错误字典，比如protobuf文件。错误字典里面应该包含错误的 code，并且在日志中作为独立字段打印，方便做业务告警的判断，错误必须有清晰的错误文档</li><li>错误的时候，需要处理已分配的资源，使用 <code>defer</code>  进行清理，例如文件句柄，或者是保存错误的操作记录。</li></ol><h2 id="使用-error-处理有哪些好处？"><a href="#使用-error-处理有哪些好处？" class="headerlink" title="使用 error 处理有哪些好处？"></a>使用 error 处理有哪些好处？</h2><ol><li>简单</li><li>考虑失败，而不是成功(Plan for failure, not success)</li><li>没有隐藏的控制流</li><li>完全交给你来控制 error</li><li>Error are values<br>在写c++或者python代码时，错误往往会隐藏在一些值里面，开发者经常会忽略要去处理对应的错误，但是把error显式的当成value处理时，开发者没有办法不去处理。</li></ol><h2 id="error源码分析"><a href="#error源码分析" class="headerlink" title="error源码分析"></a>error源码分析</h2><p>Go error就是一个普通的接口</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">&#x2F;&#x2F; The error built-in interface type is the conventional interface for  
+&#x2F;&#x2F; representing an error condition, with the nil value representing no error.  
+type error interface &#123;  
+   Error() string  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>创建error对象的一个最常用方法就是使用errors.New()</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">package errors  
+  
+&#x2F;&#x2F; New returns an error that formats as the given text.
+&#x2F;&#x2F; Each call to New returns a distinct error value even if the text is identical.
+func New(text string) error &#123;  
+   return &amp;errorString&#123;text&#125;  
+&#125;  
+  
+&#x2F;&#x2F; errorString is a trivial implementation of error.
+type errorString struct &#123;  
+   s string  
+&#125;  
+  
+func (e *errorString) Error() string &#123;  
+   return e.s  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>这个内置代码中有两个注意点：</p><ol><li>errorString就是一个实现了Error方法的struct，也就是实现了error这个interface，所以我们自定义error的时候就只需要实现Error方法</li><li>New方法返回的不是errorString对象，而是返回对象的指针，这是为了避免字符串text相同时，无法判定两个error是否相等。</li></ol><h2 id="错误类型"><a href="#错误类型" class="headerlink" title="错误类型"></a>错误类型</h2><p>总共有3种错误类型</p><ol><li>Sentinel Error</li><li>Error Type(struct)</li><li>Opaque Error</li></ol><h3 id="Sentinel-Error"><a href="#Sentinel-Error" class="headerlink" title="Sentinel Error"></a>Sentinel Error</h3><p>哨兵错误，就是定义一些包级别的错误变量，然后在调用的时候外部包可以直接对比变量进行判定，在标准库当中大量的使用了这种方式<br>例如下方 <code>net/http</code>  库中定义的错误</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">&#x2F;&#x2F; Errors used by the HTTP server.  
+var (  
+   &#x2F;&#x2F; ErrBodyNotAllowed is returned by ResponseWriter.Write calls   
+   &#x2F;&#x2F; when the HTTP method or response code does not permit a   
+   &#x2F;&#x2F; body.   
+   ErrBodyNotAllowed &#x3D; errors.New(&quot;http: request method or response status code does not allow body&quot;)  
+  
+   &#x2F;&#x2F; ErrHijacked is returned by ResponseWriter.Write calls when   
+   &#x2F;&#x2F; the underlying connection has been hijacked using the   
+   &#x2F;&#x2F; Hijacker interface. A zero-byte write on a hijacked   
+   &#x2F;&#x2F; connection will return ErrHijacked without any other side   
+   &#x2F;&#x2F; effects.   
+   ErrHijacked &#x3D; errors.New(&quot;http: connection has been hijacked&quot;)  
+  
+   &#x2F;&#x2F; ErrContentLength is returned by ResponseWriter.Write calls   
+   &#x2F;&#x2F; when a Handler set a Content-Length response header with a   
+   &#x2F;&#x2F; declared size and then attempted to write more bytes than   
+   &#x2F;&#x2F; declared.   
+   ErrContentLength &#x3D; errors.New(&quot;http: wrote more than the declared Content-Length&quot;)
+
+	&#x2F;&#x2F; Deprecated: ErrWriteAfterFlush is no longer returned by
+	&#x2F;&#x2F; anything in the net&#x2F;http package. Callers should not  
+	&#x2F;&#x2F; compare errors against this variable.  
+	ErrWriteAfterFlush &#x3D; errors.New(&quot;unused&quot;)
+)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>当返回error之后如果我们想判断error是否时某个Sentinel Error，一般使用<code>errors.Is</code>  进行判断</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">if errors.Is(err, io.EOF) &#123;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure><p>这种错误处理方式有一个问题是，将 error 当做包的 API 暴露给了第三方，会增大包的表面积，并且会在两个包之间创建了依赖。这样会导致在做重构或者升级的时候很麻烦，并且这种方式包含的错误信息会十分的有限，所以我们应该尽可能避免使用Sentinel Error</p><h3 id="Error-Type"><a href="#Error-Type" class="headerlink" title="Error Type"></a>Error Type</h3><p>Error type是实现了error接口的自定义类型，比如io库的<code>PathError</code>记录了操作和文件路径</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">&#x2F;&#x2F; PathError records an error and the operation and file path that caused it.
+type PathError struct &#123;  
+   Op   string  
+   Path string  
+   Err  error  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>因为PathError是一个type，调用者可以使用断言转换成这个类型，来获取更多的上下文信息。</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">&#x2F;&#x2F; IsCorruptedMnt return true if err is about corrupted mount point
+func IsCorruptedMnt(err error) bool &#123;  
+   if err &#x3D;&#x3D; nil &#123;  
+      return false  
+   &#125;  
+  
+   var underlyingError error  
+   switch pe :&#x3D; err.(type) &#123;  
+   case nil:  
+      return false  
+   case *os.PathError:  
+      underlyingError &#x3D; pe.Err  
+   case *os.LinkError:  
+      underlyingError &#x3D; pe.Err  
+   case *os.SyscallError:  
+      underlyingError &#x3D; pe.Err  
+   &#125;  
+  
+   if ee, ok :&#x3D; underlyingError.(syscall.Errno); ok &#123;  
+      for _, errno :&#x3D; range errorNoList &#123;  
+         if int(ee) &#x3D;&#x3D; errno &#123;  
+            klog.Warningf(&quot;IsCorruptedMnt failed with error: %v, error code: %v&quot;, err, errno)  
+            return true  
+         &#125;  
+      &#125;   &#125;  
+   return false  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>和Sentinel Error相比，Error Type的一大改进是他们能够包装底层错误以提供更多上下文，但是并没有改进Sentinel Error的劣势</p><h3 id="Opaque-Error"><a href="#Opaque-Error" class="headerlink" title="Opaque Error"></a>Opaque Error</h3><p>不透明的错误，这种方式最大的特点就是只返回错误，暴露错误判定接口，不返回类型，这样可以减少 API 的暴露，后续的处理会比较灵活，这个一般用在公共库会比较好。<br>比如，在net库中有定义这样一个Error，内部的error不对外暴露，但是对外暴露了2个方法。</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">&#x2F;&#x2F; An Error represents a network error.
+type Error interface &#123;
+	error
+	Timeout() bool &#x2F;&#x2F; Is the error a timeout?
+
+	&#x2F;&#x2F; Deprecated: Temporary errors are not well-defined.
+	&#x2F;&#x2F; Most &quot;temporary&quot; errors are timeouts, and the few exceptions are surprising.
+	&#x2F;&#x2F; Do not use this method.
+	Temporary() bool
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>使用Opaque Error我们可以断言错误实现了特定的行为，而不是断言错误是特定的类型或值</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">type timeout interface &#123;
+	Timeout() bool
+&#125;
+
+func IsTimeout(err error) bool &#123;
+	te, ok :&#x3D; err.(timeout)
+	return ok &amp;&amp; te.Timeout()
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><h2 id="错误处理优化"><a href="#错误处理优化" class="headerlink" title="错误处理优化"></a>错误处理优化</h2><p>在 go 中常常会存在大量的 <code>if err</code>  代码，下面介绍两种常见的减少这种代码的方式</p><h3 id="Bufio-scan"><a href="#Bufio-scan" class="headerlink" title="Bufio.scan"></a>Bufio.scan</h3><p>下面的两个CountLines方法，第一个对于err的判断代码比较多，第二个方法一次err判断都没有，极大的简化了代码，这是因为在 <code>sc.Scan</code>  做了很多处理，像很多类似的，需要循环读取的都可以考虑像这样包装之后进行处理</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">func CountLines1(r io.Reader) (int, error) &#123;
+	var (
+		br    &#x3D; bufio.NewReader(r)
+		lines int
+		err   error
+	)
+	for &#123;
+		_, err &#x3D; br.ReadString(&#39;\n&#39;)
+		lines++
+		if err !&#x3D; nil &#123;
+			break
+		&#125;
+	&#125;
+	if err !&#x3D; io.EOF &#123;
+		return 0, err
+	&#125;
+	return lines, err
+&#125;
+
+func CountLines2(r io.Reader) (int, error) &#123;
+	var (
+		sc    &#x3D; bufio.NewScanner(r)
+		lines int
+	)
+	for sc.Scan() &#123;
+		lines++
+	&#125;
+	return lines, sc.Err()
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><h3 id="error-writer"><a href="#error-writer" class="headerlink" title="error writer"></a>error writer</h3><p>下面的2个WriteResponse方法，简洁程度完全不一样，区别在于第二个方法使用了errWriter这个自定义的结构，将重复的逻辑进行了封装，然后把 error 暂存，然后我们就只需要在最后判断一下 error 就行了</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">type Header struct &#123;
+	Key, Value string
+&#125;
+
+type Status struct &#123;
+	Code   int
+	Reason string
+&#125;
+
+func WriteResponse(w io.Writer, st Status, headers []Header, body io.Reader) error &#123;
+	_, err :&#x3D; fmt.Fprintf(w, &quot;HTTP&#x2F;1.1 %d %s\r\n&quot;, st.Code, st.Reason)
+	if err !&#x3D; nil &#123;
+		return err
+	&#125;
+	for _, h :&#x3D; range headers &#123;
+		_, err :&#x3D; fmt.Fprintf(w, &quot;%s:%s\r\n&quot;, h.Key, h.Value)
+		if err !&#x3D; nil &#123;
+			return err
+		&#125;
+	&#125;
+	if _, err :&#x3D; fmt.Fprint(w, &quot;\r\n&quot;); err !&#x3D; nil &#123;
+		return err
+	&#125;
+	_, err &#x3D; io.Copy(w, body)
+	return err
+&#125;
+
+type errWriter struct &#123;
+	w   io.Writer
+	err error
+&#125;
+
+func (e *errWriter) Write(p []byte) (int, error) &#123;
+	if e.err !&#x3D; nil &#123;
+		return 0, e.err
+	&#125;
+	var n int
+	n, e.err &#x3D; e.w.Write(p)
+	return n, nil
+&#125;
+
+func WriteResponse2(w io.Writer, st Status, headers []Header, body io.Reader) error &#123;
+	ew :&#x3D; &amp;errWriter&#123;w: w&#125;
+	_, _ &#x3D; fmt.Fprintf(ew, &quot;HTTP&#x2F;1.1 %d %s\r\n&quot;, st.Code, st.Reason)
+	for _, h :&#x3D; range headers &#123;
+		_, _ &#x3D; fmt.Fprintf(ew, &quot;%s:%s\r\n&quot;, h.Key, h.Value)
+	&#125;
+	_, _ &#x3D; fmt.Fprintf(ew, &quot;\r\n&quot;)
+	_, _ &#x3D; io.Copy(ew, body)
+	return ew.err
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><h2 id="错误包装"><a href="#错误包装" class="headerlink" title="错误包装"></a>错误包装</h2><p>原则：你应该只处理一次错误。<br>处理一个错误意味着检查错误值。并做出一个决定。要么返回错误，要么忽略错误打日志。</p><h3 id="使用-errors-Wrap-包装错误"><a href="#使用-errors-Wrap-包装错误" class="headerlink" title="使用 errors.Wrap 包装错误"></a>使用 errors.Wrap 包装错误</h3><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">body, err :&#x3D; json.Marshal(payload)  
+if err !&#x3D; nil &#123;  
+   err &#x3D; errors.Wrap(err, &quot;failed to marshal the body&quot;)  
+   return  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><h3 id="为什么不使用-标准库的-fmt-Errorf-quot-w-quot"><a href="#为什么不使用-标准库的-fmt-Errorf-quot-w-quot" class="headerlink" title="为什么不使用### 标准库的 fmt.Errorf(&quot;%w&quot;)"></a>为什么不使用### 标准库的 <code>fmt.Errorf(&quot;%w&quot;)</code></h3><p>我们先看一下标准库的源代码，我们可以发现当 <code>p.wrappedErr != nil</code>  的时候（也就是有 %w）的时候，会使用一个 <code>wrapError</code>  将错误包装，看 <code>wrapError</code>  的源码可以发现，这个方法只是包装了一下原始错误，并且可以做到附加一些文本信息，但是没有堆栈信息。</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">package fmt
+
+import &quot;errors&quot;
+
+&#x2F;&#x2F; Errorf formats according to a format specifier and returns the string as a
+&#x2F;&#x2F; value that satisfies error.
+&#x2F;&#x2F;
+&#x2F;&#x2F; If the format specifier includes a %w verb with an error operand,
+&#x2F;&#x2F; the returned error will implement an Unwrap method returning the operand. It is
+&#x2F;&#x2F; invalid to include more than one %w verb or to supply it with an operand
+&#x2F;&#x2F; that does not implement the error interface. The %w verb is otherwise
+&#x2F;&#x2F; a synonym for %v.
+func Errorf(format string, a ...any) error &#123;
+	p :&#x3D; newPrinter()
+	p.wrapErrs &#x3D; true
+	p.doPrintf(format, a)
+	s :&#x3D; string(p.buf)
+	var err error
+	if p.wrappedErr &#x3D;&#x3D; nil &#123;
+		err &#x3D; errors.New(s)
+	&#125; else &#123;
+		err &#x3D; &amp;wrapError&#123;s, p.wrappedErr&#125;
+	&#125;
+	p.free()
+	return err
+&#125;
+
+type wrapError struct &#123;
+	msg string
+	err error
+&#125;
+
+func (e *wrapError) Error() string &#123;
+	return e.msg
+&#125;
+
+func (e *wrapError) Unwrap() error &#123;
+	return e.err
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>但是在 <code>pkg/errors</code> 的源码，可以发现除了使用 <code>withMessage</code>  附加了错误信息之外还使用 <code>withStack</code>  附加了堆栈信息，这样我们在程序入口处打印日志信息的时候就可以将堆栈信息一并打出了。</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">&#x2F;&#x2F; Wrap returns an error annotating err with a stack trace
+&#x2F;&#x2F; at the point Wrap is called, and the supplied message.
+&#x2F;&#x2F; If err is nil, Wrap returns nil.
+func Wrap(err error, message string) error &#123;
+	if err &#x3D;&#x3D; nil &#123;
+		return nil
+	&#125;
+	err &#x3D; &amp;withMessage&#123;
+		cause: err,
+		msg:   message,
+	&#125;
+	return &amp;withStack&#123;
+		err,
+		callers(),
+	&#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><h3 id="为什么不允许处处使用-errors-Wrap"><a href="#为什么不允许处处使用-errors-Wrap" class="headerlink" title="为什么不允许处处使用 errors.Wrap"></a>为什么不允许处处使用 errors.Wrap</h3><p>因为每一次 <code>errors.Wrap</code>  的调用都会为错误添加堆栈信息，如果处处调用那会有大量的无用堆栈<br>下面的代码中，我们只有一处 wrap</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">func TestErrorWrap(t *testing.T) &#123;  
+   fmt.Printf(&quot;err: %+v&quot;, c())  
+&#125;  
+  
+func a() error &#123;  
+   return errors.Wrap(fmt.Errorf(&quot;xxx&quot;), &quot;test&quot;)  
+&#125;  
+  
+func b() error &#123;  
+   return a()  
+&#125;  
+  
+func c() error &#123;  
+   return b()  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>print的结果显示一次wrap足够打出全部的堆栈信息</p><figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">err: xxx
+test
+backend&#x2F;pkg.a
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:14
+backend&#x2F;pkg.b
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:18
+backend&#x2F;pkg.c
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:22
+backend&#x2F;pkg.TestErrorWrap
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:10
+testing.tRunner
+	&#x2F;Users&#x2F;suncle&#x2F;.gvm&#x2F;gos&#x2F;go1.18&#x2F;src&#x2F;testing&#x2F;testing.go:1439
+runtime.goexit
+	&#x2F;Users&#x2F;suncle&#x2F;.gvm&#x2F;gos&#x2F;go1.18&#x2F;src&#x2F;runtime&#x2F;asm_arm64.s:1259--- PASS: TestErrorWrap (0.00s)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>再看下多处wrap的代码</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">func TestErrorWrap(t *testing.T) &#123;  
+   fmt.Printf(&quot;err: %+v&quot;, c())  
+&#125;  
+  
+func a() error &#123;  
+   return errors.Wrap(fmt.Errorf(&quot;xxx&quot;), &quot;test&quot;)  
+&#125;  
+  
+func b() error &#123;  
+   return errors.Wrap(a(), &quot;b&quot;)  
+&#125;  
+  
+func c() error &#123;  
+   return errors.Wrap(b(), &quot;c&quot;)  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>可以看到每一处wrap都添加了一次堆栈信息</p><figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">err: xxx
+test
+backend&#x2F;pkg.a
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:14
+backend&#x2F;pkg.b
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:18
+backend&#x2F;pkg.c
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:22
+backend&#x2F;pkg.TestErrorWrap
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:10
+testing.tRunner
+	&#x2F;Users&#x2F;suncle&#x2F;.gvm&#x2F;gos&#x2F;go1.18&#x2F;src&#x2F;testing&#x2F;testing.go:1439
+runtime.goexit
+	&#x2F;Users&#x2F;suncle&#x2F;.gvm&#x2F;gos&#x2F;go1.18&#x2F;src&#x2F;runtime&#x2F;asm_arm64.s:1259
+b
+backend&#x2F;pkg.b
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:18
+backend&#x2F;pkg.c
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:22
+backend&#x2F;pkg.TestErrorWrap
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:10
+testing.tRunner
+	&#x2F;Users&#x2F;suncle&#x2F;.gvm&#x2F;gos&#x2F;go1.18&#x2F;src&#x2F;testing&#x2F;testing.go:1439
+runtime.goexit
+	&#x2F;Users&#x2F;suncle&#x2F;.gvm&#x2F;gos&#x2F;go1.18&#x2F;src&#x2F;runtime&#x2F;asm_arm64.s:1259
+c
+backend&#x2F;pkg.c
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:22
+backend&#x2F;pkg.TestErrorWrap
+	&#x2F;Users&#x2F;suncle&#x2F;pkg&#x2F;a_test.go:10
+testing.tRunner
+	&#x2F;Users&#x2F;suncle&#x2F;.gvm&#x2F;gos&#x2F;go1.18&#x2F;src&#x2F;testing&#x2F;testing.go:1439
+runtime.goexit
+	&#x2F;Users&#x2F;suncle&#x2F;.gvm&#x2F;gos&#x2F;go1.18&#x2F;src&#x2F;runtime&#x2F;asm_arm64.s:1259--- PASS: TestErrorWrap (0.00s)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><h2 id="错误判断"><a href="#错误判断" class="headerlink" title="错误判断"></a>错误判断</h2><h3 id="errors-Is"><a href="#errors-Is" class="headerlink" title="errors.Is"></a>errors.Is</h3><p>不断unwrap然后判断是否相等</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">func Is(err, target error) bool &#123;
+	if target &#x3D;&#x3D; nil &#123;
+		return err &#x3D;&#x3D; target
+	&#125;
+
+	isComparable :&#x3D; reflectlite.TypeOf(target).Comparable()
+	&#x2F;&#x2F; 循环判断是否相等
+	for &#123;
+		if isComparable &amp;&amp; err &#x3D;&#x3D; target &#123;
+			return true
+		&#125;
+		if x, ok :&#x3D; err.(interface&#123; Is(error) bool &#125;); ok &amp;&amp; x.Is(target) &#123;
+			return true
+		&#125;
+		&#x2F;&#x2F; APIs, thereby making it easier to get away with them.
+		if err &#x3D; Unwrap(err); err &#x3D;&#x3D; nil &#123;
+			return false
+		&#125;
+	&#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><h3 id="errors-As"><a href="#errors-As" class="headerlink" title="errors.As"></a>errors.As</h3><p>和is的逻辑类似，也是不断unwrap比较，找到一个相同的err就返回</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">func As(err error, target any) bool &#123;
+	if target &#x3D;&#x3D; nil &#123;
+		panic(&quot;errors: target cannot be nil&quot;)
+	&#125;
+	val :&#x3D; reflectlite.ValueOf(target)
+	typ :&#x3D; val.Type()
+	if typ.Kind() !&#x3D; reflectlite.Ptr || val.IsNil() &#123;
+		panic(&quot;errors: target must be a non-nil pointer&quot;)
+	&#125;
+	targetType :&#x3D; typ.Elem()
+	if targetType.Kind() !&#x3D; reflectlite.Interface &amp;&amp; !targetType.Implements(errorType) &#123;
+		panic(&quot;errors: *target must be interface or implement error&quot;)
+	&#125;
+	for err !&#x3D; nil &#123;
+		if reflectlite.TypeOf(err).AssignableTo(targetType) &#123;
+			val.Elem().Set(reflectlite.ValueOf(err))
+			return true
+		&#125;
+		if x, ok :&#x3D; err.(interface&#123; As(any) bool &#125;); ok &amp;&amp; x.As(target) &#123;
+			return true
+		&#125;
+		err &#x3D; Unwrap(err)
+	&#125;
+	return false
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><h2 id="统一打印错误日志"><a href="#统一打印错误日志" class="headerlink" title="统一打印错误日志"></a>统一打印错误日志</h2><p>在http&#x2F;rpc 服务的中间件，或者是公司的kit库里面，添加上统一打印错误日志的中间<br>价，就可以统一处理了，再也不需要在代码中每一处错误返回的地方都打印日志。<br>以kratos框架为例，server的logging middleware可以写成这样:</p><figure><div class="code-wrapper"><pre class="line-numbers language-Go" data-language="Go"><code class="language-Go">&#x2F;&#x2F; Server is an server logging middleware.
+func Server(logger log.Logger) middleware.Middleware &#123;
+	return func(handler middleware.Handler) middleware.Handler &#123;
+		return func(ctx context.Context, req interface&#123;&#125;) (reply interface&#123;&#125;, err error) &#123;
+			var (
+				code      int32 &#x3D; 200
+				reason    string
+				kind      string
+				operation string
+			)
+			startTime :&#x3D; time.Now()
+			if info, ok :&#x3D; transport.FromServerContext(ctx); ok &#123;
+				kind &#x3D; info.Kind().String()
+				operation &#x3D; info.Operation()
+			&#125;
+			reply, err &#x3D; handler(ctx, req)
+			if se :&#x3D; errors.FromError(err); se !&#x3D; nil &#123;
+				code &#x3D; se.Code
+				reason &#x3D; se.Reason
+			&#125;
+			level, stack :&#x3D; extractError(err)
+			_ &#x3D; log.WithContext(ctx, logger).Log(level,
+				&quot;kind&quot;, &quot;server&quot;,
+				&quot;component&quot;, kind,
+				&quot;operation&quot;, operation,
+				&quot;args&quot;, extractArgs(req),
+				&quot;code&quot;, code,
+				&quot;reason&quot;, reason,
+				&quot;stack&quot;, stack,
+				&quot;latency&quot;, time.Since(startTime).Seconds(),
+			)
+			return
+		&#125;
+	&#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure><p>有了这样的middleware统一处理错误日志之后，我们就不需要再代码中疯狂打日志了，在kibana上也很方便的排查问题<br><img src="https://suncle-public.oss-cn-shenzhen.aliyuncs.com/picgo/20221204174017.png" srcset="/img/loading.gif" lazyload></p><hr><p>参考：</p><ol><li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://coolshell.cn/articles/21140.html">GO 编程模式：错误处理</a></li><li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/pkg/errors">pkg&#x2F;errors</a></li></ol></div><hr><div><div class="post-metas my-3"><div class="post-meta mr-3 d-flex align-items-center"><i class="iconfont icon-category"></i> <span class="category-chains"><span class="category-chain"><a href="/categories/Go%E8%BF%9B%E9%98%B6/" class="category-chain-item">Go进阶</a> <span>></span> <a href="/categories/Go%E8%BF%9B%E9%98%B6/02-Go-%E5%B7%A5%E7%A8%8B%E5%8C%96/" class="category-chain-item">02. Go 工程化</a></span></span></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a href="/tags/Go/">#Go</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/">#工程化</a> <a href="/tags/Error/">#Error</a></div></div><div class="license-box my-3"><div class="license-title"><div>Go工程化08 - 错误处理</div><div>https://suncle.me/posts/1358609975/</div></div><div class="license-meta"><div class="license-meta-item"><div>作者</div><div>Suncle Chen</div></div><div class="license-meta-item license-meta-date"><div>发布于</div><div>2022年12月4日</div></div><div class="license-meta-item"><div>许可协议</div><div><a target="_blank" href="https://creativecommons.org/licenses/by/4.0/" rel="external nofollow noreferrer"><span class="hint--top hint--rounded" aria-label="BY - 署名"><i class="iconfont icon-by"></i></span></a></div></div></div><div class="license-icon iconfont"></div></div><div class="post-prevnext my-3"><article class="post-prev col-6"></article><article class="post-next col-6"><a href="/posts/2599171020/" title="“有用之用”还是“无用之用” -#4"><span class="hidden-mobile">“有用之用”还是“无用之用” -#4</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></article></div></div><article id="comments" lazyload><script type="text/javascript">Fluid.utils.loadComments("#comments",(function(){var t=document.documentElement.getAttribute("data-user-color-scheme");t="dark"===t?"github-dark":"github-light",window.UtterancesThemeLight="github-light",window.UtterancesThemeDark="github-dark";var e=document.createElement("script");e.setAttribute("src","https://utteranc.es/client.js"),e.setAttribute("repo","suncle1993/suncle1993.github.io"),e.setAttribute("issue-term","pathname"),e.setAttribute("label","utterances"),e.setAttribute("theme",t),e.setAttribute("crossorigin","anonymous"),document.getElementById("comments").appendChild(e)}))</script><noscript>Please enable JavaScript to view the comments</noscript></article></article></div></div></div><div class="side-col d-none d-lg-block col-lg-2"><aside class="sidebar" style="margin-left:-1rem"><div id="toc"><p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p><div class="toc-body" id="toc-body"></div></div></aside></div></div></div><a id="scroll-top-button" aria-label="TOP" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div></main><footer><div class="footer-inner"><div class="footer-content"><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a></div><div class="statistics"><span id="busuanzi_container_site_pv" style="display:none">总访问量 <span id="busuanzi_value_site_pv"></span> 次 </span><span id="busuanzi_container_site_uv" style="display:none">总访客数 <span id="busuanzi_value_site_uv"></span> 人</span></div></div></footer><script src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js"></script><link rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css"><script>NProgress.configure({showSpinner:!1,trickleSpeed:100}),NProgress.start(),window.addEventListener("load",(function(){NProgress.done()}))</script><script src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js"></script><script src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js"></script><script src="/js/events.js"></script><script src="/js/plugins.js"></script><script src="/js/img-lazyload.js"></script><script>Fluid.utils.createScript("https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js",(function(){var t=jQuery("#toc");if(0!==t.length&&window.tocbot){var o=jQuery("#board-ctn").offset().top;window.tocbot.init({tocSelector:"#toc-body",contentSelector:".markdown-body",headingSelector:CONFIG.toc.headingSelector||"h1,h2,h3,h4,h5,h6",linkClass:"tocbot-link",activeLinkClass:"tocbot-active-link",listClass:"tocbot-list",isCollapsedClass:"tocbot-is-collapsed",collapsibleClass:"tocbot-is-collapsible",collapseDepth:CONFIG.toc.collapseDepth||0,scrollSmooth:!0,headingsOffset:-o}),t.find(".toc-list-item").length>0&&t.css("visibility","visible")}}))</script><script src="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js"></script><script>Fluid.plugins.codeWidget()</script><script>Fluid.utils.createScript("https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js",(function(){window.anchors.options={placement:CONFIG.anchorjs.placement,visible:CONFIG.anchorjs.visible},CONFIG.anchorjs.icon&&(window.anchors.options.icon=CONFIG.anchorjs.icon);var o=(CONFIG.anchorjs.element||"h1,h2,h3,h4,h5,h6").split(","),n=[];for(var i of o)n.push(".markdown-body > "+i.trim());"left"===CONFIG.anchorjs.placement&&(window.anchors.options.class="anchorjs-link-left"),window.anchors.add(n.join(", "))}))</script><script>Fluid.utils.createScript("https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js",(function(){Fluid.plugins.fancyBox()}))</script><script>Fluid.plugins.imageCaption()</script><script src="/js/local-search.js"></script><script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="/js/boot.js"></script><noscript><div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div></noscript></body></html>
